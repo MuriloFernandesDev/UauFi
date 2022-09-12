@@ -75,7 +75,7 @@ const ClienteList = () => {
   const [sortColumn, setSortColumn] = useState(store.params.sortColumn ?? 'id')
   const [currentPage, setCurrentPage] = useState(store.params.page ?? 1)
   const [rowsPerPage, setRowsPerPage] = useState(store.params.perPage ?? 10)
-  const vTimeoutPesquisa = useRef() 
+  const vTimeoutPesquisa = useRef()
   const [vPesquisando, setPesquisando] = useState(true)
 
   if ((vPesquisando) && (store.total >= 0)) {
@@ -84,11 +84,11 @@ const ClienteList = () => {
 
   useEffect(() => {
     //Somente pesquisar se os parametros de filtro mudaram
-    if ((store.params.sort !== sort) || 
-        (store.params.q !== value) ||
-        (store.params.sortColumn !== sortColumn) || 
-        (store.params.page !== currentPage) ||
-        (store.params.perPage !== rowsPerPage)) {      
+    if ((store.params.sort !== sort) ||
+      (store.params.q !== value) ||
+      (store.params.sortColumn !== sortColumn) ||
+      (store.params.page !== currentPage) ||
+      (store.params.perPage !== rowsPerPage)) {
       dispatch(
         getData({
           sort,
@@ -96,9 +96,9 @@ const ClienteList = () => {
           sortColumn,
           page: currentPage,
           perPage: rowsPerPage
-        })        
-      )         
-    }    
+        })
+      )
+    }
   }, [dispatch, store.data.length])
 
   const handleFilter = val => {
@@ -107,15 +107,15 @@ const ClienteList = () => {
     }
     setValue(val)
     vTimeoutPesquisa.current = setTimeout(() => {
-        dispatch(
-          getData({
-            sort,
-            q: val,
-            sortColumn,
-            page: currentPage,
-            perPage: rowsPerPage
-          }))
-      }, 300)      
+      dispatch(
+        getData({
+          sort,
+          q: val,
+          sortColumn,
+          page: currentPage,
+          perPage: rowsPerPage
+        }))
+    }, 300)
   }
 
   const handlePerPage = e => {
@@ -195,37 +195,39 @@ const ClienteList = () => {
     (vPesquisando) ? (
       <div className='text-center'>
         <Spinner color='primary' />
-      </div>    
+      </div>
     ) : (
-      <Card>
-        <div className='react-dataTable'>
-          <DataTable
-            noHeader
-            pagination
-            sortServer
-            noDataComponent=''
-            paginationServer
-            subHeader={true}
-            columns={columns}
-            responsive={true}
-            onSort={handleSort}
-            data={dataToRender()}
-            sortIcon={<ChevronDown />}
-            className='react-dataTable'
-            defaultSortField='id'
-            paginationDefaultPage={currentPage}
-            paginationComponent={CustomPagination}
-            subHeaderComponent={
-              <CustomHeader
-                value={value}
-                rowsPerPage={rowsPerPage}
-                handleFilter={handleFilter}
-                handlePerPage={handlePerPage}
-              />
-            }
-          />
-        </div>
-      </Card>)
+      <div className='invoice-list-wrapper'>
+        <Card>
+          <div className='react-dataTable'>
+            <DataTable
+              noHeader
+              pagination
+              sortServer
+              noDataComponent=''
+              paginationServer
+              subHeader={true}
+              columns={columns}
+              responsive={true}
+              onSort={handleSort}
+              data={dataToRender()}
+              sortIcon={<ChevronDown />}
+              className='react-dataTable'
+              defaultSortField='id'
+              paginationDefaultPage={currentPage}
+              paginationComponent={CustomPagination}
+              subHeaderComponent={
+                <CustomHeader
+                  value={value}
+                  rowsPerPage={rowsPerPage}
+                  handleFilter={handleFilter}
+                  handlePerPage={handlePerPage}
+                />
+              }
+            />
+          </div>
+        </Card>
+      </div>)
   )
 }
 
