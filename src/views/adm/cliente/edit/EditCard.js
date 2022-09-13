@@ -96,6 +96,7 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
       ...prevState,
       [name]: value
     }))
+    console.log(name)
   }
 
   const handleChangeCP = (e) => {
@@ -335,7 +336,10 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                             <div className="d-flex flex-column flex-md-row">
                               <img
                                 className="me-2 mb-1 mb-md-0 img-fluid"
-                                src={vDados?.logo ?? ""}
+                                src={
+                                  vDados?.logo ??
+                                  "https://smartdatamanager.com/image/semfoto.png"
+                                }
                                 alt="Logotipo"
                                 width="100"
                                 height="100"
@@ -383,6 +387,8 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                           </Label>
                           <Input
                             id="email"
+                            name="email"
+                            type="email"
                             value={vDados?.email ?? ""}
                             onChange={handleChange}
                           />
@@ -393,6 +399,7 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                           </Label>
                           <Input
                             id="site"
+                            name="site"
                             type="url"
                             value={vDados?.site ?? ""}
                             onChange={handleChange}
@@ -604,8 +611,8 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                       </Label>
                       <Input
                         id="vNumero"
-                        name="numero"
-                        value={vDados?.numero ?? ""}
+                        name="endereco_nr"
+                        value={vDados?.endereco_nr ?? ""}
                         onChange={handleChange}
                       />
                     </Col>
@@ -704,10 +711,10 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                         Informações gerais
                       </Label>
                       <Input
-                        value={vDados?.info_gerais ?? ""}
+                        value={vDados?.informacoes_gerais ?? ""}
                         type="textarea"
                         id="vInfoGerais"
-                        name="info_gerais"
+                        name="informacoes_gerais"
                         style={{ minHeight: "100px" }}
                         onChange={handleChange}
                       />
@@ -725,7 +732,10 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                           <div className="d-flex flex-column flex-md-row">
                             <img
                               className="me-2 mb-1 mb-md-0 img-fluid"
-                              src={vLogoCP}
+                              src={
+                                vLogoCP ??
+                                "https://smartdatamanager.com/image/semfoto.png"
+                              }
                               alt="Logotipo"
                               width="100"
                               height="100"
@@ -759,7 +769,10 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                           <div className="d-flex flex-column flex-md-row">
                             <img
                               className="me-2 mb-1 mb-md-0 img-fluid"
-                              src={vImagemFundoCP}
+                              src={
+                                vImagemFundoCP ??
+                                "https://smartdatamanager.com/image/semfoto.png"
+                              }
                               alt="Imagem de fundo"
                               width="100"
                               height="100"

@@ -63,10 +63,14 @@ const handleConfirmText = (row) => {
       store.dispatch(deleteCliente(row.id))
       MySwal.fire({
         icon: "success",
-        title: "Removido!",
-        text: "Seu arquivo foi removido.",
+        title: "Sucesso!",
+        text: "O usuário foi removido.",
         customClass: {
-          confirmButton: "btn btn-success"
+          confirmButton: "btn btn-success",
+          popup: "animate__animated animate__fadeIn"
+        },
+        hideClass: {
+          popup: "animate__animated animate__zoomOut"
         }
       })
     }
