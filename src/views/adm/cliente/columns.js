@@ -1,12 +1,12 @@
 // ** React Imports
-import { Link } from 'react-router-dom'
+import { Link } from "react-router-dom"
 
 // ** Custom Components
-import Avatar from '@components/avatar'
+import Avatar from "@components/avatar"
 
 // ** Store & Actions
-import { store } from '@store/store'
-import { deleteCliente } from './store'
+import { store } from "@store/store"
+import { deleteCliente } from "./store"
 
 // ** Reactstrap Imports
 import {
@@ -16,41 +16,79 @@ import {
   DropdownToggle,
   UncontrolledTooltip,
   UncontrolledDropdown
-} from 'reactstrap'
+} from "reactstrap"
 
 // ** Third Party Components
-import {
-  Eye,
-  Copy,
-  Trash,
-  MoreVertical
-} from 'react-feather'
+import { Eye, Copy, Trash, MoreVertical } from "react-feather"
+import Swal from "sweetalert2"
+import withReactContent from "sweetalert2-react-content"
+
+const MySwal = withReactContent(Swal)
 
 // ** renders client column
-const renderClient = row => {
+const renderClient = (row) => {
   if (row.logo.length) {
-    return <Avatar className='me-50' img={row.logo} width='32' height='32' />
+    return <Avatar className="me-50" img={row.logo} width="32" height="32" />
   } else {
-    return <Avatar color='light-primary' className='me-50' content={row.nome ? row.nome : ''} initials />
+    return (
+      <Avatar
+        color="light-primary"
+        className="me-50"
+        content={row.nome ? row.nome : ""}
+        initials
+      />
+    )
   }
+}
+
+const handleConfirmText = (row) => {
+  return MySwal.fire({
+    title: "Tem certeza?",
+    text: "Sua ação não poderá ser revertida!",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonText: "Sim, remover!",
+    cancelButtonText: "Cancelar",
+    customClass: {
+      confirmButton: "btn btn-primary",
+      cancelButton: "btn btn-outline-danger ms-1",
+      popup: "animate__animated animate__fadeIn"
+    },
+    hideClass: {
+      popup: "animate__animated animate__zoomOut"
+    },
+    buttonsStyling: false
+  }).then(function (result) {
+    if (result.value) {
+      store.dispatch(deleteCliente(row.id))
+      MySwal.fire({
+        icon: "success",
+        title: "Removido!",
+        text: "Seu arquivo foi removido.",
+        customClass: {
+          confirmButton: "btn btn-success"
+        }
+      })
+    }
+  })
 }
 
 // ** Table columns
 export const columns = [
   {
-    name: 'Cliente',
-    minWidth: '450px',
+    name: "Cliente",
+    minWidth: "450px",
     // selector: row => row.client.name,
-    cell: row => {
-      const nome = row.nome ? row.nome : '',
-        email = row.email ? row.email : ''
+    cell: (row) => {
+      const nome = row.nome ? row.nome : "",
+        email = row.email ? row.email : ""
       return (
-        <div className='d-flex justify-content-left align-items-center'>
+        <div className="d-flex justify-content-left align-items-center">
           {renderClient(row)}
-          <div className='d-flex flex-column'>
+          <div className="d-flex flex-column">
             <Link to={`/adm/cliente/${row.id}`} id={`pw-tooltip2-${row.id}`}>
-              <h6 className='user-name text-truncate mb-0'>{nome}</h6>
-              <small className='text-truncate text-muted mb-0'>{email}</small>
+              <h6 className="user-name text-truncate mb-0">{nome}</h6>
+              <small className="text-truncate text-muted mb-0">{email}</small>
             </Link>
           </div>
         </div>
@@ -58,39 +96,44 @@ export const columns = [
     }
   },
   {
-    name: <div className='text-end w-100'>Ações</div>,
-    minWidth: '80px',
-    cell: row => (
-      <div className='text-end w-100'>
-        <div className='column-action d-inline-flex'>
+    name: <div className="text-end w-100">Ações</div>,
+    minWidth: "80px",
+    cell: (row) => (
+      <div className="text-end w-100">
+        <div className="column-action d-inline-flex">
           <Link to={`/adm/cliente/${row.id}`} id={`pw-tooltip-${row.id}`}>
-            <Eye size={17} className='mx-1' />
+            <Eye size={17} className="mx-1" />
           </Link>
 
-          <UncontrolledTooltip placement='top' target={`pw-tooltip-${row.id}`}>
+          <UncontrolledTooltip placement="top" target={`pw-tooltip-${row.id}`}>
             Visualizar
           </UncontrolledTooltip>
           <UncontrolledDropdown>
-            <DropdownToggle tag='span'>
-              <MoreVertical size={17} className='cursor-pointer' />
+            <DropdownToggle tag="span">
+              <MoreVertical size={17} className="cursor-pointer" />
             </DropdownToggle>
             <DropdownMenu end>
               <DropdownItem
-                tag='a'
-                href='/'
-                className='w-100'
-                onClick={e => {
+                tag="a"
+                href="/"
+                className="w-100"
+                onClick={(e) => {
                   e.preventDefault()
-                  store.dispatch(deleteCliente(row.id))
+                  handleConfirmText(row)
                 }}
               >
-                <Trash size={14} className='me-50' />
-                <span className='align-middle'>Deletar</span>
-                https://pixinvent.com/demo/vuexy-react-admin-dashboard-template/demo-1/extensions/sweet-alert
+                <Trash size={14} className="me-50" />
+                <span className="align-middle">Remover</span>
               </DropdownItem>
-              <DropdownItem tag='a' href='/' className='w-100' onClick={e => e.preventDefault()}>
-                <Copy size={14} className='me-50' />
-                <span className='align-middle'>Duplicar</span>
+
+              <DropdownItem
+                tag="a"
+                href="/"
+                className="w-100"
+                onClick={(e) => e.preventDefault()}
+              >
+                <Copy size={14} className="me-50" />
+                <span className="align-middle">Duplicar</span>
               </DropdownItem>
             </DropdownMenu>
           </UncontrolledDropdown>
