@@ -10,6 +10,7 @@ import {
   Row,
   Col,
   Card,
+  CardBody,
   Input,
   Button,
   Label,
@@ -96,7 +97,6 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
       ...prevState,
       [name]: value
     }))
-    console.log(name)
   }
 
   const handleChangeCP = (e) => {
@@ -332,7 +332,7 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                       <Row>
                         <Col className="mb-2" sm="12">
                           <div className="border rounded p-2">
-                            <h5 className="mb-1">Logotipo para o Dashboard</h5>
+                            <h5 className="mb-1">Logotipo do Dashboard</h5>
                             <div className="d-flex flex-column flex-md-row">
                               <img
                                 className="me-2 mb-1 mb-md-0 img-fluid"
@@ -347,9 +347,9 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                               <div>
                                 <div className="mb-1">
                                   <small className="text-muted">
-                                    Resolução recomendada 800x800
+                                    Resolução recomendada: 800x800px.
                                     <br />
-                                    Tamanho máximo 250kb
+                                    Tamanho máximo: 250kB.
                                   </small>
                                 </div>
                                 <div className="d-inline-block">
@@ -743,9 +743,9 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                             <div>
                               <div className="mb-1">
                                 <small className="text-muted">
-                                  Resolução recomendada 800x800
+                                  Resolução recomendada: 800x800px.
                                   <br />
-                                  Tamanho máximo 250kb
+                                  Tamanho máximo: 250kB.
                                 </small>
                               </div>
                               <div className="d-inline-block">
@@ -780,9 +780,9 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                             <div>
                               <div className="mb-1">
                                 <small className="text-muted">
-                                  Resolução recomendada 800x800
+                                  Resolução recomendada: 800x800px.
                                   <br />
-                                  Tamanho máximo 250kb
+                                  Tamanho máximo: 250kB.
                                 </small>
                               </div>
                               <div className="d-inline-block">
@@ -915,7 +915,7 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                             for="vNomeCP"
                             className="form-check-label mt-25"
                           >
-                            Solicitar Nome
+                            Solicitar nome
                           </Label>
                         </div>
                       </Col>
@@ -1004,7 +1004,7 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                             for="vCelularCP"
                             className="form-check-label mt-25"
                           >
-                            Solicitar Celular
+                            Solicitar celular
                           </Label>
                         </div>
                       </Col>
@@ -1027,7 +1027,7 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                             for="vPaisCP"
                             className="form-check-label mt-25"
                           >
-                            Solicitar País
+                            Solicitar país
                           </Label>
                         </div>
                       </Col>
@@ -1050,7 +1050,7 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                             for="vCidadeCP"
                             className="form-check-label mt-25"
                           >
-                            Solicitar Cidade
+                            Solicitar cidade
                           </Label>
                         </div>
                       </Col>
@@ -1096,7 +1096,7 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                             for="vGeneroCP"
                             className="form-check-label mt-25"
                           >
-                            Solicitar Gênero
+                            Solicitar gênero
                           </Label>
                         </div>
                       </Col>
@@ -1165,7 +1165,7 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                             for="vHotelCP"
                             className="form-check-label mt-25"
                           >
-                            É Hotel
+                            É hotel
                           </Label>
                         </div>
                       </Col>

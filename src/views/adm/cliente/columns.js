@@ -64,7 +64,7 @@ const handleConfirmText = (row) => {
       MySwal.fire({
         icon: "success",
         title: "Sucesso!",
-        text: "O usuário foi removido.",
+        text: "O cliente foi removido.",
         customClass: {
           confirmButton: "btn btn-success",
           popup: "animate__animated animate__fadeIn"
