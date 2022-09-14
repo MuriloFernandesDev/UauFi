@@ -27,12 +27,12 @@ const handleErrorText = (error, errorMessage, errorIcon) => {
     icon: errorIcon,
     customClass: {
       confirmButton: "btn btn-primary",
-      popup: "animate__animated animate__fadeIn"
+      popup: "animate__animated animate__fadeIn",
     },
     hideClass: {
-      popup: "animate__animated animate__zoomOut"
+      popup: "animate__animated animate__zoomOut",
     },
-    buttonsStyling: false
+    buttonsStyling: false,
   })
 }
 
@@ -54,7 +54,7 @@ const ClienteEdit = () => {
         .then((response) => {
           if (response.status === 200) {
             toast.success("Cliente editado com sucesso!", {
-              position: "bottom-right"
+              position: "bottom-right",
             })
             navigate("/adm/cliente")
           }
@@ -86,7 +86,7 @@ const ClienteEdit = () => {
         .then((response) => {
           if (response.status === 200) {
             toast.success("Cliente criado com sucesso!", {
-              position: "bottom-right"
+              position: "bottom-right",
             })
             navigate("/adm/cliente")
           }
