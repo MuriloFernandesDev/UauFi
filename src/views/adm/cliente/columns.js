@@ -6,16 +6,15 @@ import Avatar from "@components/avatar"
 
 // ** Store & Actions
 import { store } from "@store/store"
-import { deleteCliente } from "./store"
+import { cloneCliente, deleteCliente } from "./store"
 
 // ** Reactstrap Imports
 import {
-  Badge,
   DropdownItem,
   DropdownMenu,
   DropdownToggle,
   UncontrolledTooltip,
-  UncontrolledDropdown
+  UncontrolledDropdown,
 } from "reactstrap"
 
 // ** Third Party Components
@@ -41,7 +40,9 @@ const renderClient = (row) => {
   }
 }
 
-const handleConfirmText = (row) => {
+// ** Modal de exclusão de cliente
+
+const handleDeleteConfirmation = (row) => {
   return MySwal.fire({
     title: "Tem certeza?",
     text: "Sua ação não poderá ser revertida!",
@@ -52,12 +53,12 @@ const handleConfirmText = (row) => {
     customClass: {
       confirmButton: "btn btn-primary",
       cancelButton: "btn btn-outline-danger ms-1",
-      popup: "animate__animated animate__fadeIn"
+      popup: "animate__animated animate__fadeIn",
     },
     hideClass: {
-      popup: "animate__animated animate__zoomOut"
+      popup: "animate__animated animate__zoomOut",
     },
-    buttonsStyling: false
+    buttonsStyling: false,
   }).then(function (result) {
     if (result.value) {
       store.dispatch(deleteCliente(row.id))
@@ -67,11 +68,72 @@ const handleConfirmText = (row) => {
         text: "O cliente foi removido.",
         customClass: {
           confirmButton: "btn btn-success",
-          popup: "animate__animated animate__fadeIn"
+          popup: "animate__animated animate__fadeIn",
         },
         hideClass: {
-          popup: "animate__animated animate__zoomOut"
+          popup: "animate__animated animate__zoomOut",
+        },
+      })
+    }
+  })
+}
+
+// ** Modal de clonagem de cliente
+
+const handleClone = (row) => {
+  MySwal.fire({
+    title: "Copiar cadastro de cliente",
+    text: "Quantas cópias deseja fazer?",
+    input: "number",
+    icon: "warning",
+    inputAttributes: {
+      min: 1,
+    },
+    customClass: {
+      input: "mx-3",
+      confirmButton: "btn btn-primary",
+      cancelButton: "btn btn-danger ms-1",
+    },
+    buttonsStyling: false,
+    inputAttributes: {
+      autocapitalize: "off",
+    },
+    showCancelButton: true,
+    confirmButtonText: "Copiar",
+    cancelButtonText: "Cancelar",
+    inputValidator: (value) => {
+      return new Promise((resolve) => {
+        const numberValue = Number(value)
+        if (numberValue <= 0 || numberValue > 50) {
+          resolve("Digite um número entre 1 e 50.")
+        } else if (numberValue % 1 !== 0) {
+          resolve("Digite um número inteiro.")
+        } else {
+          resolve()
         }
+      })
+    },
+  }).then(function (result) {
+    const cloneParams = [row.id, result.value]
+    let adaptedSentence
+    if (Number(result.value) === 1) {
+      adaptedSentence = `${result.value} cópia do cliente foi gerada.`
+    } else {
+      adaptedSentence = `${result.value} cópias do cliente foram geradas.`
+    }
+    if (result.value) {
+      store.dispatch(cloneCliente(cloneParams))
+      MySwal.fire({
+        icon: "success",
+        title: "Sucesso!",
+        text: adaptedSentence,
+        customClass: {
+          confirmButton: "btn btn-success",
+          popup: "animate__animated animate__fadeIn",
+        },
+        hideClass: {
+          popup: "animate__animated animate__zoomOut",
+        },
       })
     }
   })
@@ -97,7 +159,7 @@ export const columns = [
           </div>
         </div>
       )
-    }
+    },
   },
   {
     name: <div className="text-end w-100">Ações</div>,
@@ -123,7 +185,7 @@ export const columns = [
                 className="w-100"
                 onClick={(e) => {
                   e.preventDefault()
-                  handleConfirmText(row)
+                  handleDeleteConfirmation(row)
                 }}
               >
                 <Trash size={14} className="me-50" />
@@ -134,7 +196,10 @@ export const columns = [
                 tag="a"
                 href="/"
                 className="w-100"
-                onClick={(e) => e.preventDefault()}
+                onClick={(e) => {
+                  e.preventDefault()
+                  handleClone(row)
+                }}
               >
                 <Copy size={14} className="me-50" />
                 <span className="align-middle">Duplicar</span>
@@ -143,6 +208,6 @@ export const columns = [
           </UncontrolledDropdown>
         </div>
       </div>
-    )
-  }
+    ),
+  },
 ]

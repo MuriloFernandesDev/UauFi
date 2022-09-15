@@ -19,7 +19,7 @@ import {
   TabPane,
   Nav,
   NavItem,
-  NavLink
+  NavLink,
 } from "reactstrap"
 
 // ** Icons
@@ -43,7 +43,7 @@ const vListaArtigoGenero = [
   { value: "à", label: "à" },
   { value: "o", label: "o" },
   { value: "a", label: "a" },
-  { value: "ao", label: "ao" }
+  { value: "ao", label: "ao" },
 ]
 
 const vListaTipoIntegracao = [
@@ -55,12 +55,12 @@ const vListaTipoIntegracao = [
   { value: 5, label: "TOTVs API" },
   { value: 6, label: "TOTVs Oracle" },
   { value: 7, label: "CaririSGP" },
-  { value: 8, label: "IXC Leads" }
+  { value: 8, label: "IXC Leads" },
 ]
 
 const vListaTipoLayout = [
   { value: 0, label: "Layout Padrão" },
-  { value: 1, label: "Layout Alternativo" }
+  { value: 1, label: "Layout Alternativo" },
 ]
 
 const ClienteEditCard = ({ data, setSalvarDados }) => {
@@ -95,7 +95,7 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
     const { name, value } = e.target
     setData((prevState) => ({
       ...prevState,
-      [name]: value
+      [name]: value,
     }))
   }
 
@@ -103,7 +103,7 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
     const { name, value } = e.target
     setDataCP((prevState) => ({
       ...prevState,
-      [name]: value
+      [name]: value,
     }))
   }
 
@@ -141,7 +141,7 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
     return api.get("/categoria").then((res) => {
       vListaCategorias = res.data.map((ret) => ({
         label: ret.nome,
-        value: ret.id
+        value: ret.id,
       }))
 
       //Selecionar o item no componente
@@ -159,7 +159,7 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
     return api.get("/cliente/agregador").then((res) => {
       vListaAgregadores = res.data.map((ret) => ({
         label: ret.nome,
-        value: ret.id
+        value: ret.id,
       }))
 
       //Selecionar o item no componente
@@ -184,8 +184,8 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
       handleChange({
         target: {
           name: vName,
-          value: reader.result
-        }
+          value: reader.result,
+        },
       })
     }
     reader.readAsDataURL(files[0])
@@ -337,8 +337,10 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                               <img
                                 className="me-2 mb-1 mb-md-0 img-fluid"
                                 src={
-                                  vDados?.logo ??
-                                  "https://smartdatamanager.com/image/semfoto.png"
+                                  vDados?.logo === null ||
+                                  "https://www.uaufi.com/uploads/logos/sem_foto.png"
+                                    ? "https://smartdatamanager.com/image/semfoto.png"
+                                    : vDados?.logo
                                 }
                                 alt="Logotipo"
                                 width="100"
@@ -422,7 +424,7 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                         onChange={(e) => {
                           setArtigoGenero(e)
                           handleChange({
-                            target: { name: "artigo_genero", value: e.value }
+                            target: { name: "artigo_genero", value: e.value },
                           })
                         }}
                         options={vListaArtigoGenero}
@@ -484,7 +486,7 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                         onChange={(e) => {
                           setCategoria(e)
                           handleChange({
-                            target: { name: "categoria_id", value: e.value }
+                            target: { name: "categoria_id", value: e.value },
                           })
                         }}
                         options={vListaCategorias}
@@ -503,8 +505,8 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                             handleChange({
                               target: {
                                 name: "agregador",
-                                value: e.target.checked
-                              }
+                                value: e.target.checked,
+                              },
                             })
                           }}
                         />
@@ -530,8 +532,8 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                               name: "categoria_id",
                               value: e
                                 ?.map((item) => item.value.toString())
-                                .toString()
-                            }
+                                .toString(),
+                            },
                           })
                         }}
                         options={vListaAgregadores}
@@ -642,11 +644,11 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                         onChange={(e) => {
                           setEstado(e)
                           handleChange({
-                            target: { name: "estado_id", value: e.value }
+                            target: { name: "estado_id", value: e.value },
                           })
                           getCidades(e)
                           handleChange({
-                            target: { name: "cidade_id", value: null }
+                            target: { name: "cidade_id", value: null },
                           })
                         }}
                         options={vListaEstados}
@@ -670,7 +672,7 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                         onChange={(e) => {
                           setCidade(e)
                           handleChange({
-                            target: { name: "cidade_id", value: e.value }
+                            target: { name: "cidade_id", value: e.value },
                           })
                         }}
                         options={vListaCidades}
@@ -690,7 +692,7 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                         onChange={handleChange}
                         className={classnames({
                           "text-danger":
-                            (vDados?.breve_descricao?.length || 0) > 510
+                            (vDados?.breve_descricao?.length || 0) > 510,
                         })}
                       />
                       <span
@@ -698,7 +700,7 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                           "textarea-counter-value float-end",
                           {
                             "bg-danger":
-                              (vDados?.breve_descricao?.length || 0) > 510
+                              (vDados?.breve_descricao?.length || 0) > 510,
                           }
                         )}
                       >
@@ -728,13 +730,15 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                     <Row>
                       <Col className="mb-2" lg="6">
                         <div className="border rounded p-2">
-                          <h5 className="mb-1">Logotipo</h5>
+                          <h5 className="mb-1">Logotipo do Captive Portal</h5>
                           <div className="d-flex flex-column flex-md-row">
                             <img
                               className="me-2 mb-1 mb-md-0 img-fluid"
                               src={
-                                vLogoCP ??
-                                "https://smartdatamanager.com/image/semfoto.png"
+                                vLogoCP === null ||
+                                "https://www.uaufi.com/uploads/logos/sem_foto.png"
+                                  ? "https://smartdatamanager.com/image/semfoto.png"
+                                  : vLogoCP
                               }
                               alt="Logotipo"
                               width="100"
@@ -743,7 +747,7 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                             <div>
                               <div className="mb-1">
                                 <small className="text-muted">
-                                  Resolução recomendada: 800x800px.
+                                  Resolução recomendada: 900x900px.
                                   <br />
                                   Tamanho máximo: 250kB.
                                 </small>
@@ -770,8 +774,10 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                             <img
                               className="me-2 mb-1 mb-md-0 img-fluid"
                               src={
-                                vImagemFundoCP ??
-                                "https://smartdatamanager.com/image/semfoto.png"
+                                vImagemFundoCP === null ||
+                                "https://www.uaufi.com/uploads/logos/sem_foto.png"
+                                  ? "https://smartdatamanager.com/image/semfoto.png"
+                                  : vImagemFundoCP
                               }
                               alt="Imagem de fundo"
                               width="100"
@@ -780,7 +786,7 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                             <div>
                               <div className="mb-1">
                                 <small className="text-muted">
-                                  Resolução recomendada: 800x800px.
+                                  Resolução recomendada: 3000x3000px.
                                   <br />
                                   Tamanho máximo: 250kB.
                                 </small>
@@ -825,7 +831,10 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                           onChange={(e) => {
                             setTipoLayout(e)
                             handleChangeCP({
-                              target: { name: "layout_captive", value: e.value }
+                              target: {
+                                name: "layout_captive",
+                                value: e.value,
+                              },
                             })
                           }}
                           options={vListaTipoLayout}
@@ -846,8 +855,8 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                             handleChangeCP({
                               target: {
                                 name: "tipo_integracao",
-                                value: e.value
-                              }
+                                value: e.value,
+                              },
                             })
                           }}
                           options={vListaTipoIntegracao}
@@ -906,8 +915,8 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                               handleChangeCP({
                                 target: {
                                   name: "nome",
-                                  value: e.target.checked
-                                }
+                                  value: e.target.checked,
+                                },
                               })
                             }}
                           />
@@ -929,8 +938,8 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                               handleChangeCP({
                                 target: {
                                   name: "email",
-                                  value: e.target.checked
-                                }
+                                  value: e.target.checked,
+                                },
                               })
                             }}
                           />
@@ -950,7 +959,10 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                             checked={vDadosCP?.cpf ?? false}
                             onChange={(e) => {
                               handleChangeCP({
-                                target: { name: "cpf", value: e.target.checked }
+                                target: {
+                                  name: "cpf",
+                                  value: e.target.checked,
+                                },
                               })
                             }}
                           />
@@ -972,8 +984,8 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                               handleChangeCP({
                                 target: {
                                   name: "nascimento",
-                                  value: e.target.checked
-                                }
+                                  value: e.target.checked,
+                                },
                               })
                             }}
                           />
@@ -995,8 +1007,8 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                               handleChangeCP({
                                 target: {
                                   name: "celular",
-                                  value: e.target.checked
-                                }
+                                  value: e.target.checked,
+                                },
                               })
                             }}
                           />
@@ -1018,8 +1030,8 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                               handleChangeCP({
                                 target: {
                                   name: "pais",
-                                  value: e.target.checked
-                                }
+                                  value: e.target.checked,
+                                },
                               })
                             }}
                           />
@@ -1041,8 +1053,8 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                               handleChangeCP({
                                 target: {
                                   name: "cidade",
-                                  value: e.target.checked
-                                }
+                                  value: e.target.checked,
+                                },
                               })
                             }}
                           />
@@ -1064,8 +1076,8 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                               handleChangeCP({
                                 target: {
                                   name: "usa_sms",
-                                  value: e.target.checked
-                                }
+                                  value: e.target.checked,
+                                },
                               })
                             }}
                           />
@@ -1087,8 +1099,8 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                               handleChangeCP({
                                 target: {
                                   name: "genero",
-                                  value: e.target.checked
-                                }
+                                  value: e.target.checked,
+                                },
                               })
                             }}
                           />
@@ -1110,8 +1122,8 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                               handleChangeCP({
                                 target: {
                                   name: "brasileiro",
-                                  value: e.target.checked
-                                }
+                                  value: e.target.checked,
+                                },
                               })
                             }}
                           />
@@ -1133,8 +1145,8 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                               handleChangeCP({
                                 target: {
                                   name: "login_social",
-                                  value: e.target.checked
-                                }
+                                  value: e.target.checked,
+                                },
                               })
                             }}
                           />
@@ -1156,8 +1168,8 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                               handleChangeCP({
                                 target: {
                                   name: "hotel",
-                                  value: e.target.checked
-                                }
+                                  value: e.target.checked,
+                                },
                               })
                             }}
                           />
@@ -1179,8 +1191,8 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                               handleChangeCP({
                                 target: {
                                   name: "empresa_representa",
-                                  value: e.target.checked
-                                }
+                                  value: e.target.checked,
+                                },
                               })
                             }}
                           />
@@ -1202,8 +1214,8 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                               handleChangeCP({
                                 target: {
                                   name: "indicacao",
-                                  value: e.target.checked
-                                }
+                                  value: e.target.checked,
+                                },
                               })
                             }}
                           />

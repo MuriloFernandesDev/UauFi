@@ -20,7 +20,7 @@ import withReactContent from "sweetalert2-react-content"
 
 const MySwal = withReactContent(Swal)
 
-const handleErrorText = (error, errorMessage, errorIcon) => {
+const handleError = (error, errorMessage, errorIcon) => {
   return MySwal.fire({
     title: error,
     text: errorMessage,
@@ -61,19 +61,19 @@ const ClienteEdit = () => {
         })
         .catch((error) => {
           if (error.response.status === 400) {
-            handleErrorText(
+            handleError(
               "Atenção!",
               "Preencha todos os campos corretamente.",
               "warning"
             )
           } else if (error.response.status === 503) {
-            handleErrorText(
+            handleError(
               "Hotspot offline",
               "Tente novamente mais tarde.",
               "error"
             )
           } else {
-            handleErrorText(
+            handleError(
               "Erro inesperado",
               "Por favor, contate um administrador.",
               "error"
@@ -93,19 +93,19 @@ const ClienteEdit = () => {
         })
         .catch((error) => {
           if (error.response.status === 400) {
-            handleErrorText(
+            handleError(
               "Atenção!",
               "Preencha todos os campos corretamente.",
               "warning"
             )
           } else if (error.response.status === 503) {
-            handleErrorText(
+            handleError(
               "Hotspot offline",
               "Tente novamente mais tarde.",
               "error"
             )
           } else {
-            handleErrorText(
+            handleError(
               "Erro inesperado",
               "Por favor, contate um administrador.",
               "error"
