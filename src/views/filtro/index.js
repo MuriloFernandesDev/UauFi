@@ -14,7 +14,7 @@ import DataTable from "react-data-table-component"
 import { Button, Input, Row, Col, Card, Spinner } from "reactstrap"
 
 // ** Store & Actions
-import { getData } from "./store"
+import { getFiltro } from "./store"
 import { useDispatch, useSelector } from "react-redux"
 
 // ** Styles
@@ -64,10 +64,10 @@ const CustomHeader = ({ handleFilter, value, handlePerPage, rowsPerPage }) => {
   )
 }
 
-const ClienteList = () => {
+const FiltroList = () => {
   // ** Store vars
   const dispatch = useDispatch()
-  const store = useSelector((state) => state.cliente)
+  const store = useSelector((state) => state.filtro)
 
   // ** States
   const [value, setValue] = useState(store.params.q ?? "")
@@ -92,7 +92,7 @@ const ClienteList = () => {
       store.params.perPage !== rowsPerPage
     ) {
       dispatch(
-        getData({
+        getFiltro({
           sort,
           q: value,
           sortColumn,
@@ -110,7 +110,7 @@ const ClienteList = () => {
     setValue(val)
     vTimeoutPesquisa.current = setTimeout(() => {
       dispatch(
-        getData({
+        getFiltro({
           sort,
           q: val,
           sortColumn,
@@ -123,7 +123,7 @@ const ClienteList = () => {
 
   const handlePerPage = (e) => {
     dispatch(
-      getData({
+      getFiltro({
         sort,
         q: value,
         sortColumn,
@@ -136,7 +136,7 @@ const ClienteList = () => {
 
   const handlePagination = (page) => {
     dispatch(
-      getData({
+      getFiltro({
         sort,
         q: value,
         sortColumn,
@@ -186,7 +186,7 @@ const ClienteList = () => {
     setSort(sortDirection)
     setSortColumn(column.sortField)
     dispatch(
-      getData({
+      getFiltro({
         q: value,
         page: currentPage,
         sort: sortDirection,
@@ -235,4 +235,4 @@ const ClienteList = () => {
   )
 }
 
-export default ClienteList
+export default FiltroList

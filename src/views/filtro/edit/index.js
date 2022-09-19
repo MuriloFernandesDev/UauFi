@@ -8,7 +8,7 @@ import api from "@src/services/api"
 // ** Reactstrap
 import { Row, Col, Spinner } from "reactstrap"
 
-// ** Editar Cliente
+// ** Editar filtro
 import EditCard from "./EditCard"
 
 // ** Terceiros
@@ -36,7 +36,7 @@ const handleError = (error, errorMessage, errorIcon) => {
   })
 }
 
-const ClienteEdit = () => {
+const FiltroEdit = () => {
   // ** Hooks
   const { id } = useParams()
 
@@ -50,13 +50,13 @@ const ClienteEdit = () => {
   const handleSalvar = (pDados) => {
     if (pDados.id > 0) {
       api
-        .put("/cliente", pDados)
+        .put("/filtro", pDados)
         .then((response) => {
           if (response.status === 200) {
-            toast.success("Cliente editado com sucesso!", {
+            toast.success("Filtro editado com sucesso!", {
               position: "bottom-right",
             })
-            navigate("/adm/cliente")
+            navigate("/filtro")
           }
         })
         .catch((error) => {
@@ -82,13 +82,13 @@ const ClienteEdit = () => {
         })
     } else {
       api
-        .post("/cliente", pDados)
+        .post("/filtro", pDados)
         .then((response) => {
           if (response.status === 200) {
-            toast.success("Cliente criado com sucesso!", {
+            toast.success("Filtro criado com sucesso!", {
               position: "bottom-right",
             })
-            navigate("/adm/cliente")
+            navigate("/filtro")
           }
         })
         .catch((error) => {
@@ -115,9 +115,9 @@ const ClienteEdit = () => {
     }
   }
 
-  // ** Get Cliente on mount based on id
+  // ** Get filter on mount based on id
   useEffect(() => {
-    api.get(`/cliente/${id}`).then((response) => {
+    api.get(`/filtro/${id}`).then((response) => {
       setData(response.data[0])
       setCarregando(false)
     })
@@ -138,4 +138,4 @@ const ClienteEdit = () => {
   )
 }
 
-export default ClienteEdit
+export default FiltroEdit

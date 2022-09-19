@@ -4,8 +4,8 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"
 // ** Axios Imports
 import api from "@src/services/api"
 
-export const getCustomerData = createAsyncThunk(
-  "admCliente/getCustomerData",
+export const getCliente = createAsyncThunk(
+  "admCliente/getCliente",
   async (parametros) => {
     //console.log(parametros)
     const response = await api.get("/cliente/0/", { params: parametros })
@@ -34,29 +34,11 @@ export const getCustomerData = createAsyncThunk(
   }
 )
 
-export const addData = createAsyncThunk(
-  "admCliente/addData",
-  async (dados, { dispatch, getState }) => {
-    const response = await api.post("/cliente", { dados })
-    await dispatch(getCustomerData(getState().cliente.params))
-    return response.data
-  }
-)
-
-export const updateData = createAsyncThunk(
-  "admCliente/updateData",
-  async (dados, { dispatch, getState }) => {
-    const response = await api.put("/cliente", { dados })
-    await dispatch(getCustomerData(getState().cliente.params))
-    return response.data
-  }
-)
-
 export const deleteCliente = createAsyncThunk(
   "admCliente/deleteCliente",
   async (id, { dispatch, getState }) => {
     await api.delete(`/cliente/${id}`)
-    await dispatch(getCustomerData(getState().cliente.params))
+    await dispatch(getCliente(getState().cliente.params))
     return id
   }
 )
@@ -65,7 +47,7 @@ export const cloneCliente = createAsyncThunk(
   "admCliente/cloneCliente",
   async (cloneParams, { dispatch, getState }) => {
     await api.post(`/cliente/duplicar/${cloneParams[0]}/${cloneParams[1]}`)
-    await dispatch(getCustomerData(getState().cliente.params))
+    await dispatch(getCliente(getState().cliente.params))
     return cloneParams[0]
   }
 )
@@ -80,7 +62,7 @@ export const admClienteSlice = createSlice({
   },
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(getCustomerData.fulfilled, (state, action) => {
+    builder.addCase(getCliente.fulfilled, (state, action) => {
       state.data = action.payload.data
       state.allData = action.payload.allData
       state.total = action.payload.totalPages

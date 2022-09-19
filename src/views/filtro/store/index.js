@@ -4,11 +4,11 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"
 // ** Axios Imports
 import api from "@src/services/api"
 
-export const getData = createAsyncThunk(
-  "admCliente/getData",
+export const getFiltro = createAsyncThunk(
+  "filtro/getFiltro",
   async (parametros) => {
     //console.log(parametros)
-    const response = await api.get("/cliente/0/", { params: parametros })
+    const response = await api.get("/filtro/lista/0/", { params: parametros })
     //console.log(response)
     let vRegInicial = (parametros.page - 1) * parametros.perPage
     let vRegFinal = parametros.page * parametros.perPage
@@ -34,44 +34,22 @@ export const getData = createAsyncThunk(
   }
 )
 
-export const addData = createAsyncThunk(
-  "admCliente/addData",
-  async (dados, { dispatch, getState }) => {
-    const response = await api.post("/cliente", { dados })
-    await dispatch(getData(getState().cliente.params))
-    return response.data
-  }
-)
-
-export const updateData = createAsyncThunk(
-  "admCliente/updateData",
-  async (dados, { dispatch, getState }) => {
-    const response = await api.put("/cliente", { dados })
-    await dispatch(getData(getState().cliente.params))
-    return response.data
-  }
-)
-
-export const deleteCliente = createAsyncThunk(
-  "admCliente/deleteCliente",
+export const deleteFiltro = createAsyncThunk(
+  "filtro/deleteFiltro",
   async (id, { dispatch, getState }) => {
-    await api.delete(`/cliente/${id}`)
-    await dispatch(getData(getState().cliente.params))
+    await api.delete(`/filtro/${id}`)
+    await dispatch(getFiltro(getState().filtro.params))
     return id
   }
 )
 
-export const cloneCliente = createAsyncThunk(
-  "admCliente/cloneCliente",
-  async (cloneParams, { dispatch, getState }) => {
-    await api.post(`/cliente/duplicar/${cloneParams[0]}/${cloneParams[1]}`)
-    await dispatch(getData(getState().cliente.params))
-    return cloneParams[0]
-  }
-)
+export const getGenero = async () => {
+  const response = (await api.get(`/listas/genero`)).data
+  return response
+}
 
-export const admClienteSlice = createSlice({
-  name: "admCliente",
+export const filtroSlice = createSlice({
+  name: "filtro",
   initialState: {
     data: [],
     total: -1,
@@ -80,7 +58,7 @@ export const admClienteSlice = createSlice({
   },
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(getData.fulfilled, (state, action) => {
+    builder.addCase(getFiltro.fulfilled, (state, action) => {
       state.data = action.payload.data
       state.allData = action.payload.allData
       state.total = action.payload.totalPages
@@ -89,4 +67,4 @@ export const admClienteSlice = createSlice({
   },
 })
 
-export default admClienteSlice.reducer
+export default filtroSlice.reducer
