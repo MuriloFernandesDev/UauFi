@@ -1,154 +1,167 @@
 // ** Icons Import
-import { Link, MessageSquare, Wifi, UserCheck, Archive, Circle, Mic, Home, DollarSign, List, FileText, Calendar } from 'react-feather'
+import {
+  Link,
+  MessageSquare,
+  Wifi,
+  UserCheck,
+  Archive,
+  Circle,
+  Mic,
+  Home,
+  DollarSign,
+  List,
+  FileText,
+  Calendar,
+} from "react-feather"
 
-export default [  
+export default [
   {
-    id: 'menuDashboard',
-    title: 'Dashboard',
+    id: "menuDashboard",
+    title: "Dashboard",
     icon: <Home size={20} />,
-    navLink: '/dashboard'
+    navLink: "/dashboard",
   },
   {
-    id: 'menuAdm',
-    title: 'Administrativo',
+    id: "menuAdm",
+    title: "Administrativo",
     icon: <Archive size={20} />,
     children: [
       {
-        id: 'menuAdmCliente',
-        title: 'Cliente',
+        id: "menuAdmCliente",
+        title: "Cliente",
         icon: <Circle size={12} />,
-        navLink: '/adm/cliente'
+        navLink: "/adm/cliente",
       },
       {
-        id: 'menuAdmHotspot',
-        title: 'Hotspot',
+        id: "menuAdmHotspot",
+        title: "Hotspot",
         icon: <Circle size={12} />,
-        navLink: '/adm/hotspot'
+        navLink: "/adm/hotspot",
       },
       {
-        id: 'menuAdmLogin',
-        title: 'Login',
+        id: "menuAdmLogin",
+        title: "Login",
         icon: <Circle size={12} />,
-        navLink: '/adm/login'
-      }
-    ]
+        navLink: "/adm/login",
+      },
+    ],
   },
   {
-    id: 'menuPesquisa',
-    title: 'Pesquisa',
-    icon: <UserCheck size={20} />,    
-    navLink: '/pesquisa'   
+    id: "menuPesquisa",
+    title: "Pesquisa",
+    icon: <UserCheck size={20} />,
+    navLink: "/pesquisa",
   },
   {
-    id: 'menuPublicidade',
-    title: 'Publicidade',
-    icon: <Mic size={20} />,    
-    navLink: '/publicidade'   
+    id: "menuPublicidade",
+    title: "Publicidade",
+    icon: <Mic size={20} />,
+    navLink: "/publicidade",
   },
   {
-    id: 'menuStatus',
-    title: 'Status',
+    id: "menuStatus",
+    title: "Status",
     icon: <Wifi size={20} />,
     children: [
       {
-        id: 'menuStatusHotspot',
-        title: 'Hotspots online',
+        id: "menuStatusHotspot",
+        title: "Hotspots online",
         icon: <Circle size={12} />,
-        navLink: '/status/hotspot'
+        navLink: "/status/hotspot",
       },
       {
-        id: 'menuStatusUsuario',
-        title: 'Usuários online',
+        id: "menuStatusUsuario",
+        title: "Usuários online",
         icon: <Circle size={12} />,
-        navLink: '/status/usuario'
-      }
-    ]
+        navLink: "/status/usuario",
+      },
+    ],
   },
   {
-    id: 'menuCarteira',
-    title: 'Minha carteira',
-    icon: <DollarSign size={20} />,    
-    navLink: '/carteira'   
+    id: "menuCarteira",
+    title: "Minha carteira",
+    icon: <DollarSign size={20} />,
+    navLink: "/carteira",
   },
   {
-    id: 'menuFiltro',
-    title: 'Filtros',
-    icon: <List size={20} />,    
-    navLink: '/filtro'   
+    id: "menuFiltro",
+    title: "Filtros",
+    icon: <List size={20} />,
+    navLink: "/filtro",
   },
   {
-    id: 'menuCampanha',
-    title: 'Campanhas',
+    id: "menuCampanha",
+    title: "Campanhas",
     icon: <MessageSquare size={20} />,
     children: [
       {
-        id: 'menuCampanhaPush',
-        title: 'Push (App)',
+        id: "menuCampanhaPush",
+        title: "Push (App)",
         icon: <Circle size={12} />,
-        navLink: '/campanha/push'
+        navLink: "/campanha/push",
       },
       {
-        id: 'menuCampanhaSms',
-        title: 'SMS',
+        id: "menuCampanhaSms",
+        title: "SMS",
         icon: <Circle size={12} />,
-        navLink: '/campanha/sms'
+        navLink: "/campanha/sms",
       },
       {
-        id: 'menuCampanhaRecorrente',
-        title: 'Recorrentes',
+        id: "menuCampanhaRecorrente",
+        title: "Recorrentes",
         icon: <Calendar size={20} />,
         children: [
           {
-            id: 'menuCampanhaRecorrentePush',
-            title: 'Push (App)',
+            id: "menuCampanhaRecorrentePush",
+            title: "Push (App)",
             icon: <Circle size={12} />,
-            navLink: '/campanha/recorrente/push'
+            navLink: "/campanha/recorrente/push",
           },
           {
-            id: 'menuCampanhaRecorrenteSms',
-            title: 'SMS',
+            id: "menuCampanhaRecorrenteSms",
+            title: "SMS",
             icon: <Circle size={12} />,
-            navLink: '/campanha/recorrente/sms'
-          }
-        ]
-      }
-    ]
+            navLink: "/campanha/recorrente/sms",
+          },
+        ],
+      },
+    ],
   },
   {
-    id: 'menuEncurtador',
-    title: 'Encurtador de URL',
-    icon: <Link size={20} />,    
-    navLink: '/encurtador'   
+    id: "menuEncurtador",
+    title: "Encurtador de URL",
+    icon: <Link size={20} />,
+    navLink: "/encurtador",
   },
   {
-    id: 'menuRelatorio',
-    title: 'Relatórios',
+    id: "menuRelatorio",
+    title: "Relatórios",
     icon: <FileText size={20} />,
     children: [
       {
-        id: 'menuRelatorioCampanha',
-        title: 'Campanhas',
+        id: "menuRelatorioCampanha",
+        title: "Campanhas",
         icon: <Circle size={12} />,
-        navLink: '/relatorio/campanha'
+        navLink: "/relatorio/campanha",
       },
       {
-        id: 'menuRelatorioCadastro',
-        title: 'Cadastros/Conexões',
+        id: "menuRelatorioCadastro",
+        title: "Cadastros/Conexões",
         icon: <Circle size={12} />,
-        navLink: '/relatorio/cadastro'
+        navLink: "/relatorio/cadastro",
       },
       {
-        id: 'menuRelatorioEmail',
-        title: 'Exportar e-mails',
+        id: "menuRelatorioEmail",
+        title: "Exportar e-mails",
         icon: <Circle size={12} />,
-        navLink: '/relatorio/email'
+        navLink: "/relatorio/email",
       },
       {
-        id: 'menuRelatorioRegistro',
-        title: 'Exportar registros',
+        id: "menuRelatorioRegistro",
+        title: "Exportar registros",
         icon: <Circle size={12} />,
-        navLink: '/relatorio/registro'
-      }
-    ]
-  }
+        navLink: "/relatorio/registro",
+      },
+    ],
+  },
 ]

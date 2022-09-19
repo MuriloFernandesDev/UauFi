@@ -14,7 +14,7 @@ import DataTable from "react-data-table-component"
 import { Button, Input, Row, Col, Card, Spinner } from "reactstrap"
 
 // ** Store & Actions
-import { getCustomerData } from "./store"
+import { getData } from "./store"
 import { useDispatch, useSelector } from "react-redux"
 
 // ** Styles
@@ -39,8 +39,8 @@ const CustomHeader = ({ handleFilter, value, handlePerPage, rowsPerPage }) => {
               <option value="50">50</option>
             </Input>
           </div>
-          <Button tag={Link} to="/adm/cliente/add" color="primary">
-            Novo cadastro
+          <Button tag={Link} to="/filtro/add" color="primary">
+            Novo filtro
           </Button>
         </Col>
         <Col
@@ -92,7 +92,7 @@ const ClienteList = () => {
       store.params.perPage !== rowsPerPage
     ) {
       dispatch(
-        getCustomerData({
+        getData({
           sort,
           q: value,
           sortColumn,
@@ -110,7 +110,7 @@ const ClienteList = () => {
     setValue(val)
     vTimeoutPesquisa.current = setTimeout(() => {
       dispatch(
-        getCustomerData({
+        getData({
           sort,
           q: val,
           sortColumn,
@@ -123,7 +123,7 @@ const ClienteList = () => {
 
   const handlePerPage = (e) => {
     dispatch(
-      getCustomerData({
+      getData({
         sort,
         q: value,
         sortColumn,
@@ -136,7 +136,7 @@ const ClienteList = () => {
 
   const handlePagination = (page) => {
     dispatch(
-      getCustomerData({
+      getData({
         sort,
         q: value,
         sortColumn,
@@ -186,7 +186,7 @@ const ClienteList = () => {
     setSort(sortDirection)
     setSortColumn(column.sortField)
     dispatch(
-      getCustomerData({
+      getData({
         q: value,
         page: currentPage,
         sort: sortDirection,
