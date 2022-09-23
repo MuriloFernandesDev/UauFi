@@ -3,60 +3,43 @@ import { Fragment, useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 
 // ** Utils
-import { selectThemeColors } from "@utils"
 
 // ** Reactstrap
-import {
-  Row,
-  Col,
-  Card,
-  CardBody,
-  Input,
-  Button,
-  Label,
-  Form,
-  TabContent,
-  TabPane,
-  Nav,
-  NavItem,
-  NavLink,
-} from "reactstrap"
+import { Row, Col, Card, Input, Button, Label } from "reactstrap"
 
 // ** Icons
 import { CornerUpLeft, Check } from "react-feather"
+import Nouislider from "nouislider-react"
+import "@styles/react/libs/noui-slider/noui-slider.scss"
+import wNumb from "wnumb"
 
 // ** Terceiros
-import Cleave from "cleave.js/react"
-import "cleave.js/dist/addons/cleave-phone.br"
+// import Cleave from "cleave.js/react"
 import Select from "react-select"
-import classnames from "classnames"
+// import classnames from "classnames"
+import "@styles/react/libs/flatpickr/flatpickr.scss"
 
 // ** API
 import api from "@src/services/api"
+import { getGenero } from "../store"
 
 const FiltroEditCard = ({ data, setSalvarDados }) => {
   const navigate = useNavigate()
-
   // ** States
   const [vDados, setData] = useState(data)
-  const [vDadosCP, setDataCP] = useState(data?.dados_captive[0])
-  const [vArtigoGenero, setArtigoGenero] = useState(
-    data && data?.artigo_genero !== null
-      ? { label: data?.artigo_genero, value: data?.artigo_genero }
-      : null
-  )
+  const [genero, setGenero] = useState(null)
+  const [selectedGenero, setSelectedGenero] = useState(null)
   const [vEstado, setEstado] = useState(null)
   const [vCidade, setCidade] = useState(null)
-  const [vCategoria, setCategoria] = useState(null)
-  const [vAgregador, setAgregador] = useState(null)
-  const [vListaCidades, setListaCidades] = useState(null)
   const [vListaEstados, setListaEstados] = useState(null)
-
-  // Captive Portal
-  const [vTipoLayout, setTipoLayout] = useState(null)
-  const [vTipoIntegracao, setTipoIntegracao] = useState(null)
-
-  const [active, setActive] = useState("1")
+  const [vListaCidades, setListaCidades] = useState(null)
+  const [upperConnect, setUpperConnect] = useState(18)
+  const [lowerConnect, setLowerConnect] = useState(100)
+  const [appDataInicial, setAppDataInicial] = useState("")
+  const [appDataFinal, setAppDataFinal] = useState("")
+  const [visitaDataInicial, setVisitaDataInicial] = useState("")
+  const [visitaDataFinal, setVisitaDataFinal] = useState("")
+  const [clienteId, setClienteId] = useState(0)
 
   const handleChange = (e) => {
     const { name, value } = e.target
@@ -66,31 +49,28 @@ const FiltroEditCard = ({ data, setSalvarDados }) => {
     }))
   }
 
-  const handleChangeCP = (e) => {
-    const { name, value } = e.target
-    setDataCP((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }))
-  }
+  const handleGenero = async () => {
+    const getGeneros = await getGenero()
+    setGenero(getGeneros)
 
-  const toggle = (tab) => {
-    if (active !== tab) {
-      setActive(tab)
+    if (vDados.id !== undefined) {
+      const gendersArray = vDados?.genero
+        .split(",")
+        .map((item) => parseInt(item))
+
+      setSelectedGenero(
+        gendersArray?.map((item) => {
+          const response = getGeneros?.filter((res) => res.value === item)
+          if (response) {
+            return {
+              ...response[0],
+              label: response[0]?.label,
+              value: response[0]?.value,
+            }
+          }
+        })
+      )
     }
-  }
-
-  const getCidades = (e) => {
-    return api
-      .get(`/cidade/por_estado/${(e ? e.value : data?.estado_id) || 0}`)
-      .then((res) => {
-        setListaCidades(
-          res.data.map((ret) => ({ label: ret.nome, value: ret.id }))
-        )
-
-        //Limpar a Cidade para setar o select
-        setCidade(null)
-      })
   }
 
   const getEstados = () => {
@@ -104,126 +84,51 @@ const FiltroEditCard = ({ data, setSalvarDados }) => {
     })
   }
 
-  const getCategorias = () => {
-    return api.get("/categoria").then((res) => {
-      vListaCategorias = res.data.map((ret) => ({
-        label: ret.nome,
-        value: ret.id,
-      }))
-
-      //Selecionar o item no componente
-      if (!vCategoria && data?.categoria_id) {
-        setCategoria(
-          vListaCategorias?.filter(
-            (item) => item.value === Number(data?.categoria_id)
-          )[0]
+  const getCidades = (e) => {
+    return api
+      .get(`/cidade/por_estado/${(e ? e.value : data?.estado_id) || 0}`)
+      .then((res) => {
+        setListaCidades(
+          res.data.map((ret) => ({ label: ret.nome, value: ret.id }))
         )
-      }
-    })
-  }
-
-  const getAgregadores = () => {
-    return api.get("/cliente/agregador").then((res) => {
-      vListaAgregadores = res.data.map((ret) => ({
-        label: ret.nome,
-        value: ret.id,
-      }))
-
-      //Selecionar o item no componente
-      if (!vAgregador && data?.cliente_agregador) {
-        const vAgregadorArray = data?.cliente_agregador
-          ?.split(",")
-          .map((item) => parseInt(item))
-        setAgregador(
-          vListaAgregadores?.filter((item) =>
-            vAgregadorArray?.includes(item.value)
-          )
-        )
-      }
-    })
-  }
-
-  const onChangeImagem = (e) => {
-    const reader = new FileReader(),
-      files = e.target.files,
-      vName = e.target.name
-    reader.onload = function () {
-      handleChange({
-        target: {
-          name: vName,
-          value: reader.result,
-        },
+        //Limpar a Cidade para setar o select
+        setCidade(null)
       })
-    }
-    reader.readAsDataURL(files[0])
   }
-
   //Selecionar o item no componente
-  if (
-    !vEstado &&
-    vListaEstados &&
-    vDados?.estado_id !== null &&
-    vDados !== null
-  ) {
-    setEstado(
-      vListaEstados?.filter(
-        (item) => item.value === Number(vDados?.estado_id)
-      )[0]
-    )
-    if (vDados?.estado_id) {
-      getCidades({ value: vDados?.estado_id })
-    }
-  }
+  // if (
+  //   !vCidade &&
+  //   vListaCidades &&
+  //   vEstado &&
+  //   vDados?.cidades !== null &&
+  //   vDados !== null
+  // ) {
+  //   setCidade(
+  //     vListaCidades?.filter(
+  //       (item) => item.value === Number(vDados?.cidades.map((i) => i.id))
+  //     )[0]
+  //   )
+  // }
 
-  //Selecionar o item no componente
-  if (
-    !vCidade &&
-    vListaCidades &&
-    vEstado &&
-    vDados?.cidade_id !== null &&
-    vDados !== null
-  ) {
-    setCidade(
-      vListaCidades?.filter(
-        (item) => item.value === Number(vDados?.cidade_id)
-      )[0]
-    )
-  }
-
-  const optTel = { phone: true, phoneRegionCode: "BR" }
-  const optCep = { delimiters: [".", "-"], blocks: [2, 3, 3], uppercase: true }
+  const blockChange = () => {}
 
   const setDados = () => {
-    vDados.dados_captive = [vDadosCP]
     setSalvarDados(vDados)
   }
 
-  // ** Get cliente on mount based on id
+  // ** Get filter on mount based on id
+
   useEffect(() => {
     // ** Requisitar listas
     if (vListaEstados === null) {
       getEstados()
+      handleGenero()
     }
-    if (vListaCategorias === null) {
-      getCategorias()
-    }
-    getAgregadores()
-
-    if (!vTipoLayout && data?.dados_captive[0]?.layout_captive !== null) {
-      setTipoLayout(
-        vListaTipoLayout.filter(
-          (item) =>
-            item.value === Number(data?.dados_captive[0]?.layout_captive || 0)
-        )[0]
-      )
-    }
-    if (!vTipoIntegracao && data?.dados_captive[0]?.tipo_integracao !== null) {
-      setTipoIntegracao(
-        vListaTipoIntegracao.filter(
-          (item) =>
-            item.value === Number(data?.dados_captive[0]?.tipo_integracao || 0)
-        )[0]
-      )
+    if (vDados.id !== undefined) {
+      setAppDataInicial(vDados.app_data_inicial.substring(0, 10))
+      setAppDataFinal(vDados.app_data_final.substring(0, 10))
+      setVisitaDataInicial(vDados.visita_data_inicial.substring(0, 10))
+      setVisitaDataFinal(vDados.visita_data_final.substring(0, 10))
     }
   }, [])
 
@@ -241,12 +146,16 @@ const FiltroEditCard = ({ data, setSalvarDados }) => {
                   <CornerUpLeft size={17} />
                 </Button.Ripple>
               </div>
-              <div>
-                <Button.Ripple color="success" onClick={setDados}>
-                  <Check size={17} />
-                  <span className="align-middle ms-25">Salvar</span>
-                </Button.Ripple>
-              </div>
+              {vDados.id !== undefined ? (
+                ""
+              ) : (
+                <div>
+                  <Button.Ripple color="success" onClick={setDados}>
+                    <Check size={17} />
+                    <span className="align-middle ms-25">Salvar</span>
+                  </Button.Ripple>
+                </div>
+              )}
             </div>
           </Card>
         </Fragment>
@@ -254,418 +163,312 @@ const FiltroEditCard = ({ data, setSalvarDados }) => {
       <Col sm="12">
         <Card className="p-2 pb-0">
           <Fragment>
-            <Nav tabs>
-              <NavItem>
-                <NavLink
-                  active={active === "1"}
-                  onClick={() => {
-                    toggle("1")
-                  }}
-                >
-                  Dados básicos
-                </NavLink>
-              </NavItem>
-              <NavItem>
-                <NavLink
-                  active={active === "2"}
-                  onClick={() => {
-                    toggle("2")
-                  }}
-                >
-                  Captive Portal
-                </NavLink>
-              </NavItem>
-            </Nav>
             <Card className="mb-0">
               <Row>
-                <Col lg="6">
+                <Col lg="12">
                   <Row>
-                    <Col className="mb-2" sm="12">
-                      <div className="border rounded p-2">
-                        <h5 className="mb-1">Logotipo do Dashboard</h5>
-                        <div className="d-flex flex-column flex-md-row">
-                          <img
-                            className="me-2 mb-1 mb-md-0 img-fluid"
-                            src={
-                              vDados?.logo === null ||
-                              "https://www.uaufi.com/uploads/logos/sem_foto.png"
-                                ? "https://smartdatamanager.com/image/semfoto.png"
-                                : vDados?.logo
-                            }
-                            alt="Logotipo"
-                            width="100"
-                            height="100"
-                          />
-                          <div>
-                            <div className="mb-1">
-                              <small className="text-muted">
-                                Resolução recomendada: 800x800px.
-                                <br />
-                                Tamanho máximo: 250kB.
-                              </small>
-                            </div>
-                            <div className="d-inline-block">
-                              <div className="mb-0">
-                                <Input
-                                  type="file"
-                                  name="logo"
-                                  onChange={onChangeImagem}
-                                  accept=".jpg, .jpeg, .png, .gif, .webp"
-                                />
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </Col>
-                  </Row>
-                </Col>
-                <Col lg="6">
-                  <Row>
-                    <Col md="12" className="mb-2">
+                    <Col lg="6" md="6" className="mb-2">
                       <Label className="form-label" for="nome">
-                        Nome completo
+                        Nome da campanha
                       </Label>
                       <Input
                         id="nome"
                         name="nome"
                         value={vDados?.nome ?? ""}
-                        onChange={handleChange}
+                        onChange={
+                          vDados.id !== undefined ? blockChange : handleChange
+                        }
                       />
                     </Col>
-                    <Col md="6" className="mb-2">
-                      <Label className="form-label" for="email">
-                        E-mail
+
+                    <Col lg="6" md="6" className="mb-2">
+                      <Label className="form-label" for="genero">
+                        Gêneros atingidos pela campanha
                       </Label>
-                      <Input
-                        id="email"
-                        name="email"
-                        type="email"
-                        value={vDados?.email ?? ""}
-                        onChange={handleChange}
-                      />
-                    </Col>
-                    <Col md="6" className="mb-2">
-                      <Label className="form-label" for="site">
-                        Site
-                      </Label>
-                      <Input
-                        id="site"
-                        name="site"
-                        type="url"
-                        value={vDados?.site ?? ""}
-                        onChange={handleChange}
+                      <Select
+                        isClearable
+                        id="genero"
+                        isMulti={true}
+                        value={selectedGenero}
+                        placeholder={"Selecione..."}
+                        className="react-select"
+                        classNamePrefix="select"
+                        options={genero}
+                        onChange={
+                          vDados.id !== undefined
+                            ? blockChange
+                            : (e) => (
+                                setSelectedGenero(e),
+                                handleChange({
+                                  target: {
+                                    name: "genero",
+                                    value: e
+                                      ?.map((item) => item.value.toString())
+                                      .toString(),
+                                  },
+                                })
+                              )
+                        }
                       />
                     </Col>
                   </Row>
                 </Col>
 
-                <Col md="3" className="mb-2">
-                  <Label className="form-label" for="artigo_genero">
-                    Tratamento
-                  </Label>
-                  <Select
-                    isClearable
-                    id="artigo_genero"
-                    placeholder={"Selecione..."}
-                    className="react-select"
-                    classNamePrefix="select"
-                    value={vArtigoGenero}
-                    onChange={(e) => {
-                      setArtigoGenero(e)
-                      handleChange({
-                        target: { name: "artigo_genero", value: e.value },
-                      })
-                    }}
-                    options={vListaArtigoGenero}
-                  />
-                </Col>
-                <Col className="mb-2">
-                  <Label className="form-label" for="slug">
-                    Slug
-                  </Label>
-                  <Input
-                    id="slug"
-                    name="slug"
-                    value={vDadosCP?.slug ?? ""}
-                    onChange={handleChangeCP}
-                  />
-                </Col>
-                <Col md="3" className="mb-2">
-                  <Label className="form-label" for="cor_primaria">
-                    Cor primária
-                  </Label>
-                  <Input
-                    id="cor_primaria"
-                    name="cor_primaria"
-                    type="color"
-                    className="p-0"
-                    value={vDadosCP?.cor_primaria ?? ""}
-                    onChange={handleChangeCP}
-                  />
-                </Col>
-                <Col md="3" className="mb-2">
-                  <Label className="form-label" for="cor_secundaria">
-                    Cor secundária
-                  </Label>
-                  <Input
-                    id="cor_secundaria"
-                    name="cor_secundaria"
-                    type="color"
-                    className="p-0"
-                    value={vDadosCP?.cor_secundaria ?? ""}
-                    onChange={handleChangeCP}
-                  />
+                <Col lg="12" style={{ marginBottom: "2em" }}>
+                  <Row>
+                    <Label
+                      className="form-label"
+                      style={{ marginBottom: "2em" }}
+                    >
+                      Faixa etária atingida pela campanha
+                    </Label>
+                    <Col>
+                      <Nouislider
+                        connect={true}
+                        start={
+                          vDados?.idade_inicial
+                            ? [vDados?.idade_inicial, vDados?.idade_final]
+                            : [upperConnect, lowerConnect]
+                        }
+                        step={1}
+                        disabled={vDados.id !== undefined}
+                        tooltips={true}
+                        style={{ zIndex: 0 }}
+                        format={wNumb({
+                          decimals: 0,
+                        })}
+                        behaviour={"tap"}
+                        direction="ltr"
+                        range={{
+                          min: 18,
+                          max: 100,
+                        }}
+                        onChange={(e) => {
+                          setUpperConnect(e[0])
+                          setLowerConnect(e[1])
+                          handleChange({
+                            target: {
+                              name: "idade_inicial",
+                              value: Number(e[0]),
+                            },
+                          })
+                          handleChange({
+                            target: {
+                              name: "idade_final",
+                              value: Number(e[1]),
+                            },
+                          })
+                        }}
+                      />
+                    </Col>
+                  </Row>
                 </Col>
 
-                <Col md="4" className="mb-2">
-                  <Label className="form-label" for="vCategoria">
-                    Categoria
-                  </Label>
-                  <Select
-                    isClearable
-                    id="vCategoria"
-                    placeholder={"Selecione..."}
-                    className="react-select"
-                    classNamePrefix="select"
-                    value={
-                      vListaCategorias?.filter(
-                        (item) => item.value === vDados?.categoria_id
-                      )[0]
-                    }
-                    onChange={(e) => {
-                      setCategoria(e)
-                      handleChange({
-                        target: { name: "categoria_id", value: e.value },
-                      })
-                    }}
-                    options={vListaCategorias}
-                  />
-                </Col>
-                <Col md="2" className="mb-2 text-center">
-                  <Label for="agregador" className="form-label mb-50">
-                    É matriz?
-                  </Label>
-                  <div className="form-switch form-check-primary">
-                    <Input
-                      type="switch"
-                      id="agregador"
-                      checked={vDados?.agregador ?? false}
-                      onChange={(e) => {
-                        handleChange({
-                          target: {
-                            name: "agregador",
-                            value: e.target.checked,
-                          },
-                        })
-                      }}
-                    />
-                  </div>
-                </Col>
-                <Col md="6" className="mb-2">
-                  <Label className="form-label" for="vAgregador">
-                    Cliente matriz
-                  </Label>
-                  <Select
-                    isClearable
-                    id="vAgregador"
-                    isMulti
-                    theme={selectThemeColors}
-                    placeholder={""}
-                    className="react-select"
-                    classNamePrefix="select"
-                    value={vAgregador}
-                    onChange={(e) => {
-                      setAgregador(e)
-                      handleChange({
-                        target: {
-                          name: "categoria_id",
-                          value: e
-                            ?.map((item) => item.value.toString())
-                            .toString(),
-                        },
-                      })
-                    }}
-                    options={vListaAgregadores}
-                  />
-                </Col>
-
-                <Col md="4" className="mb-2">
-                  <Label className="form-label" for="tel_1">
-                    Telefone 1
-                  </Label>
-                  <Cleave
-                    className="form-control"
-                    placeholder="00 0000 0000"
-                    options={optTel}
-                    id="tel_1"
-                    name="tel_1"
-                    value={vDados?.tel_1 ?? ""}
-                    onChange={handleChange}
-                  />
-                </Col>
-                <Col md="4" className="mb-2">
-                  <Label className="form-label" for="tel_2">
-                    Telefone 2
-                  </Label>
-                  <Cleave
-                    className="form-control"
-                    placeholder="00 0000 0000"
-                    options={optTel}
-                    id="tel_2"
-                    name="tel_2"
-                    value={vDados?.tel_2 ?? ""}
-                    onChange={handleChange}
-                  />
-                </Col>
-                <Col md="4" className="mb-2">
-                  <Label className="form-label" for="whatsapp">
-                    WhatsApp
-                  </Label>
-                  <Cleave
-                    className="form-control"
-                    placeholder="00 00000 0000"
-                    options={optTel}
-                    id="whatsapp"
-                    name="whatsapp"
-                    value={vDados?.whatsapp ?? ""}
-                    onChange={handleChange}
-                  />
-                </Col>
-                <Col md="3" className="mb-2">
-                  <Label className="form-label" for="vCep">
-                    CEP
-                  </Label>
-                  <Cleave
-                    className="form-control"
-                    placeholder="00.000-000"
-                    options={optCep}
-                    id="vCep"
-                    name="cep"
-                    value={vDados?.cep ?? ""}
-                    onChange={handleChange}
-                  />
-                </Col>
-                <Col md="6" className="mb-2">
-                  <Label className="form-label" for="vEndereco">
-                    Endereço
-                  </Label>
-                  <Input
-                    id="vEndereco"
-                    name="endereco"
-                    value={vDados?.endereco ?? ""}
-                    onChange={handleChange}
-                  />
-                </Col>
-                <Col md="3" className="mb-2">
-                  <Label className="form-label" for="vNumero">
-                    Número
-                  </Label>
-                  <Input
-                    id="vNumero"
-                    name="endereco_nr"
-                    value={vDados?.endereco_nr ?? ""}
-                    onChange={handleChange}
-                  />
+                <Col lg="12">
+                  <Row>
+                    {!vDados.id ? (
+                      <Col md="6" className="mb-2">
+                        <Label className="form-label" for="vEstado">
+                          Selecione o Estado para listar as cidades
+                        </Label>
+                        <Select
+                          isClearable
+                          id="vEstado"
+                          placeholder={"Selecione..."}
+                          className="react-select"
+                          classNamePrefix="select"
+                          value={vEstado}
+                          onChange={(e) => {
+                            setEstado(e)
+                            handleChange({
+                              target: { name: "estado_id", value: e?.value },
+                            })
+                            getCidades(e)
+                            handleChange({
+                              target: { name: "cidades", value: null },
+                            })
+                          }}
+                          options={vListaEstados}
+                        />
+                      </Col>
+                    ) : (
+                      ""
+                    )}
+                    <Col md={vDados.id ? "12" : "6"} className="mb-2">
+                      <Label className="form-label" for="vCidade">
+                        Cidades atingidas pela campanha
+                      </Label>
+                      <Select
+                        id="vCidade"
+                        noOptionsMessage={() => "vazio"}
+                        LoadingMessage={() => "pesquisando..."}
+                        placeholder={"Selecione..."}
+                        mess
+                        isMulti={true}
+                        isClearable
+                        className="react-select"
+                        classNamePrefix="select"
+                        isDisabled={(vDados?.estado_id ?? 0) === 0}
+                        value={
+                          vDados.cidades
+                            ? vDados.cidades.map((i) => ({
+                                label: i.nome,
+                                value: i.id,
+                              }))
+                            : vCidade
+                        }
+                        onChange={
+                          vDados.id !== undefined
+                            ? blockChange
+                            : (e) => {
+                                setCidade(e)
+                                handleChange({
+                                  target: {
+                                    name: "cidades",
+                                    value: e?.map((item) => ({
+                                      id: item.value,
+                                      nome: item.label,
+                                    })),
+                                  },
+                                })
+                              }
+                        }
+                        options={vListaCidades}
+                      />
+                      {console.log(vCidade, vDados.cidades)}
+                    </Col>
+                  </Row>
                 </Col>
 
-                <Col md="4" className="mb-2">
-                  <Label className="form-label" for="vBairro">
-                    Bairro
-                  </Label>
-                  <Input
-                    id="vBairro"
-                    name="bairro"
-                    value={vDados?.bairro ?? ""}
-                    onChange={handleChange}
-                  />
-                </Col>
-                <Col md="4" className="mb-2">
-                  <Label className="form-label" for="vEstado">
-                    Estado
-                  </Label>
-                  <Select
-                    isClearable
-                    id="vEstado"
-                    placeholder={"Selecione..."}
-                    className="react-select"
-                    classNamePrefix="select"
-                    value={vEstado}
-                    onChange={(e) => {
-                      setEstado(e)
-                      handleChange({
-                        target: { name: "estado_id", value: e.value },
-                      })
-                      getCidades(e)
-                      handleChange({
-                        target: { name: "cidade_id", value: null },
-                      })
-                    }}
-                    options={vListaEstados}
-                  />
-                </Col>
-                <Col md="4" className="mb-2">
-                  <Label className="form-label" for="vCidade">
-                    Cidade
-                  </Label>
-                  <Select
-                    id="vCidade"
-                    noOptionsMessage={() => "vazio"}
-                    LoadingMessage={() => "pesquisando..."}
-                    placeholder={"Selecione..."}
-                    mess
-                    isClearable
-                    className="react-select"
-                    classNamePrefix="select"
-                    isDisabled={(vDados?.estado_id ?? 0) === 0}
-                    value={vCidade}
-                    onChange={(e) => {
-                      setCidade(e)
-                      handleChange({
-                        target: { name: "cidade_id", value: e.value },
-                      })
-                    }}
-                    options={vListaCidades}
-                  />
+                <Col lg="12">
+                  <Row>
+                    <Label className="form-label">
+                      {vDados.id !== undefined
+                        ? "Em caso de campanha Push: período em que o usuário se conectou no App"
+                        : "Vai enviar Push? Selecione o período em que o usuário se conectou no App"}
+                    </Label>
+                    <Col className="mb-2">
+                      <Label className="form-label" for="app-data-inicial">
+                        Data inicial
+                      </Label>
+                      <Input
+                        id="app-data-inicial"
+                        name="app-data-inicial"
+                        type="date"
+                        value={appDataInicial}
+                        disabled={vDados.id !== undefined}
+                        onChange={(e) => {
+                          setAppDataInicial(e.target.value)
+                          handleChange({
+                            target: {
+                              name: "app_data_inicial",
+                              value: e.target.value,
+                            },
+                          })
+                        }}
+                      />
+                    </Col>
+
+                    <Col className="mb-2">
+                      <Label className="form-label" for="app-data-final">
+                        Data final
+                      </Label>
+                      <Input
+                        id="app-data-final"
+                        name="app-data-final"
+                        type="date"
+                        value={appDataFinal}
+                        disabled={vDados.id !== undefined}
+                        onChange={(e) => {
+                          setAppDataFinal(e.target.value)
+                          handleChange({
+                            target: {
+                              name: "app_data_final",
+                              value: e.target.value,
+                            },
+                          })
+                        }}
+                      />
+                    </Col>
+                  </Row>
                 </Col>
 
-                <Col md="12" className="mb-2">
-                  <Label className="form-label" for="vBreveDescricao">
-                    Breve descrição
-                  </Label>
-                  <Input
-                    value={vDados?.breve_descricao ?? ""}
-                    type="textarea"
-                    id="vBreveDescricao"
-                    name="breve_descricao"
-                    style={{ minHeight: "80px" }}
-                    onChange={handleChange}
-                    className={classnames({
-                      "text-danger":
-                        (vDados?.breve_descricao?.length || 0) > 510,
-                    })}
-                  />
-                  <span
-                    className={classnames("textarea-counter-value float-end", {
-                      "bg-danger": (vDados?.breve_descricao?.length || 0) > 510,
-                    })}
-                  >
-                    {`${vDados?.breve_descricao?.length || 0}/510`}
-                  </span>
-                </Col>
+                <Col lg="12">
+                  <Row>
+                    <Label className="form-label">
+                      Usuários que visitaram seu estabelecimento em um período
+                    </Label>
+                    <Col className="mb-2">
+                      <Label className="form-label" for="visita-data-inicial">
+                        Data inicial
+                      </Label>
+                      <Input
+                        id="visita-data-inicial"
+                        name="visita-data-inicial"
+                        type="date"
+                        value={visitaDataInicial}
+                        disabled={vDados.id !== undefined}
+                        onChange={(e) => {
+                          setVisitaDataInicial(e.target.value)
+                          handleChange({
+                            target: {
+                              name: "visita_data_inicial",
+                              value: e.target.value,
+                            },
+                          })
+                        }}
+                      />
+                    </Col>
 
-                <Col md="12" className="mb-2">
-                  <Label className="form-label" for="vInfoGerais">
-                    Informações gerais
-                  </Label>
-                  <Input
-                    value={vDados?.informacoes_gerais ?? ""}
-                    type="textarea"
-                    id="vInfoGerais"
-                    name="informacoes_gerais"
-                    style={{ minHeight: "100px" }}
-                    onChange={handleChange}
-                  />
+                    <Col className="mb-2">
+                      <Label className="form-label" for="visita-data-final">
+                        Data final
+                      </Label>
+                      <Input
+                        id="visita-data-final"
+                        name="visita-data-final"
+                        type="date"
+                        value={visitaDataFinal}
+                        disabled={vDados.id !== undefined}
+                        onChange={(e) => {
+                          setVisitaDataFinal(e.target.value)
+                          handleChange({
+                            target: {
+                              name: "visita_data_final",
+                              value: e.target.value,
+                            },
+                          })
+                        }}
+                      />
+                    </Col>
+                  </Row>
+                </Col>
+                <Col lg="4">
+                  <Row>
+                    <Col lg="6" md="6" className="mb-2">
+                      <Label className="form-label" for="cliente-id">
+                        ID do cliente
+                      </Label>
+                      <Input
+                        id="cliente-id"
+                        name="cliente-id"
+                        type="number"
+                        style={{ marginBottom: "20px" }}
+                        value={clienteId}
+                        onChange={(e) => {
+                          setClienteId(e.target.value)
+                          handleChange({
+                            target: {
+                              name: "cliente_id",
+                              value: Number(e.target.value),
+                            },
+                          })
+                          {
+                          }
+                        }}
+                      />
+                    </Col>
+                  </Row>
                 </Col>
               </Row>
             </Card>

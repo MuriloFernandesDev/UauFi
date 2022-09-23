@@ -14,7 +14,7 @@ import DataTable from "react-data-table-component"
 import { Button, Input, Row, Col, Card, Spinner } from "reactstrap"
 
 // ** Store & Actions
-import { getFiltro } from "./store"
+import { getFiltros } from "./store"
 import { useDispatch, useSelector } from "react-redux"
 
 // ** Styles
@@ -92,7 +92,7 @@ const FiltroList = () => {
       store.params.perPage !== rowsPerPage
     ) {
       dispatch(
-        getFiltro({
+        getFiltros({
           sort,
           q: value,
           sortColumn,
@@ -110,7 +110,7 @@ const FiltroList = () => {
     setValue(val)
     vTimeoutPesquisa.current = setTimeout(() => {
       dispatch(
-        getFiltro({
+        getFiltros({
           sort,
           q: val,
           sortColumn,
@@ -123,7 +123,7 @@ const FiltroList = () => {
 
   const handlePerPage = (e) => {
     dispatch(
-      getFiltro({
+      getFiltros({
         sort,
         q: value,
         sortColumn,
@@ -136,7 +136,7 @@ const FiltroList = () => {
 
   const handlePagination = (page) => {
     dispatch(
-      getFiltro({
+      getFiltros({
         sort,
         q: value,
         sortColumn,
@@ -170,6 +170,7 @@ const FiltroList = () => {
           currentPage !== 0 ? (currentPage <= count ? currentPage - 1 : 0) : 0
         }
         containerClassName={"pagination react-paginate justify-content-end p-1"}
+        style={{ zIndex: -1 }}
       />
     )
   }
@@ -186,7 +187,7 @@ const FiltroList = () => {
     setSort(sortDirection)
     setSortColumn(column.sortField)
     dispatch(
-      getFiltro({
+      getFiltros({
         q: value,
         page: currentPage,
         sort: sortDirection,

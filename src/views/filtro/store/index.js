@@ -4,12 +4,12 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"
 // ** Axios Imports
 import api from "@src/services/api"
 
-export const getFiltro = createAsyncThunk(
-  "filtro/getFiltro",
+export const getFiltros = createAsyncThunk(
+  "filtro/getFiltros",
   async (parametros) => {
     //console.log(parametros)
     const response = await api.get("/filtro/lista/0/", { params: parametros })
-    //console.log(response)
+    // console.log(response)
     let vRegInicial = (parametros.page - 1) * parametros.perPage
     let vRegFinal = parametros.page * parametros.perPage
     //Verificar se o registro inicial existe
@@ -38,7 +38,7 @@ export const deleteFiltro = createAsyncThunk(
   "filtro/deleteFiltro",
   async (id, { dispatch, getState }) => {
     await api.delete(`/filtro/${id}`)
-    await dispatch(getFiltro(getState().filtro.params))
+    await dispatch(getFiltros(getState().filtro.params))
     return id
   }
 )
@@ -58,7 +58,7 @@ export const filtroSlice = createSlice({
   },
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(getFiltro.fulfilled, (state, action) => {
+    builder.addCase(getFiltros.fulfilled, (state, action) => {
       state.data = action.payload.data
       state.allData = action.payload.allData
       state.total = action.payload.totalPages

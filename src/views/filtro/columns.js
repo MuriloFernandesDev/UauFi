@@ -89,7 +89,7 @@ export const columns = [
         <div className="d-flex justify-content-left align-items-center">
           {renderFiltro(row)}
           <div className="d-flex flex-column">
-            <Link to={`/filtro/lista/${row.id}`} id={`pw-tooltip2-${row.id}`}>
+            <Link to={`/filtro/${row.id}`} id={`pw-tooltip2-${row.id}`}>
               <h6 className="user-name text-truncate mb-0">{nome}</h6>
               <small className="text-truncate text-muted mb-0">
                 {filtroInfo}
@@ -108,7 +108,7 @@ export const columns = [
       return (
         <div className="text-end w-100">
           <div className="d-inline-flex flex-column">
-            <Link to={`/filtro/lista/${row.id}`} id={`pw-tooltip2-${row.id}`}>
+            <Link to={`/filtro/${row.id}`} id={`pw-tooltip2-${row.id}`}>
               <h6 className="user-name text-truncate mb-0">
                 {`${dataCriacao.substring(8, 10)}/${dataCriacao.substring(
                   5,
@@ -130,7 +130,7 @@ export const columns = [
     cell: (row) => (
       <div className="text-end w-100">
         <div className="column-action d-inline-flex">
-          <Link to={`/filtro/lista/${row.id}`} id={`pw-tooltip-${row.id}`}>
+          <Link to={`/filtro/${row.id}`} id={`pw-tooltip-${row.id}`}>
             <Eye size={17} className="mx-1" />
           </Link>
           <UncontrolledTooltip placement="top" target={`pw-tooltip-${row.id}`}>

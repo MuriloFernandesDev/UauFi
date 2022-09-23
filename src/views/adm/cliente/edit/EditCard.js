@@ -529,7 +529,7 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                           setAgregador(e)
                           handleChange({
                             target: {
-                              name: "categoria_id",
+                              name: "cliente_agregador",
                               value: e
                                 ?.map((item) => item.value.toString())
                                 .toString(),

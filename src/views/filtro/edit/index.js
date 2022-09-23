@@ -118,7 +118,7 @@ const FiltroEdit = () => {
   // ** Get filter on mount based on id
   useEffect(() => {
     api.get(`/filtro/${id}`).then((response) => {
-      setData(response.data[0])
+      setData(response.data)
       setCarregando(false)
     })
   }, [])
