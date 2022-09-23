@@ -170,7 +170,6 @@ const FiltroList = () => {
           currentPage !== 0 ? (currentPage <= count ? currentPage - 1 : 0) : 0
         }
         containerClassName={"pagination react-paginate justify-content-end p-1"}
-        style={{ zIndex: -1 }}
       />
     )
   }

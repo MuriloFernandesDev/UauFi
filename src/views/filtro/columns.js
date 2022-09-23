@@ -133,11 +133,11 @@ export const columns = [
           <Link to={`/filtro/${row.id}`} id={`pw-tooltip-${row.id}`}>
             <Eye size={17} className="mx-1" />
           </Link>
+
           <UncontrolledTooltip placement="top" target={`pw-tooltip-${row.id}`}>
             Visualizar
           </UncontrolledTooltip>
-
-          <UncontrolledDropdown direction="start">
+          <UncontrolledDropdown>
             <DropdownToggle tag="span">
               <MoreVertical size={17} className="cursor-pointer" />
             </DropdownToggle>
