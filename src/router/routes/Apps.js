@@ -17,6 +17,8 @@ const InvoiceList = lazy(() => import("../../views/apps/invoice/list"))
 const InvoiceEdit = lazy(() => import("../../views/apps/invoice/edit"))
 const InvoicePrint = lazy(() => import("../../views/apps/invoice/print"))
 const InvoicePreview = lazy(() => import("../../views/apps/invoice/preview"))
+const Plano = lazy(() => import("../../views/plano"))
+const PlanoEdit = lazy(() => import("../../views/plano/edit"))
 
 const EcommerceShop = lazy(() => import("../../views/apps/ecommerce/shop"))
 const EcommerceDetail = lazy(() => import("../../views/apps/ecommerce/detail"))
@@ -154,6 +156,14 @@ const AppRoutes = [
     meta: {
       layout: "blank",
     },
+  },
+  {
+    element: <Plano />,
+    path: "/plano",
+  },
+  {
+    element: <PlanoEdit />,
+    path: "/plano/:id",
   },
   {
     element: <EcommerceShop />,

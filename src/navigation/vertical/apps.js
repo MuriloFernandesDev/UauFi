@@ -12,6 +12,7 @@ import {
   List,
   FileText,
   Calendar,
+  Smartphone,
 } from "react-feather"
 
 export default [
@@ -88,6 +89,12 @@ export default [
     title: "Filtros",
     icon: <List size={20} />,
     navLink: "/filtro",
+  },
+  {
+    id: "menuPlano",
+    title: "Planos de acesso",
+    icon: <Smartphone size={20} />,
+    navLink: "/plano",
   },
   {
     id: "menuCampanha",
