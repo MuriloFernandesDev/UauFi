@@ -18,7 +18,7 @@ import {
 } from "reactstrap"
 
 // ** Third Party Components
-import { Eye, Copy, Trash, MoreVertical } from "react-feather"
+import { Eye, Trash, MoreVertical } from "react-feather"
 import Swal from "sweetalert2"
 import withReactContent from "sweetalert2-react-content"
 
@@ -153,18 +153,6 @@ export const columns = [
               >
                 <Trash size={14} className="me-50" />
                 <span className="align-middle">Remover</span>
-              </DropdownItem>
-
-              <DropdownItem
-                tag="a"
-                href="/"
-                className="w-100"
-                onClick={(e) => {
-                  e.preventDefault()
-                }}
-              >
-                <Copy size={14} className="me-50" />
-                <span className="align-middle">Duplicar</span>
               </DropdownItem>
             </DropdownMenu>
           </UncontrolledDropdown>

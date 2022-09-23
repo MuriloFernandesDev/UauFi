@@ -2,22 +2,18 @@
 import { Fragment, useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 
-// ** Utils
-
 // ** Reactstrap
 import { Row, Col, Card, Input, Button, Label } from "reactstrap"
 
 // ** Icons
 import { CornerUpLeft, Check } from "react-feather"
+
+// ** Terceiros
+import Select from "react-select"
+import "@styles/react/libs/flatpickr/flatpickr.scss"
 import Nouislider from "nouislider-react"
 import "@styles/react/libs/noui-slider/noui-slider.scss"
 import wNumb from "wnumb"
-
-// ** Terceiros
-// import Cleave from "cleave.js/react"
-import Select from "react-select"
-// import classnames from "classnames"
-import "@styles/react/libs/flatpickr/flatpickr.scss"
 
 // ** API
 import api from "@src/services/api"
@@ -25,6 +21,7 @@ import { getGenero } from "../store"
 
 const FiltroEditCard = ({ data, setSalvarDados }) => {
   const navigate = useNavigate()
+
   // ** States
   const [vDados, setData] = useState(data)
   const [genero, setGenero] = useState(null)
@@ -39,8 +36,10 @@ const FiltroEditCard = ({ data, setSalvarDados }) => {
   const [appDataFinal, setAppDataFinal] = useState("")
   const [visitaDataInicial, setVisitaDataInicial] = useState("")
   const [visitaDataFinal, setVisitaDataFinal] = useState("")
+
   const [clienteId, setClienteId] = useState(0)
 
+  // ** Organização da informação
   const handleChange = (e) => {
     const { name, value } = e.target
     setData((prevState) => ({
@@ -49,6 +48,7 @@ const FiltroEditCard = ({ data, setSalvarDados }) => {
     }))
   }
 
+  // ** Listagem de gêneros
   const handleGenero = async () => {
     const getGeneros = await getGenero()
     setGenero(getGeneros)
@@ -73,6 +73,7 @@ const FiltroEditCard = ({ data, setSalvarDados }) => {
     }
   }
 
+  // ** Listagem de Estados e cidades
   const getEstados = () => {
     return api.get("/estado").then((res) => {
       setListaEstados(
@@ -95,21 +96,8 @@ const FiltroEditCard = ({ data, setSalvarDados }) => {
         setCidade(null)
       })
   }
-  //Selecionar o item no componente
-  // if (
-  //   !vCidade &&
-  //   vListaCidades &&
-  //   vEstado &&
-  //   vDados?.cidades !== null &&
-  //   vDados !== null
-  // ) {
-  //   setCidade(
-  //     vListaCidades?.filter(
-  //       (item) => item.value === Number(vDados?.cidades.map((i) => i.id))
-  //     )[0]
-  //   )
-  // }
 
+  // ** Bloquear ações de onChange
   const blockChange = () => {}
 
   const setDados = () => {

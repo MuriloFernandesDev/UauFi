@@ -39,7 +39,6 @@ const handleError = (error, errorMessage, errorIcon) => {
 const FiltroEdit = () => {
   // ** Hooks
   const { id } = useParams()
-
   const navigate = useNavigate()
 
   // ** States
