@@ -6,7 +6,7 @@ import Avatar from "@components/avatar"
 
 // ** Store & Actions
 import { store } from "@store/store"
-import { deleteFiltro } from "./store"
+import { deletePlano } from "./store"
 
 // ** Reactstrap Imports
 import {
@@ -24,8 +24,8 @@ import withReactContent from "sweetalert2-react-content"
 
 const MySwal = withReactContent(Swal)
 
-// ** renders filter column
-const renderFiltro = (row) => {
+// ** renders plan column
+const renderPlano = (row) => {
   return (
     <Avatar
       color="light-primary"
@@ -36,7 +36,7 @@ const renderFiltro = (row) => {
   )
 }
 
-// ** Modal de exclusão de filtro
+// ** Modal de exclusão de plano
 
 const handleDeleteConfirmation = (row) => {
   return MySwal.fire({
@@ -57,11 +57,11 @@ const handleDeleteConfirmation = (row) => {
     buttonsStyling: false,
   }).then(function (result) {
     if (result.value) {
-      store.dispatch(deleteFiltro(row.id))
+      store.dispatch(deletePlano(row.id))
       MySwal.fire({
         icon: "success",
         title: "Sucesso!",
-        text: "O filtro foi removido.",
+        text: "O plano de conexão foi removido.",
         customClass: {
           confirmButton: "btn btn-success",
           popup: "animate__animated animate__fadeIn",
@@ -77,22 +77,21 @@ const handleDeleteConfirmation = (row) => {
 // ** Table columns
 export const columns = [
   {
-    name: "Filtro",
+    name: "Plano de conexão",
     minWidth: "450px",
-    // selector: row => row.filtro.name,
     cell: (row) => {
       const nome = row.nome ? row.nome : "",
         idadeInicial = row.idade_inicial ? row.idade_inicial : "",
         idadeFinal = row.idade_final ? row.idade_final : ""
-      const filtroInfo = `${idadeInicial} a ${idadeFinal} anos`
+      const planoInfo = `${idadeInicial} a ${idadeFinal} anos`
       return (
         <div className="d-flex justify-content-left align-items-center">
-          {renderFiltro(row)}
+          {renderPlano(row)}
           <div className="d-flex flex-column">
-            <Link to={`/filtro/${row.id}`} id={`pw-tooltip2-${row.id}`}>
+            <Link to={`/plano/${row.id}`} id={`pw-tooltip2-${row.id}`}>
               <h6 className="user-name text-truncate mb-0">{nome}</h6>
               <small className="text-truncate text-muted mb-0">
-                {filtroInfo}
+                {planoInfo}
               </small>
             </Link>
           </div>
@@ -108,7 +107,7 @@ export const columns = [
       return (
         <div className="text-end w-100">
           <div className="d-inline-flex flex-column">
-            <Link to={`/filtro/${row.id}`} id={`pw-tooltip2-${row.id}`}>
+            <Link to={`/plano/${row.id}`} id={`pw-tooltip2-${row.id}`}>
               <h6 className="user-name text-truncate mb-0">
                 {`${dataCriacao.substring(8, 10)}/${dataCriacao.substring(
                   5,
@@ -130,7 +129,7 @@ export const columns = [
     cell: (row) => (
       <div className="text-end w-100">
         <div className="column-action d-inline-flex">
-          <Link to={`/filtro/${row.id}`} id={`pw-tooltip-${row.id}`}>
+          <Link to={`/plano/${row.id}`} id={`pw-tooltip-${row.id}`}>
             <Eye size={17} className="mx-1" />
           </Link>
 

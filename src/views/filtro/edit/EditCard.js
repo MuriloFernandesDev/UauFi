@@ -113,10 +113,18 @@ const FiltroEditCard = ({ data, setSalvarDados }) => {
       handleGenero()
     }
     if (vDados.id !== undefined) {
-      setAppDataInicial(vDados.app_data_inicial.substring(0, 10))
-      setAppDataFinal(vDados.app_data_final.substring(0, 10))
-      setVisitaDataInicial(vDados.visita_data_inicial.substring(0, 10))
-      setVisitaDataFinal(vDados.visita_data_final.substring(0, 10))
+      if (vDados.app_data_inicial) {
+        setAppDataInicial(vDados.app_data_inicial.substring(0, 10))
+      }
+      if (vDados.app_data_final) {
+        setAppDataFinal(vDados.app_data_final.substring(0, 10))
+      }
+      if (vDados.visita_data_inicial) {
+        setVisitaDataInicial(vDados.visita_data_inicial.substring(0, 10))
+      }
+      if (vDados.visita_data_final) {
+        setVisitaDataFinal(vDados.visita_data_final.substring(0, 10))
+      }
     }
   }, [])
 
@@ -323,7 +331,6 @@ const FiltroEditCard = ({ data, setSalvarDados }) => {
                         }
                         options={vListaCidades}
                       />
-                      {console.log(vCidade, vDados.cidades)}
                     </Col>
                   </Row>
                 </Col>

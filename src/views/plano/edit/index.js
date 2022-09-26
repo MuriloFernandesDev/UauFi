@@ -8,7 +8,7 @@ import api from "@src/services/api"
 // ** Reactstrap
 import { Row, Col, Spinner } from "reactstrap"
 
-// ** Editar filtro
+// ** Editar plano de conexão
 import EditCard from "./EditCard"
 
 // ** Terceiros
@@ -36,7 +36,7 @@ const handleError = (error, errorMessage, errorIcon) => {
   })
 }
 
-const FiltroEdit = () => {
+const PlanoEdit = () => {
   // ** Hooks
   const { id } = useParams()
   const navigate = useNavigate()
@@ -52,7 +52,7 @@ const FiltroEdit = () => {
         .put("/plano_conexao", pDados)
         .then((response) => {
           if (response.status === 200) {
-            toast.success("Filtro editado com sucesso!", {
+            toast.success("Plano de conexão editado com sucesso!", {
               position: "bottom-right",
             })
             navigate("/plano")
@@ -84,7 +84,7 @@ const FiltroEdit = () => {
         .post("/plano_conexao", pDados)
         .then((response) => {
           if (response.status === 200) {
-            toast.success("Filtro criado com sucesso!", {
+            toast.success("Plano de conexão criado com sucesso!", {
               position: "bottom-right",
             })
             navigate("/plano")
@@ -137,4 +137,4 @@ const FiltroEdit = () => {
   )
 }
 
-export default FiltroEdit
+export default PlanoEdit

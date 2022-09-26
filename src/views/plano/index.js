@@ -14,7 +14,7 @@ import DataTable from "react-data-table-component"
 import { Button, Input, Row, Col, Card, Spinner } from "reactstrap"
 
 // ** Store & Actions
-import { getFiltros } from "./store"
+import { getPlanos } from "./store"
 import { useDispatch, useSelector } from "react-redux"
 
 // ** Styles
@@ -40,7 +40,7 @@ const CustomHeader = ({ handleFilter, value, handlePerPage, rowsPerPage }) => {
             </Input>
           </div>
           <Button tag={Link} to="/plano/add" color="primary">
-            Novo filtro
+            Novo plano de conexão
           </Button>
         </Col>
         <Col
@@ -64,10 +64,10 @@ const CustomHeader = ({ handleFilter, value, handlePerPage, rowsPerPage }) => {
   )
 }
 
-const FiltroList = () => {
+const PlanoList = () => {
   // ** Store vars
   const dispatch = useDispatch()
-  const store = useSelector((state) => state.filtro)
+  const store = useSelector((state) => state.plano)
 
   // ** States
   const [value, setValue] = useState(store.params.q ?? "")
@@ -83,7 +83,7 @@ const FiltroList = () => {
   }
 
   useEffect(() => {
-    //Somente pesquisar se os parametros de filtro mudaram
+    //Somente pesquisar se os parametros de plano mudaram
     if (
       store.params.sort !== sort ||
       store.params.q !== value ||
@@ -92,7 +92,7 @@ const FiltroList = () => {
       store.params.perPage !== rowsPerPage
     ) {
       dispatch(
-        getFiltros({
+        getPlanos({
           sort,
           q: value,
           sortColumn,
@@ -110,7 +110,7 @@ const FiltroList = () => {
     setValue(val)
     vTimeoutPesquisa.current = setTimeout(() => {
       dispatch(
-        getFiltros({
+        getPlanos({
           sort,
           q: val,
           sortColumn,
@@ -123,7 +123,7 @@ const FiltroList = () => {
 
   const handlePerPage = (e) => {
     dispatch(
-      getFiltros({
+      getPlanos({
         sort,
         q: value,
         sortColumn,
@@ -136,7 +136,7 @@ const FiltroList = () => {
 
   const handlePagination = (page) => {
     dispatch(
-      getFiltros({
+      getPlanos({
         sort,
         q: value,
         sortColumn,
@@ -186,7 +186,7 @@ const FiltroList = () => {
     setSort(sortDirection)
     setSortColumn(column.sortField)
     dispatch(
-      getFiltros({
+      getPlanos({
         q: value,
         page: currentPage,
         sort: sortDirection,
@@ -235,4 +235,4 @@ const FiltroList = () => {
   )
 }
 
-export default FiltroList
+export default PlanoList

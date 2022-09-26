@@ -8,7 +8,7 @@ export const getPlanos = createAsyncThunk(
   "plano/getPlanos",
   async (parametros) => {
     //console.log(parametros)
-    const response = await api.get("/plano_conexao/lista/0/", {
+    const response = await api.get("/plano_conexao/lista/133/", {
       params: parametros,
     })
     // console.log(response)
@@ -45,8 +45,8 @@ export const deletePlano = createAsyncThunk(
   }
 )
 
-export const getGenero = async () => {
-  const response = (await api.get(`/listas/genero`)).data
+export const getHotspot = async (clienteId) => {
+  const response = (await api.get(`/hotspot/lista/${clienteId}`)).data
   return response
 }
 

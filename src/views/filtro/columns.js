@@ -1,9 +1,6 @@
 // ** React Imports
 import { Link } from "react-router-dom"
 
-// ** Custom Components
-import Avatar from "@components/avatar"
-
 // ** Store & Actions
 import { store } from "@store/store"
 import { deleteFiltro } from "./store"
@@ -23,18 +20,6 @@ import Swal from "sweetalert2"
 import withReactContent from "sweetalert2-react-content"
 
 const MySwal = withReactContent(Swal)
-
-// ** renders filter column
-const renderFiltro = (row) => {
-  return (
-    <Avatar
-      color="light-primary"
-      className="me-50"
-      content={row.nome ? row.nome : ""}
-      initials
-    />
-  )
-}
 
 // ** Modal de exclusão de filtro
 
@@ -87,7 +72,6 @@ export const columns = [
       const filtroInfo = `${idadeInicial} a ${idadeFinal} anos`
       return (
         <div className="d-flex justify-content-left align-items-center">
-          {renderFiltro(row)}
           <div className="d-flex flex-column">
             <Link to={`/filtro/${row.id}`} id={`pw-tooltip2-${row.id}`}>
               <h6 className="user-name text-truncate mb-0">{nome}</h6>
