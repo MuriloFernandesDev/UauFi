@@ -1,6 +1,9 @@
 // ** React Imports
 import { Link } from "react-router-dom"
 
+// ** Utils
+import { formatDateTime } from "@utils"
+
 // ** Store & Actions
 import { store } from "@store/store"
 import { deleteFiltro } from "./store"
@@ -94,13 +97,7 @@ export const columns = [
           <div className="d-inline-flex flex-column">
             <Link to={`/filtro/${row.id}`} id={`pw-tooltip2-${row.id}`}>
               <h6 className="user-name text-truncate mb-0">
-                {`${dataCriacao.substring(8, 10)}/${dataCriacao.substring(
-                  5,
-                  7
-                )}/${dataCriacao.substring(0, 4)} - ${dataCriacao.substring(
-                  11,
-                  16
-                )}`}
+                {formatDateTime(dataCriacao)}
               </h6>
             </Link>
           </div>

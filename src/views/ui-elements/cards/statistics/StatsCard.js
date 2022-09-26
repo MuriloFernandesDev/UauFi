@@ -184,7 +184,7 @@ const StatsCard = () => {
                 )}
 
                 <CardText className="font-small-3 mb-0">
-                  Total de usuarios
+                  Total de usuários
                 </CardText>
               </div>
             </div>

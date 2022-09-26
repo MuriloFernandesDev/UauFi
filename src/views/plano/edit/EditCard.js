@@ -24,6 +24,27 @@ const PlanoEditCard = ({ data, setSalvarDados }) => {
   const [hotspots, setHotspots] = useState(null)
   const [selectedHotspots, setSelectedHotspots] = useState(null)
 
+  const timeUnit = [
+    { value: "m", label: "Minuto" },
+    { value: "h", label: "Hora" },
+    { value: "d", label: "Dia" },
+  ]
+
+  const accessType = [
+    {
+      value: 1,
+      label: "Visitante",
+    },
+    {
+      value: 2,
+      label: "Hóspede / Cliente",
+    },
+    {
+      value: 3,
+      label: "Evento",
+    },
+  ]
+
   // ** Organização da informação
   const handleChange = (e) => {
     const { name, value } = e.target
@@ -205,28 +226,46 @@ const PlanoEditCard = ({ data, setSalvarDados }) => {
                     </Col>
 
                     <Col lg="4" md="6" className="mb-2">
-                      <Label className="form-label" for="unidade-tempo">
+                      <Label className="form-label" for="tempo">
                         Unidade de tempo
                       </Label>
                       <Select
                         isClearable
-                        id="unidade-tempo"
+                        id="tempo"
                         placeholder={"Selecione..."}
                         className="react-select"
                         classNamePrefix="select"
+                        options={timeUnit}
+                        onChange={(e) => {
+                          handleChange({
+                            target: {
+                              name: "tempo",
+                              value: e?.value,
+                            },
+                          })
+                        }}
                       />
                     </Col>
 
                     <Col lg="4" md="6" className="mb-2">
-                      <Label className="form-label" for="tipo-acesso">
+                      <Label className="form-label" for="tipo-plano-id">
                         Selecione o tipo de acesso
                       </Label>
                       <Select
                         isClearable
-                        id="tipo-acesso"
+                        id="tipo-plano-id"
                         placeholder={"Selecione..."}
                         className="react-select"
                         classNamePrefix="select"
+                        options={accessType}
+                        onChange={(e) => {
+                          handleChange({
+                            target: {
+                              name: "tipo_plano_id",
+                              value: Number(e?.value),
+                            },
+                          })
+                        }}
                       />
                     </Col>
                   </Row>

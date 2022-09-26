@@ -127,7 +127,7 @@ export default [
   },
   {
     id: "menuPlano",
-    title: "Planos de acesso",
+    title: "Planos de conexão",
     icon: <Smartphone size={20} />,
     navLink: "/plano",
   },
