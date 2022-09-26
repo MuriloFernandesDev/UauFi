@@ -71,8 +71,10 @@ const ClienteList = () => {
 
   // ** States
   const [value, setValue] = useState(store.params.q ?? "")
-  const [sort, setSort] = useState(store.params.sort ?? "desc")
-  const [sortColumn, setSortColumn] = useState(store.params.sortColumn ?? "id")
+  const [sort, setSort] = useState(store.params.sort ?? "asc")
+  const [sortColumn, setSortColumn] = useState(
+    store.params.sortColumn ?? "nome"
+  )
   const [currentPage, setCurrentPage] = useState(store.params.page ?? 1)
   const [rowsPerPage, setRowsPerPage] = useState(store.params.perPage ?? 10)
   const vTimeoutPesquisa = useRef()

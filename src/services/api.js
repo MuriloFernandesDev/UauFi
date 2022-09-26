@@ -1,19 +1,31 @@
-import axios from 'axios'
+import axios from "axios"
+
+// ** import das configurações do JWT
+import jwtDefaultConfig from "@src/@core/auth/jwt/jwtDefaultConfig"
 
 const api = axios.create({
-  baseURL: process.env.REACT_APP_API_URL
+  baseURL: process.env.REACT_APP_API_URL,
 })
 
 api.interceptors.request.use(
-  config => {
-    const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsImN0eSI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6ImFkbUB1YXVmaS5jb20iLCJuYmYiOjE2NTg1MDkzNTQsImV4cCI6MTY1ODUxMjk1NCwiaWF0IjoxNjU4NTA5MzU0fQ.fMMjnJGsgAwQW29I-Jo8z9OJ2XXPx8k5DePWN24wUvI' 
-    if (token) {
-      config.headers['Authorization'] = `Bearer ${token}`
+  (config) => {
+    const accessToken = localStorage.getItem(
+      jwtDefaultConfig.storageTokenKeyName
+    )
+
+    const hotspotId = JSON.parse(localStorage.getItem("hotspotId"))
+    //Enviar Hotspot selecionado
+    if (hotspotId) {
+      config.headers["hotspot_id"] = hotspotId.value
     }
-    config.headers['Access-Control-Allow-Origin'] = '*'
+
+    if (accessToken && accessToken !== "undefined") {
+      config.headers.Authorization = `${jwtDefaultConfig.tokenType} ${accessToken}`
+    }
+    config.headers["Access-Control-Allow-Origin"] = "*"
     return config
   },
-  error => {
+  (error) => {
     Promise.reject(error)
   }
 )

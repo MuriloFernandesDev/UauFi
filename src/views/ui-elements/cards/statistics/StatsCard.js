@@ -1,73 +1,195 @@
 // ** Third Party Components
-import classnames from 'classnames'
-import { TrendingUp, User, Box, DollarSign } from 'react-feather'
+import { User, Wifi, UserPlus, Smartphone } from "react-feather"
 
 // ** Custom Components
-import Avatar from '@components/avatar'
+import Avatar from "@components/avatar"
+
+// ** Hooks
+import { useEffect, useState } from "react"
+
+// ** API
+import api from "@src/services/api"
 
 // ** Reactstrap Imports
-import { Card, CardHeader, CardTitle, CardBody, CardText, Row, Col } from 'reactstrap'
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardBody,
+  CardText,
+  Row,
+  Col,
+  Spinner,
+} from "reactstrap"
 
-const StatsCard = ({ cols }) => {
-  const data = [
-    {
-      title: '230k',
-      subtitle: 'Sales',
-      color: 'light-primary',
-      icon: <TrendingUp size={24} />
-    },
-    {
-      title: '8.549k',
-      subtitle: 'Customers',
-      color: 'light-info',
-      icon: <User size={24} />
-    },
-    {
-      title: '1.423k',
-      subtitle: 'Products',
-      color: 'light-danger',
-      icon: <Box size={24} />
-    },
-    {
-      title: '$9745',
-      subtitle: 'Revenue',
-      color: 'light-success',
-      icon: <DollarSign size={24} />
-    }
-  ]
+const StatsCard = () => {
+  const [vValor1, setValor1] = useState(null)
+  const [vProcessando1, setProcessando1] = useState(true)
 
-  const renderData = () => {
-    return data.map((item, index) => {
-      const colMargin = Object.keys(cols)
-      const margin = index === 2 ? 'sm' : colMargin[0]
-      return (
-        <Col
-          key={index}
-          {...cols}
-          className={classnames({
-            [`mb-2 mb-${margin}-0`]: index !== data.length - 1
-          })}
-        >
-          <div className='d-flex align-items-center'>
-            <Avatar color={item.color} icon={item.icon} className='me-2' />
-            <div className='my-auto'>
-              <h4 className='fw-bolder mb-0'>{item.title}</h4>
-              <CardText className='font-small-3 mb-0'>{item.subtitle}</CardText>
-            </div>
-          </div>
-        </Col>
-      )
-    })
+  const [vValor2, setValor2] = useState(null)
+  const [vProcessando2, setProcessando2] = useState(true)
+
+  const [vValor3, setValor3] = useState(null)
+  const [vProcessando3, setProcessando3] = useState(true)
+
+  const [vValor4, setValor4] = useState(null)
+  const [vProcessando4, setProcessando4] = useState(true)
+
+  const getDados1 = () => {
+    setProcessando1(true)
+    return api
+      .get("/conexao/qtd_total/0")
+      .then((res) => {
+        setProcessando1(false)
+        setValor1(res.data.valor)
+      })
+      .catch((error) => {
+        setProcessando1(false)
+        console.error("Erro ao pegar dados:", error)
+      })
   }
 
+  const getDados2 = () => {
+    setProcessando2(true)
+    return api
+      .get("/conexao/qtd_dispositivo_online/0")
+      .then((res) => {
+        setProcessando2(false)
+        setValor2(res.data.valor)
+      })
+      .catch((error) => {
+        setProcessando2(false)
+        console.error("Erro ao pegar dados:", error)
+      })
+  }
+
+  const getDados3 = () => {
+    setProcessando3(true)
+    return api
+      .get("/conexao/cadastro_total/0")
+      .then((res) => {
+        setProcessando3(false)
+        setValor3(res.data.valor)
+      })
+      .catch((error) => {
+        setProcessando3(false)
+        console.error("Erro ao pegar dados:", error)
+      })
+  }
+
+  const getDados4 = () => {
+    setProcessando4(true)
+    return api
+      .get("/conexao/usuario_total")
+      .then((res) => {
+        setProcessando4(false)
+        setValor4(res.data.valor)
+      })
+      .catch((error) => {
+        setProcessando4(false)
+        console.error("Erro ao pegar dados:", error)
+      })
+  }
+
+  useEffect(() => {
+    // ** Requisitar dados
+    getDados1()
+    getDados2()
+    getDados3()
+    getDados4()
+  }, [])
+
   return (
-    <Card className='card-statistics'>
+    <Card className="card-statistics">
       <CardHeader>
-        <CardTitle tag='h4'>Statistics</CardTitle>
-        <CardText className='card-text font-small-2 me-25 mb-0'>Updated 1 month ago</CardText>
+        <h5>Quantidades totais</h5>
       </CardHeader>
-      <CardBody className='statistics-body'>
-        <Row>{renderData()}</Row>
+      <CardBody className="statistics-body">
+        <Row>
+          <Col sm="6" xl="3" className="mb-2 mb-xl-0">
+            <div className="d-flex align-items-center">
+              <Avatar
+                color="light-primary"
+                icon={<Smartphone size={24} />}
+                className="me-2"
+              />
+              <div className="my-auto">
+                {vProcessando1 ? (
+                  <Spinner color="primary" />
+                ) : (
+                  <h4 className="fw-bolder mb-0">{vValor1}</h4>
+                )}
+
+                <CardText className="font-small-3 mb-0">
+                  Conexões realizadas
+                </CardText>
+              </div>
+            </div>
+          </Col>
+
+          <Col sm="6" xl="3" className="mb-2 mb-xl-0">
+            <div className="d-flex align-items-center">
+              <Avatar
+                color="light-info"
+                icon={<Wifi size={24} />}
+                className="me-2"
+              />
+              <div className="my-auto">
+                {vProcessando2 ? (
+                  <Spinner color="primary" />
+                ) : (
+                  <h4 className="fw-bolder mb-0">{vValor2}</h4>
+                )}
+
+                <CardText className="font-small-3 mb-0">
+                  Online no momento
+                </CardText>
+              </div>
+            </div>
+          </Col>
+
+          <Col sm="6" xl="3" className="mb-2 mb-sm-0">
+            <div className="d-flex align-items-center">
+              <Avatar
+                color="light-info"
+                icon={<UserPlus size={24} />}
+                className="me-2"
+              />
+              <div className="my-auto">
+                {vProcessando3 ? (
+                  <Spinner color="primary" />
+                ) : (
+                  <h4 className="fw-bolder mb-0">{vValor3}</h4>
+                )}
+
+                <CardText className="font-small-3 mb-0">
+                  Total de cadastros
+                </CardText>
+              </div>
+            </div>
+          </Col>
+
+          <Col sm="6" xl="3">
+            <div className="d-flex align-items-center">
+              <Avatar
+                color="light-success"
+                icon={<User size={24} />}
+                className="me-2"
+              />
+              <div className="my-auto">
+                {vProcessando4 ? (
+                  <Spinner color="primary" />
+                ) : (
+                  <h4 className="fw-bolder mb-0">{vValor4}</h4>
+                )}
+
+                <CardText className="font-small-3 mb-0">
+                  Total de usuarios
+                </CardText>
+              </div>
+            </div>
+          </Col>
+        </Row>
       </CardBody>
     </Card>
   )
