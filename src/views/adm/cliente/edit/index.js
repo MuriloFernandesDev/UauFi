@@ -39,7 +39,6 @@ const handleError = (error, errorMessage, errorIcon) => {
 const ClienteEdit = () => {
   // ** Hooks
   const { id } = useParams()
-  console.log(id)
 
   const navigate = useNavigate()
 

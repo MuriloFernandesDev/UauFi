@@ -13,34 +13,28 @@ import { useDispatch } from "react-redux"
 import { handleLogout } from "@store/authentication"
 
 // ** Third Party Components
-import {
-  User,
-  Mail,
-  CheckSquare,
-  MessageSquare,
-  Settings,
-  CreditCard,
-  HelpCircle,
-  Power
-} from "react-feather"
+import { User, Users, Power, Sun, Moon } from "react-feather"
 
 // ** Reactstrap Imports
 import {
   UncontrolledDropdown,
   DropdownMenu,
   DropdownToggle,
-  DropdownItem
+  DropdownItem,
 } from "reactstrap"
 
 // ** Default Avatar Image
 import defaultAvatar from "@src/assets/images/avatars/avatar-blank.png"
 
-const UserDropdown = () => {
+const UserDropdown = (props) => {
   // ** Store Vars
   const dispatch = useDispatch()
 
   // ** State
   const [userData, setUserData] = useState(null)
+
+  // ** Props
+  const { skin, setSkin } = props
 
   //** ComponentDidMount
   useEffect(() => {
@@ -51,6 +45,19 @@ const UserDropdown = () => {
 
   //** Vars
   const userAvatar = (userData && userData.avatar) || defaultAvatar
+
+  const handleThemeToggler = () => {
+    setSkin(skin === "dark" ? "light" : "dark")
+  }
+
+  // ** Function to toggle Theme (Light/Dark)
+  const ThemeToggler = () => {
+    if (skin === "dark") {
+      return <Sun size={14} className="me-75" />
+    } else {
+      return <Moon size={14} className="me-75" />
+    }
+  }
 
   return (
     <UncontrolledDropdown tag="li" className="dropdown-user nav-item">
@@ -74,6 +81,17 @@ const UserDropdown = () => {
         <DropdownItem tag={Link} to="/adm/login/edit">
           <User size={14} className="me-75" />
           <span className="align-middle">Perfil</span>
+        </DropdownItem>
+        <DropdownItem tag={Link} to="/adm/login/edit">
+          <Users size={14} className="me-75" />
+          <span className="align-middle">Impersonar</span>
+        </DropdownItem>
+        <DropdownItem
+          className="d-block d-lg-none"
+          onClick={() => handleThemeToggler()}
+        >
+          <ThemeToggler />
+          <span className="align-middle">Mudar tema</span>
         </DropdownItem>
         <DropdownItem
           tag={Link}

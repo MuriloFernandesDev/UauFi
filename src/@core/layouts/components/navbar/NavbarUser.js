@@ -23,7 +23,7 @@ const NavbarUser = (props) => {
   }
 
   return (
-    <ul className="nav navbar-nav align-items-center ms-auto">
+    <ul className="nav navbar-nav align-items-center ms-auto flex-nowrap">
       {/* <IntlDropdown /> */}
       <NavItem className="d-none d-lg-block">
         <NavLink className="nav-link-style">
@@ -31,7 +31,7 @@ const NavbarUser = (props) => {
         </NavLink>
       </NavItem>
       <NotificationDropdown />
-      <UserDropdown />
+      <UserDropdown skin={skin} setSkin={setSkin} />
     </ul>
   )
 }

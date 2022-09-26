@@ -1,6 +1,6 @@
 // ** React Imports
-import { useContext } from "react"
-import { Link, useNavigate } from "react-router-dom"
+import { useContext, useState, useEffect } from "react"
+import { Link, useNavigate, useParams } from "react-router-dom"
 
 // ** Custom Hooks
 import { useSkin } from "@hooks/useSkin"
@@ -10,15 +10,7 @@ import useJwt from "@src/auth/jwt/useJwt"
 import toast from "react-hot-toast"
 import { useDispatch } from "react-redux"
 import { useForm, Controller } from "react-hook-form"
-import {
-  Facebook,
-  Twitter,
-  Mail,
-  GitHub,
-  HelpCircle,
-  Coffee,
-  X,
-} from "react-feather"
+import { AlertTriangle, Wifi, X } from "react-feather"
 
 // ** Actions
 import { handleLogin } from "@store/authentication"
@@ -33,6 +25,9 @@ import InputPasswordToggle from "@components/input-password-toggle"
 // ** Utils
 import { getHomeRouteForLoggedInUser } from "@utils"
 
+// ** API
+import api from "@src/services/api"
+
 // ** Reactstrap Imports
 import {
   Row,
@@ -40,95 +35,98 @@ import {
   Form,
   Input,
   Label,
-  Alert,
+  Spinner,
   Button,
   CardText,
   CardTitle,
-  UncontrolledTooltip,
 } from "reactstrap"
 
 // ** Styles
 import "@styles/react/pages/page-authentication.scss"
 
-// ** API
-import api from "@src/services/api"
-
-const ToastContent = ({ t, name, role }) => {
+const ToastContent = ({ t, mensagem }) => {
   return (
     <div className="d-flex">
       <div className="me-1">
-        <Avatar size="sm" color="success" icon={<Coffee size={12} />} />
+        <Avatar size="sm" color="warning" icon={<AlertTriangle size={12} />} />
       </div>
       <div className="d-flex flex-column">
         <div className="d-flex justify-content-between">
-          <h6>{name}</h6>
+          <h6>Ops!</h6>
           <X
             size={12}
             className="cursor-pointer"
             onClick={() => toast.dismiss(t.id)}
           />
         </div>
-        <span>
-          You have successfully logged in as an {role} user to Vuexy. Now you
-          can start to explore. Enjoy!
-        </span>
+        <span>{mensagem}</span>
       </div>
     </div>
   )
 }
 
 const defaultValues = {
-  password: "admin",
-  loginEmail: "admin@demo.com",
+  password: "",
+  loginEmail: "",
 }
 
 const Login = () => {
   // ** Hooks
+  const { slug } = useParams()
   const { skin } = useSkin()
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const ability = useContext(AbilityContext)
+  const [vEntrando, setEntrando] = useState(false)
+  const [vDadosSlug, setDadosSlug] = useState({
+    logo: null,
+    title: "",
+    primaryColor: "",
+    secondColor: "",
+    slug: "uau-fi",
+  })
+
   const {
     control,
     setError,
     handleSubmit,
     formState: { errors },
   } = useForm({ defaultValues })
-  const illustration = skin === "dark" ? "login-v2-dark.svg" : "login-v2.svg",
+  const illustration = skin === "dark" ? "bg-login.webp" : "bg-login.webp",
     source = require(`@src/assets/images/pages/${illustration}`).default
 
   const onSubmit = (data) => {
     if (Object.values(data).every((field) => field.length > 0)) {
-      api
-        .post("/cliente_login/auth", {
-          email: data.loginEmail,
-          senha: data.password,
-        })
-        .then((res) => {
-          console.log(res)
-        })
-        .catch((err) => console.log(err))
-
+      setEntrando(true)
       useJwt
-        .login({ email: data.loginEmail, password: data.password })
+        .login({ email: data.loginEmail, senha: data.password })
         .then((res) => {
-          const data = {
-            ...res.data.userData,
-            accessToken: res.data.accessToken,
-            refreshToken: res.data.refreshToken,
+          if (res.data !== "") {
+            const data = {
+              ...res.data.user,
+              accessToken: res.data.user.accessToken,
+              refreshToken: res.data.user.refreshToken,
+            }
+            dispatch(handleLogin(data))
+            ability.update(res.data.user.ability)
+            navigate(getHomeRouteForLoggedInUser(data.role))
+          } else {
+            toast((t) => (
+              <ToastContent t={t} mensagem={"E-mail e/ou senha inválidos!"} />
+            ))
           }
-          dispatch(handleLogin(data))
-          ability.update(res.data.userData.ability)
-          navigate(getHomeRouteForLoggedInUser(data.role))
+          setEntrando(false)
+        })
+        .catch((err) => {
+          setEntrando(false)
           toast((t) => (
             <ToastContent
               t={t}
-              role={data.role || "admin"}
-              name={data.fullName || data.username || "John Doe"}
+              mensagem={"Sistema offline, tente novamente mais tarde!"}
             />
           ))
+          console.log(err)
         })
-        .catch((err) => console.log(err))
     } else {
       for (const key in data) {
         if (data[key].length === 0) {
@@ -140,14 +138,36 @@ const Login = () => {
     }
   }
 
+  const getDadosSlug = () => {
+    return api
+      .get(`/cliente/tema?slug=${slug}`)
+      .then((res) => {
+        setDadosSlug(res.data)
+      })
+      .catch((error) => {
+        console.error("Erro ao pegar dados:", error)
+      })
+  }
+
+  useEffect(() => {
+    // ** Requisitar perfil slug
+    getDadosSlug()
+  }, [])
+
   return (
     <div className="auth-wrapper auth-cover">
       <Row className="auth-inner m-0">
-        <Col className="d-none d-lg-flex align-items-center p-5" lg="8" sm="12">
-          <div className="w-100 d-lg-flex align-items-center justify-content-center px-5">
-            <img className="img-fluid" src={source} alt="Login Cover" />
-          </div>
-        </Col>
+        <Col
+          className="d-none d-lg-flex align-items-center p-5"
+          lg="8"
+          sm="12"
+          style={{
+            backgroundImage: `url("${source}")`,
+            backgroundRepeat: "no-repeat",
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+          }}
+        ></Col>
         <Col
           className="d-flex align-items-center auth-bg px-2 p-lg-5"
           lg="4"
@@ -155,79 +175,15 @@ const Login = () => {
         >
           <Col className="px-xl-2 mx-auto" sm="8" md="6" lg="12">
             <div className="text-center mb-4">
-              <svg viewBox="0 0 139 95" version="1.1" height="28">
-                <defs>
-                  <linearGradient
-                    x1="100%"
-                    y1="10.5120544%"
-                    x2="50%"
-                    y2="89.4879456%"
-                    id="linearGradient-1"
-                  >
-                    <stop stopColor="#000000" offset="0%"></stop>
-                    <stop stopColor="#FFFFFF" offset="100%"></stop>
-                  </linearGradient>
-                  <linearGradient
-                    x1="64.0437835%"
-                    y1="46.3276743%"
-                    x2="37.373316%"
-                    y2="100%"
-                    id="linearGradient-2"
-                  >
-                    <stop
-                      stopColor="#EEEEEE"
-                      stopOpacity="0"
-                      offset="0%"
-                    ></stop>
-                    <stop stopColor="#FFFFFF" offset="100%"></stop>
-                  </linearGradient>
-                </defs>
-                <g
-                  id="Page-1"
-                  stroke="none"
-                  strokeWidth="1"
-                  fill="none"
-                  fillRule="evenodd"
-                >
-                  <g
-                    id="Artboard"
-                    transform="translate(-400.000000, -178.000000)"
-                  >
-                    <g id="Group" transform="translate(400.000000, 178.000000)">
-                      <path
-                        d="M-5.68434189e-14,2.84217094e-14 L39.1816085,2.84217094e-14 L69.3453773,32.2519224 L101.428699,2.84217094e-14 L138.784583,2.84217094e-14 L138.784199,29.8015838 C137.958931,37.3510206 135.784352,42.5567762 132.260463,45.4188507 C128.736573,48.2809251 112.33867,64.5239941 83.0667527,94.1480575 L56.2750821,94.1480575 L6.71554594,44.4188507 C2.46876683,39.9813776 0.345377275,35.1089553 0.345377275,29.8015838 C0.345377275,24.4942122 0.230251516,14.560351 -5.68434189e-14,2.84217094e-14 Z"
-                        id="Path"
-                        className="text-primary"
-                        style={{ fill: "currentColor" }}
-                      ></path>
-                      <path
-                        d="M69.3453773,32.2519224 L101.428699,1.42108547e-14 L138.784583,1.42108547e-14 L138.784199,29.8015838 C137.958931,37.3510206 135.784352,42.5567762 132.260463,45.4188507 C128.736573,48.2809251 112.33867,64.5239941 83.0667527,94.1480575 L56.2750821,94.1480575 L32.8435758,70.5039241 L69.3453773,32.2519224 Z"
-                        id="Path"
-                        fill="url(#linearGradient-1)"
-                        opacity="0.2"
-                      ></path>
-                      <polygon
-                        id="Path-2"
-                        fill="#000000"
-                        opacity="0.049999997"
-                        points="69.3922914 32.4202615 32.8435758 70.5039241 54.0490008 16.1851325"
-                      ></polygon>
-                      <polygon
-                        id="Path-2"
-                        fill="#000000"
-                        opacity="0.099999994"
-                        points="69.3922914 32.4202615 32.8435758 70.5039241 58.3683556 20.7402338"
-                      ></polygon>
-                      <polygon
-                        id="Path-3"
-                        fill="url(#linearGradient-2)"
-                        opacity="0.099999994"
-                        points="101.428699 0 83.0667527 94.1480575 130.378721 47.0740288"
-                      ></polygon>
-                    </g>
-                  </g>
-                </g>
-              </svg>
+              {vDadosSlug.logo ? (
+                <img
+                  alt="Logotipo"
+                  src={vDadosSlug.logo}
+                  style={{ maxHeight: "100%", maxWidth: "60%" }}
+                ></img>
+              ) : (
+                <Wifi size={30} />
+              )}
             </div>
             <CardTitle tag="h3" className="fw-bold mb-1">
               Bem-vindo ao seu dashboard!
@@ -261,7 +217,7 @@ const Login = () => {
                   <Label className="form-label" for="login-password">
                     Senha
                   </Label>
-                  <Link to="/forgot-password">
+                  <Link to="/forgot-password" tabIndex={-1}>
                     <small>Esqueceu?</small>
                   </Link>
                 </div>
@@ -284,9 +240,17 @@ const Login = () => {
                   Manter conectado
                 </Label>
               </div>
-              <Button type="submit" color="primary" block>
-                Entrar
-              </Button>
+
+              {vEntrando ? (
+                <Button type="submit" color="primary" block disabled>
+                  <Spinner size="sm" />
+                  <span className="ms-50">Entrando...</span>
+                </Button>
+              ) : (
+                <Button type="submit" color="primary" block>
+                  Entrar
+                </Button>
+              )}
             </Form>
           </Col>
         </Col>
