@@ -55,7 +55,7 @@ const PlanoEdit = () => {
             toast.success("Plano de conexão editado com sucesso!", {
               position: "bottom-right",
             })
-            navigate("/plano")
+            navigate("/usuario/plano")
           }
         })
         .catch((error) => {
@@ -87,7 +87,7 @@ const PlanoEdit = () => {
             toast.success("Plano de conexão criado com sucesso!", {
               position: "bottom-right",
             })
-            navigate("/plano")
+            navigate("/usuario/plano")
           }
         })
         .catch((error) => {

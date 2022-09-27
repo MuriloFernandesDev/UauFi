@@ -71,9 +71,9 @@ export default [
         id: "menuUsuariosPlanoConexao",
         title: "Plano de conexão",
         icon: <Circle size={12} />,
-        navLink: "/usuario/plano_conexao",
+        navLink: "/usuario/plano",
         action: "read",
-        resource: "plano_conexao",
+        resource: "plano",
       },
       {
         id: "menuUsuariosBlock",
@@ -124,12 +124,6 @@ export default [
     navLink: "/filtro",
     action: "read",
     resource: "filtro_campanha",
-  },
-  {
-    id: "menuPlano",
-    title: "Planos de conexão",
-    icon: <Smartphone size={20} />,
-    navLink: "/plano",
   },
   {
     id: "menuCampanha",

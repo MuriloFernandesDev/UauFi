@@ -21,13 +21,15 @@ const PlanoEditCard = ({ data, setSalvarDados }) => {
 
   // ** States
   const [vDados, setData] = useState(data)
+  const [hotspots, setHotspots] = useState(null)
+  const [nome, setNome] = useState("")
   const [download, setDownload] = useState("")
   const [upload, setUpload] = useState("")
   const [tempoConexão, setTempoConexão] = useState("")
+  const [ativo, setAtivo] = useState(false)
   const [selectedHotspot, setSelectedHotspot] = useState(null)
   const [selectedUnidade, setSelectedUnidade] = useState(null)
   const [selectedTipoAcesso, setSelectedTipoAcesso] = useState(null)
-  const [hotspots, setHotspots] = useState(null)
   let hotspotsVar
   const timeUnit = [
     { value: "m", label: "Minuto" },
@@ -107,9 +109,11 @@ const PlanoEditCard = ({ data, setSalvarDados }) => {
       handleHotspots()
       handleUnidade()
       handleTipoAcesso()
+      setNome(vDados[0].nome !== null ? vDados[0].nome : "")
       setDownload(vDados[0].mega_download !== 0 ? vDados[0].mega_download : "")
       setUpload(vDados[0].mega_upload !== 0 ? vDados[0].mega_upload : "")
       setTempoConexão(vDados[0].tempo !== 0 ? vDados[0].tempo : "")
+      setAtivo(vDados[0].ativo)
     }
   }, [])
 
@@ -122,7 +126,7 @@ const PlanoEditCard = ({ data, setSalvarDados }) => {
               <div>
                 <Button.Ripple
                   color="primary"
-                  onClick={() => navigate("/plano")}
+                  onClick={() => navigate("/usuario/plano")}
                 >
                   <CornerUpLeft size={17} />
                 </Button.Ripple>
@@ -155,9 +159,19 @@ const PlanoEditCard = ({ data, setSalvarDados }) => {
                       <Input
                         id="nome"
                         name="nome"
-                        value={vDados[0]?.nome ?? ""}
+                        value={nome}
                         onChange={
-                          vDados.id !== undefined ? blockChange : handleChange
+                          vDados.id !== undefined
+                            ? blockChange
+                            : (e) => {
+                                setNome(e.target.value)
+                                handleChange({
+                                  target: {
+                                    name: "nome",
+                                    value: e.target.value,
+                                  },
+                                })
+                              }
                         }
                       />
                     </Col>
@@ -328,8 +342,10 @@ const PlanoEditCard = ({ data, setSalvarDados }) => {
                         <Input
                           type="switch"
                           id="ativo"
-                          checked={vDados[0]?.ativo ?? false}
+                          checked={ativo}
                           onChange={(e) => {
+                            setAtivo(e.target.checked)
+                            console.log(e.target.checked)
                             handleChange({
                               target: {
                                 name: "ativo",

@@ -12,7 +12,7 @@ import filtro from "@src/views/filtro/store"
 import invoice from "@src/views/apps/invoice/store"
 import kanban from "@src/views/apps/kanban/store"
 import permissions from "@src/views/apps/roles-permissions/store"
-import plano from "@src/views/plano/store"
+import plano from "@src/views/users/plano/store"
 import todo from "@src/views/apps/todo/store"
 import users from "@src/views/apps/user/store"
 

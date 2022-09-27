@@ -5,7 +5,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"
 import api from "@src/services/api"
 
 export const getPlanos = createAsyncThunk(
-  "plano/getPlanos",
+  "usersPlano/getPlanos",
   async (parametros) => {
     //console.log(parametros)
     const response = await api.get("/plano_conexao/lista/", {
@@ -37,7 +37,7 @@ export const getPlanos = createAsyncThunk(
 )
 
 export const deletePlano = createAsyncThunk(
-  "plano/deletePlano",
+  "usersPlano/deletePlano",
   async (id, { dispatch, getState }) => {
     await api.delete(`/plano_conexao/${id}`)
     await dispatch(getPlanos(getState().plano.params))

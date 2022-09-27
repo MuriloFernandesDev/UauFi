@@ -39,7 +39,7 @@ const CustomHeader = ({ handleFilter, value, handlePerPage, rowsPerPage }) => {
               <option value="50">50</option>
             </Input>
           </div>
-          <Button tag={Link} to="/plano/add" color="primary">
+          <Button tag={Link} to="/usuario/plano/add" color="primary">
             Novo plano de conexão
           </Button>
         </Col>
