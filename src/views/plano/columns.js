@@ -24,18 +24,6 @@ import withReactContent from "sweetalert2-react-content"
 
 const MySwal = withReactContent(Swal)
 
-// ** renders plan column
-const renderPlano = (row) => {
-  return (
-    <Avatar
-      color="light-primary"
-      className="me-50"
-      content={row.nome ? row.nome : ""}
-      initials
-    />
-  )
-}
-
 // ** Modal de exclusão de plano
 
 const handleDeleteConfirmation = (row) => {
@@ -77,16 +65,24 @@ const handleDeleteConfirmation = (row) => {
 // ** Table columns
 export const columns = [
   {
-    name: "Plano de conexão",
+    name: "Nome",
     minWidth: "450px",
     cell: (row) => {
-      const nome = row.nome ? row.nome : "",
-        idadeInicial = row.idade_inicial ? row.idade_inicial : "",
-        idadeFinal = row.idade_final ? row.idade_final : ""
-      const planoInfo = `${idadeInicial} a ${idadeFinal} anos`
+      const nome = row.nome ?? "",
+        planoAtivo = `${row.ativo ? "Ativo" : "Inativo"}. ` ?? "",
+        tempoConexao = `Tempo máximo de conexão: ${row.tempo}` ?? ""
+      let tempoUnidade
+      if (row.unidade_tempo === "m") {
+        tempoUnidade = row.tempo === 1 ? "minuto" : "minutos"
+      } else if (row.unidade_tempo === "h") {
+        tempoUnidade = row.tempo === 1 ? "hora" : "horas"
+      } else {
+        tempoUnidade = row.tempo === 1 ? "dia" : "dias"
+      }
+      const planoInfo = `${planoAtivo}${tempoConexao} ${tempoUnidade}`
+
       return (
         <div className="d-flex justify-content-left align-items-center">
-          {renderPlano(row)}
           <div className="d-flex flex-column">
             <Link to={`/plano/${row.id}`} id={`pw-tooltip2-${row.id}`}>
               <h6 className="user-name text-truncate mb-0">{nome}</h6>
@@ -100,23 +96,29 @@ export const columns = [
     },
   },
   {
-    name: <div className="text-end w-100">Data de criação</div>,
-    minWidth: "80px",
+    name: "Plano de conexão",
+    minWidth: "200px",
     cell: (row) => {
-      const dataCriacao = row.data_criacao ? row.data_criacao : ""
+      const velocidadeDownload = row.mega_download ?? "",
+        velocidadeUpload = row.mega_upload ?? ""
+      let tipoPlano
+      if (row.tipo_plano_id === 1) {
+        tipoPlano = "Visitante"
+      } else if (row.tipo_plano_id === 2) {
+        tipoPlano = "Hóspede / Cliente"
+      } else {
+        tipoPlano = "Evento"
+      }
+      const planoInfo = `Download: ${velocidadeDownload}Mb | Upload: ${velocidadeUpload}Mb`
+
       return (
-        <div className="text-end w-100">
-          <div className="d-inline-flex flex-column">
+        <div className="d-flex justify-content-left align-items-center">
+          <div className="d-flex flex-column">
             <Link to={`/plano/${row.id}`} id={`pw-tooltip2-${row.id}`}>
-              <h6 className="user-name text-truncate mb-0">
-                {`${dataCriacao.substring(8, 10)}/${dataCriacao.substring(
-                  5,
-                  7
-                )}/${dataCriacao.substring(0, 4)} - ${dataCriacao.substring(
-                  11,
-                  16
-                )}`}
-              </h6>
+              <h6 className="user-name text-truncate mb-0">{tipoPlano}</h6>
+              <small className="text-truncate text-muted mb-0">
+                {planoInfo}
+              </small>
             </Link>
           </div>
         </div>

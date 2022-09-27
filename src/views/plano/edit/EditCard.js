@@ -21,9 +21,14 @@ const PlanoEditCard = ({ data, setSalvarDados }) => {
 
   // ** States
   const [vDados, setData] = useState(data)
+  const [download, setDownload] = useState("")
+  const [upload, setUpload] = useState("")
+  const [tempoConexão, setTempoConexão] = useState("")
+  const [selectedHotspot, setSelectedHotspot] = useState(null)
+  const [selectedUnidade, setSelectedUnidade] = useState(null)
+  const [selectedTipoAcesso, setSelectedTipoAcesso] = useState(null)
   const [hotspots, setHotspots] = useState(null)
-  const [selectedHotspots, setSelectedHotspots] = useState(null)
-
+  let hotspotsVar
   const timeUnit = [
     { value: "m", label: "Minuto" },
     { value: "h", label: "Hora" },
@@ -54,9 +59,37 @@ const PlanoEditCard = ({ data, setSalvarDados }) => {
     }))
   }
 
-  const handleHotspot = async () => {
-    const response = await getHotspot(20)
-    setHotspots(response?.map((i) => ({ value: i.id, label: i.nome })))
+  const handleHotspots = async () => {
+    hotspotsVar = await getHotspot()
+    setHotspots(hotspotsVar)
+
+    if (vDados[0].id !== undefined) {
+      hotspotsVar?.map((res) => {
+        if (res.value === vDados[0].hotspot_id) {
+          setSelectedHotspot({ value: res.value, label: res.label })
+        }
+      })
+    }
+  }
+
+  const handleUnidade = async () => {
+    if (vDados[0].id !== undefined) {
+      timeUnit?.map((res) => {
+        if (res.value === vDados[0].unidade_tempo) {
+          setSelectedUnidade({ value: res.value, label: res.label })
+        }
+      })
+    }
+  }
+
+  const handleTipoAcesso = async () => {
+    if (vDados[0].id !== undefined) {
+      accessType?.map((res) => {
+        if (res.value === vDados[0].tipo_plano_id) {
+          setSelectedTipoAcesso({ value: res.value, label: res.label })
+        }
+      })
+    }
   }
 
   // ** Bloquear ações de onChange
@@ -71,7 +104,12 @@ const PlanoEditCard = ({ data, setSalvarDados }) => {
   useEffect(() => {
     // ** Requisitar listas
     if (vDados.id !== 0 || undefined) {
-      handleHotspot()
+      handleHotspots()
+      handleUnidade()
+      handleTipoAcesso()
+      setDownload(vDados[0].mega_download !== 0 ? vDados[0].mega_download : "")
+      setUpload(vDados[0].mega_upload !== 0 ? vDados[0].mega_upload : "")
+      setTempoConexão(vDados[0].tempo !== 0 ? vDados[0].tempo : "")
     }
   }, [])
 
@@ -117,7 +155,7 @@ const PlanoEditCard = ({ data, setSalvarDados }) => {
                       <Input
                         id="nome"
                         name="nome"
-                        value={vDados?.nome ?? ""}
+                        value={vDados[0]?.nome ?? ""}
                         onChange={
                           vDados.id !== undefined ? blockChange : handleChange
                         }
@@ -131,18 +169,17 @@ const PlanoEditCard = ({ data, setSalvarDados }) => {
                       <Select
                         isClearable
                         id="hotspot-id"
-                        isMulti={true}
                         placeholder={"Selecione..."}
+                        value={selectedHotspot}
                         options={hotspots}
-                        value={selectedHotspots}
                         className="react-select"
                         classNamePrefix="select"
                         onChange={(e) => {
-                          setSelectedHotspots(e)
+                          setSelectedHotspot(e)
                           handleChange({
                             target: {
                               name: "hotspot_id",
-                              value: e?.map((item) => Number(item.value)),
+                              value: Number(e?.value),
                             },
                           })
                         }}
@@ -155,46 +192,52 @@ const PlanoEditCard = ({ data, setSalvarDados }) => {
                   <Row>
                     <Col lg="6" md="6" className="mb-2">
                       <Label className="form-label" for="mega-download">
-                        Velocidade de download
+                        Velocidade de download (Mbps)
                       </Label>
                       <Input
                         id="mega-download"
                         name="mega-download"
                         type="number"
                         placeholder="Mbps"
+                        value={download}
                         onChange={
                           vDados.id !== undefined
                             ? blockChange
-                            : (e) =>
+                            : (e) => {
+                                setDownload(e.target.value)
                                 handleChange({
                                   target: {
                                     name: "mega_download",
                                     value: Number(e.target.value),
                                   },
                                 })
+                              }
                         }
                       />
                     </Col>
 
                     <Col lg="6" md="6" className="mb-2">
                       <Label className="form-label" for="mega-upload">
-                        Velocidade de upload
+                        Velocidade de upload (Mbps)
                       </Label>
                       <Input
                         id="mega-upload"
                         name="mega-upload"
                         type="number"
                         placeholder="Mbps"
+                        value={upload}
                         onChange={
                           vDados.id !== undefined
                             ? blockChange
-                            : (e) =>
+                            : (e) => {
+                                setUpload(e.target.value)
                                 handleChange({
                                   target: {
                                     name: "mega_upload",
                                     value: Number(e.target.value),
                                   },
                                 })
+                              }
                         }
                       />
                     </Col>
@@ -211,35 +254,40 @@ const PlanoEditCard = ({ data, setSalvarDados }) => {
                         id="tempo"
                         name="tempo"
                         type="number"
+                        value={tempoConexão}
                         onChange={
                           vDados.id !== undefined
                             ? blockChange
-                            : (e) =>
+                            : (e) => {
+                                setTempoConexão(e.target.value)
                                 handleChange({
                                   target: {
                                     name: "tempo",
                                     value: Number(e.target.value),
                                   },
                                 })
+                              }
                         }
                       />
                     </Col>
 
                     <Col lg="4" md="6" className="mb-2">
-                      <Label className="form-label" for="tempo">
+                      <Label className="form-label" for="unidade-tempo">
                         Unidade de tempo
                       </Label>
                       <Select
                         isClearable
-                        id="tempo"
+                        id="unidade-tempo"
                         placeholder={"Selecione..."}
                         className="react-select"
                         classNamePrefix="select"
+                        value={selectedUnidade}
                         options={timeUnit}
                         onChange={(e) => {
+                          setSelectedUnidade(e)
                           handleChange({
                             target: {
-                              name: "tempo",
+                              name: "unidade_tempo",
                               value: e?.value,
                             },
                           })
@@ -257,8 +305,10 @@ const PlanoEditCard = ({ data, setSalvarDados }) => {
                         placeholder={"Selecione..."}
                         className="react-select"
                         classNamePrefix="select"
+                        value={selectedTipoAcesso}
                         options={accessType}
                         onChange={(e) => {
+                          setSelectedTipoAcesso(e)
                           handleChange({
                             target: {
                               name: "tipo_plano_id",
@@ -267,6 +317,31 @@ const PlanoEditCard = ({ data, setSalvarDados }) => {
                           })
                         }}
                       />
+                    </Col>
+                  </Row>
+                </Col>
+
+                <Col lg="12">
+                  <Row>
+                    <Col md="4" className="mb-2">
+                      <div className="form-check form-switch">
+                        <Input
+                          type="switch"
+                          id="ativo"
+                          checked={vDados[0]?.ativo ?? false}
+                          onChange={(e) => {
+                            handleChange({
+                              target: {
+                                name: "ativo",
+                                value: e.target.checked,
+                              },
+                            })
+                          }}
+                        />
+                        <Label for="ativo" className="form-check-label mt-25">
+                          Ativar plano de conexão
+                        </Label>
+                      </div>
                     </Col>
                   </Row>
                 </Col>

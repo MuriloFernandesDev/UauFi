@@ -31,7 +31,7 @@ const NavbarBookmarks = (props) => {
   const [hotspotId, setHotspotId] = useHotspotId()
 
   const getHotspots = () => {
-    return api.get("/hotspot/lista/0").then((res) => {
+    return api.get("/hotspot/lista/").then((res) => {
       setListaHotspots(
         res.data.map((ret) => ({
           label: ret.nome,
