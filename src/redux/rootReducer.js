@@ -6,8 +6,9 @@ import calendar from "@src/views/apps/calendar/store"
 import chat from "@src/views/apps/chat/store"
 import cliente from "@src/views/adm/cliente/store"
 import dataTables from "@src/views/tables/data-tables/store"
-import email from "@src/views/apps/email/store"
 import ecommerce from "@src/views/apps/ecommerce/store"
+import email from "@src/views/apps/email/store"
+import evento from "@src/views/evento/store"
 import filtro from "@src/views/filtro/store"
 import invoice from "@src/views/apps/invoice/store"
 import kanban from "@src/views/apps/kanban/store"
@@ -26,6 +27,7 @@ const rootReducer = {
   dataTables,
   ecommerce,
   email,
+  evento,
   filtro,
   invoice,
   kanban,

@@ -12,6 +12,8 @@ const Cliente = lazy(() => import("../../views/adm/cliente"))
 const ClienteEdit = lazy(() => import("../../views/adm/cliente/edit"))
 const Filtro = lazy(() => import("../../views/filtro"))
 const FiltroEdit = lazy(() => import("../../views/filtro/edit"))
+const Evento = lazy(() => import("../../views/evento"))
+const EventoEdit = lazy(() => import("../../views/evento/edit"))
 const InvoiceAdd = lazy(() => import("../../views/apps/invoice/add"))
 const InvoiceList = lazy(() => import("../../views/apps/invoice/list"))
 const InvoiceEdit = lazy(() => import("../../views/apps/invoice/edit"))
@@ -125,6 +127,14 @@ const AppRoutes = [
   {
     element: <FiltroEdit />,
     path: "/filtro/:id",
+  },
+  {
+    element: <Evento />,
+    path: "/evento",
+  },
+  {
+    element: <EventoEdit />,
+    path: "/evento/:id",
   },
   {
     element: <InvoiceList />,
