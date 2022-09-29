@@ -94,9 +94,6 @@ const PlanoEditCard = ({ data, setSalvarDados }) => {
     }
   }
 
-  // ** Bloquear ações de onChange
-  const blockChange = () => {}
-
   const setDados = () => {
     setSalvarDados(vDados)
   }
@@ -160,19 +157,15 @@ const PlanoEditCard = ({ data, setSalvarDados }) => {
                         id="nome"
                         name="nome"
                         value={nome}
-                        onChange={
-                          vDados.id !== undefined
-                            ? blockChange
-                            : (e) => {
-                                setNome(e.target.value)
-                                handleChange({
-                                  target: {
-                                    name: "nome",
-                                    value: e.target.value,
-                                  },
-                                })
-                              }
-                        }
+                        onChange={(e) => {
+                          setNome(e.target.value)
+                          handleChange({
+                            target: {
+                              name: "nome",
+                              value: e.target.value,
+                            },
+                          })
+                        }}
                       />
                     </Col>
 
@@ -214,19 +207,15 @@ const PlanoEditCard = ({ data, setSalvarDados }) => {
                         type="number"
                         placeholder="Mbps"
                         value={download}
-                        onChange={
-                          vDados.id !== undefined
-                            ? blockChange
-                            : (e) => {
-                                setDownload(e.target.value)
-                                handleChange({
-                                  target: {
-                                    name: "mega_download",
-                                    value: Number(e.target.value),
-                                  },
-                                })
-                              }
-                        }
+                        onChange={(e) => {
+                          setDownload(e.target.value)
+                          handleChange({
+                            target: {
+                              name: "mega_download",
+                              value: Number(e.target.value),
+                            },
+                          })
+                        }}
                       />
                     </Col>
 
@@ -240,19 +229,15 @@ const PlanoEditCard = ({ data, setSalvarDados }) => {
                         type="number"
                         placeholder="Mbps"
                         value={upload}
-                        onChange={
-                          vDados.id !== undefined
-                            ? blockChange
-                            : (e) => {
-                                setUpload(e.target.value)
-                                handleChange({
-                                  target: {
-                                    name: "mega_upload",
-                                    value: Number(e.target.value),
-                                  },
-                                })
-                              }
-                        }
+                        onChange={(e) => {
+                          setUpload(e.target.value)
+                          handleChange({
+                            target: {
+                              name: "mega_upload",
+                              value: Number(e.target.value),
+                            },
+                          })
+                        }}
                       />
                     </Col>
                   </Row>
@@ -269,19 +254,15 @@ const PlanoEditCard = ({ data, setSalvarDados }) => {
                         name="tempo"
                         type="number"
                         value={tempoConexão}
-                        onChange={
-                          vDados.id !== undefined
-                            ? blockChange
-                            : (e) => {
-                                setTempoConexão(e.target.value)
-                                handleChange({
-                                  target: {
-                                    name: "tempo",
-                                    value: Number(e.target.value),
-                                  },
-                                })
-                              }
-                        }
+                        onChange={(e) => {
+                          setTempoConexão(e.target.value)
+                          handleChange({
+                            target: {
+                              name: "tempo",
+                              value: Number(e.target.value),
+                            },
+                          })
+                        }}
                       />
                     </Col>
 

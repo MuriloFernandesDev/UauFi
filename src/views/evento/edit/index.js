@@ -47,9 +47,9 @@ const EventoEdit = () => {
 
   // ** Função para salvar dados & respostas a erros
   const handleSalvar = (pDados) => {
-    if (pDados.id > 0) {
+    if (pDados[0].id > 0) {
       api
-        .put("/evento", pDados)
+        .put("/evento", pDados[0])
         .then((response) => {
           if (response.status === 200) {
             toast.success("Evento editado com sucesso!", {

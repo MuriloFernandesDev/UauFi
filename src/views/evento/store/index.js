@@ -50,6 +50,11 @@ export const getHotspot = async () => {
   return response
 }
 
+export const getPlano = async () => {
+  const response = (await api.get(`/plano_conexao/lista`)).data
+  return response
+}
+
 export const eventoSlice = createSlice({
   name: "evento",
   initialState: {

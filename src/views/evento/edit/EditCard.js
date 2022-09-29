@@ -10,8 +10,8 @@ import { CornerUpLeft, Check } from "react-feather"
 
 // ** Terceiros
 import Select from "react-select"
+import { getHotspot, getPlano } from "../store"
 import "@styles/react/libs/flatpickr/flatpickr.scss"
-import { getHotspot } from "../store"
 
 // ** API
 // import api from "@src/services/api"
@@ -21,36 +21,17 @@ const EventoEditCard = ({ data, setSalvarDados }) => {
 
   // ** States
   const [vDados, setData] = useState(data)
-  const [hotspots, setHotspots] = useState(null)
   const [nome, setNome] = useState("")
-  const [download, setDownload] = useState("")
-  const [upload, setUpload] = useState("")
-  const [tempoConexão, setTempoConexão] = useState("")
+  const [dataInicio, setDataInicio] = useState("")
+  const [dataFim, setDataFim] = useState("")
+  const [voucher, setVoucher] = useState("")
+  const [planos, setPlanos] = useState(null)
+  const [hotspots, setHotspots] = useState(null)
   const [ativo, setAtivo] = useState(false)
   const [selectedHotspot, setSelectedHotspot] = useState(null)
-  const [selectedUnidade, setSelectedUnidade] = useState(null)
-  const [selectedTipoAcesso, setSelectedTipoAcesso] = useState(null)
+  const [selectedPlano, setSelectedPlano] = useState(null)
   let hotspotsVar
-  const timeUnit = [
-    { value: "m", label: "Minuto" },
-    { value: "h", label: "Hora" },
-    { value: "d", label: "Dia" },
-  ]
-
-  const accessType = [
-    {
-      value: 1,
-      label: "Visitante",
-    },
-    {
-      value: 2,
-      label: "Hóspede / Cliente",
-    },
-    {
-      value: 3,
-      label: "Evento",
-    },
-  ]
+  let planosVar
 
   // ** Organização da informação
   const handleChange = (e) => {
@@ -74,21 +55,14 @@ const EventoEditCard = ({ data, setSalvarDados }) => {
     }
   }
 
-  const handleUnidade = async () => {
-    if (vDados[0].id !== undefined) {
-      timeUnit?.map((res) => {
-        if (res.value === vDados[0].unidade_tempo) {
-          setSelectedUnidade({ value: res.value, label: res.label })
-        }
-      })
-    }
-  }
+  const handlePlanos = async () => {
+    planosVar = await getPlano()
+    setPlanos(planosVar.map((i) => ({ value: i.id, label: i.nome })))
 
-  const handleTipoAcesso = async () => {
     if (vDados[0].id !== undefined) {
-      accessType?.map((res) => {
-        if (res.value === vDados[0].tipo_evento_id) {
-          setSelectedTipoAcesso({ value: res.value, label: res.label })
+      planosVar?.map((res) => {
+        if (res.id === vDados[0].plano_conexao_id) {
+          setSelectedPlano({ value: res.id, label: res.nome })
         }
       })
     }
@@ -107,12 +81,17 @@ const EventoEditCard = ({ data, setSalvarDados }) => {
     // ** Requisitar listas
     if (vDados.id !== 0 || undefined) {
       handleHotspots()
-      handleUnidade()
-      handleTipoAcesso()
+      handlePlanos()
       setNome(vDados[0].nome !== null ? vDados[0].nome : "")
-      setDownload(vDados[0].mega_download !== 0 ? vDados[0].mega_download : "")
-      setUpload(vDados[0].mega_upload !== 0 ? vDados[0].mega_upload : "")
-      setTempoConexão(vDados[0].tempo !== 0 ? vDados[0].tempo : "")
+      setVoucher(vDados[0].voucher !== null ? vDados[0].voucher : "")
+      setDataInicio(
+        vDados[0].data_inicio !== "0001-01-01T00:00:00"
+          ? vDados[0].data_inicio
+          : ""
+      )
+      setDataFim(
+        vDados[0].data_fim !== "0001-01-01T00:00:00" ? vDados[0].data_fim : ""
+      )
       setAtivo(vDados[0].ativo)
     }
   }, [])
@@ -175,6 +154,103 @@ const EventoEditCard = ({ data, setSalvarDados }) => {
                         }
                       />
                     </Col>
+                    <Col lg="6" md="6" className="mb-2">
+                      <Label className="form-label" for="voucher">
+                        Voucher
+                      </Label>
+                      <Input
+                        id="voucher"
+                        name="voucher"
+                        maxLength={20}
+                        value={voucher}
+                        onChange={(e) => {
+                          setVoucher(e.target.value)
+                          handleChange({
+                            target: {
+                              name: "voucher",
+                              value: e.target.value,
+                            },
+                          })
+                        }}
+                      />
+                    </Col>{" "}
+                  </Row>
+                </Col>
+
+                <Col lg="12">
+                  <Row>
+                    <Col lg="6" md="6" className="mb-2">
+                      <Label className="form-label" for="data-inicio">
+                        Início do evento
+                      </Label>
+
+                      <Input
+                        id="data-inicio"
+                        name="data-inicio"
+                        type="datetime-local"
+                        value={dataInicio}
+                        disabled={vDados.id !== undefined}
+                        onChange={(e) => {
+                          setDataInicio(e.target.value)
+                          handleChange({
+                            target: {
+                              name: "data_inicio",
+                              value: e.target.value,
+                            },
+                          })
+                        }}
+                      />
+                    </Col>
+
+                    <Col lg="6" md="6" className="mb-2">
+                      <Label className="form-label" for="data-fim">
+                        Fim do evento
+                      </Label>
+                      <Input
+                        id="data-fim"
+                        name="data-fim"
+                        type="datetime-local"
+                        value={dataFim}
+                        disabled={vDados.id !== undefined}
+                        onChange={(e) => {
+                          setDataFim(e.target.value)
+                          handleChange({
+                            target: {
+                              name: "data_fim",
+                              value: e.target.value,
+                            },
+                          })
+                        }}
+                      />
+                    </Col>
+                  </Row>
+                </Col>
+
+                <Col lg="12">
+                  <Row>
+                    <Col lg="6" md="6" className="mb-2">
+                      <Label className="form-label" for="plano-conexao-id">
+                        Selecione um plano de conexão
+                      </Label>
+                      <Select
+                        isClearable
+                        id="plano-conexao-id"
+                        placeholder={"Selecione..."}
+                        value={selectedPlano}
+                        options={planos}
+                        className="react-select"
+                        classNamePrefix="select"
+                        onChange={(e) => {
+                          setSelectedPlano(e)
+                          handleChange({
+                            target: {
+                              name: "plano_conexao_id",
+                              value: Number(e?.value),
+                            },
+                          })
+                        }}
+                      />
+                    </Col>
 
                     <Col lg="6" md="6" className="mb-2">
                       <Label className="form-label" for="hotspot-id">
@@ -204,139 +280,6 @@ const EventoEditCard = ({ data, setSalvarDados }) => {
 
                 <Col lg="12">
                   <Row>
-                    <Col lg="6" md="6" className="mb-2">
-                      <Label className="form-label" for="mega-download">
-                        Velocidade de download (Mbps)
-                      </Label>
-                      <Input
-                        id="mega-download"
-                        name="mega-download"
-                        type="number"
-                        placeholder="Mbps"
-                        value={download}
-                        onChange={
-                          vDados.id !== undefined
-                            ? blockChange
-                            : (e) => {
-                                setDownload(e.target.value)
-                                handleChange({
-                                  target: {
-                                    name: "mega_download",
-                                    value: Number(e.target.value),
-                                  },
-                                })
-                              }
-                        }
-                      />
-                    </Col>
-
-                    <Col lg="6" md="6" className="mb-2">
-                      <Label className="form-label" for="mega-upload">
-                        Velocidade de upload (Mbps)
-                      </Label>
-                      <Input
-                        id="mega-upload"
-                        name="mega-upload"
-                        type="number"
-                        placeholder="Mbps"
-                        value={upload}
-                        onChange={
-                          vDados.id !== undefined
-                            ? blockChange
-                            : (e) => {
-                                setUpload(e.target.value)
-                                handleChange({
-                                  target: {
-                                    name: "mega_upload",
-                                    value: Number(e.target.value),
-                                  },
-                                })
-                              }
-                        }
-                      />
-                    </Col>
-                  </Row>
-                </Col>
-
-                <Col lg="12">
-                  <Row>
-                    <Col lg="4" md="6" className="mb-2">
-                      <Label className="form-label" for="tempo">
-                        Tempo de conexão
-                      </Label>
-                      <Input
-                        id="tempo"
-                        name="tempo"
-                        type="number"
-                        value={tempoConexão}
-                        onChange={
-                          vDados.id !== undefined
-                            ? blockChange
-                            : (e) => {
-                                setTempoConexão(e.target.value)
-                                handleChange({
-                                  target: {
-                                    name: "tempo",
-                                    value: Number(e.target.value),
-                                  },
-                                })
-                              }
-                        }
-                      />
-                    </Col>
-
-                    <Col lg="4" md="6" className="mb-2">
-                      <Label className="form-label" for="unidade-tempo">
-                        Unidade de tempo
-                      </Label>
-                      <Select
-                        isClearable
-                        id="unidade-tempo"
-                        placeholder={"Selecione..."}
-                        className="react-select"
-                        classNamePrefix="select"
-                        value={selectedUnidade}
-                        options={timeUnit}
-                        onChange={(e) => {
-                          setSelectedUnidade(e)
-                          handleChange({
-                            target: {
-                              name: "unidade_tempo",
-                              value: e?.value,
-                            },
-                          })
-                        }}
-                      />
-                    </Col>
-
-                    <Col lg="4" md="6" className="mb-2">
-                      <Label className="form-label" for="tipo-evento-id">
-                        Selecione o tipo de acesso
-                      </Label>
-                      <Select
-                        isClearable
-                        id="tipo-evento-id"
-                        placeholder={"Selecione..."}
-                        className="react-select"
-                        classNamePrefix="select"
-                        value={selectedTipoAcesso}
-                        options={accessType}
-                        onChange={(e) => {
-                          setSelectedTipoAcesso(e)
-                          handleChange({
-                            target: {
-                              name: "tipo_evento_id",
-                              value: Number(e?.value),
-                            },
-                          })
-                        }}
-                      />
-                    </Col>
-                  </Row>
-                </Col>
-
-                <Col lg="12">
-                  <Row>
                     <Col md="4" className="mb-2">
                       <div className="form-check form-switch">
                         <Input
@@ -345,7 +288,6 @@ const EventoEditCard = ({ data, setSalvarDados }) => {
                           checked={ativo}
                           onChange={(e) => {
                             setAtivo(e.target.checked)
-                            console.log(e.target.checked)
                             handleChange({
                               target: {
                                 name: "ativo",

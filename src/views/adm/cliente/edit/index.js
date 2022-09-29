@@ -121,7 +121,6 @@ const ClienteEdit = () => {
       setData(response.data[0])
       setCarregando(false)
     })
-    console.log("o", data)
   }, [])
 
   return vCarregando ? (

@@ -8,7 +8,7 @@ export const getFiltros = createAsyncThunk(
   "filtro/getFiltros",
   async (parametros) => {
     //console.log(parametros)
-    const response = await api.get("/filtro/lista/0/", { params: parametros })
+    const response = await api.get("/filtro/lista/", { params: parametros })
     // console.log(response)
     let vRegInicial = (parametros.page - 1) * parametros.perPage
     let vRegFinal = parametros.page * parametros.perPage

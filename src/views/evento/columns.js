@@ -1,8 +1,8 @@
 // ** React Imports
 import { Link } from "react-router-dom"
 
-// ** Custom Components
-import Avatar from "@components/avatar"
+// ** Utils
+import { formatDateTime } from "@utils"
 
 // ** Store & Actions
 import { store } from "@store/store"
@@ -70,16 +70,8 @@ export const columns = [
     cell: (row) => {
       const nome = row.nome ?? "",
         eventoAtivo = `${row.ativo ? "Ativo" : "Inativo"}. ` ?? "",
-        tempoConexao = `Tempo máximo de conexão: ${row.tempo}` ?? ""
-      let tempoUnidade
-      if (row.unidade_tempo === "m") {
-        tempoUnidade = row.tempo === 1 ? "minuto" : "minutos"
-      } else if (row.unidade_tempo === "h") {
-        tempoUnidade = row.tempo === 1 ? "hora" : "horas"
-      } else {
-        tempoUnidade = row.tempo === 1 ? "dia" : "dias"
-      }
-      const eventoInfo = `${eventoAtivo}${tempoConexao} ${tempoUnidade}`
+        voucher = `Voucher de acesso: ${row.voucher}` ?? "",
+        eventoInfo = `${eventoAtivo}${voucher}`
 
       return (
         <div className="d-flex justify-content-left align-items-center">
@@ -96,26 +88,26 @@ export const columns = [
     },
   },
   {
-    name: "Evento de conexão",
+    name: "Período de realização",
     minWidth: "200px",
     cell: (row) => {
-      const velocidadeDownload = row.mega_download ?? "",
-        velocidadeUpload = row.mega_upload ?? ""
-      let tipoEvento
-      if (row.tipo_evento_id === 1) {
-        tipoEvento = "Visitante"
-      } else if (row.tipo_evento_id === 2) {
-        tipoEvento = "Hóspede / Cliente"
+      const eventoInicio = formatDateTime(row.data_inicio) ?? "",
+        eventoFim = formatDateTime(row.data_fim) ?? "",
+        eventoPeriodo = `${eventoInicio} a ${eventoFim}`
+      let eventoInfo
+      if (new Date().toISOString() < row.data_inicio) {
+        eventoInfo = `Evento ainda não iniciado`
+      } else if (new Date().toISOString() > row.data_fim) {
+        eventoInfo = `Evento finalizado`
       } else {
-        tipoEvento = "Evento"
+        eventoInfo = `Evento em andamento`
       }
-      const eventoInfo = `Download: ${velocidadeDownload}Mb | Upload: ${velocidadeUpload}Mb`
 
       return (
         <div className="d-flex justify-content-left align-items-center">
           <div className="d-flex flex-column">
             <Link to={`/evento/${row.id}`} id={`pw-tooltip2-${row.id}`}>
-              <h6 className="user-name text-truncate mb-0">{tipoEvento}</h6>
+              <h6 className="user-name text-truncate mb-0">{eventoPeriodo}</h6>
               <small className="text-truncate text-muted mb-0">
                 {eventoInfo}
               </small>
