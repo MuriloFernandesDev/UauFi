@@ -10,6 +10,7 @@ import ecommerce from "@src/views/apps/ecommerce/store"
 import email from "@src/views/apps/email/store"
 import evento from "@src/views/evento/store"
 import filtro from "@src/views/filtro/store"
+import gerenciar from "@src/views/users/gerenciar/store"
 import invoice from "@src/views/apps/invoice/store"
 import kanban from "@src/views/apps/kanban/store"
 import permissions from "@src/views/apps/roles-permissions/store"
@@ -29,6 +30,7 @@ const rootReducer = {
   email,
   evento,
   filtro,
+  gerenciar,
   invoice,
   kanban,
   permissions,

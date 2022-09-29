@@ -38,7 +38,7 @@ const StatsCard = () => {
   const getDados1 = () => {
     setProcessando1(true)
     return api
-      .get("/conexao/qtd_total/0")
+      .get("/conexao/qtd_total/")
       .then((res) => {
         setProcessando1(false)
         setValor1(res.data.valor)
@@ -52,7 +52,7 @@ const StatsCard = () => {
   const getDados2 = () => {
     setProcessando2(true)
     return api
-      .get("/conexao/qtd_dispositivo_online/0")
+      .get("/conexao/qtd_dispositivo_online/")
       .then((res) => {
         setProcessando2(false)
         setValor2(res.data.valor)
@@ -66,7 +66,7 @@ const StatsCard = () => {
   const getDados3 = () => {
     setProcessando3(true)
     return api
-      .get("/conexao/cadastro_total/0")
+      .get("/conexao/cadastro_total/")
       .then((res) => {
         setProcessando3(false)
         setValor3(res.data.valor)
