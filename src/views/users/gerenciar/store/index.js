@@ -4,8 +4,8 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"
 // ** Axios Imports
 import api from "@src/services/api"
 
-export const getPlanos = createAsyncThunk(
-  "usersPlano/getPlanos",
+export const getGerenciar = createAsyncThunk(
+  "usersGerenciar/getGerenciar",
   async (parametros) => {
     //console.log(parametros)
     const response = await api.get("/plano_conexao/lista/", {
@@ -36,11 +36,11 @@ export const getPlanos = createAsyncThunk(
   }
 )
 
-export const deletePlano = createAsyncThunk(
-  "usersPlano/deletePlano",
+export const deleteGerenciar = createAsyncThunk(
+  "usersGerenciar/deleteGerenciar",
   async (id, { dispatch, getState }) => {
     await api.delete(`/plano_conexao/${id}`)
-    await dispatch(getPlanos(getState().plano.params))
+    await dispatch(getGerenciar(getState().plano.params))
     return id
   }
 )
@@ -50,8 +50,8 @@ export const getHotspot = async () => {
   return response
 }
 
-export const planoSlice = createSlice({
-  name: "plano",
+export const gerenciarSlice = createSlice({
+  name: "gerenciar",
   initialState: {
     data: [],
     total: -1,
@@ -60,7 +60,7 @@ export const planoSlice = createSlice({
   },
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(getPlanos.fulfilled, (state, action) => {
+    builder.addCase(getGerenciar.fulfilled, (state, action) => {
       state.data = action.payload.data
       state.allData = action.payload.allData
       state.total = action.payload.totalPages
@@ -69,4 +69,4 @@ export const planoSlice = createSlice({
   },
 })
 
-export default planoSlice.reducer
+export default gerenciarSlice.reducer

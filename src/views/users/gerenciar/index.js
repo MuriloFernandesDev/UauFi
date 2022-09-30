@@ -11,10 +11,10 @@ import { ChevronDown } from "react-feather"
 import DataTable from "react-data-table-component"
 
 // ** Reactstrap
-import { Button, Input, Row, Col, Card, Spinner } from "reactstrap"
+import { Input, Row, Col, Card, Spinner } from "reactstrap"
 
 // ** Store & Actions
-import { getPlanos } from "./store"
+import { getGerenciar } from "./store"
 import { useDispatch, useSelector } from "react-redux"
 
 // ** Styles
@@ -39,9 +39,6 @@ const CustomHeader = ({ handleFilter, value, handlePerPage, rowsPerPage }) => {
               <option value="50">50</option>
             </Input>
           </div>
-          <Button tag={Link} to="/usuario/plano/add" color="primary">
-            Novo plano de conexão
-          </Button>
         </Col>
         <Col
           lg="6"
@@ -64,10 +61,10 @@ const CustomHeader = ({ handleFilter, value, handlePerPage, rowsPerPage }) => {
   )
 }
 
-const PlanoList = () => {
+const GerenciarList = () => {
   // ** Store vars
   const dispatch = useDispatch()
-  const store = useSelector((state) => state.plano)
+  const store = useSelector((state) => state.gerenciar)
 
   // ** States
   const [value, setValue] = useState(store.params.q ?? "")
@@ -83,7 +80,7 @@ const PlanoList = () => {
   }
 
   useEffect(() => {
-    //Somente pesquisar se os parametros de plano mudaram
+    //Somente pesquisar se os parametros de gerenciamento mudaram
     if (
       store.params.sort !== sort ||
       store.params.q !== value ||
@@ -92,7 +89,7 @@ const PlanoList = () => {
       store.params.perPage !== rowsPerPage
     ) {
       dispatch(
-        getPlanos({
+        getGerenciar({
           sort,
           q: value,
           sortColumn,
@@ -110,7 +107,7 @@ const PlanoList = () => {
     setValue(val)
     vTimeoutPesquisa.current = setTimeout(() => {
       dispatch(
-        getPlanos({
+        getGerenciar({
           sort,
           q: val,
           sortColumn,
@@ -123,7 +120,7 @@ const PlanoList = () => {
 
   const handlePerPage = (e) => {
     dispatch(
-      getPlanos({
+      getGerenciar({
         sort,
         q: value,
         sortColumn,
@@ -136,7 +133,7 @@ const PlanoList = () => {
 
   const handlePagination = (page) => {
     dispatch(
-      getPlanos({
+      getGerenciar({
         sort,
         q: value,
         sortColumn,
@@ -166,6 +163,7 @@ const PlanoList = () => {
         previousLinkClassName={"page-link"}
         previousClassName={"page-item prev"}
         onPageChange={(page) => handlePagination(page)}
+        style={{ zIndex: 1 }}
         forcePage={
           currentPage !== 0 ? (currentPage <= count ? currentPage - 1 : 0) : 0
         }
@@ -186,7 +184,7 @@ const PlanoList = () => {
     setSort(sortDirection)
     setSortColumn(column.sortField)
     dispatch(
-      getPlanos({
+      getGerenciar({
         q: value,
         page: currentPage,
         sort: sortDirection,
@@ -235,4 +233,4 @@ const PlanoList = () => {
   )
 }
 
-export default PlanoList
+export default GerenciarList

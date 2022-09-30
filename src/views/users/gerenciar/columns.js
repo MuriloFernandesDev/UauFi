@@ -6,7 +6,7 @@ import Avatar from "@components/avatar"
 
 // ** Store & Actions
 import { store } from "@store/store"
-import { deletePlano } from "./store"
+import { deleteGerenciar } from "./store"
 
 // ** Reactstrap Imports
 import {
@@ -15,6 +15,7 @@ import {
   DropdownToggle,
   UncontrolledTooltip,
   UncontrolledDropdown,
+  Badge,
 } from "reactstrap"
 
 // ** Third Party Components
@@ -24,7 +25,23 @@ import withReactContent from "sweetalert2-react-content"
 
 const MySwal = withReactContent(Swal)
 
-// ** Modal de exclusão de plano
+// ** renders client column
+const renderClient = (row) => {
+  if (1 > 0) {
+    return <Avatar className="me-50" img={row.logo} width="32" height="32" />
+  } else {
+    return (
+      <Avatar
+        color="light-primary"
+        className="me-50"
+        content={row.nome ? row.nome : ""}
+        initials
+      />
+    )
+  }
+}
+
+// ** Modal de exclusão de gerenciamento
 
 const handleDeleteConfirmation = (row) => {
   return MySwal.fire({
@@ -45,11 +62,11 @@ const handleDeleteConfirmation = (row) => {
     buttonsStyling: false,
   }).then(function (result) {
     if (result.value) {
-      store.dispatch(deletePlano(row.id))
+      store.dispatch(deleteGerenciar(row.id))
       MySwal.fire({
         icon: "success",
         title: "Sucesso!",
-        text: "O plano de conexão foi removido.",
+        text: "O gerenciamento foi removido.",
         customClass: {
           confirmButton: "btn btn-success",
           popup: "animate__animated animate__fadeIn",
@@ -66,30 +83,24 @@ const handleDeleteConfirmation = (row) => {
 export const columns = [
   {
     name: "Nome",
-    minWidth: "450px",
+    minWidth: "400px",
     sortable: true,
     selector: (row) => row.nome,
     cell: (row) => {
-      const nome = row.nome ?? "",
-        planoAtivo = `${row.ativo ? "Ativo" : "Inativo"}. ` ?? "",
-        tempoConexao = `Tempo máximo de conexão: ${row.tempo}` ?? ""
-      let tempoUnidade
-      if (row.unidade_tempo === "m") {
-        tempoUnidade = row.tempo === 1 ? "minuto" : "minutos"
-      } else if (row.unidade_tempo === "h") {
-        tempoUnidade = row.tempo === 1 ? "hora" : "horas"
-      } else {
-        tempoUnidade = row.tempo === 1 ? "dia" : "dias"
-      }
-      const planoInfo = `${planoAtivo}${tempoConexao} ${tempoUnidade}`
+      const nome = "Noam Chomsky",
+        gerenciarAtivo = "Conectado"
 
       return (
         <div className="d-flex justify-content-left align-items-center">
+          {renderClient(row)}
           <div className="d-flex flex-column">
-            <Link to={`/usuario/plano/${row.id}`} id={`pw-tooltip2-${row.id}`}>
+            <Link
+              to={`/usuario/gerenciar/${row.id}`}
+              id={`pw-tooltip2-${row.id}`}
+            >
               <h6 className="user-name text-truncate mb-0">{nome}</h6>
               <small className="text-truncate text-muted mb-0">
-                {planoInfo}
+                <Badge color="success">{gerenciarAtivo}</Badge>
               </small>
             </Link>
           </div>
@@ -98,30 +109,54 @@ export const columns = [
     },
   },
   {
-    name: "Plano de conexão",
-    minWidth: "200px",
+    name: "Hotel",
+    minWidth: "350px",
     sortable: true,
     selector: (row) => row.tipo_plano_id,
     cell: (row) => {
-      const velocidadeDownload = row.mega_download ?? "",
-        velocidadeUpload = row.mega_upload ?? ""
-      let tipoPlano
-      if (row.tipo_plano_id === 1) {
-        tipoPlano = "Visitante"
-      } else if (row.tipo_plano_id === 2) {
-        tipoPlano = "Hóspede / Cliente"
-      } else {
-        tipoPlano = "Evento"
-      }
-      const planoInfo = `Download: ${velocidadeDownload}Mb | Upload: ${velocidadeUpload}Mb`
+      const velocidadeDownload = "Ramada Hotel Aeroporto de Viracopos",
+        velocidadeUpload = "RHVC"
 
       return (
         <div className="d-flex justify-content-left align-items-center">
           <div className="d-flex flex-column">
-            <Link to={`/usuario/plano/${row.id}`} id={`pw-tooltip2-${row.id}`}>
-              <h6 className="user-name text-truncate mb-0">{tipoPlano}</h6>
+            <Link
+              to={`/usuario/gerenciar/${row.id}`}
+              id={`pw-tooltip2-${row.id}`}
+            >
+              <h6 className="user-name text-truncate mb-0">
+                {velocidadeDownload}
+              </h6>
               <small className="text-truncate text-muted mb-0">
-                {planoInfo}
+                {velocidadeUpload}
+              </small>
+            </Link>
+          </div>
+        </div>
+      )
+    },
+  },
+  {
+    name: "Perfil",
+    minWidth: "200px",
+    sortable: true,
+    selector: (row) => row.tipo_plano_id,
+    cell: (row) => {
+      const velocidadeDownload = "Visitante",
+        velocidadeUpload = "MAC: 5C:CD:5B:B7:E3:1E"
+
+      return (
+        <div className="d-flex justify-content-left align-items-center">
+          <div className="d-flex flex-column">
+            <Link
+              to={`/usuario/gerenciar/${row.id}`}
+              id={`pw-tooltip2-${row.id}`}
+            >
+              <h6 className="user-name text-truncate mb-0">
+                {velocidadeDownload}
+              </h6>
+              <small className="text-truncate text-muted mb-0">
+                {velocidadeUpload}
               </small>
             </Link>
           </div>
@@ -135,7 +170,7 @@ export const columns = [
     cell: (row) => (
       <div className="text-end w-100">
         <div className="column-action d-inline-flex">
-          <Link to={`/usuario/plano/${row.id}`} id={`pw-tooltip-${row.id}`}>
+          <Link to={`/usuario/gerenciar/${row.id}`} id={`pw-tooltip-${row.id}`}>
             <Eye size={17} className="mx-1" />
           </Link>
 
@@ -148,7 +183,28 @@ export const columns = [
             </DropdownToggle>
             <DropdownMenu end>
               <DropdownItem
-                tag="a"
+                href="/"
+                className="w-100"
+                onClick={(e) => {
+                  e.preventDefault()
+                  handleDeleteConfirmation(row)
+                }}
+              >
+                <Trash size={14} className="me-50" />
+                <span className="align-middle">Remover</span>
+              </DropdownItem>
+              <DropdownItem
+                href="/"
+                className="w-100"
+                onClick={(e) => {
+                  e.preventDefault()
+                  handleDeleteConfirmation(row)
+                }}
+              >
+                <Trash size={14} className="me-50" />
+                <span className="align-middle">Remover</span>
+              </DropdownItem>
+              <DropdownItem
                 href="/"
                 className="w-100"
                 onClick={(e) => {

@@ -207,7 +207,7 @@ const PlanoList = () => {
           <DataTable
             noHeader
             pagination
-            sortServer
+            // sortServer
             noDataComponent=""
             paginationServer
             subHeader={true}

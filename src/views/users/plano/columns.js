@@ -67,6 +67,8 @@ export const columns = [
   {
     name: "Nome",
     minWidth: "450px",
+    sortable: true,
+    selector: (row) => row.nome,
     cell: (row) => {
       const nome = row.nome ?? "",
         planoAtivo = `${row.ativo ? "Ativo" : "Inativo"}. ` ?? "",
@@ -98,6 +100,8 @@ export const columns = [
   {
     name: "Plano de conexão",
     minWidth: "200px",
+    sortable: true,
+    selector: (row) => row.tipo_plano_id,
     cell: (row) => {
       const velocidadeDownload = row.mega_download ?? "",
         velocidadeUpload = row.mega_upload ?? ""

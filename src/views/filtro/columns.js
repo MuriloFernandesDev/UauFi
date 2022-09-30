@@ -66,8 +66,8 @@ const handleDeleteConfirmation = (row) => {
 export const columns = [
   {
     name: "Filtro",
-    minWidth: "450px",
-    // selector: row => row.filtro.name,
+    sortable: true,
+    selector: (row) => row.nome,
     cell: (row) => {
       const nome = row.nome ? row.nome : "",
         idadeInicial = row.idade_inicial ? row.idade_inicial : "",
@@ -90,6 +90,8 @@ export const columns = [
   {
     name: <div className="text-end w-100">Data de criação</div>,
     minWidth: "80px",
+    sortable: true,
+    selector: (row) => row.data_criacao,
     cell: (row) => {
       const dataCriacao = row.data_criacao ? row.data_criacao : ""
       return (

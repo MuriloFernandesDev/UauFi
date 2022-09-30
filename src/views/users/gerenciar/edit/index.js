@@ -8,7 +8,7 @@ import api from "@src/services/api"
 // ** Reactstrap
 import { Row, Col, Spinner } from "reactstrap"
 
-// ** Editar plano de conexão
+// ** Editar gerenciamento
 import EditCard from "./EditCard"
 
 // ** Terceiros
@@ -36,7 +36,7 @@ const handleError = (error, errorMessage, errorIcon) => {
   })
 }
 
-const PlanoEdit = () => {
+const GerenciarEdit = () => {
   // ** Hooks
   const { id } = useParams()
   const navigate = useNavigate()
@@ -55,7 +55,7 @@ const PlanoEdit = () => {
             toast.success("Plano de conexão editado com sucesso!", {
               position: "bottom-right",
             })
-            navigate("/usuario/plano")
+            navigate("/usuario/gerenciar")
           }
         })
         .catch((error) => {
@@ -87,7 +87,7 @@ const PlanoEdit = () => {
             toast.success("Plano de conexão criado com sucesso!", {
               position: "bottom-right",
             })
-            navigate("/usuario/plano")
+            navigate("/usuario/gerenciar")
           }
         })
         .catch((error) => {
@@ -137,4 +137,4 @@ const PlanoEdit = () => {
   )
 }
 
-export default PlanoEdit
+export default GerenciarEdit

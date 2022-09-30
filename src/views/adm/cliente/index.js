@@ -209,7 +209,7 @@ const ClienteList = () => {
           <DataTable
             noHeader
             pagination
-            sortServer
+            // sortServer
             noDataComponent=""
             paginationServer
             subHeader={true}

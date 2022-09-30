@@ -16,7 +16,7 @@ import { getHotspot } from "../store"
 // ** API
 // import api from "@src/services/api"
 
-const PlanoEditCard = ({ data, setSalvarDados }) => {
+const GerenciarEditCard = ({ data, setSalvarDados }) => {
   const navigate = useNavigate()
 
   // ** States
@@ -123,7 +123,7 @@ const PlanoEditCard = ({ data, setSalvarDados }) => {
               <div>
                 <Button.Ripple
                   color="primary"
-                  onClick={() => navigate("/usuario/plano")}
+                  onClick={() => navigate("/usuario/gerenciar")}
                 >
                   <CornerUpLeft size={17} />
                 </Button.Ripple>
@@ -151,7 +151,7 @@ const PlanoEditCard = ({ data, setSalvarDados }) => {
                   <Row>
                     <Col lg="6" md="6" className="mb-2">
                       <Label className="form-label" for="nome">
-                        Nome do plano de conexão
+                        Nome do gerenciamento
                       </Label>
                       <Input
                         id="nome"
@@ -291,12 +291,12 @@ const PlanoEditCard = ({ data, setSalvarDados }) => {
                     </Col>
 
                     <Col lg="4" md="6" className="mb-2">
-                      <Label className="form-label" for="tipo-plano-id">
+                      <Label className="form-label" for="tipo-gerenciar-id">
                         Selecione o tipo de acesso
                       </Label>
                       <Select
                         isClearable
-                        id="tipo-plano-id"
+                        id="tipo-gerenciar-id"
                         placeholder={"Selecione..."}
                         className="react-select"
                         classNamePrefix="select"
@@ -306,7 +306,7 @@ const PlanoEditCard = ({ data, setSalvarDados }) => {
                           setSelectedTipoAcesso(e)
                           handleChange({
                             target: {
-                              name: "tipo_plano_id",
+                              name: "tipo_gerenciar_id",
                               value: Number(e?.value),
                             },
                           })
@@ -336,7 +336,7 @@ const PlanoEditCard = ({ data, setSalvarDados }) => {
                           }}
                         />
                         <Label for="ativo" className="form-check-label mt-25">
-                          Ativar plano de conexão
+                          Ativar gerenciamento
                         </Label>
                       </div>
                     </Col>
@@ -351,4 +351,4 @@ const PlanoEditCard = ({ data, setSalvarDados }) => {
   )
 }
 
-export default PlanoEditCard
+export default GerenciarEditCard
