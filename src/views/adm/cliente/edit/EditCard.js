@@ -90,7 +90,7 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
   const [vTipoIntegracao, setTipoIntegracao] = useState(null)
   const [varDadosIntegracao1, setVarDadosIntegracao1] = useState("")
   const [varDadosIntegracao2, setVarDadosIntegracao2] = useState("")
-  const [varDadosIntegracao3, setVarDadosIntegracao3] = useState("")
+  // const [varDadosIntegracao3, setVarDadosIntegracao3] = useState("")
 
   const [active, setActive] = useState("1")
 
@@ -898,9 +898,8 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                         />
                       </Col>
 
-                      {vDadosCP.tipo_integracao !== 5 ? (
-                        ""
-                      ) : (
+                      {vDadosCP.tipo_integracao === 5 ||
+                      vDadosCP.tipo_integracao === 6 ? (
                         <Col md="12">
                           <Row>
                             <Col md="6" className="mb-2">
@@ -920,8 +919,9 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                                     target: {
                                       name: "dados_integracao",
                                       value: {
-                                        hotel_id: varDadosIntegracao1,
+                                        hotel_id: e.target.value,
                                         service_name: varDadosIntegracao2,
+                                        // service_name = Prefixo
                                       },
                                     },
                                   })
@@ -934,7 +934,7 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                                 className="form-label"
                                 for="dados-integracao-2"
                               >
-                                Nome do serviço
+                                Prefixo
                               </Label>
                               <Input
                                 id="dados-integracao-2"
@@ -946,7 +946,7 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                                       name: "dados_integracao",
                                       value: {
                                         hotel_id: varDadosIntegracao1,
-                                        service_name: varDadosIntegracao2,
+                                        service_name: e.target.value,
                                       },
                                     },
                                   })
@@ -955,71 +955,12 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                             </Col>
                           </Row>
                         </Col>
-                      )}
-
-                      {/* ///////////////////////////////////// */}
-
-                      {vDadosCP.tipo_integracao !== 6 ? (
-                        ""
                       ) : (
-                        <Col md="12">
-                          <Row>
-                            <Col md="6" className="mb-2">
-                              <Label
-                                className="form-label"
-                                for="dados-integracao-1"
-                              >
-                                ID do Hotel
-                              </Label>
-                              <Input
-                                id="dados-integracao-1"
-                                type="number"
-                                value={varDadosIntegracao1}
-                                onChange={(e) => {
-                                  setVarDadosIntegracao1(e.target.value)
-                                  handleChangeCP({
-                                    target: {
-                                      name: "dados_integracao",
-                                      value: {
-                                        hotel_id: varDadosIntegracao1,
-                                        service_name: varDadosIntegracao2,
-                                      },
-                                    },
-                                  })
-                                }}
-                              />
-                            </Col>
-
-                            <Col md="6" className="mb-2">
-                              <Label
-                                className="form-label"
-                                for="dados-integracao-2"
-                              >
-                                Nome do serviço
-                              </Label>
-                              <Input
-                                id="dados-integracao-2"
-                                value={varDadosIntegracao2}
-                                onChange={(e) => {
-                                  setVarDadosIntegracao2(e.target.value)
-                                  handleChangeCP({
-                                    target: {
-                                      name: "dados_integracao",
-                                      value: {
-                                        hotel_id: varDadosIntegracao1,
-                                        service_name: varDadosIntegracao2,
-                                      },
-                                    },
-                                  })
-                                }}
-                              />
-                            </Col>
-                          </Row>
-                        </Col>
+                        ""
                       )}
 
                       {/* ///////////////////////////////////// */}
-
+                      {/* 
                       <Col md="12">
                         <Row>
                           <Col md="4" className="mb-2">
@@ -1099,7 +1040,8 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                             />
                           </Col>
                         </Row>
-                      </Col>
+                      </Col> */}
+
                       <Col md="12" className="mb-1">
                         <div className="divider divider-dark">
                           <div className="divider-text text-dark">
