@@ -116,6 +116,7 @@ const PlanoEditCard = ({ data, setSalvarDados }) => {
 
   return (
     <Row>
+      {console.log(vDados)}
       <Col sm="12">
         <Fragment>
           <Card className="mb-1">
@@ -264,6 +265,7 @@ const PlanoEditCard = ({ data, setSalvarDados }) => {
                           })
                         }}
                       />
+                      {console.log(tempoConexão)}
                     </Col>
 
                     <Col lg="4" md="6" className="mb-2">
@@ -326,7 +328,6 @@ const PlanoEditCard = ({ data, setSalvarDados }) => {
                           checked={ativo}
                           onChange={(e) => {
                             setAtivo(e.target.checked)
-                            console.log(e.target.checked)
                             handleChange({
                               target: {
                                 name: "ativo",

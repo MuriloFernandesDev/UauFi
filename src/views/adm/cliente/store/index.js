@@ -9,7 +9,7 @@ export const getCliente = createAsyncThunk(
   async (parametros) => {
     //console.log(parametros)
     const response = await api.get("/cliente/0/", { params: parametros })
-    //console.log(response)
+    // console.log(response)
     let vRegInicial = (parametros.page - 1) * parametros.perPage
     let vRegFinal = parametros.page * parametros.perPage
     //Verificar se o registro inicial existe

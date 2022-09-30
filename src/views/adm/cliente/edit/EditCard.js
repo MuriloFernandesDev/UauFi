@@ -88,6 +88,9 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
   )
   const [vTipoLayout, setTipoLayout] = useState(null)
   const [vTipoIntegracao, setTipoIntegracao] = useState(null)
+  const [varDadosIntegracao1, setVarDadosIntegracao1] = useState("")
+  const [varDadosIntegracao2, setVarDadosIntegracao2] = useState("")
+  const [varDadosIntegracao3, setVarDadosIntegracao3] = useState("")
 
   const [active, setActive] = useState("1")
 
@@ -280,6 +283,7 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
 
   return (
     <Row>
+      {console.log(vDadosCP)}
       <Col sm="12">
         <Fragment>
           <Card className="mb-1">
@@ -806,7 +810,6 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                           </div>
                         </div>
                       </Col>
-
                       <Col md="12" className="mb-2">
                         <Label className="form-label" for="tituloCP">
                           Título
@@ -818,7 +821,6 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                           id="tituloCP"
                         />
                       </Col>
-
                       <Col md="6" className="mb-2">
                         <Label className="form-label" for="vTipoLayout">
                           Tipo de Layout
@@ -862,7 +864,6 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                           options={vListaTipoIntegracao}
                         />
                       </Col>
-
                       <Col md="6" className="mb-2">
                         <Label className="form-label" for="vMinutosDesconexao">
                           Tempo máximo de conexão do usuário (minutos)
@@ -897,6 +898,208 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                         />
                       </Col>
 
+                      {vDadosCP.tipo_integracao !== 5 ? (
+                        ""
+                      ) : (
+                        <Col md="12">
+                          <Row>
+                            <Col md="6" className="mb-2">
+                              <Label
+                                className="form-label"
+                                for="dados-integracao-1"
+                              >
+                                ID do Hotel
+                              </Label>
+                              <Input
+                                id="dados-integracao-1"
+                                type="number"
+                                value={varDadosIntegracao1}
+                                onChange={(e) => {
+                                  setVarDadosIntegracao1(e.target.value)
+                                  handleChangeCP({
+                                    target: {
+                                      name: "dados_integracao",
+                                      value: {
+                                        hotel_id: varDadosIntegracao1,
+                                        service_name: varDadosIntegracao2,
+                                      },
+                                    },
+                                  })
+                                }}
+                              />
+                            </Col>
+
+                            <Col md="6" className="mb-2">
+                              <Label
+                                className="form-label"
+                                for="dados-integracao-2"
+                              >
+                                Nome do serviço
+                              </Label>
+                              <Input
+                                id="dados-integracao-2"
+                                value={varDadosIntegracao2}
+                                onChange={(e) => {
+                                  setVarDadosIntegracao2(e.target.value)
+                                  handleChangeCP({
+                                    target: {
+                                      name: "dados_integracao",
+                                      value: {
+                                        hotel_id: varDadosIntegracao1,
+                                        service_name: varDadosIntegracao2,
+                                      },
+                                    },
+                                  })
+                                }}
+                              />
+                            </Col>
+                          </Row>
+                        </Col>
+                      )}
+
+                      {/* ///////////////////////////////////// */}
+
+                      {vDadosCP.tipo_integracao !== 6 ? (
+                        ""
+                      ) : (
+                        <Col md="12">
+                          <Row>
+                            <Col md="6" className="mb-2">
+                              <Label
+                                className="form-label"
+                                for="dados-integracao-1"
+                              >
+                                ID do Hotel
+                              </Label>
+                              <Input
+                                id="dados-integracao-1"
+                                type="number"
+                                value={varDadosIntegracao1}
+                                onChange={(e) => {
+                                  setVarDadosIntegracao1(e.target.value)
+                                  handleChangeCP({
+                                    target: {
+                                      name: "dados_integracao",
+                                      value: {
+                                        hotel_id: varDadosIntegracao1,
+                                        service_name: varDadosIntegracao2,
+                                      },
+                                    },
+                                  })
+                                }}
+                              />
+                            </Col>
+
+                            <Col md="6" className="mb-2">
+                              <Label
+                                className="form-label"
+                                for="dados-integracao-2"
+                              >
+                                Nome do serviço
+                              </Label>
+                              <Input
+                                id="dados-integracao-2"
+                                value={varDadosIntegracao2}
+                                onChange={(e) => {
+                                  setVarDadosIntegracao2(e.target.value)
+                                  handleChangeCP({
+                                    target: {
+                                      name: "dados_integracao",
+                                      value: {
+                                        hotel_id: varDadosIntegracao1,
+                                        service_name: varDadosIntegracao2,
+                                      },
+                                    },
+                                  })
+                                }}
+                              />
+                            </Col>
+                          </Row>
+                        </Col>
+                      )}
+
+                      {/* ///////////////////////////////////// */}
+
+                      <Col md="12">
+                        <Row>
+                          <Col md="4" className="mb-2">
+                            <Label
+                              className="form-label"
+                              for="dados-integracao-1"
+                            >
+                              ID do Hotel
+                            </Label>
+                            <Input
+                              id="dados-integracao-1"
+                              type="number"
+                              value={varDadosIntegracao1}
+                              onChange={(e) => {
+                                setVarDadosIntegracao1(e.target.value)
+                                handleChangeCP({
+                                  target: {
+                                    name: "dados_integracao",
+                                    value: {
+                                      hotel_id: varDadosIntegracao1,
+                                      service_name: varDadosIntegracao2,
+                                    },
+                                  },
+                                })
+                              }}
+                            />
+                          </Col>
+
+                          <Col md="4" className="mb-2">
+                            <Label
+                              className="form-label"
+                              for="dados-integracao-2"
+                            >
+                              Nome do serviço
+                            </Label>
+                            <Input
+                              id="dados-integracao-2"
+                              value={varDadosIntegracao2}
+                              onChange={(e) => {
+                                setVarDadosIntegracao2(e.target.value)
+                                handleChangeCP({
+                                  target: {
+                                    name: "dados_integracao",
+                                    value: {
+                                      hotel_id: varDadosIntegracao1,
+                                      service_name: varDadosIntegracao2,
+                                    },
+                                  },
+                                })
+                              }}
+                            />
+                          </Col>
+
+                          <Col md="4" className="mb-2">
+                            <Label
+                              className="form-label"
+                              for="dados-integracao-3"
+                            >
+                              Token
+                            </Label>
+                            <Input
+                              id="dados-integracao-3"
+                              value={varDadosIntegracao3}
+                              onChange={(e) => {
+                                setVarDadosIntegracao3(e.target.value)
+                                handleChangeCP({
+                                  target: {
+                                    name: "dados_integracao",
+                                    value: {
+                                      hotel_id: varDadosIntegracao1,
+                                      service_name: varDadosIntegracao2,
+                                      token: varDadosIntegracao3,
+                                    },
+                                  },
+                                })
+                              }}
+                            />
+                          </Col>
+                        </Row>
+                      </Col>
                       <Col md="12" className="mb-1">
                         <div className="divider divider-dark">
                           <div className="divider-text text-dark">
@@ -904,7 +1107,6 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                           </div>
                         </div>
                       </Col>
-
                       <Col md="4" className="mb-2">
                         <div className="form-check form-switch">
                           <Input
