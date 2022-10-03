@@ -9,13 +9,11 @@ import { ThemeColors } from "@src/utility/context/ThemeColors"
 
 // ** Demo Components
 import CompanyTable from "./CompanyTable"
-import Earnings from "@src/views/ui-elements/cards/analytics/Earnings"
+import Plataforma from "@src/views/ui-elements/cards/analytics/Plataforma"
 import CardUsuarioMaisVisita from "@src/views/ui-elements/cards/advance/CardUsuarioMaisVisita"
 import StatsCard from "@src/views/ui-elements/cards/statistics/StatsCard"
-import GoalOverview from "@src/views/ui-elements/cards/analytics/GoalOverview"
 import RevenueReport from "@src/views/ui-elements/cards/analytics/RevenueReport"
 import OrdersBarChart from "@src/views/ui-elements/cards/statistics/OrdersBarChart"
-import CardTransactions from "@src/views/ui-elements/cards/advance/CardTransactions"
 import ProfitLineChart from "@src/views/ui-elements/cards/statistics/ProfitLineChart"
 import CardBrowserStates from "@src/views/ui-elements/cards/advance/CardBrowserState"
 
@@ -50,7 +48,7 @@ const EcommerceDashboard = () => {
               <ProfitLineChart info={colors.info.main} />
             </Col>
             <Col lg="12" md="6" xs="12">
-              <Earnings success={colors.success.main} />
+              <Plataforma />
             </Col>
           </Row>
         </Col>

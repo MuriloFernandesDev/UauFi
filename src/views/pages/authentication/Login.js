@@ -217,7 +217,7 @@ const Login = () => {
                   <Label className="form-label" for="login-password">
                     Senha
                   </Label>
-                  <Link to="/forgot-password" tabIndex={-1}>
+                  <Link to="/esqueci-senha" tabIndex={-1}>
                     <small>Esqueceu?</small>
                   </Link>
                 </div>

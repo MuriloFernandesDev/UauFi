@@ -71,114 +71,13 @@ const AuthenticationRoutes = [
     },
   },
   {
-    path: "/pages/login-basic",
-    element: <LoginBasic />,
-    meta: {
-      layout: "blank",
-    },
-  },
-  {
-    path: "/pages/login-cover",
-    element: <LoginCover />,
-    meta: {
-      layout: "blank",
-    },
-  },
-  {
-    path: "/register",
-    element: <Register />,
-    meta: {
-      layout: "blank",
-      publicRoute: true,
-      restricted: true,
-    },
-  },
-  {
-    path: "/pages/register-basic",
-    element: <RegisterBasic />,
-    meta: {
-      layout: "blank",
-    },
-  },
-  {
-    path: "/pages/register-cover",
-    element: <RegisterCover />,
-    meta: {
-      layout: "blank",
-    },
-  },
-  {
-    path: "/pages/register-multi-steps",
-    element: <RegisterMultiSteps />,
-    meta: {
-      layout: "blank",
-    },
-  },
-
-  {
-    path: "/forgot-password",
+    path: "/esqueci-senha",
     element: <ForgotPassword />,
     layout: "BlankLayout",
     meta: {
       layout: "blank",
       publicRoute: true,
       restricted: true,
-    },
-  },
-  {
-    path: "/pages/forgot-password-basic",
-    element: <ForgotPasswordBasic />,
-    meta: {
-      layout: "blank",
-    },
-  },
-  {
-    path: "/pages/forgot-password-cover",
-    element: <ForgotPasswordCover />,
-    meta: {
-      layout: "blank",
-    },
-  },
-  {
-    path: "/pages/reset-password-basic",
-    element: <ResetPasswordBasic />,
-    meta: {
-      layout: "blank",
-    },
-  },
-  {
-    path: "/pages/reset-password-cover",
-    element: <ResetPasswordCover />,
-    meta: {
-      layout: "blank",
-    },
-  },
-  {
-    path: "/pages/verify-email-basic",
-    element: <VerifyEmailBasic />,
-    meta: {
-      layout: "blank",
-    },
-  },
-  {
-    path: "/pages/verify-email-cover",
-    element: <VerifyEmailCover />,
-    meta: {
-      layout: "blank",
-    },
-  },
-  {
-    path: "/pages/two-steps-basic",
-    element: <TwoStepsBasic />,
-    meta: {
-      layout: "blank",
-    },
-  },
-  {
-    path: "/pages/two-steps-cover",
-    element: <TwoStepsCover />,
-    meta: {
-      layout: "blank",
     },
   },
 ]

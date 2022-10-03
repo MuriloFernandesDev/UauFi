@@ -73,7 +73,7 @@ export default [
         icon: <Circle size={12} />,
         navLink: "/usuario/plano",
         action: "read",
-        resource: "plano",
+        resource: "plano_conexao",
       },
       {
         id: "menuUsuariosBlock",
@@ -81,7 +81,7 @@ export default [
         icon: <Circle size={12} />,
         navLink: "/usuario/gerenciar",
         action: "read",
-        resource: "status_usuario",
+        resource: "permissao_mac",
       },
     ],
   },
