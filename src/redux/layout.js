@@ -35,7 +35,7 @@ export const layoutSlice = createSlice({
     menuHidden: themeConfig.layout.menu.isHidden,
     contentWidth: themeConfig.layout.contentWidth,
     navbarColor: themeConfig.layout.navbar.backgroundColor,
-    hotspotId: themeConfig.layout.hotspotId,
+    clienteId: themeConfig.clienteId,
   },
   reducers: {
     handleRTL: (state, action) => {
@@ -46,12 +46,12 @@ export const layoutSlice = createSlice({
       state.skin = action.payload
       window.localStorage.setItem("skin", JSON.stringify(action.payload))
     },
-    handleHotspot: (state, action) => {
-      state.hotspotId = action.payload
-      if (state.hotspotId) {
-        window.localStorage.setItem("hotspotId", JSON.stringify(action.payload))
+    handleClienteId: (state, action) => {
+      state.clienteId = action.payload
+      if (action.payload) {
+        window.localStorage.setItem("clienteId", JSON.stringify(action.payload))
       } else {
-        window.localStorage.removeItem("hotspotId")
+        window.localStorage.removeItem("clienteId")
       }
     },
     handleLayout: (state, action) => {
@@ -89,7 +89,7 @@ export const {
   handleRTL,
   handleSkin,
   handleLayout,
-  handleHotspot,
+  handleClienteId,
   handleLastLayout,
   handleMenuHidden,
   handleNavbarType,

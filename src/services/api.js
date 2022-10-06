@@ -13,10 +13,10 @@ api.interceptors.request.use(
       jwtDefaultConfig.storageTokenKeyName
     )
 
-    const hotspotId = JSON.parse(localStorage.getItem("hotspotId"))
-    //Enviar Hotspot selecionado
-    if (hotspotId) {
-      config.headers["hotspot_id"] = hotspotId.value
+    const clienteId = JSON.parse(localStorage.getItem("clienteId"))
+    //Enviar Cliente selecionado
+    if (clienteId) {
+      config.headers["cliente_id"] = clienteId.value
     }
 
     if (accessToken && accessToken !== "undefined") {

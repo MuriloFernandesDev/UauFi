@@ -339,13 +339,8 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                             <h5 className="mb-1">Logotipo do Dashboard</h5>
                             <div className="d-flex flex-column flex-md-row">
                               <img
-                                className="me-2 mb-1 mb-md-0 img-fluid"
-                                src={
-                                  vDados?.logo === null ||
-                                  "https://www.uaufi.com/uploads/logos/sem_foto.png"
-                                    ? "https://smartdatamanager.com/image/semfoto.png"
-                                    : vDados?.logo
-                                }
+                                className="me-2 mb-1 mb-md-0 img-fluid img-proporcional"
+                                src={vDados?.logo}
                                 alt="Logotipo"
                                 width="100"
                                 height="100"
@@ -737,13 +732,8 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                           <h5 className="mb-1">Logotipo do Captive Portal</h5>
                           <div className="d-flex flex-column flex-md-row">
                             <img
-                              className="me-2 mb-1 mb-md-0 img-fluid"
-                              src={
-                                vLogoCP === null ||
-                                "https://www.uaufi.com/uploads/logos/sem_foto.png"
-                                  ? "https://smartdatamanager.com/image/semfoto.png"
-                                  : vLogoCP
-                              }
+                              className="me-2 mb-1 mb-md-0 img-fluid img-proporcional"
+                              src={vLogoCP}
                               alt="Logotipo"
                               width="100"
                               height="100"
@@ -776,13 +766,8 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                           <h5 className="mb-1">Imagem de fundo</h5>
                           <div className="d-flex flex-column flex-md-row">
                             <img
-                              className="me-2 mb-1 mb-md-0 img-fluid"
-                              src={
-                                vImagemFundoCP === null ||
-                                "https://www.uaufi.com/uploads/logos/sem_foto.png"
-                                  ? "https://smartdatamanager.com/image/semfoto.png"
-                                  : vImagemFundoCP
-                              }
+                              className="me-2 mb-1 mb-md-0 img-fluid img-proporcional"
+                              src={vImagemFundoCP}
                               alt="Imagem de fundo"
                               width="100"
                               height="100"

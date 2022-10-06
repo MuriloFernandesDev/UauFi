@@ -3,7 +3,7 @@
 //Template config options
 const themeConfig = {
   app: {
-    appName: "Vuexy",
+    appName: "Uau-Fi Connect",
     appLogoImage: require("@src/assets/images/logo/logo.svg").default,
   },
   layout: {
@@ -11,7 +11,7 @@ const themeConfig = {
     skin: "light", // light, dark, bordered, semi-dark
     type: "vertical", // vertical, horizontal
     contentWidth: "full", // full, boxed
-    hotspotId: "0", // ID do Hotspot
+    clienteId: null,
     menu: {
       isHidden: false,
       isCollapsed: false,

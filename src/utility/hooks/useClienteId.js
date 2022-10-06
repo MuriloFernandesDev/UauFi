@@ -2,22 +2,22 @@
 import { useEffect } from "react"
 
 // ** Store & Actions
-import { handleHotspot } from "@store/layout"
+import { handleClienteId } from "@store/layout"
 import { useDispatch } from "react-redux"
 
-export const useHotspotId = () => {
+export const useClienteId = () => {
   // ** Store Vars
   const dispatch = useDispatch()
-  const hotspotId = JSON.parse(localStorage.getItem("hotspotId"))
+  const clienteId = JSON.parse(localStorage.getItem("clienteId"))
 
   // ** Return a wrapped version of useState's setter function
-  const setHotspotId = (value) => {
-    dispatch(handleHotspot(value))
+  const setClienteId = (value) => {
+    dispatch(handleClienteId(value))
   }
 
   useEffect(() => {
     // ** Renderizar todos os componentes
-  }, [hotspotId])
+  }, [clienteId])
 
-  return [hotspotId, setHotspotId]
+  return [clienteId, setClienteId]
 }

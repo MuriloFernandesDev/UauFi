@@ -33,6 +33,7 @@ export const authSlice = createSlice({
         config.storageRefreshTokenKeyName,
         action.payload.refreshToken
       )
+      localStorage.removeItem("clienteId")
     },
     handleLogout: (state) => {
       state.userData = {}

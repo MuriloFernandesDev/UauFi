@@ -103,12 +103,12 @@ const Login = () => {
         .then((res) => {
           if (res.data !== "") {
             const data = {
-              ...res.data.user,
-              accessToken: res.data.user.accessToken,
-              refreshToken: res.data.user.refreshToken,
+              ...res.data,
+              accessToken: res.data.accessToken,
+              refreshToken: res.data.refreshToken,
             }
             dispatch(handleLogin(data))
-            ability.update(res.data.user.ability)
+            ability.update(res.data.ability)
             navigate(getHomeRouteForLoggedInUser(data.role))
           } else {
             toast((t) => (

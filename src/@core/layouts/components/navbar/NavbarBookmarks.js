@@ -17,7 +17,7 @@ import { getBookmarks } from "@store/navbar"
 import Select from "react-select"
 
 // ** Hooks
-import { useHotspotId } from "@hooks/useHotspotId"
+import { useClienteId } from "@hooks/useClienteId"
 
 const NavbarBookmarks = (props) => {
   // ** Props
@@ -26,25 +26,22 @@ const NavbarBookmarks = (props) => {
   // ** Store Vars
   const dispatch = useDispatch()
 
-  const [vListaHotspots, setListaHotspots] = useState(null)
+  const [vListaClientes, setListaClientes] = useState(null)
+  const [vMostrarListaClientes, setMostrarListaClientes] = useState(false)
   // ** Hooks
-  const [hotspotId, setHotspotId] = useHotspotId()
+  const [clienteId, setClienteId] = useClienteId()
 
-  const getHotspots = () => {
-    return api.get("/hotspot/lista/").then((res) => {
-      setListaHotspots(
-        res.data.map((ret) => ({
-          label: ret.nome,
-          value: ret.id,
-        }))
-      )
+  const getClientes = () => {
+    return api.get("/cliente/lista_simples/").then((res) => {
+      setListaClientes(res.data)
+      setMostrarListaClientes(res.data.length > 1)
     })
   }
 
   // ** ComponentDidMount
   useEffect(() => {
     dispatch(getBookmarks())
-    getHotspots()
+    getClientes()
   }, [])
 
   return (
@@ -59,22 +56,26 @@ const NavbarBookmarks = (props) => {
           </NavLink>
         </NavItem>
       </ul>
-      <ul className="nav navbar-nav w-100">
-        <NavItem className="w-100 me-1">
-          <Select
-            isClearable
-            id="vHotspot"
-            placeholder={"Filtrar por hotspot..."}
-            className="react-select d-block"
-            classNamePrefix="select"
-            value={hotspotId}
-            onChange={(e) => {
-              setHotspotId(e)
-            }}
-            options={vListaHotspots}
-          />
-        </NavItem>
-      </ul>
+      {vMostrarListaClientes ? (
+        <ul className="nav navbar-nav w-100">
+          <NavItem className="w-100 me-1">
+            <Select
+              isClearable
+              id="vCliente"
+              placeholder={"Filtrar por cliente..."}
+              className="react-select d-block"
+              classNamePrefix="select"
+              value={clienteId}
+              onChange={(e) => {
+                setClienteId(e)
+              }}
+              options={vListaClientes}
+            />
+          </NavItem>
+        </ul>
+      ) : (
+        ""
+      )}
     </Fragment>
   )
 }
