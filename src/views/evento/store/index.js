@@ -5,9 +5,8 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"
 import api from "@src/services/api"
 
 export const getEventos = createAsyncThunk(
-  "usersEvento/getEventos",
+  "evento/getEventos",
   async (parametros) => {
-    //console.log(parametros)
     const response = await api.get("/evento/lista/", {
       params: parametros,
     })
@@ -38,9 +37,8 @@ export const getEventos = createAsyncThunk(
 
 export const deleteEvento = createAsyncThunk(
   "evento/deleteEvento",
-  async (id, { dispatch, getState }) => {
+  async (id) => {
     await api.delete(`/evento/${id}`)
-    await dispatch(getEventos(getState().evento.params))
     return id
   }
 )

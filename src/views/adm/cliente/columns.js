@@ -8,6 +8,9 @@ import Avatar from "@components/avatar"
 import { store } from "@store/store"
 import { cloneCliente, deleteCliente } from "./store"
 
+// ** Utils
+import { getUserData } from "@utils"
+
 // ** Reactstrap Imports
 import {
   DropdownItem,
@@ -23,6 +26,8 @@ import Swal from "sweetalert2"
 import withReactContent from "sweetalert2-react-content"
 
 const MySwal = withReactContent(Swal)
+
+const user = getUserData()
 
 // ** renders client column
 const renderClient = (row) => {
@@ -151,14 +156,22 @@ export const columns = [
     // selector: row => row.client.name,
     cell: (row) => {
       const nome = row.nome ? row.nome : "",
-        email = row.email ? row.email : ""
+        hotspot_id =
+          user.perfil === "adm" ? (row.hotspot_id ? row.hotspot_id : "") : "",
+        telefone = row.tel_1 ? `Telefone: ${row.tel_1}` : "",
+        whatsapp = row.whatsapp ? ` WhatsApp: ${row.whatsapp}` : ""
       return (
         <div className="d-flex justify-content-left align-items-center">
           {renderClient(row)}
           <div className="d-flex flex-column">
             <Link to={`/adm/cliente/${row.id}`} id={`pw-tooltip2-${row.id}`}>
-              <h6 className="user-name text-truncate mb-0">{nome}</h6>
-              <small className="text-truncate text-muted mb-0">{email}</small>
+              <h6 className="user-name text-truncate mb-0">
+                {nome}
+                <strong className="text-muted ms-1">{hotspot_id}</strong>
+              </h6>
+              <small className="text-truncate text-muted mb-0">
+                {telefone + whatsapp}
+              </small>
             </Link>
           </div>
         </div>

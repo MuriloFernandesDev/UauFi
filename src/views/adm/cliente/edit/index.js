@@ -10,6 +10,8 @@ import { Row, Col, Spinner } from "reactstrap"
 
 // ** Editar Cliente
 import EditCard from "./EditCard"
+import { getCliente } from "../store"
+import { useDispatch, useSelector } from "react-redux"
 
 // ** Terceiros
 import toast from "react-hot-toast"
@@ -42,9 +44,18 @@ const ClienteEdit = () => {
 
   const navigate = useNavigate()
 
+  // ** Store vars
+  const dispatch = useDispatch()
+  const vParFiltro = useSelector((state) => state.cliente.params)
+
   // ** States
   const [data, setData] = useState(null)
   const [vCarregando, setCarregando] = useState(true)
+
+  const handleOK = () => {
+    dispatch(getCliente(vParFiltro))
+    navigate("/adm/cliente")
+  }
 
   // ** Função para salvar dados & respostas a erros
   const handleSalvar = (pDados) => {
@@ -56,7 +67,7 @@ const ClienteEdit = () => {
             toast.success("Cliente editado com sucesso!", {
               position: "bottom-right",
             })
-            navigate("/adm/cliente")
+            handleOK()
           }
         })
         .catch((error) => {
@@ -88,7 +99,7 @@ const ClienteEdit = () => {
             toast.success("Cliente criado com sucesso!", {
               position: "bottom-right",
             })
-            navigate("/adm/cliente")
+            handleOK()
           }
         })
         .catch((error) => {

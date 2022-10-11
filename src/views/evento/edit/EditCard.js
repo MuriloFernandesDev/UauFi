@@ -11,25 +11,16 @@ import { CornerUpLeft, Check } from "react-feather"
 // ** Terceiros
 import Select from "react-select"
 import { getHotspot, getPlano } from "../store"
-import "@styles/react/libs/flatpickr/flatpickr.scss"
-
-// ** API
-// import api from "@src/services/api"
 
 const EventoEditCard = ({ data, setSalvarDados }) => {
   const navigate = useNavigate()
 
   // ** States
   const [vDados, setData] = useState(data)
-  const [nome, setNome] = useState("")
-  const [dataInicio, setDataInicio] = useState("")
-  const [dataFim, setDataFim] = useState("")
-  const [voucher, setVoucher] = useState("")
-  const [planos, setPlanos] = useState(null)
-  const [hotspots, setHotspots] = useState(null)
-  const [ativo, setAtivo] = useState(false)
-  const [selectedHotspot, setSelectedHotspot] = useState(null)
-  const [selectedPlano, setSelectedPlano] = useState(null)
+  const [vListaPlanos, setListaPlanos] = useState(null)
+  const [vListaHotspots, setListaHotspots] = useState(null)
+  const [vHotspot, setHotspot] = useState(null)
+  const [vPlano, setPlano] = useState(null)
   let hotspotsVar
   let planosVar
 
@@ -44,12 +35,12 @@ const EventoEditCard = ({ data, setSalvarDados }) => {
 
   const handleHotspots = async () => {
     hotspotsVar = await getHotspot()
-    setHotspots(hotspotsVar)
+    setListaHotspots(hotspotsVar)
 
-    if (vDados[0].id !== undefined) {
+    if (vDados.id !== undefined) {
       hotspotsVar?.map((res) => {
-        if (res.value === vDados[0].hotspot_id) {
-          setSelectedHotspot({ value: res.value, label: res.label })
+        if (res.value === vDados.hotspot_id) {
+          setHotspot({ value: res.value, label: res.label })
         }
       })
     }
@@ -57,19 +48,16 @@ const EventoEditCard = ({ data, setSalvarDados }) => {
 
   const handlePlanos = async () => {
     planosVar = await getPlano()
-    setPlanos(planosVar.map((i) => ({ value: i.id, label: i.nome })))
+    setListaPlanos(planosVar.map((i) => ({ value: i.id, label: i.nome })))
 
-    if (vDados[0].id !== undefined) {
+    if (vDados.id !== undefined) {
       planosVar?.map((res) => {
-        if (res.id === vDados[0].plano_conexao_id) {
-          setSelectedPlano({ value: res.id, label: res.nome })
+        if (res.id === vDados.plano_conexao_id) {
+          setPlano({ value: res.id, label: res.nome })
         }
       })
     }
   }
-
-  // ** Bloquear ações de onChange
-  const blockChange = () => {}
 
   const setDados = () => {
     setSalvarDados(vDados)
@@ -79,21 +67,8 @@ const EventoEditCard = ({ data, setSalvarDados }) => {
 
   useEffect(() => {
     // ** Requisitar listas
-    if (vDados.id !== 0 || undefined) {
-      handleHotspots()
-      handlePlanos()
-      setNome(vDados[0].nome !== null ? vDados[0].nome : "")
-      setVoucher(vDados[0].voucher !== null ? vDados[0].voucher : "")
-      setDataInicio(
-        vDados[0].data_inicio !== "0001-01-01T00:00:00"
-          ? vDados[0].data_inicio
-          : ""
-      )
-      setDataFim(
-        vDados[0].data_fim !== "0001-01-01T00:00:00" ? vDados[0].data_fim : ""
-      )
-      setAtivo(vDados[0].ativo)
-    }
+    handleHotspots()
+    handlePlanos()
   }, [])
 
   return (
@@ -110,16 +85,12 @@ const EventoEditCard = ({ data, setSalvarDados }) => {
                   <CornerUpLeft size={17} />
                 </Button.Ripple>
               </div>
-              {vDados.id !== undefined ? (
-                ""
-              ) : (
-                <div>
-                  <Button.Ripple color="success" onClick={setDados}>
-                    <Check size={17} />
-                    <span className="align-middle ms-25">Salvar</span>
-                  </Button.Ripple>
-                </div>
-              )}
+              <div>
+                <Button.Ripple color="success" onClick={setDados}>
+                  <Check size={17} />
+                  <span className="align-middle ms-25">Salvar</span>
+                </Button.Ripple>
+              </div>
             </div>
           </Card>
         </Fragment>
@@ -138,20 +109,8 @@ const EventoEditCard = ({ data, setSalvarDados }) => {
                       <Input
                         id="nome"
                         name="nome"
-                        value={nome}
-                        onChange={
-                          vDados.id !== undefined
-                            ? blockChange
-                            : (e) => {
-                                setNome(e.target.value)
-                                handleChange({
-                                  target: {
-                                    name: "nome",
-                                    value: e.target.value,
-                                  },
-                                })
-                              }
-                        }
+                        value={vDados?.nome ?? ""}
+                        onChange={handleChange}
                       />
                     </Col>
                     <Col lg="6" md="6" className="mb-2">
@@ -162,16 +121,8 @@ const EventoEditCard = ({ data, setSalvarDados }) => {
                         id="voucher"
                         name="voucher"
                         maxLength={20}
-                        value={voucher}
-                        onChange={(e) => {
-                          setVoucher(e.target.value)
-                          handleChange({
-                            target: {
-                              name: "voucher",
-                              value: e.target.value,
-                            },
-                          })
-                        }}
+                        value={vDados?.voucher ?? ""}
+                        onChange={handleChange}
                       />
                     </Col>{" "}
                   </Row>
@@ -185,20 +136,11 @@ const EventoEditCard = ({ data, setSalvarDados }) => {
                       </Label>
 
                       <Input
-                        id="data-inicio"
-                        name="data-inicio"
+                        id="data_inicio"
+                        name="data_inicio"
                         type="datetime-local"
-                        value={dataInicio}
-                        disabled={vDados.id !== undefined}
-                        onChange={(e) => {
-                          setDataInicio(e.target.value)
-                          handleChange({
-                            target: {
-                              name: "data_inicio",
-                              value: e.target.value,
-                            },
-                          })
-                        }}
+                        value={vDados?.data_inicio ?? ""}
+                        onChange={handleChange}
                       />
                     </Col>
 
@@ -207,20 +149,11 @@ const EventoEditCard = ({ data, setSalvarDados }) => {
                         Fim do evento
                       </Label>
                       <Input
-                        id="data-fim"
-                        name="data-fim"
+                        id="data_fim"
+                        name="data_fim"
                         type="datetime-local"
-                        value={dataFim}
-                        disabled={vDados.id !== undefined}
-                        onChange={(e) => {
-                          setDataFim(e.target.value)
-                          handleChange({
-                            target: {
-                              name: "data_fim",
-                              value: e.target.value,
-                            },
-                          })
-                        }}
+                        value={vDados?.data_fim ?? ""}
+                        onChange={handleChange}
                       />
                     </Col>
                   </Row>
@@ -230,18 +163,18 @@ const EventoEditCard = ({ data, setSalvarDados }) => {
                   <Row>
                     <Col lg="6" md="6" className="mb-2">
                       <Label className="form-label" for="plano-conexao-id">
-                        Selecione um plano de conexão
+                        Plano de conexão
                       </Label>
                       <Select
-                        isClearable
                         id="plano-conexao-id"
+                        noOptionsMessage={() => "Vazio"}
                         placeholder={"Selecione..."}
-                        value={selectedPlano}
-                        options={planos}
+                        value={vPlano}
+                        options={vListaPlanos}
                         className="react-select"
                         classNamePrefix="select"
                         onChange={(e) => {
-                          setSelectedPlano(e)
+                          setPlano(e)
                           handleChange({
                             target: {
                               name: "plano_conexao_id",
@@ -253,19 +186,21 @@ const EventoEditCard = ({ data, setSalvarDados }) => {
                     </Col>
 
                     <Col lg="6" md="6" className="mb-2">
-                      <Label className="form-label" for="hotspot-id">
+                      <Label className="form-label" for="hotspot_id">
                         Selecione um Hotspot
                       </Label>
                       <Select
                         isClearable
-                        id="hotspot-id"
+                        id="hotspot_id"
+                        noOptionsMessage={() => "Vazio"}
                         placeholder={"Selecione..."}
-                        value={selectedHotspot}
-                        options={hotspots}
+                        value={vHotspot}
+                        options={vListaHotspots}
                         className="react-select"
                         classNamePrefix="select"
+                        isDisabled={vDados.id === 0 && vDados.hotspot_id > 0}
                         onChange={(e) => {
-                          setSelectedHotspot(e)
+                          setHotspot(e)
                           handleChange({
                             target: {
                               name: "hotspot_id",
@@ -285,9 +220,8 @@ const EventoEditCard = ({ data, setSalvarDados }) => {
                         <Input
                           type="switch"
                           id="ativo"
-                          checked={ativo}
+                          checked={vDados?.ativo ?? false}
                           onChange={(e) => {
-                            setAtivo(e.target.checked)
                             handleChange({
                               target: {
                                 name: "ativo",
@@ -297,7 +231,7 @@ const EventoEditCard = ({ data, setSalvarDados }) => {
                           }}
                         />
                         <Label for="ativo" className="form-check-label mt-25">
-                          Ativar evento
+                          {vDados?.ativo ? "Evento ativo" : "Evento desativado"}
                         </Label>
                       </div>
                     </Col>

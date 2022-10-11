@@ -1,5 +1,5 @@
-@import '../../../base/bootstrap-extended/include';
-@import '../../../base/components/include';
+@import "../../../base/bootstrap-extended/include";
+@import "../../../base/components/include";
 
 // InValid Select
 .react-select.is-invalid {
@@ -81,6 +81,7 @@
 // Multi Select
 .select__multi-value,
 .react-select__multi-value {
+  background-color: $primary;
   color: $white;
   border-radius: 3px;
   margin: 0 0.7rem 0 0;
@@ -176,7 +177,7 @@
   }
 }
 
-html[dir='rtl'] {
+html[dir="rtl"] {
   .select__control {
     .select__loading-indicator {
       flex-direction: row-reverse;

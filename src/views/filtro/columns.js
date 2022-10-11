@@ -88,15 +88,15 @@ export const columns = [
     },
   },
   {
-    name: <div className="text-end w-100">Data de criação</div>,
+    name: "Data de criação",
     minWidth: "80px",
     sortable: true,
     selector: (row) => row.data_criacao,
     cell: (row) => {
       const dataCriacao = row.data_criacao ? row.data_criacao : ""
       return (
-        <div className="text-end w-100">
-          <div className="d-inline-flex flex-column">
+        <div className="d-flex justify-content-left align-items-center">
+          <div className="d-flex flex-column">
             <Link to={`/filtro/${row.id}`} id={`pw-tooltip2-${row.id}`}>
               <h6 className="user-name text-truncate mb-0">
                 {formatDateTime(dataCriacao)}

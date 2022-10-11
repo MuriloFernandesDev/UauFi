@@ -61,6 +61,19 @@ export const formatDateToMonthShort = (value, toTimeForCurrentDay = true) => {
   return new Intl.DateTimeFormat("pt-BR", formatting).format(new Date(value))
 }
 
+//Retornar data e hora atual no formato para input
+export const dateTimeNow = () => {
+  const d = new Date()
+  let month = `${d.getMonth() + 1}`,
+    day = `${d.getDate()}`
+  const year = d.getFullYear()
+
+  if (month.length < 2) month = `0${month}`
+  if (day.length < 2) day = `0${day}`
+
+  return [year, month, day].join("-")
+}
+
 /**
  ** Return if user is logged in
  ** This is completely up to you and how you want to store the token in your frontend application

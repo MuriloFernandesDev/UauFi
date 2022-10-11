@@ -3,9 +3,7 @@ import { Fragment } from "react"
 
 // ** Routes Imports
 import AppRoutes from "./Apps"
-import FormRoutes from "./Forms"
 import PagesRoutes from "./Pages"
-import TablesRoutes from "./Tables"
 import DashboardRoutes from "./Dashboards"
 import UiElementRoutes from "./UiElements"
 import ExtensionsRoutes from "./Extensions"
@@ -46,8 +44,6 @@ const Routes = [
   ...UiElementRoutes,
   ...ExtensionsRoutes,
   ...PageLayoutsRoutes,
-  ...FormRoutes,
-  ...TablesRoutes,
 ]
 
 const getRouteMeta = (route) => {

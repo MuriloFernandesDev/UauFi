@@ -2,23 +2,42 @@
 import { Link } from "react-router-dom"
 import { useRef, useState, useEffect } from "react"
 
-// ** Table
-import { columns } from "./columns"
-
 // ** Terceiros
 import ReactPaginate from "react-paginate"
-import { ChevronDown } from "react-feather"
+import { ChevronDown, Eye, Trash, MoreVertical } from "react-feather"
 import DataTable from "react-data-table-component"
 
 // ** Reactstrap
-import { Button, Input, Row, Col, Card, Spinner } from "reactstrap"
+import {
+  Button,
+  Input,
+  Row,
+  Col,
+  Card,
+  Spinner,
+  DropdownItem,
+  DropdownMenu,
+  DropdownToggle,
+  UncontrolledTooltip,
+  UncontrolledDropdown,
+} from "reactstrap"
 
 // ** Store & Actions
-import { getEventos } from "./store"
+import { getEventos, deleteEvento } from "./store"
 import { useDispatch, useSelector } from "react-redux"
 
 // ** Styles
 import "@styles/react/libs/tables/react-dataTable-component.scss"
+
+// ** Utils
+import { formatDateTime } from "@utils"
+
+// ** Third Party Components
+import Swal from "sweetalert2"
+import withReactContent from "sweetalert2-react-content"
+import toast from "react-hot-toast"
+
+const MySwal = withReactContent(Swal)
 
 const CustomHeader = ({ handleFilter, value, handlePerPage, rowsPerPage }) => {
   return (
@@ -71,12 +90,17 @@ const EventoList = () => {
 
   // ** States
   const [value, setValue] = useState(store.params.q ?? "")
-  const [sort, setSort] = useState(store.params.sort ?? "desc")
-  const [sortColumn, setSortColumn] = useState(store.params.sortColumn ?? "id")
+  const [sort, setSort] = useState(store.params.sort ?? "asc")
+  const [sortColumn, setSortColumn] = useState(
+    store.params.sortColumn ?? "nome"
+  )
   const [currentPage, setCurrentPage] = useState(store.params.page ?? 1)
   const [rowsPerPage, setRowsPerPage] = useState(store.params.perPage ?? 10)
   const vTimeoutPesquisa = useRef()
   const [vPesquisando, setPesquisando] = useState(true)
+
+  // ** Guardar o Cliente selecionado para atualizar a página caso mude
+  const sClienteId = localStorage.getItem("clienteId")
 
   if (vPesquisando && store.total >= 0) {
     setPesquisando(false)
@@ -89,7 +113,8 @@ const EventoList = () => {
       store.params.q !== value ||
       store.params.sortColumn !== sortColumn ||
       store.params.page !== currentPage ||
-      store.params.perPage !== rowsPerPage
+      store.params.perPage !== rowsPerPage ||
+      store.params.clienteId !== sClienteId
     ) {
       dispatch(
         getEventos({
@@ -98,6 +123,7 @@ const EventoList = () => {
           sortColumn,
           page: currentPage,
           perPage: rowsPerPage,
+          clienteId: sClienteId,
         })
       )
     }
@@ -116,6 +142,7 @@ const EventoList = () => {
           sortColumn,
           page: currentPage,
           perPage: rowsPerPage,
+          clienteId: sClienteId,
         })
       )
     }, 300)
@@ -129,6 +156,7 @@ const EventoList = () => {
         sortColumn,
         page: currentPage,
         perPage: parseInt(e.target.value),
+        clienteId: sClienteId,
       })
     )
     setRowsPerPage(parseInt(e.target.value))
@@ -142,10 +170,139 @@ const EventoList = () => {
         sortColumn,
         perPage: rowsPerPage,
         page: page.selected + 1,
+        clienteId: sClienteId,
       })
     )
     setCurrentPage(page.selected + 1)
   }
+
+  // ** Modal de exclusão de evento
+  const handleDeleteConfirmation = (row) => {
+    return MySwal.fire({
+      title: "Tem certeza?",
+      text: "Sua ação não poderá ser revertida!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Sim, remover!",
+      cancelButtonText: "Cancelar",
+      customClass: {
+        confirmButton: "btn btn-primary",
+        cancelButton: "btn btn-outline-danger ms-1",
+        popup: "animate__animated animate__fadeIn",
+      },
+      hideClass: {
+        popup: "animate__animated animate__zoomOut",
+      },
+      buttonsStyling: false,
+    }).then(async (result) => {
+      if (result.value) {
+        await dispatch(deleteEvento(row.id))
+        handleFilter(store.params.q)
+
+        toast.success("Removido com sucesso!", {
+          position: "bottom-right",
+        })
+      }
+    })
+  }
+
+  // ** Table columns
+  const columns = [
+    {
+      name: "Nome",
+      minWidth: "450px",
+      cell: (row) => {
+        const nome = row.nome ?? "",
+          eventoAtivo = `${row.ativo ? "Ativo" : "Inativo"}. ` ?? "",
+          voucher = `Voucher: ${row.voucher}` ?? "",
+          eventoInfo = `${eventoAtivo}${voucher}`
+
+        return (
+          <div className="d-flex justify-content-left align-items-center">
+            <div className="d-flex flex-column">
+              <Link to={`/evento/${row.id}`} id={`pw-tooltip2-${row.id}`}>
+                <h6 className="user-name text-truncate mb-0">{nome}</h6>
+                <small className="text-truncate text-muted mb-0">
+                  {eventoInfo}
+                </small>
+              </Link>
+            </div>
+          </div>
+        )
+      },
+    },
+    {
+      name: "Período de realização",
+      minWidth: "200px",
+      cell: (row) => {
+        const eventoInicio = formatDateTime(row.data_inicio) ?? "",
+          eventoFim = formatDateTime(row.data_fim) ?? "",
+          eventoPeriodo = `${eventoInicio} a ${eventoFim}`
+        let eventoInfo
+        if (new Date().toISOString() < row.data_inicio) {
+          eventoInfo = `Evento ainda não iniciado`
+        } else if (new Date().toISOString() > row.data_fim) {
+          eventoInfo = `Evento finalizado`
+        } else {
+          eventoInfo = `Evento em andamento`
+        }
+
+        return (
+          <div className="d-flex justify-content-left align-items-center">
+            <div className="d-flex flex-column">
+              <Link to={`/evento/${row.id}`} id={`pw-tooltip2-${row.id}`}>
+                <h6 className="user-name text-truncate mb-0">
+                  {eventoPeriodo}
+                </h6>
+                <small className="text-truncate text-muted mb-0">
+                  {eventoInfo}
+                </small>
+              </Link>
+            </div>
+          </div>
+        )
+      },
+    },
+    {
+      name: <div className="text-end w-100">Ações</div>,
+      minWidth: "80px",
+      cell: (row) => (
+        <div className="text-end w-100">
+          <div className="column-action d-inline-flex">
+            <Link to={`/evento/${row.id}`} id={`pw-tooltip-${row.id}`}>
+              <Eye size={17} className="mx-1" />
+            </Link>
+
+            <UncontrolledTooltip
+              placement="top"
+              target={`pw-tooltip-${row.id}`}
+            >
+              Visualizar
+            </UncontrolledTooltip>
+            <UncontrolledDropdown>
+              <DropdownToggle tag="span">
+                <MoreVertical size={17} className="cursor-pointer" />
+              </DropdownToggle>
+              <DropdownMenu end>
+                <DropdownItem
+                  tag="a"
+                  href="/"
+                  className="w-100"
+                  onClick={(e) => {
+                    e.preventDefault()
+                    handleDeleteConfirmation(row)
+                  }}
+                >
+                  <Trash size={14} className="me-50" />
+                  <span className="align-middle">Remover</span>
+                </DropdownItem>
+              </DropdownMenu>
+            </UncontrolledDropdown>
+          </div>
+        </div>
+      ),
+    },
+  ]
 
   const CustomPagination = () => {
     const count = Math.ceil(store.total / rowsPerPage)
@@ -192,6 +349,7 @@ const EventoList = () => {
         sort: sortDirection,
         perPage: rowsPerPage,
         sortColumn: column.sortField,
+        clienteId: sClienteId,
       })
     )
   }
@@ -207,7 +365,7 @@ const EventoList = () => {
           <DataTable
             noHeader
             pagination
-            sortServer
+            // sortServer
             noDataComponent=""
             paginationServer
             subHeader={true}

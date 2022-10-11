@@ -2,15 +2,11 @@
 import { Fragment, useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 
-// ** Utils
-import { selectThemeColors } from "@utils"
-
 // ** Reactstrap
 import {
   Row,
   Col,
   Card,
-  CardBody,
   Input,
   Button,
   Label,
@@ -283,7 +279,6 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
 
   return (
     <Row>
-      {console.log(vDadosCP)}
       <Col sm="12">
         <Fragment>
           <Card className="mb-1">
@@ -417,6 +412,7 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                         isClearable
                         id="artigo_genero"
                         placeholder={"Selecione..."}
+                        noOptionsMessage={() => "Vazio"}
                         className="react-select"
                         classNamePrefix="select"
                         value={vArtigoGenero}
@@ -476,6 +472,7 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                         id="vCategoria"
                         placeholder={"Selecione..."}
                         className="react-select"
+                        noOptionsMessage={() => "Vazio"}
                         classNamePrefix="select"
                         value={
                           vListaCategorias?.filter(
@@ -518,8 +515,8 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                       <Select
                         isClearable
                         id="vAgregador"
+                        noOptionsMessage={() => "Vazio"}
                         isMulti
-                        theme={selectThemeColors}
                         placeholder={""}
                         className="react-select"
                         classNamePrefix="select"
@@ -636,6 +633,7 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                       <Select
                         isClearable
                         id="vEstado"
+                        noOptionsMessage={() => "Vazio"}
                         placeholder={"Selecione..."}
                         className="react-select"
                         classNamePrefix="select"
@@ -812,6 +810,7 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                         </Label>
                         <Select
                           placeholder={"Selecione..."}
+                          noOptionsMessage={() => "Vazio"}
                           className="react-select"
                           classNamePrefix="select"
                           value={vTipoLayout}
@@ -835,6 +834,7 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                           id="vTipoIntegracao"
                           placeholder={"Selecione..."}
                           className="react-select"
+                          noOptionsMessage={() => "Vazio"}
                           classNamePrefix="select"
                           value={vTipoIntegracao}
                           onChange={(e) => {

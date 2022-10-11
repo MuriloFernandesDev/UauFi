@@ -78,6 +78,9 @@ const FiltroList = () => {
   const vTimeoutPesquisa = useRef()
   const [vPesquisando, setPesquisando] = useState(true)
 
+  // ** Guardar o Cliente selecionado para atualizar a página caso mude
+  const sClienteId = localStorage.getItem("clienteId")
+
   if (vPesquisando && store.total >= 0) {
     setPesquisando(false)
   }
@@ -89,7 +92,8 @@ const FiltroList = () => {
       store.params.q !== value ||
       store.params.sortColumn !== sortColumn ||
       store.params.page !== currentPage ||
-      store.params.perPage !== rowsPerPage
+      store.params.perPage !== rowsPerPage ||
+      store.params.clienteId !== sClienteId
     ) {
       dispatch(
         getFiltros({
@@ -98,6 +102,7 @@ const FiltroList = () => {
           sortColumn,
           page: currentPage,
           perPage: rowsPerPage,
+          clienteId: sClienteId,
         })
       )
     }
@@ -116,6 +121,7 @@ const FiltroList = () => {
           sortColumn,
           page: currentPage,
           perPage: rowsPerPage,
+          clienteId: sClienteId,
         })
       )
     }, 300)
@@ -129,6 +135,7 @@ const FiltroList = () => {
         sortColumn,
         page: currentPage,
         perPage: parseInt(e.target.value),
+        clienteId: sClienteId,
       })
     )
     setRowsPerPage(parseInt(e.target.value))
@@ -142,6 +149,7 @@ const FiltroList = () => {
         sortColumn,
         perPage: rowsPerPage,
         page: page.selected + 1,
+        clienteId: sClienteId,
       })
     )
     setCurrentPage(page.selected + 1)
@@ -192,6 +200,7 @@ const FiltroList = () => {
         sort: sortDirection,
         perPage: rowsPerPage,
         sortColumn: column.sortField,
+        clienteId: sClienteId,
       })
     )
   }

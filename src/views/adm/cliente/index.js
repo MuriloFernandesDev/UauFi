@@ -40,7 +40,7 @@ const CustomHeader = ({ handleFilter, value, handlePerPage, rowsPerPage }) => {
             </Input>
           </div>
           <Button tag={Link} to="/adm/cliente/add" color="primary">
-            Novo cadastro
+            Novo cliente
           </Button>
         </Col>
         <Col

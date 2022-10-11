@@ -10,11 +10,14 @@ import { Row, Col, Spinner } from "reactstrap"
 
 // ** Editar evento
 import EditCard from "./EditCard"
+import { getEventos } from "../store"
+import { useDispatch, useSelector } from "react-redux"
 
 // ** Terceiros
 import toast from "react-hot-toast"
 import Swal from "sweetalert2"
 import withReactContent from "sweetalert2-react-content"
+import UILoader from "@components/ui-loader"
 
 // ** Modal de apresentação de erros
 
@@ -41,24 +44,37 @@ const EventoEdit = () => {
   const { id } = useParams()
   const navigate = useNavigate()
 
+  // ** Store vars
+  const dispatch = useDispatch()
+  const vParFiltro = useSelector((state) => state.evento.params)
+
   // ** States
   const [data, setData] = useState(null)
   const [vCarregando, setCarregando] = useState(true)
+  const [vSalvando, setSalvando] = useState(false)
+
+  const handleOK = () => {
+    setSalvando(false)
+    dispatch(getEventos(vParFiltro))
+    navigate("/evento")
+  }
 
   // ** Função para salvar dados & respostas a erros
   const handleSalvar = (pDados) => {
-    if (pDados[0].id > 0) {
+    setSalvando(true)
+    if (pDados.id > 0) {
       api
-        .put("/evento", pDados[0])
+        .put("/evento", pDados)
         .then((response) => {
           if (response.status === 200) {
             toast.success("Evento editado com sucesso!", {
               position: "bottom-right",
             })
-            navigate("/evento")
+            handleOK()
           }
         })
         .catch((error) => {
+          setSalvando(false)
           if (error.response.status === 400) {
             handleError(
               "Atenção!",
@@ -87,10 +103,11 @@ const EventoEdit = () => {
             toast.success("Evento criado com sucesso!", {
               position: "bottom-right",
             })
-            navigate("/evento")
+            handleOK()
           }
         })
         .catch((error) => {
+          setSalvando(false)
           if (error.response.status === 400) {
             handleError(
               "Atenção!",
@@ -117,7 +134,7 @@ const EventoEdit = () => {
   // ** Get filter on mount based on id
   useEffect(() => {
     api.get(`/evento/${id}`).then((response) => {
-      setData(response.data)
+      setData(response.data[0])
       setCarregando(false)
     })
   }, [])
@@ -127,13 +144,13 @@ const EventoEdit = () => {
       <Spinner color="primary" />
     </div>
   ) : (
-    <div>
+    <UILoader blocking={vSalvando} overlayColor="rgba(255, 255, 255, .5)">
       <Row>
         <Col sm={12}>
           <EditCard data={data} setSalvarDados={handleSalvar} />
         </Col>
       </Row>
-    </div>
+    </UILoader>
   )
 }
 

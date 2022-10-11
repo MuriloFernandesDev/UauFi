@@ -30,6 +30,7 @@ const FiltroEditCard = ({ data, setSalvarDados }) => {
   const [vCidade, setCidade] = useState(null)
   const [vListaEstados, setListaEstados] = useState(null)
   const [vListaCidades, setListaCidades] = useState(null)
+  const [vCliente, setCliente] = useState(null)
   const [upperConnect, setUpperConnect] = useState(18)
   const [lowerConnect, setLowerConnect] = useState(100)
   const [appDataInicial, setAppDataInicial] = useState("")
@@ -37,7 +38,7 @@ const FiltroEditCard = ({ data, setSalvarDados }) => {
   const [visitaDataInicial, setVisitaDataInicial] = useState("")
   const [visitaDataFinal, setVisitaDataFinal] = useState("")
 
-  const [clienteId, setClienteId] = useState(0)
+  const [vListaClientes, setListaClientes] = useState(null)
 
   // ** Organização da informação
   const handleChange = (e) => {
@@ -54,23 +55,38 @@ const FiltroEditCard = ({ data, setSalvarDados }) => {
     setGenero(getGeneros)
 
     if (vDados.id !== undefined) {
-      const gendersArray = vDados?.genero
-        .split(",")
-        .map((item) => parseInt(item))
+      if (vDados?.genero) {
+        const gendersArray = vDados?.genero
+          .split(",")
+          .map((item) => parseInt(item))
 
-      setSelectedGenero(
-        gendersArray?.map((item) => {
-          const response = getGeneros?.filter((res) => res.value === item)
-          if (response) {
-            return {
-              ...response[0],
-              label: response[0]?.label,
-              value: response[0]?.value,
+        setSelectedGenero(
+          gendersArray?.map((item) => {
+            const response = getGeneros?.filter((res) => res.value === item)
+            if (response) {
+              return {
+                ...response[0],
+                label: response[0]?.label,
+                value: response[0]?.value,
+              }
             }
-          }
-        })
-      )
+          })
+        )
+      }
     }
+  }
+
+  const getClientes = () => {
+    return api.get("/cliente/lista_simples").then((res) => {
+      setListaClientes(res.data)
+
+      //Selecionar o item no componente
+      if (!vCliente && data?.cliente_id) {
+        setCliente(
+          res.data?.filter((item) => item.value === Number(data?.cliente_id))[0]
+        )
+      }
+    })
   }
 
   // ** Listagem de Estados e cidades
@@ -112,6 +128,7 @@ const FiltroEditCard = ({ data, setSalvarDados }) => {
       getEstados()
       handleGenero()
     }
+    getClientes()
     if (vDados.id !== undefined) {
       if (vDados.app_data_inicial) {
         setAppDataInicial(vDados.app_data_inicial.substring(0, 10))
@@ -161,103 +178,128 @@ const FiltroEditCard = ({ data, setSalvarDados }) => {
           <Fragment>
             <Card className="mb-0">
               <Row>
-                <Col lg="12">
-                  <Row>
-                    <Col lg="6" md="6" className="mb-2">
-                      <Label className="form-label" for="nome">
-                        Nome da campanha
-                      </Label>
-                      <Input
-                        id="nome"
-                        name="nome"
-                        value={vDados?.nome ?? ""}
-                        onChange={
-                          vDados.id !== undefined ? blockChange : handleChange
-                        }
-                      />
-                    </Col>
-
-                    <Col lg="6" md="6" className="mb-2">
-                      <Label className="form-label" for="genero">
-                        Gêneros atingidos pela campanha
-                      </Label>
-                      <Select
-                        isClearable
-                        id="genero"
-                        isMulti={true}
-                        value={selectedGenero}
-                        placeholder={"Selecione..."}
-                        className="react-select"
-                        classNamePrefix="select"
-                        options={genero}
-                        onChange={
-                          vDados.id !== undefined
-                            ? blockChange
-                            : (e) => (
-                                setSelectedGenero(e),
-                                handleChange({
-                                  target: {
-                                    name: "genero",
-                                    value: e
-                                      ?.map((item) => item.value.toString())
-                                      .toString(),
-                                  },
-                                })
-                              )
-                        }
-                      />
-                    </Col>
-                  </Row>
+                <Col md="6" className="mb-2">
+                  <Label className="form-label" for="nome">
+                    Nome
+                  </Label>
+                  <Input
+                    id="nome"
+                    name="nome"
+                    value={vDados?.nome ?? ""}
+                    onChange={
+                      vDados.id !== undefined ? blockChange : handleChange
+                    }
+                  />
                 </Col>
 
-                <Col lg="12" style={{ marginBottom: "2em" }}>
-                  <Row>
-                    <Label
-                      className="form-label"
-                      style={{ marginBottom: "2em" }}
-                    >
-                      Faixa etária atingida pela campanha
-                    </Label>
-                    <Col>
-                      <Nouislider
-                        connect={true}
-                        start={
-                          vDados?.idade_inicial
-                            ? [vDados?.idade_inicial, vDados?.idade_final]
-                            : [upperConnect, lowerConnect]
-                        }
-                        step={1}
-                        disabled={vDados.id !== undefined}
-                        tooltips={true}
-                        style={{ zIndex: 0 }}
-                        format={wNumb({
-                          decimals: 0,
-                        })}
-                        behaviour={"tap"}
-                        direction="ltr"
-                        range={{
-                          min: 18,
-                          max: 100,
-                        }}
-                        onChange={(e) => {
-                          setUpperConnect(e[0])
-                          setLowerConnect(e[1])
-                          handleChange({
-                            target: {
-                              name: "idade_inicial",
-                              value: Number(e[0]),
-                            },
-                          })
-                          handleChange({
-                            target: {
-                              name: "idade_final",
-                              value: Number(e[1]),
-                            },
-                          })
-                        }}
-                      />
-                    </Col>
-                  </Row>
+                <Col md="6" className="mb-2">
+                  <Label className="form-label" for="vCliente">
+                    Cliente
+                  </Label>
+                  <Select
+                    isClearable
+                    noOptionsMessage={() => "Vazio"}
+                    id="vCliente"
+                    disabled={vDados.id !== undefined}
+                    placeholder={"Selecione..."}
+                    className="react-select"
+                    classNamePrefix="select"
+                    value={
+                      vListaClientes?.filter(
+                        (item) => item.value === vDados?.cliente_id
+                      )[0]
+                    }
+                    onChange={
+                      vDados.id !== undefined
+                        ? blockChange
+                        : (e) => {
+                            setCliente(e)
+                            handleChange({
+                              target: { name: "cliente_id", value: e?.value },
+                            })
+                          }
+                    }
+                    options={vListaClientes}
+                  />
+                </Col>
+
+                <Col md="6" className="mb-2">
+                  <Label className="form-label" for="genero">
+                    Gênero(s) atingidos
+                  </Label>
+                  <Select
+                    isClearable
+                    id="genero"
+                    isMulti={true}
+                    noOptionsMessage={() => "Vazio"}
+                    disabled={vDados.id !== undefined}
+                    value={selectedGenero}
+                    placeholder={"Selecione..."}
+                    className="react-select"
+                    classNamePrefix="select"
+                    options={genero}
+                    onChange={
+                      vDados.id !== undefined
+                        ? blockChange
+                        : (e) => (
+                            setSelectedGenero(e),
+                            handleChange({
+                              target: {
+                                name: "genero",
+                                value: e
+                                  ?.map((item) => item.value.toString())
+                                  .toString(),
+                              },
+                            })
+                          )
+                    }
+                  />
+                </Col>
+                <Col md="6" className="mb-2">
+                  <Label
+                    className="form-label"
+                    style={{ marginBottom: "2.2em" }}
+                  >
+                    Faixa etária
+                  </Label>
+
+                  <Nouislider
+                    connect={true}
+                    start={
+                      vDados?.idade_inicial
+                        ? [vDados?.idade_inicial, vDados?.idade_final]
+                        : [upperConnect, lowerConnect]
+                    }
+                    step={1}
+                    disabled={vDados.id !== undefined}
+                    tooltips={true}
+                    style={{ zIndex: 0 }}
+                    format={wNumb({
+                      decimals: 0,
+                    })}
+                    behaviour={"tap"}
+                    direction="ltr"
+                    range={{
+                      min: 18,
+                      max: 100,
+                    }}
+                    onChange={(e) => {
+                      setUpperConnect(e[0])
+                      setLowerConnect(e[1])
+                      handleChange({
+                        target: {
+                          name: "idade_inicial",
+                          value: Number(e[0]),
+                        },
+                      })
+                      handleChange({
+                        target: {
+                          name: "idade_final",
+                          value: Number(e[1]),
+                        },
+                      })
+                    }}
+                  />
                 </Col>
 
                 <Col lg="12">
@@ -272,6 +314,7 @@ const FiltroEditCard = ({ data, setSalvarDados }) => {
                           id="vEstado"
                           placeholder={"Selecione..."}
                           className="react-select"
+                          noOptionsMessage={() => "Vazio"}
                           classNamePrefix="select"
                           value={vEstado}
                           onChange={(e) => {
@@ -292,11 +335,11 @@ const FiltroEditCard = ({ data, setSalvarDados }) => {
                     )}
                     <Col md={vDados.id ? "12" : "6"} className="mb-2">
                       <Label className="form-label" for="vCidade">
-                        Cidades atingidas pela campanha
+                        Cidades atingidas
                       </Label>
                       <Select
                         id="vCidade"
-                        noOptionsMessage={() => "vazio"}
+                        noOptionsMessage={() => "Vazio"}
                         LoadingMessage={() => "pesquisando..."}
                         placeholder={"Selecione..."}
                         mess
@@ -338,9 +381,7 @@ const FiltroEditCard = ({ data, setSalvarDados }) => {
                 <Col lg="12">
                   <Row>
                     <Label className="form-label">
-                      {vDados.id !== undefined
-                        ? "Em caso de campanha Push: período em que o usuário se conectou no App"
-                        : "Vai enviar Push? Selecione o período em que o usuário se conectou no App"}
+                      Usuários que utilizaram o App em um período
                     </Label>
                     <Col className="mb-2">
                       <Label className="form-label" for="app-data-inicial">
@@ -433,33 +474,6 @@ const FiltroEditCard = ({ data, setSalvarDados }) => {
                               value: e.target.value,
                             },
                           })
-                        }}
-                      />
-                    </Col>
-                  </Row>
-                </Col>
-                <Col lg="4">
-                  <Row>
-                    <Col lg="6" md="6" className="mb-2">
-                      <Label className="form-label" for="cliente-id">
-                        ID do cliente
-                      </Label>
-                      <Input
-                        id="cliente-id"
-                        name="cliente-id"
-                        type="number"
-                        style={{ marginBottom: "20px" }}
-                        value={clienteId}
-                        onChange={(e) => {
-                          setClienteId(e.target.value)
-                          handleChange({
-                            target: {
-                              name: "cliente_id",
-                              value: Number(e.target.value),
-                            },
-                          })
-                          {
-                          }
                         }}
                       />
                     </Col>

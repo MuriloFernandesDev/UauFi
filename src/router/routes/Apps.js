@@ -4,14 +4,24 @@ import { Navigate } from "react-router-dom"
 
 const Cliente = lazy(() => import("../../views/adm/cliente"))
 const ClienteEdit = lazy(() => import("../../views/adm/cliente/edit"))
+const Hotspot = lazy(() => import("../../views/adm/hotspot"))
+const HotspotEdit = lazy(() => import("../../views/adm/hotspot/edit"))
+const ClienteLogin = lazy(() => import("../../views/adm/login"))
+const ClienteLoginEdit = lazy(() => import("../../views/adm/login/edit"))
+const PlanoConexao = lazy(() => import("../../views/adm/plano_conexao"))
+const PlanoConexaoEdit = lazy(() =>
+  import("../../views/adm/plano_conexao/edit")
+)
+const UsuarioLista = lazy(() => import("../../views/usuario/lista"))
+const UsuarioDados = lazy(() => import("../../views/usuario/dados"))
 const Evento = lazy(() => import("../../views/evento"))
 const EventoEdit = lazy(() => import("../../views/evento/edit"))
 const Filtro = lazy(() => import("../../views/filtro"))
 const FiltroEdit = lazy(() => import("../../views/filtro/edit"))
-const Gerenciar = lazy(() => import("../../views/users/gerenciar"))
-const GerenciarEdit = lazy(() => import("../../views/users/gerenciar/edit"))
-const Plano = lazy(() => import("../../views/users/plano"))
-const PlanoEdit = lazy(() => import("../../views/users/plano/edit"))
+const PermissaoMAC = lazy(() => import("../../views/adm/permissao_mac"))
+const PermissaoMacEdit = lazy(() =>
+  import("../../views/adm/permissao_mac/edit")
+)
 
 const AppRoutes = [
   {
@@ -21,6 +31,38 @@ const AppRoutes = [
   {
     element: <ClienteEdit />,
     path: "/adm/cliente/:id",
+  },
+  {
+    element: <Hotspot />,
+    path: "/adm/hotspot",
+  },
+  {
+    element: <HotspotEdit />,
+    path: "/adm/hotspot/:id",
+  },
+  {
+    element: <ClienteLogin />,
+    path: "/adm/login",
+  },
+  {
+    element: <ClienteLoginEdit />,
+    path: "/adm/login/:id",
+  },
+  {
+    element: <PlanoConexao />,
+    path: "/adm/plano_conexao",
+  },
+  {
+    element: <PlanoConexaoEdit />,
+    path: "/adm/plano_conexao/:id",
+  },
+  {
+    element: <UsuarioLista />,
+    path: "/usuario/lista",
+  },
+  {
+    element: <UsuarioDados />,
+    path: "/usuario/dados/:id",
   },
   {
     element: <Filtro />,
@@ -39,20 +81,12 @@ const AppRoutes = [
     path: "/evento/:id",
   },
   {
-    element: <Gerenciar />,
-    path: "/usuario/gerenciar",
+    element: <PermissaoMAC />,
+    path: "/adm/permissao_mac",
   },
   {
-    element: <GerenciarEdit />,
-    path: "/usuario/gerenciar/:id",
-  },
-  {
-    element: <Plano />,
-    path: "/usuario/plano",
-  },
-  {
-    element: <PlanoEdit />,
-    path: "/usuario/plano/:id",
+    element: <PermissaoMacEdit />,
+    path: "/adm/permissao_mac/:id",
   },
 ]
 

@@ -8,7 +8,7 @@ export const getCliente = createAsyncThunk(
   "admCliente/getCliente",
   async (parametros) => {
     //console.log(parametros)
-    const response = await api.get("/cliente/0/", { params: parametros })
+    const response = await api.get("/cliente/lista", { params: parametros })
     // console.log(response)
     let vRegInicial = (parametros.page - 1) * parametros.perPage
     let vRegFinal = parametros.page * parametros.perPage
