@@ -17,6 +17,7 @@ import { useDispatch, useSelector } from "react-redux"
 import toast from "react-hot-toast"
 import Swal from "sweetalert2"
 import withReactContent from "sweetalert2-react-content"
+import UILoader from "@components/ui-loader"
 
 // ** Modal de apresentação de erros
 
@@ -51,14 +52,17 @@ const ClienteEdit = () => {
   // ** States
   const [data, setData] = useState(null)
   const [vCarregando, setCarregando] = useState(true)
+  const [vSalvando, setSalvando] = useState(false)
 
   const handleOK = () => {
+    setSalvando(false)
     dispatch(getCliente(vParFiltro))
     navigate("/adm/cliente")
   }
 
   // ** Função para salvar dados & respostas a erros
   const handleSalvar = (pDados) => {
+    setSalvando(true)
     if (pDados.id > 0) {
       api
         .put("/cliente", pDados)
@@ -71,6 +75,7 @@ const ClienteEdit = () => {
           }
         })
         .catch((error) => {
+          setSalvando(false)
           if (error.response.status === 400) {
             handleError(
               "Atenção!",
@@ -103,6 +108,7 @@ const ClienteEdit = () => {
           }
         })
         .catch((error) => {
+          setSalvando(false)
           if (error.response.status === 400) {
             handleError(
               "Atenção!",
@@ -139,13 +145,13 @@ const ClienteEdit = () => {
       <Spinner color="primary" />
     </div>
   ) : (
-    <div>
+    <UILoader blocking={vSalvando}>
       <Row>
         <Col sm={12}>
           <EditCard data={data} setSalvarDados={handleSalvar} />
         </Col>
       </Row>
-    </div>
+    </UILoader>
   )
 }
 

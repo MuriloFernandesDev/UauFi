@@ -115,7 +115,7 @@ const StatsCard = () => {
               />
               <div className="my-auto">
                 {vProcessando1 ? (
-                  <Spinner color="primary" />
+                  <Spinner type="grow" size="sm" color="primary" />
                 ) : (
                   <h4 className="fw-bolder mb-0">{vValor1}</h4>
                 )}
@@ -136,7 +136,7 @@ const StatsCard = () => {
               />
               <div className="my-auto">
                 {vProcessando2 ? (
-                  <Spinner color="primary" />
+                  <Spinner type="grow" size="sm" color="primary" />
                 ) : (
                   <h4 className="fw-bolder mb-0">{vValor2}</h4>
                 )}
@@ -157,7 +157,7 @@ const StatsCard = () => {
               />
               <div className="my-auto">
                 {vProcessando3 ? (
-                  <Spinner color="primary" />
+                  <Spinner type="grow" size="sm" color="primary" />
                 ) : (
                   <h4 className="fw-bolder mb-0">{vValor3}</h4>
                 )}
@@ -178,7 +178,7 @@ const StatsCard = () => {
               />
               <div className="my-auto">
                 {vProcessando4 ? (
-                  <Spinner color="primary" />
+                  <Spinner type="grow" size="sm" color="primary" />
                 ) : (
                   <h4 className="fw-bolder mb-0">{vValor4}</h4>
                 )}

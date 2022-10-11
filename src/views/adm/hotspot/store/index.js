@@ -36,21 +36,29 @@ export const getHotspot = createAsyncThunk(
 
 export const deleteHotspot = createAsyncThunk(
   "admHotspot/deleteHotspot",
-  async (id, { dispatch, getState }) => {
+  async (id) => {
     await api.delete(`/hotspot/${id}`)
-    await dispatch(getHotspot(getState().hotspot.params))
     return id
   }
 )
 
 export const cloneHotspot = createAsyncThunk(
   "admHotspot/cloneHotspot",
-  async (cloneParams, { dispatch, getState }) => {
+  async (cloneParams) => {
     await api.post(`/hotspot/duplicar/${cloneParams[0]}/${cloneParams[1]}`)
-    await dispatch(getHotspot(getState().hotspot.params))
     return cloneParams[0]
   }
 )
+
+export const getClientes = async () => {
+  const response = (await api.get(`/cliente/lista_simples`)).data
+  return response
+}
+
+export const getMarcas = async () => {
+  const response = (await api.get(`/listas/marca_equipamento`)).data
+  return response
+}
 
 export const admHotspotSlice = createSlice({
   name: "admHotspot",

@@ -64,17 +64,19 @@ const PlanoEditCard = ({ data, setSalvarDados }) => {
     }))
   }
 
-  const handleHotspots = async () => {
-    hotspotsVar = await getHotspot()
-    setListaHotspots(hotspotsVar)
+  const handleHotspots = () => {
+    getHotspot().then((res) => {
+      hotspotsVar = res
+      setListaHotspots(hotspotsVar)
 
-    if (vDados?.id !== undefined) {
-      hotspotsVar?.map((res) => {
-        if (res.value === vDados.hotspot_id) {
-          setHotspot({ value: res.value, label: res.label })
-        }
-      })
-    }
+      if (vDados?.id !== undefined) {
+        hotspotsVar?.map((res) => {
+          if (res.value === vDados.hotspot_id) {
+            setHotspot({ value: res.value, label: res.label })
+          }
+        })
+      }
+    })
   }
 
   const setDados = () => {

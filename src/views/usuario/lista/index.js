@@ -385,7 +385,7 @@ const UsuarioLista = () => {
               renderStats={
                 <h3 className="fw-bolder mb-75">
                   {vProcessando1 ? (
-                    <Spinner color="primary" />
+                    <Spinner type="grow" size="sm" color="primary" />
                   ) : (
                     new Intl.NumberFormat().format(store.total)
                   )}
@@ -400,7 +400,11 @@ const UsuarioLista = () => {
               icon={<UserPlus size={20} />}
               renderStats={
                 <h3 className="fw-bolder mb-75">
-                  {vProcessando2 ? <Spinner color="primary" /> : store.novos}
+                  {vProcessando2 ? (
+                    <Spinner type="grow" size="sm" color="primary" />
+                  ) : (
+                    store.novos
+                  )}
                 </h3>
               }
             />
@@ -412,43 +416,49 @@ const UsuarioLista = () => {
               icon={<UserCheck size={20} />}
               renderStats={
                 <h3 className="fw-bolder mb-75">
-                  {vProcessando3 ? <Spinner color="primary" /> : store.online}
+                  {vProcessando3 ? (
+                    <Spinner type="grow" size="sm" color="primary" />
+                  ) : (
+                    store.online
+                  )}
                 </h3>
               }
             />
           </Col>
         </Row>
       </div>
-      <UILoader blocking={vPesquisando} overlayColor="rgba(255, 255, 255, .5)">
-        <Card className="overflow-hidden">
-          <div className="react-dataTable">
-            <DataTable
-              noHeader
-              subHeader
-              sortServer
-              pagination
-              noDataComponent=""
-              responsive
-              paginationServer
-              columns={columns}
-              onSort={handleSort}
-              sortIcon={<ChevronDown />}
-              className="react-dataTable"
-              paginationComponent={CustomPagination}
-              data={dataToRender()}
-              subHeaderComponent={
-                <CustomHeader
-                  store={store}
-                  searchTerm={searchTerm}
-                  rowsPerPage={rowsPerPage}
-                  handleFilter={handleFilter}
-                  handlePerPage={handlePerPage}
-                  toggleSidebar={toggleSidebar}
-                />
-              }
-            />
-          </div>
-        </Card>
+      <UILoader blocking={vPesquisando}>
+        <div className="invoice-list-wrapper">
+          <Card className="overflow-hidden">
+            <div className="react-dataTable">
+              <DataTable
+                noHeader
+                subHeader
+                sortServer
+                pagination
+                noDataComponent=""
+                responsive
+                paginationServer
+                columns={columns}
+                onSort={handleSort}
+                sortIcon={<ChevronDown />}
+                className="react-dataTable"
+                paginationComponent={CustomPagination}
+                data={dataToRender()}
+                subHeaderComponent={
+                  <CustomHeader
+                    store={store}
+                    searchTerm={searchTerm}
+                    rowsPerPage={rowsPerPage}
+                    handleFilter={handleFilter}
+                    handlePerPage={handlePerPage}
+                    toggleSidebar={toggleSidebar}
+                  />
+                }
+              />
+            </div>
+          </Card>
+        </div>
         <Sidebar open={sidebarOpen} toggleSidebar={toggleSidebar} />
       </UILoader>
     </Fragment>

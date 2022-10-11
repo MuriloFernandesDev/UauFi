@@ -83,7 +83,7 @@ const CardUsuarioMaisVisita = () => {
           )
         ) : (
           <div className="mb-2">
-            <Spinner color="primary" />
+            <Spinner type="grow" color="primary" />
           </div>
         )}
         <Button color="primary">Ver todos</Button>

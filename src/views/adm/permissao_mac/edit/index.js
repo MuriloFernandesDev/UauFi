@@ -136,7 +136,7 @@ const GerenciarEdit = () => {
       <Spinner color="primary" />
     </div>
   ) : (
-    <UILoader blocking={vSalvando} overlayColor="rgba(255, 255, 255, .5)">
+    <UILoader blocking={vSalvando}>
       <Row>
         <Col sm={12}>
           <EditCard data={data} setSalvarDados={handleSalvar} />

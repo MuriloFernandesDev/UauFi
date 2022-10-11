@@ -10,11 +10,14 @@ import { Row, Col, Spinner } from "reactstrap"
 
 // ** Editar Hotspot
 import EditCard from "./EditCard"
+import { getHotspot } from "../store"
+import { useDispatch, useSelector } from "react-redux"
 
 // ** Terceiros
 import toast from "react-hot-toast"
 import Swal from "sweetalert2"
 import withReactContent from "sweetalert2-react-content"
+import UILoader from "@components/ui-loader"
 
 // ** Modal de apresentação de erros
 
@@ -42,12 +45,24 @@ const HotspotEdit = () => {
 
   const navigate = useNavigate()
 
+  // ** Store vars
+  const dispatch = useDispatch()
+  const vParFiltro = useSelector((state) => state.hotspot.params)
+
   // ** States
   const [data, setData] = useState(null)
   const [vCarregando, setCarregando] = useState(true)
+  const [vSalvando, setSalvando] = useState(false)
+
+  const handleOK = () => {
+    setSalvando(false)
+    dispatch(getHotspot(vParFiltro))
+    navigate("/adm/hotspot")
+  }
 
   // ** Função para salvar dados & respostas a erros
   const handleSalvar = (pDados) => {
+    setSalvando(true)
     if (pDados.id > 0) {
       api
         .put("/hotspot", pDados)
@@ -56,10 +71,11 @@ const HotspotEdit = () => {
             toast.success("Hotspot editado com sucesso!", {
               position: "bottom-right",
             })
-            navigate("/adm/hotspot")
+            handleOK()
           }
         })
         .catch((error) => {
+          setSalvando(false)
           if (error.response.status === 400) {
             handleError(
               "Atenção!",
@@ -67,11 +83,7 @@ const HotspotEdit = () => {
               "warning"
             )
           } else if (error.response.status === 503) {
-            handleError(
-              "Hotspot offline",
-              "Tente novamente mais tarde.",
-              "error"
-            )
+            handleError("Hotspot offline", error.response.data, "error")
           } else {
             handleError(
               "Erro inesperado",
@@ -88,10 +100,11 @@ const HotspotEdit = () => {
             toast.success("Hotspot criado com sucesso!", {
               position: "bottom-right",
             })
-            navigate("/adm/hotspot")
+            handleOK()
           }
         })
         .catch((error) => {
+          setSalvando(false)
           if (error.response.status === 400) {
             handleError(
               "Atenção!",
@@ -99,11 +112,7 @@ const HotspotEdit = () => {
               "warning"
             )
           } else if (error.response.status === 503) {
-            handleError(
-              "Hotspot offline",
-              "Tente novamente mais tarde.",
-              "error"
-            )
+            handleError("Hotspot offline", error.response.data, "error")
           } else {
             handleError(
               "Erro inesperado",
@@ -118,7 +127,7 @@ const HotspotEdit = () => {
   // ** Get Hotspot on mount based on id
   useEffect(() => {
     api.get(`/hotspot/${id}`).then((response) => {
-      setData(response.data[0])
+      setData(response.data)
       setCarregando(false)
     })
   }, [])
@@ -128,13 +137,13 @@ const HotspotEdit = () => {
       <Spinner color="primary" />
     </div>
   ) : (
-    <div>
+    <UILoader blocking={vSalvando}>
       <Row>
         <Col sm={12}>
           <EditCard data={data} setSalvarDados={handleSalvar} />
         </Col>
       </Row>
-    </div>
+    </UILoader>
   )
 }
 

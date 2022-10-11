@@ -36,18 +36,16 @@ export const getCliente = createAsyncThunk(
 
 export const deleteCliente = createAsyncThunk(
   "admCliente/deleteCliente",
-  async (id, { dispatch, getState }) => {
+  async (id) => {
     await api.delete(`/cliente/${id}`)
-    await dispatch(getCliente(getState().cliente.params))
     return id
   }
 )
 
 export const cloneCliente = createAsyncThunk(
   "admCliente/cloneCliente",
-  async (cloneParams, { dispatch, getState }) => {
+  async (cloneParams) => {
     await api.post(`/cliente/duplicar/${cloneParams[0]}/${cloneParams[1]}`)
-    await dispatch(getCliente(getState().cliente.params))
     return cloneParams[0]
   }
 )
