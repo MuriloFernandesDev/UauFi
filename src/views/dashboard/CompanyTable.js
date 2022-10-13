@@ -1,145 +1,87 @@
+// ** React Imports
+import { Link } from "react-router-dom"
+
 // ** Custom Components
-import Avatar from '@components/avatar'
+import Avatar from "@components/avatar"
 
 // ** Reactstrap Imports
-import { Table, Card } from 'reactstrap'
+import { Table, Card } from "reactstrap"
 
-// ** Icons Imports
-import { Monitor, Coffee, Watch, TrendingUp, TrendingDown } from 'react-feather'
+import { useEffect, useState, useRef } from "react"
+
+// ** Utils
+import { formatDateTime } from "@utils"
+
+// ** API
+import api from "@src/services/api"
 
 const CompanyTable = () => {
-  // ** vars
+  // ** States
+  const [vDados, setDados] = useState(null)
 
-  const data = [
-    {
-      img: require('@src/assets/images/icons/toolbox.svg').default,
-      name: 'Dixons',
-      email: 'meguc@ruj.io',
-      icon: <Monitor size={18} />,
-      category: 'Technology',
-      views: '23.4k',
-      time: '24 hours',
-      revenue: '891.2',
-      sales: '68'
-    },
-    {
-      img: require('@src/assets/images/icons/parachute.svg').default,
-      name: 'Motels',
-      email: 'vecav@hodzi.co.uk',
-      icon: <Coffee size={18} />,
-      category: 'Grocery',
-      views: '78k',
-      time: '2 days',
-      revenue: '668.51',
-      sales: '97',
-      salesUp: true
-    },
-    {
-      img: require('@src/assets/images/icons/brush.svg').default,
-      name: 'Zipcar',
-      email: 'davcilse@is.gov',
-      icon: <Watch size={18} />,
-      category: 'Fashion',
-      views: '162',
-      time: '5 days',
-      revenue: '522.29',
-      sales: '62',
-      salesUp: true
-    },
-    {
-      img: require('@src/assets/images/icons/star.svg').default,
-      name: 'Owning',
-      email: 'us@cuhil.gov',
-      icon: <Monitor size={18} />,
-      category: 'Technology',
-      views: '214',
-      time: '24 hour',
-      revenue: '291.01',
-      sales: '88',
-      salesUp: true
-    },
-    {
-      img: require('@src/assets/images/icons/book.svg').default,
-      name: 'Cafés',
-      email: 'pudais@jife.com',
-      icon: <Coffee size={18} />,
-      category: 'Grocery',
-      views: '208',
-      time: '1 week',
-      revenue: '783.93',
-      sales: '16'
-    },
-    {
-      img: require('@src/assets/images/icons/rocket.svg').default,
-      name: 'Kmart',
-      email: 'bipri@cawiw.com',
-      icon: <Watch size={18} />,
-      category: 'Fashion',
-      views: '990',
-      time: '1 month',
-      revenue: '780.05',
-      sales: '78',
-      salesUp: true
-    },
-    {
-      img: require('@src/assets/images/icons/speaker.svg').default,
-      name: 'Payers',
-      email: 'luk@izug.io',
-      icon: <Watch size={18} />,
-      category: 'Fashion',
-      views: '12.9k',
-      time: '12 hours',
-      revenue: '531.49',
-      sales: '42',
-      salesUp: true
+  const vTimeoutPesquisa = useRef()
+
+  const getDados = () => {
+    if (vTimeoutPesquisa) {
+      clearTimeout(vTimeoutPesquisa.current)
     }
-  ]
-  const colorsArr = {
-    Technology: 'light-primary',
-    Grocery: 'light-success',
-    Fashion: 'light-warning'
+    vTimeoutPesquisa.current = setTimeout(
+      () => {
+        return api
+          .get("/usuario/ultimas_conexoes")
+          .then((res) => {
+            setDados(res.data)
+          })
+          .catch(() => {
+            setDados(null)
+          })
+      },
+      vDados ? 60000 : 1
+    )
   }
 
-  const renderData = () => {
-    return data.map(col => {
-      const IconTag = col.salesUp ? (
-        <TrendingUp size={15} className='text-success' />
-      ) : (
-        <TrendingDown size={15} className='text-danger' />
-      )
+  useEffect(() => {
+    // ** Requisitar lista
+    getDados()
+  }, [vDados])
 
+  const renderData = () => {
+    return vDados?.map((col) => {
       return (
-        <tr key={col.name}>
+        <tr key={col.id}>
           <td>
-            <div className='d-flex align-items-center'>
-              <div className='avatar rounded'>
-                <div className='avatar-content'>
-                  <img src={col.img} alt={col.name} />
-                </div>
+            <div className="d-flex justify-content-left align-items-center">
+              <Avatar
+                className="me-1"
+                img={col.foto_url}
+                width="32"
+                height="32"
+              />
+              <div className="d-flex flex-column">
+                <Link
+                  to={`/usuario/dados/${col.id}`}
+                  className="user_name text-truncate text-body"
+                >
+                  <span className="fw-bolder">{col.nome}</span>
+                </Link>
+                <small className="text-truncate text-muted mb-0">
+                  {col.ultimo_quarto
+                    ? `Quarto: ${col.ultimo_quarto}`
+                    : `Cel: ${col.celular}`}
+                </small>
               </div>
-              <div>
-                <div className='fw-bolder'>{col.name}</div>
-                <div className='font-small-2 text-muted'>{col.email}</div>
-              </div>
             </div>
           </td>
-          <td>
-            <div className='d-flex align-items-center'>
-              <Avatar className='me-1' color={colorsArr[col.category]} icon={col.icon} />
-              <span>{col.category}</span>
+          <td className="text-nowrap">
+            <div className="d-flex flex-column">
+              <span className="mb-25">{col.plataforma}</span>
+              <span className="font-small-2 text-muted">{col.mac}</span>
             </div>
           </td>
-          <td className='text-nowrap'>
-            <div className='d-flex flex-column'>
-              <span className='fw-bolder mb-25'>{col.views}</span>
-              <span className='font-small-2 text-muted'>in {col.time}</span>
-            </div>
-          </td>
-          <td>${col.revenue}</td>
-          <td>
-            <div className='d-flex align-items-center'>
-              <span className='fw-bolder me-1'>{col.sales}%</span>
-              {IconTag}
+          <td className="text-nowrap">
+            <div className="d-flex flex-column">
+              <span className="mb-25">{formatDateTime(col.entrada)}</span>
+              <span className="font-small-2 text-muted">{col.hotspot}</span>
             </div>
           </td>
         </tr>
@@ -148,15 +90,13 @@ const CompanyTable = () => {
   }
 
   return (
-    <Card className='card-company-table'>
+    <Card className="card-company-table">
       <Table responsive>
         <thead>
           <tr>
-            <th>Company</th>
-            <th>Category</th>
-            <th>Views</th>
-            <th>Revenue</th>
-            <th>Sales</th>
+            <th>Usuário</th>
+            <th>Dispositivo</th>
+            <th>Conexão</th>
           </tr>
         </thead>
         <tbody>{renderData()}</tbody>

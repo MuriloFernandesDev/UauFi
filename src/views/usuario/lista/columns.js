@@ -24,7 +24,7 @@ import {
 // ** Renders Client Columns
 const renderClient = (row) => {
   if (row.foto?.length) {
-    return <Avatar className="me-1" img={row.foto} width="32" height="32" />
+    return <Avatar className="me-1" img={row.foto_url} width="32" height="32" />
   } else {
     return (
       <Avatar

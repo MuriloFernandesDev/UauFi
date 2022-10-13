@@ -12,7 +12,7 @@ import CompanyTable from "./CompanyTable"
 import Plataforma from "@src/views/ui-elements/cards/analytics/Plataforma"
 import CardUsuarioMaisVisita from "@src/views/ui-elements/cards/advance/CardUsuarioMaisVisita"
 import StatsCard from "@src/views/ui-elements/cards/statistics/StatsCard"
-import RevenueReport from "@src/views/ui-elements/cards/analytics/RevenueReport"
+import NovosCad from "@src/views/ui-elements/cards/analytics/NovosCad"
 import OrdersBarChart from "@src/views/ui-elements/cards/statistics/OrdersBarChart"
 import ProfitLineChart from "@src/views/ui-elements/cards/statistics/ProfitLineChart"
 import CardBrowserStates from "@src/views/ui-elements/cards/advance/CardBrowserState"
@@ -53,7 +53,7 @@ const EcommerceDashboard = () => {
           </Row>
         </Col>
         <Col lg="8" md="12">
-          <RevenueReport
+          <NovosCad
             primary={colors.primary.main}
             warning={colors.warning.main}
           />

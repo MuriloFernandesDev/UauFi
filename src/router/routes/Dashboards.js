@@ -1,17 +1,12 @@
-import { lazy } from 'react'
+import { lazy } from "react"
 
-const DashboardAnalytics = lazy(() => import('../../views/dashboard/analytics'))
-const DashboardEcommerce = lazy(() => import('../../views/dashboard'))
+const DashboardEcommerce = lazy(() => import("../../views/dashboard"))
 
 const DashboardRoutes = [
   {
-    path: '/dashboard/analytics',
-    element: <DashboardAnalytics />
+    path: "/dashboard",
+    element: <DashboardEcommerce />,
   },
-  {
-    path: '/dashboard',
-    element: <DashboardEcommerce />
-  }
 ]
 
 export default DashboardRoutes

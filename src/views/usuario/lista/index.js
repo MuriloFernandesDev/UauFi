@@ -267,7 +267,7 @@ const UsuarioLista = () => {
         datai: vDataInicial,
         dataf: vDataFinal,
         situacao: arrayToString(vSituacao),
-        clienteId: sClienteId,
+        clienteId: store.params.clienteId,
       },
       vForce
     )

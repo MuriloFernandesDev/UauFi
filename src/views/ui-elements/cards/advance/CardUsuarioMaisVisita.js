@@ -1,12 +1,5 @@
 // ** Reactstrap
-import {
-  Card,
-  CardBody,
-  CardText,
-  Button,
-  Spinner,
-  CardTitle,
-} from "reactstrap"
+import { Card, CardBody, CardText, Spinner } from "reactstrap"
 
 // ** Imagens
 import medal from "@src/assets/images/illustration/badge.svg"
@@ -25,6 +18,7 @@ import Avatar from "@components/avatar"
 
 // ** Default Avatar Image
 import defaultAvatar from "@src/assets/images/avatars/avatar-blank.png"
+import { Link } from "react-router-dom"
 
 const CardUsuarioMaisVisita = () => {
   // ** States
@@ -55,27 +49,26 @@ const CardUsuarioMaisVisita = () => {
     <Card className="card-congratulations-medal">
       <CardBody>
         <h6 className="mb-1">Usuário que mais te visitou:</h6>
+
         {!vProcessando ? (
           vDados?.qtd > 0 ? (
-            <div>
-              <h5>
-                <Avatar
-                  className="me-1"
-                  img={(vDados && vDados.foto_url) || defaultAvatar}
-                />
-                {vDados?.nome}
-              </h5>
-              <CardText className="font-small-3">
-                <span>
-                  Última visita {formatDateTime(vDados?.ultima_visita)}
-                </span>
-              </CardText>
-              <h3 className="mb-75 mt-1">
-                <a href="/" onClick={(e) => e.preventDefault()}>
-                  {vDados?.qtd} visitas
-                </a>
-              </h3>
-            </div>
+            <Link to={`/usuario/dados/${vDados?.id}`}>
+              <div>
+                <h5>
+                  <Avatar
+                    className="me-1"
+                    img={(vDados && vDados.foto_url) || defaultAvatar}
+                  />
+                  {vDados?.nome}
+                </h5>
+                <CardText className="font-small-3">
+                  <span>
+                    Última visita {formatDateTime(vDados?.ultima_visita)}
+                  </span>
+                </CardText>
+                <h3 className="mb-75 mt-1">{vDados?.qtd} visitas</h3>
+              </div>
+            </Link>
           ) : (
             <div className="mb-2">
               <h6>Ninguém se conectou aqui ainda 😔</h6>
@@ -86,7 +79,6 @@ const CardUsuarioMaisVisita = () => {
             <Spinner type="grow" color="primary" />
           </div>
         )}
-        <Button color="primary">Ver todos</Button>
         <img className="congratulation-medal" src={medal} alt="Medalha" />
       </CardBody>
     </Card>
