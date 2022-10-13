@@ -90,7 +90,7 @@ const CompanyTable = () => {
   }
 
   return (
-    <Card className="card-company-table">
+    <Card>
       <Table responsive>
         <thead>
           <tr>

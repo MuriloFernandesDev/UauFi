@@ -6,7 +6,6 @@ import api from "@src/services/api"
 
 // ** Third Party Components
 import Chart from "react-apexcharts"
-import { Settings } from "react-feather"
 
 // ** Reactstrap Imports
 import {
@@ -34,7 +33,6 @@ const NovosCad = (props) => {
     return api
       .get(`/usuario/cadastro_comparativo/${p}`)
       .then((res) => {
-        console.log(vDados)
         setProcessando(false)
         setDados(res.data)
         setOptions({

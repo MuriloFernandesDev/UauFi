@@ -15,18 +15,18 @@ import StatsCard from "@src/views/ui-elements/cards/statistics/StatsCard"
 import NovosCad from "@src/views/ui-elements/cards/analytics/NovosCad"
 import OrdersBarChart from "@src/views/ui-elements/cards/statistics/OrdersBarChart"
 import ProfitLineChart from "@src/views/ui-elements/cards/statistics/ProfitLineChart"
-import CardBrowserStates from "@src/views/ui-elements/cards/advance/CardBrowserState"
+import CardGeneros from "./CardGeneros"
 
 // ** Styles
 import "@styles/react/libs/charts/apex-charts.scss"
 import "@styles/base/pages/dashboard-ecommerce.scss"
 
+// ** Third Party Components
+import "chart.js/auto"
+
 const EcommerceDashboard = () => {
   // ** Context
   const { colors } = useContext(ThemeColors)
-
-  // ** vars
-  const trackBgColor = "#e9ecef"
 
   return (
     <div id="dashboard-ecommerce">
@@ -64,7 +64,7 @@ const EcommerceDashboard = () => {
           <CompanyTable />
         </Col>
         <Col lg="4" md="6" xs="12">
-          <CardBrowserStates colors={colors} trackBgColor={trackBgColor} />
+          <CardGeneros />
         </Col>
       </Row>
     </div>
