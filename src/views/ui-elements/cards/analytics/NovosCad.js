@@ -80,7 +80,7 @@ const NovosCad = (props) => {
             axisTicks: {
               show: false,
             },
-            categories: res.data[0].dados.map(({ label }) => label),
+            categories: res.data[0]?.dados?.map(({ label }) => label),
             axisBorder: {
               show: false,
             },
@@ -111,10 +111,12 @@ const NovosCad = (props) => {
           },
         })
         setSeries(
-          res.data?.map(({ nome, dados }) => ({
-            name: nome,
-            data: dados?.map(({ value }) => value),
-          }))
+          res.data.length > 0
+            ? res.data?.map(({ nome, dados }) => ({
+                name: nome,
+                data: dados?.map(({ value }) => value),
+              }))
+            : []
         )
       })
       .catch(() => {

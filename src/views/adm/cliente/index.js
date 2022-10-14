@@ -270,7 +270,6 @@ const ClienteList = () => {
   }
 
   // ** Modal de clonagem de cliente
-
   const handleClone = (row) => {
     MySwal.fire({
       title: "Copiar cadastro de cliente",

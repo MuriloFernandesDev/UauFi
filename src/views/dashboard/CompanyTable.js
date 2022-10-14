@@ -66,15 +66,16 @@ const CompanyTable = () => {
                 </Link>
                 <small className="text-truncate text-muted mb-0">
                   {col.ultimo_quarto
-                    ? `Quarto: ${col.ultimo_quarto}`
-                    : `Cel: ${col.celular}`}
+                    ? `Quarto: ${col.ultimo_quarto ?? ""}`
+                    : ""}
+                  {col.celular ? ` Cel: ${col.celular}` : ""}
                 </small>
               </div>
             </div>
           </td>
           <td className="text-nowrap">
             <div className="d-flex flex-column">
-              <span className="mb-25">{col.plataforma}</span>
+              <span className="mb-25">{col.plataforma ?? ""}</span>
               <span className="font-small-2 text-muted">{col.mac}</span>
             </div>
           </td>

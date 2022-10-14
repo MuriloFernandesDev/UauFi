@@ -8,13 +8,16 @@ import api from "@src/services/api"
 // ** Reactstrap
 import { Row, Col, Spinner } from "reactstrap"
 
-// ** Editar ClienteLogin
+// ** Editar Login
 import EditCard from "./EditCard"
+import { getClienteLogin } from "../store"
+import { useDispatch, useSelector } from "react-redux"
 
 // ** Terceiros
 import toast from "react-hot-toast"
 import Swal from "sweetalert2"
 import withReactContent from "sweetalert2-react-content"
+import UILoader from "@components/ui-loader"
 
 // ** Modal de apresentação de erros
 
@@ -42,12 +45,24 @@ const ClienteLoginEdit = () => {
 
   const navigate = useNavigate()
 
+  // ** Store vars
+  const dispatch = useDispatch()
+  const vParFiltro = useSelector((state) => state.cliente_login.params)
+
   // ** States
   const [data, setData] = useState(null)
   const [vCarregando, setCarregando] = useState(true)
+  const [vSalvando, setSalvando] = useState(false)
+
+  const handleOK = () => {
+    setSalvando(false)
+    dispatch(getClienteLogin(vParFiltro))
+    navigate("/adm/login")
+  }
 
   // ** Função para salvar dados & respostas a erros
   const handleSalvar = (pDados) => {
+    setSalvando(true)
     if (pDados.id > 0) {
       api
         .put("/cliente_login", pDados)
@@ -56,10 +71,11 @@ const ClienteLoginEdit = () => {
             toast.success("Login editado com sucesso!", {
               position: "bottom-right",
             })
-            navigate("/adm/login")
+            handleOK()
           }
         })
         .catch((error) => {
+          setSalvando(false)
           if (error.response.status === 400) {
             handleError(
               "Atenção!",
@@ -88,10 +104,11 @@ const ClienteLoginEdit = () => {
             toast.success("Login criado com sucesso!", {
               position: "bottom-right",
             })
-            navigate("/adm/login")
+            handleOK()
           }
         })
         .catch((error) => {
+          setSalvando(false)
           if (error.response.status === 400) {
             handleError(
               "Atenção!",
@@ -115,7 +132,7 @@ const ClienteLoginEdit = () => {
     }
   }
 
-  // ** Get Login on mount based on id
+  // ** Get Dados on mount based on id
   useEffect(() => {
     api.get(`/cliente_login/${id}`).then((response) => {
       setData(response.data[0])
@@ -128,13 +145,13 @@ const ClienteLoginEdit = () => {
       <Spinner color="primary" />
     </div>
   ) : (
-    <div>
+    <UILoader blocking={vSalvando}>
       <Row>
         <Col sm={12}>
           <EditCard data={data} setSalvarDados={handleSalvar} />
         </Col>
       </Row>
-    </div>
+    </UILoader>
   )
 }
 

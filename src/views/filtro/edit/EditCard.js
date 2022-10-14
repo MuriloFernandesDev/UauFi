@@ -200,7 +200,7 @@ const FiltroEditCard = ({ data, setSalvarDados }) => {
                     isClearable
                     noOptionsMessage={() => "Vazio"}
                     id="vCliente"
-                    disabled={vDados.id !== undefined}
+                    disabled={vDados.id > 0}
                     placeholder={"Selecione..."}
                     className="react-select"
                     classNamePrefix="select"
@@ -232,7 +232,7 @@ const FiltroEditCard = ({ data, setSalvarDados }) => {
                     id="genero"
                     isMulti={true}
                     noOptionsMessage={() => "Vazio"}
-                    disabled={vDados.id !== undefined}
+                    disabled={vDados.id > 0}
                     value={selectedGenero}
                     placeholder={"Selecione..."}
                     className="react-select"
@@ -271,7 +271,7 @@ const FiltroEditCard = ({ data, setSalvarDados }) => {
                         : [upperConnect, lowerConnect]
                     }
                     step={1}
-                    disabled={vDados.id !== undefined}
+                    disabled={vDados.id > 0}
                     tooltips={true}
                     style={{ zIndex: 0 }}
                     format={wNumb({
@@ -347,7 +347,7 @@ const FiltroEditCard = ({ data, setSalvarDados }) => {
                         isClearable
                         className="react-select"
                         classNamePrefix="select"
-                        isDisabled={(vDados?.estado_id ?? 0) === 0}
+                        disabled={vDados.id > 0}
                         value={
                           vDados.cidades
                             ? vDados.cidades.map((i) => ({
@@ -392,7 +392,7 @@ const FiltroEditCard = ({ data, setSalvarDados }) => {
                         name="app-data-inicial"
                         type="date"
                         value={appDataInicial}
-                        disabled={vDados.id !== undefined}
+                        disabled={vDados.id > 0}
                         onChange={(e) => {
                           setAppDataInicial(e.target.value)
                           handleChange({
@@ -414,7 +414,7 @@ const FiltroEditCard = ({ data, setSalvarDados }) => {
                         name="app-data-final"
                         type="date"
                         value={appDataFinal}
-                        disabled={vDados.id !== undefined}
+                        disabled={vDados.id > 0}
                         onChange={(e) => {
                           setAppDataFinal(e.target.value)
                           handleChange({
@@ -443,7 +443,7 @@ const FiltroEditCard = ({ data, setSalvarDados }) => {
                         name="visita-data-inicial"
                         type="date"
                         value={visitaDataInicial}
-                        disabled={vDados.id !== undefined}
+                        disabled={vDados.id > 0}
                         onChange={(e) => {
                           setVisitaDataInicial(e.target.value)
                           handleChange({
@@ -465,7 +465,7 @@ const FiltroEditCard = ({ data, setSalvarDados }) => {
                         name="visita-data-final"
                         type="date"
                         value={visitaDataFinal}
-                        disabled={vDados.id !== undefined}
+                        disabled={vDados.id > 0}
                         onChange={(e) => {
                           setVisitaDataFinal(e.target.value)
                           handleChange({

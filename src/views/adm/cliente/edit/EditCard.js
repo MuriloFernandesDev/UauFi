@@ -30,11 +30,6 @@ import classnames from "classnames"
 // ** API
 import api from "@src/services/api"
 
-// ** Listas
-//let vListaEstados = null
-let vListaCategorias = null
-let vListaAgregadores = null
-
 const vListaArtigoGenero = [
   { value: "à", label: "à" },
   { value: "o", label: "o" },
@@ -76,6 +71,8 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
   const [vAgregador, setAgregador] = useState(null)
   const [vListaCidades, setListaCidades] = useState(null)
   const [vListaEstados, setListaEstados] = useState(null)
+  const [vListaCategorias, setListaCategorias] = useState(null)
+  const [vListaAgregadores, setListaAgregadores] = useState(null)
 
   // Captive Portal
   const [vLogoCP, setLogoCP] = useState(data?.dados_captive[0]?.logo_captive)
@@ -86,7 +83,7 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
   const [vTipoIntegracao, setTipoIntegracao] = useState(null)
   const [varDadosIntegracao1, setVarDadosIntegracao1] = useState("")
   const [varDadosIntegracao2, setVarDadosIntegracao2] = useState("")
-  // const [varDadosIntegracao3, setVarDadosIntegracao3] = useState("")
+  const [varDadosIntegracao3, setVarDadosIntegracao3] = useState("")
 
   const [active, setActive] = useState("1")
 
@@ -120,8 +117,18 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
           res.data.map((ret) => ({ label: ret.nome, value: ret.id }))
         )
 
-        //Limpar a Cidade para setar o select
-        setCidade(null)
+        if (data?.cidade_id) {
+          setCidade(
+            res.data
+              ?.filter((item) => item.id === Number(data?.cidade_id))
+              .map((ret) => ({
+                label: ret.nome,
+                value: ret.id,
+              }))[0]
+          )
+        } else {
+          setCidade(null)
+        }
       })
   }
 
@@ -131,24 +138,41 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
         res.data.map((ret) => ({ label: ret.nome, value: ret.id }))
       )
 
-      //Limpar o estado para setar o select
-      setEstado(null)
+      if (data?.estado_id) {
+        setEstado(
+          res.data
+            ?.filter((item) => item.id === Number(data?.estado_id))
+            .map((ret) => ({
+              label: ret.nome,
+              value: ret.id,
+            }))[0]
+        )
+        getCidades({ value: data?.estado_id })
+      } else {
+        setEstado(null)
+        setCidade(null)
+      }
     })
   }
 
   const getCategorias = () => {
     return api.get("/categoria").then((res) => {
-      vListaCategorias = res.data.map((ret) => ({
-        label: ret.nome,
-        value: ret.id,
-      }))
+      setListaCategorias(
+        res.data.map((ret) => ({
+          label: ret.nome,
+          value: ret.id,
+        }))
+      )
 
       //Selecionar o item no componente
-      if (!vCategoria && data?.categoria_id) {
+      if (data?.categoria_id) {
         setCategoria(
-          vListaCategorias?.filter(
-            (item) => item.value === Number(data?.categoria_id)
-          )[0]
+          res.data
+            ?.filter((item) => item.id === Number(data?.categoria_id ?? 0))
+            .map((ret) => ({
+              label: ret.nome,
+              value: ret.id,
+            }))[0]
         )
       }
     })
@@ -156,20 +180,25 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
 
   const getAgregadores = () => {
     return api.get("/cliente/agregador").then((res) => {
-      vListaAgregadores = res.data.map((ret) => ({
-        label: ret.nome,
-        value: ret.id,
-      }))
+      setListaAgregadores(
+        res.data.map((ret) => ({
+          label: ret.nome,
+          value: ret.id,
+        }))
+      )
 
       //Selecionar o item no componente
-      if (!vAgregador && data?.cliente_agregador) {
+      if (data?.cliente_agregador) {
         const vAgregadorArray = data?.cliente_agregador
           ?.split(",")
           .map((item) => parseInt(item))
         setAgregador(
-          vListaAgregadores?.filter((item) =>
-            vAgregadorArray?.includes(item.value)
-          )
+          res.data
+            ?.filter((item) => vAgregadorArray?.includes(item.id))
+            .map((ret) => ({
+              label: ret.nome,
+              value: ret.id,
+            }))
         )
       }
     })
@@ -208,38 +237,6 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
     reader.readAsDataURL(files[0])
   }
 
-  //Selecionar o item no componente
-  if (
-    !vEstado &&
-    vListaEstados &&
-    vDados?.estado_id !== null &&
-    vDados !== null
-  ) {
-    setEstado(
-      vListaEstados?.filter(
-        (item) => item.value === Number(vDados?.estado_id)
-      )[0]
-    )
-    if (vDados?.estado_id) {
-      getCidades({ value: vDados?.estado_id })
-    }
-  }
-
-  //Selecionar o item no componente
-  if (
-    !vCidade &&
-    vListaCidades &&
-    vEstado &&
-    vDados?.cidade_id !== null &&
-    vDados !== null
-  ) {
-    setCidade(
-      vListaCidades?.filter(
-        (item) => item.value === Number(vDados?.cidade_id)
-      )[0]
-    )
-  }
-
   const optTel = { phone: true, phoneRegionCode: "BR" }
   const optCep = { delimiters: [".", "-"], blocks: [2, 3, 3], uppercase: true }
 
@@ -258,6 +255,34 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
       getCategorias()
     }
     getAgregadores()
+
+    //Verificar dados da integração
+    if (data?.dados_captive[0]?.dados_integracao?.length > 2) {
+      const vDadosIntegracao = JSON.parse(
+        data?.dados_captive[0]?.dados_integracao
+      )
+      switch (data?.dados_captive[0]?.tipo_integracao) {
+        case 5:
+          setVarDadosIntegracao1(vDadosIntegracao.hotel_id)
+          setVarDadosIntegracao2(vDadosIntegracao.totvs_id)
+          break
+        case 6:
+          setVarDadosIntegracao1(vDadosIntegracao.hotel_id)
+          setVarDadosIntegracao2(vDadosIntegracao.service_name)
+          break
+        case 2:
+        case 8:
+          setVarDadosIntegracao1(vDadosIntegracao.url)
+          setVarDadosIntegracao2(vDadosIntegracao.usuario)
+          setVarDadosIntegracao3(vDadosIntegracao.senha)
+          break
+        case 7:
+          setVarDadosIntegracao1(vDadosIntegracao.url)
+          setVarDadosIntegracao2(vDadosIntegracao.app)
+          setVarDadosIntegracao3(vDadosIntegracao.token)
+          break
+      }
+    }
 
     if (!vTipoLayout && data?.dados_captive[0]?.layout_captive !== null) {
       setTipoLayout(
@@ -391,7 +416,7 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                         </Col>
                         <Col md="6" className="mb-2">
                           <Label className="form-label" for="site">
-                            Site
+                            Site institucional
                           </Label>
                           <Input
                             id="site"
@@ -425,7 +450,7 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                         options={vListaArtigoGenero}
                       />
                     </Col>
-                    <Col className="mb-2">
+                    <Col md="3" className="mb-2">
                       <Label className="form-label" for="slug">
                         Slug
                       </Label>
@@ -436,34 +461,7 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                         onChange={handleChangeCP}
                       />
                     </Col>
-                    <Col md="3" className="mb-2">
-                      <Label className="form-label" for="cor_primaria">
-                        Cor primária
-                      </Label>
-                      <Input
-                        id="cor_primaria"
-                        name="cor_primaria"
-                        type="color"
-                        className="p-0"
-                        value={vDadosCP?.cor_primaria ?? ""}
-                        onChange={handleChangeCP}
-                      />
-                    </Col>
-                    <Col md="3" className="mb-2">
-                      <Label className="form-label" for="cor_secundaria">
-                        Cor secundária
-                      </Label>
-                      <Input
-                        id="cor_secundaria"
-                        name="cor_secundaria"
-                        type="color"
-                        className="p-0"
-                        value={vDadosCP?.cor_secundaria ?? ""}
-                        onChange={handleChangeCP}
-                      />
-                    </Col>
-
-                    <Col md="4" className="mb-2">
+                    <Col md="6" className="mb-2">
                       <Label className="form-label" for="vCategoria">
                         Categoria
                       </Label>
@@ -474,11 +472,7 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                         className="react-select"
                         noOptionsMessage={() => "Vazio"}
                         classNamePrefix="select"
-                        value={
-                          vListaCategorias?.filter(
-                            (item) => item.value === vDados?.categoria_id
-                          )[0]
-                        }
+                        value={vCategoria}
                         onChange={(e) => {
                           setCategoria(e)
                           handleChange({
@@ -488,7 +482,7 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                         options={vListaCategorias}
                       />
                     </Col>
-                    <Col md="2" className="mb-2 text-center">
+                    <Col md="2" className="mb-2">
                       <Label for="agregador" className="form-label mb-50">
                         É matriz?
                       </Label>
@@ -535,7 +529,20 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                         options={vListaAgregadores}
                       />
                     </Col>
-
+                    <Col md="4" className="mb-2">
+                      <Label className="form-label" for="whatsapp">
+                        WhatsApp
+                      </Label>
+                      <Cleave
+                        className="form-control"
+                        placeholder="00 00000 0000"
+                        options={optTel}
+                        id="whatsapp"
+                        name="whatsapp"
+                        value={vDados?.whatsapp ?? ""}
+                        onChange={handleChange}
+                      />
+                    </Col>
                     <Col md="4" className="mb-2">
                       <Label className="form-label" for="tel_1">
                         Telefone 1
@@ -564,21 +571,8 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                         onChange={handleChange}
                       />
                     </Col>
+
                     <Col md="4" className="mb-2">
-                      <Label className="form-label" for="whatsapp">
-                        WhatsApp
-                      </Label>
-                      <Cleave
-                        className="form-control"
-                        placeholder="00 00000 0000"
-                        options={optTel}
-                        id="whatsapp"
-                        name="whatsapp"
-                        value={vDados?.whatsapp ?? ""}
-                        onChange={handleChange}
-                      />
-                    </Col>
-                    <Col md="3" className="mb-2">
                       <Label className="form-label" for="vCep">
                         CEP
                       </Label>
@@ -592,7 +586,7 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                         onChange={handleChange}
                       />
                     </Col>
-                    <Col md="6" className="mb-2">
+                    <Col md="8" className="mb-2">
                       <Label className="form-label" for="vEndereco">
                         Endereço
                       </Label>
@@ -603,7 +597,7 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                         onChange={handleChange}
                       />
                     </Col>
-                    <Col md="3" className="mb-2">
+                    <Col md="4" className="mb-2">
                       <Label className="form-label" for="vNumero">
                         Número
                       </Label>
@@ -793,7 +787,7 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                           </div>
                         </div>
                       </Col>
-                      <Col md="12" className="mb-2">
+                      <Col md="6" className="mb-2">
                         <Label className="form-label" for="tituloCP">
                           Título
                         </Label>
@@ -804,7 +798,20 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                           id="tituloCP"
                         />
                       </Col>
-                      <Col md="6" className="mb-2">
+                      <Col md="2" className="mb-2">
+                        <Label className="form-label" for="cor_primaria">
+                          Cor primária
+                        </Label>
+                        <Input
+                          id="cor_primaria"
+                          name="cor_primaria"
+                          type="color"
+                          className="p-0"
+                          value={vDadosCP?.cor_primaria ?? ""}
+                          onChange={handleChangeCP}
+                        />
+                      </Col>
+                      <Col md="4" className="mb-2">
                         <Label className="form-label" for="vTipoLayout">
                           Tipo de Layout
                         </Label>
@@ -824,6 +831,39 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                             })
                           }}
                           options={vListaTipoLayout}
+                        />
+                      </Col>
+                      <Col md="6" className="mb-2">
+                        <Label className="form-label" for="vMinutosDesconexao">
+                          Tempo máximo de conexão do usuário (minutos)
+                        </Label>
+                        <Input
+                          id="vMinutosDesconexao"
+                          name="minutos_desconexao"
+                          value={vDadosCP?.minutos_desconexao ?? 0}
+                          onChange={handleChangeCP}
+                        />
+                      </Col>
+                      <Col md="6" className="mb-2">
+                        <Label className="form-label" for="vRedirectUrl">
+                          URL da página exibida após a liberação do usuário
+                        </Label>
+                        <Input
+                          id="vRedirectUrl"
+                          name="redirect_url"
+                          value={vDadosCP?.redirect_url ?? ""}
+                          onChange={handleChangeCP}
+                        />
+                      </Col>
+                      <Col md="6" className="mb-2">
+                        <Label className="form-label" for="vIntelifi">
+                          Código Intelifi para anúncios
+                        </Label>
+                        <Input
+                          id="vIntelifi"
+                          name="intelifi_hid"
+                          value={vDadosCP?.intelifi_hid ?? ""}
+                          onChange={handleChangeCP}
                         />
                       </Col>
                       <Col md="6" className="mb-2">
@@ -849,184 +889,298 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                           options={vListaTipoIntegracao}
                         />
                       </Col>
-                      <Col md="6" className="mb-2">
-                        <Label className="form-label" for="vMinutosDesconexao">
-                          Tempo máximo de conexão do usuário (minutos)
-                        </Label>
-                        <Input
-                          id="vMinutosDesconexao"
-                          name="minutos_desconexao"
-                          value={vDadosCP?.minutos_desconexao ?? 0}
-                          onChange={handleChangeCP}
-                        />
-                      </Col>
-                      <Col md="6" className="mb-2">
-                        <Label className="form-label" for="vIntelifi">
-                          Código Intelifi para anúncios
-                        </Label>
-                        <Input
-                          id="vIntelifi"
-                          name="intelifi_hid"
-                          value={vDadosCP?.intelifi_hid ?? ""}
-                          onChange={handleChangeCP}
-                        />
-                      </Col>
-                      <Col md="12" className="mb-2">
-                        <Label className="form-label" for="vRedirectUrl">
-                          URL da página exibida após a liberação do usuário
-                        </Label>
-                        <Input
-                          id="vRedirectUrl"
-                          name="redirect_url"
-                          value={vDadosCP?.redirect_url ?? ""}
-                          onChange={handleChangeCP}
-                        />
-                      </Col>
-
-                      {vDadosCP.tipo_integracao === 5 ||
-                      vDadosCP.tipo_integracao === 6 ? (
-                        <Col md="12">
-                          <Row>
-                            <Col md="6" className="mb-2">
-                              <Label
-                                className="form-label"
-                                for="dados-integracao-1"
-                              >
-                                ID do Hotel
-                              </Label>
-                              <Input
-                                id="dados-integracao-1"
-                                type="number"
-                                value={varDadosIntegracao1}
-                                onChange={(e) => {
-                                  setVarDadosIntegracao1(e.target.value)
-                                  handleChangeCP({
-                                    target: {
-                                      name: "dados_integracao",
-                                      value: {
-                                        hotel_id: e.target.value,
-                                        service_name: varDadosIntegracao2,
-                                        // service_name = Prefixo
+                      {vDadosCP?.tipo_integracao === 2 ||
+                      vDadosCP?.tipo_integracao === 5 ||
+                      vDadosCP?.tipo_integracao === 6 ||
+                      vDadosCP?.tipo_integracao === 7 ||
+                      vDadosCP?.tipo_integracao === 8 ? (
+                        <Fragment>
+                          <Col md="12">
+                            <div className="divider divider-dark">
+                              <div className="divider-text text-dark">
+                                Dados extras para a integração
+                              </div>
+                            </div>
+                          </Col>
+                          {vDadosCP?.tipo_integracao === 5 ? (
+                            <Fragment>
+                              <Col md="6" className="mb-2">
+                                <Label
+                                  className="form-label"
+                                  for="dados-integracao-1"
+                                >
+                                  ID do Hotel
+                                </Label>
+                                <Input
+                                  id="dados-integracao-1"
+                                  type="number"
+                                  value={varDadosIntegracao1}
+                                  onChange={(e) => {
+                                    setVarDadosIntegracao1(e.target.value)
+                                    handleChangeCP({
+                                      target: {
+                                        name: "dados_integracao",
+                                        value: JSON.stringify({
+                                          hotel_id: e.target.value,
+                                          totvs_id: varDadosIntegracao2,
+                                        }),
                                       },
-                                    },
-                                  })
-                                }}
-                              />
-                            </Col>
+                                    })
+                                  }}
+                                />
+                              </Col>
 
-                            <Col md="6" className="mb-2">
-                              <Label
-                                className="form-label"
-                                for="dados-integracao-2"
-                              >
-                                Prefixo
-                              </Label>
-                              <Input
-                                id="dados-integracao-2"
-                                value={varDadosIntegracao2}
-                                onChange={(e) => {
-                                  setVarDadosIntegracao2(e.target.value)
-                                  handleChangeCP({
-                                    target: {
-                                      name: "dados_integracao",
-                                      value: {
-                                        hotel_id: varDadosIntegracao1,
-                                        service_name: e.target.value,
+                              <Col md="6" className="mb-2">
+                                <Label
+                                  className="form-label"
+                                  for="dados-integracao-2"
+                                >
+                                  ID TOTVs
+                                </Label>
+                                <Input
+                                  id="dados-integracao-2"
+                                  type="number"
+                                  value={varDadosIntegracao3}
+                                  onChange={(e) => {
+                                    setVarDadosIntegracao3(e.target.value)
+                                    handleChangeCP({
+                                      target: {
+                                        name: "dados_integracao",
+                                        value: JSON.stringify({
+                                          hotel_id: varDadosIntegracao1,
+                                          totvs_id: e.target.value,
+                                        }),
                                       },
-                                    },
-                                  })
-                                }}
-                              />
-                            </Col>
-                          </Row>
-                        </Col>
+                                    })
+                                  }}
+                                />
+                              </Col>
+                            </Fragment>
+                          ) : (
+                            ""
+                          )}
+                          {vDadosCP?.tipo_integracao === 6 ? (
+                            <Fragment>
+                              <Col md="6" className="mb-2">
+                                <Label
+                                  className="form-label"
+                                  for="dados-integracao-1"
+                                >
+                                  ID do Hotel
+                                </Label>
+                                <Input
+                                  id="dados-integracao-1"
+                                  type="number"
+                                  value={varDadosIntegracao1}
+                                  onChange={(e) => {
+                                    setVarDadosIntegracao1(e.target.value)
+                                    handleChangeCP({
+                                      target: {
+                                        name: "dados_integracao",
+                                        value: JSON.stringify({
+                                          hotel_id: e.target.value,
+                                          service_name: varDadosIntegracao2,
+                                        }),
+                                      },
+                                    })
+                                  }}
+                                />
+                              </Col>
+                              <Col md="6" className="mb-2">
+                                <Label
+                                  className="form-label"
+                                  for="dados-integracao-2"
+                                >
+                                  Prefixo do banco de dados
+                                </Label>
+                                <Input
+                                  id="dados-integracao-2"
+                                  value={varDadosIntegracao2}
+                                  onChange={(e) => {
+                                    setVarDadosIntegracao2(e.target.value)
+                                    handleChangeCP({
+                                      target: {
+                                        name: "dados_integracao",
+                                        value: JSON.stringify({
+                                          hotel_id: varDadosIntegracao1,
+                                          service_name: e.target.value,
+                                        }),
+                                      },
+                                    })
+                                  }}
+                                />
+                              </Col>
+                            </Fragment>
+                          ) : (
+                            ""
+                          )}
+                          {vDadosCP?.tipo_integracao === 2 ||
+                          vDadosCP?.tipo_integracao === 8 ? (
+                            <Fragment>
+                              <Col md="6" className="mb-2">
+                                <Label
+                                  className="form-label"
+                                  for="dados-integracao-1"
+                                >
+                                  URL da API
+                                </Label>
+                                <Input
+                                  id="dados-integracao-1"
+                                  value={varDadosIntegracao1}
+                                  onChange={(e) => {
+                                    setVarDadosIntegracao1(e.target.value)
+                                    handleChangeCP({
+                                      target: {
+                                        name: "dados_integracao",
+                                        value: JSON.stringify({
+                                          url: e.target.value,
+                                          usuario: varDadosIntegracao2,
+                                          senha: varDadosIntegracao3,
+                                        }),
+                                      },
+                                    })
+                                  }}
+                                />
+                              </Col>
+                              <Col md="3" className="mb-2">
+                                <Label
+                                  className="form-label"
+                                  for="dados-integracao-2"
+                                >
+                                  Usuário
+                                </Label>
+                                <Input
+                                  id="dados-integracao-2"
+                                  value={varDadosIntegracao2}
+                                  onChange={(e) => {
+                                    setVarDadosIntegracao2(e.target.value)
+                                    handleChangeCP({
+                                      target: {
+                                        name: "dados_integracao",
+                                        value: JSON.stringify({
+                                          url: varDadosIntegracao1,
+                                          usuario: e.target.value,
+                                          senha: varDadosIntegracao3,
+                                        }),
+                                      },
+                                    })
+                                  }}
+                                />
+                              </Col>
+                              <Col md="3" className="mb-2">
+                                <Label
+                                  className="form-label"
+                                  for="dados-integracao-3"
+                                >
+                                  Senha
+                                </Label>
+                                <Input
+                                  id="dados-integracao-3"
+                                  value={varDadosIntegracao3}
+                                  onChange={(e) => {
+                                    setVarDadosIntegracao3(e.target.value)
+                                    handleChangeCP({
+                                      target: {
+                                        name: "dados_integracao",
+                                        value: JSON.stringify({
+                                          url: varDadosIntegracao1,
+                                          usuario: varDadosIntegracao2,
+                                          senha: e.target.value,
+                                        }),
+                                      },
+                                    })
+                                  }}
+                                />
+                              </Col>
+                            </Fragment>
+                          ) : (
+                            ""
+                          )}
+                          {vDadosCP?.tipo_integracao === 7 ? (
+                            <Fragment>
+                              <Col md="5" className="mb-2">
+                                <Label
+                                  className="form-label"
+                                  for="dados-integracao-1"
+                                >
+                                  URL da API
+                                </Label>
+                                <Input
+                                  id="dados-integracao-1"
+                                  value={varDadosIntegracao1}
+                                  onChange={(e) => {
+                                    setVarDadosIntegracao1(e.target.value)
+                                    handleChangeCP({
+                                      target: {
+                                        name: "dados_integracao",
+                                        value: JSON.stringify({
+                                          url: e.target.value,
+                                          app: varDadosIntegracao2,
+                                          token: varDadosIntegracao3,
+                                        }),
+                                      },
+                                    })
+                                  }}
+                                />
+                              </Col>
+                              <Col md="3" className="mb-2">
+                                <Label
+                                  className="form-label"
+                                  for="dados-integracao-2"
+                                >
+                                  Nome do APP
+                                </Label>
+                                <Input
+                                  id="dados-integracao-2"
+                                  value={varDadosIntegracao2}
+                                  onChange={(e) => {
+                                    setVarDadosIntegracao2(e.target.value)
+                                    handleChangeCP({
+                                      target: {
+                                        name: "dados_integracao",
+                                        value: JSON.stringify({
+                                          url: varDadosIntegracao1,
+                                          app: e.target.value,
+                                          token: varDadosIntegracao3,
+                                        }),
+                                      },
+                                    })
+                                  }}
+                                />
+                              </Col>
+                              <Col md="4" className="mb-2">
+                                <Label
+                                  className="form-label"
+                                  for="dados-integracao-3"
+                                >
+                                  Senha
+                                </Label>
+                                <Input
+                                  id="dados-integracao-3"
+                                  value={varDadosIntegracao3}
+                                  onChange={(e) => {
+                                    setVarDadosIntegracao3(e.target.value)
+                                    handleChangeCP({
+                                      target: {
+                                        name: "dados_integracao",
+                                        value: JSON.stringify({
+                                          url: varDadosIntegracao1,
+                                          app: varDadosIntegracao2,
+                                          token: e.target.value,
+                                        }),
+                                      },
+                                    })
+                                  }}
+                                />
+                              </Col>
+                            </Fragment>
+                          ) : (
+                            ""
+                          )}
+                        </Fragment>
                       ) : (
                         ""
                       )}
-
-                      {/* ///////////////////////////////////// */}
-                      {/* 
-                      <Col md="12">
-                        <Row>
-                          <Col md="4" className="mb-2">
-                            <Label
-                              className="form-label"
-                              for="dados-integracao-1"
-                            >
-                              ID do Hotel
-                            </Label>
-                            <Input
-                              id="dados-integracao-1"
-                              type="number"
-                              value={varDadosIntegracao1}
-                              onChange={(e) => {
-                                setVarDadosIntegracao1(e.target.value)
-                                handleChangeCP({
-                                  target: {
-                                    name: "dados_integracao",
-                                    value: {
-                                      hotel_id: varDadosIntegracao1,
-                                      service_name: varDadosIntegracao2,
-                                    },
-                                  },
-                                })
-                              }}
-                            />
-                          </Col>
-
-                          <Col md="4" className="mb-2">
-                            <Label
-                              className="form-label"
-                              for="dados-integracao-2"
-                            >
-                              Nome do serviço
-                            </Label>
-                            <Input
-                              id="dados-integracao-2"
-                              value={varDadosIntegracao2}
-                              onChange={(e) => {
-                                setVarDadosIntegracao2(e.target.value)
-                                handleChangeCP({
-                                  target: {
-                                    name: "dados_integracao",
-                                    value: {
-                                      hotel_id: varDadosIntegracao1,
-                                      service_name: varDadosIntegracao2,
-                                    },
-                                  },
-                                })
-                              }}
-                            />
-                          </Col>
-
-                          <Col md="4" className="mb-2">
-                            <Label
-                              className="form-label"
-                              for="dados-integracao-3"
-                            >
-                              Token
-                            </Label>
-                            <Input
-                              id="dados-integracao-3"
-                              value={varDadosIntegracao3}
-                              onChange={(e) => {
-                                setVarDadosIntegracao3(e.target.value)
-                                handleChangeCP({
-                                  target: {
-                                    name: "dados_integracao",
-                                    value: {
-                                      hotel_id: varDadosIntegracao1,
-                                      service_name: varDadosIntegracao2,
-                                      token: varDadosIntegracao3,
-                                    },
-                                  },
-                                })
-                              }}
-                            />
-                          </Col>
-                        </Row>
-                      </Col> */}
-
                       <Col md="12" className="mb-1">
                         <div className="divider divider-dark">
                           <div className="divider-text text-dark">
