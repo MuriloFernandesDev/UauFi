@@ -44,19 +44,19 @@ const NovosCad = (props) => {
           },
           stroke: {
             curve: "smooth",
-            dashArray: [12, 0],
-            width: [3, 4],
+            dashArray: [0, 12],
+            width: [4, 3],
           },
           legend: {
             show: false,
           },
-          colors: ["#ebe9f1", "#d0ccff"],
+          colors: ["#d0ccff", "#ebe9f1"],
           fill: {
             type: "gradient",
             gradient: {
               shade: "dark",
               inverseColors: false,
-              gradientToColors: ["#ebe9f1", props.primary],
+              gradientToColors: [props.primary, "#ebe9f1"],
               shadeIntensity: 1,
               type: "horizontal",
               opacityFrom: 1,

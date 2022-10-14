@@ -79,7 +79,12 @@ const CardUsuarioMaisVisita = () => {
             <Spinner type="grow" color="primary" />
           </div>
         )}
-        <img className="congratulation-medal" src={medal} alt="Medalha" />
+        <img
+          className="congratulation-medal"
+          src={medal}
+          alt="Medalha"
+          height="80"
+        />
       </CardBody>
     </Card>
   )

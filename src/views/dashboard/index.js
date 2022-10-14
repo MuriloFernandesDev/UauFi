@@ -8,11 +8,11 @@ import { Row, Col } from "reactstrap"
 import { ThemeColors } from "@src/utility/context/ThemeColors"
 
 // ** Demo Components
-import CompanyTable from "./CompanyTable"
-import Plataforma from "@src/views/ui-elements/cards/analytics/Plataforma"
-import CardUsuarioMaisVisita from "@src/views/ui-elements/cards/advance/CardUsuarioMaisVisita"
-import StatsCard from "@src/views/ui-elements/cards/statistics/StatsCard"
-import NovosCad from "@src/views/ui-elements/cards/analytics/NovosCad"
+import CardUltimosUsuarios from "./CardUltimosUsuarios"
+import Plataforma from "./Plataforma"
+import CardUsuarioMaisVisita from "./CardUsuarioMaisVisita"
+import CardQuantidades from "./CardQuantidades"
+import NovosCad from "./NovosCad"
 import OrdersBarChart from "@src/views/ui-elements/cards/statistics/OrdersBarChart"
 import ProfitLineChart from "@src/views/ui-elements/cards/statistics/ProfitLineChart"
 import CardGeneros from "./CardGeneros"
@@ -35,7 +35,7 @@ const EcommerceDashboard = () => {
           <CardUsuarioMaisVisita />
         </Col>
         <Col xl="8" md="6" xs="12">
-          <StatsCard cols={{ xl: "3", sm: "6" }} />
+          <CardQuantidades cols={{ xl: "3", sm: "6" }} />
         </Col>
       </Row>
       <Row className="match-height">
@@ -61,7 +61,7 @@ const EcommerceDashboard = () => {
       </Row>
       <Row className="match-height">
         <Col lg="8" xs="12">
-          <CompanyTable />
+          <CardUltimosUsuarios />
         </Col>
         <Col lg="4" md="6" xs="12">
           <CardGeneros />

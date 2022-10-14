@@ -7,7 +7,7 @@ import Avatar from "@components/avatar"
 // ** Third Party Components
 import classnames from "classnames"
 import PerfectScrollbar from "react-perfect-scrollbar"
-import { Bell, X, Check, AlertTriangle } from "react-feather"
+import { Gift } from "react-feather"
 
 // ** Reactstrap Imports
 import {
@@ -25,72 +25,29 @@ const NotificationDropdown = () => {
   const notificationsArray = [
     {
       img: require("@src/assets/images/portrait/small/avatar-s-15.jpg").default,
-      subtitle: "Won the monthly best seller badge.",
+      subtitle: "30 anos",
       title: (
         <p className="media-heading">
-          <span className="fw-bolder">Congratulation Sam 🎉</span>winner!
+          <span className="fw-bolder">João Paulo</span>
         </p>
       ),
     },
     {
       img: require("@src/assets/images/portrait/small/avatar-s-3.jpg").default,
-      subtitle: "You have 10 unread messages.",
+      subtitle: "20 anos",
       title: (
         <p className="media-heading">
-          <span className="fw-bolder">New message</span>&nbsp;received
+          <span className="fw-bolder">Maria Ângela</span>
         </p>
       ),
     },
     {
       avatarContent: "MD",
       color: "light-danger",
-      subtitle: "MD Inc. order updated",
+      subtitle: "25 anos",
       title: (
         <p className="media-heading">
-          <span className="fw-bolder">Revised Order 👋</span>&nbsp;checkout
-        </p>
-      ),
-    },
-    {
-      title: <h6 className="fw-bolder me-auto mb-0">System Notifications</h6>,
-      switch: (
-        <div className="form-check form-switch">
-          <Input
-            type="switch"
-            name="customSwitch"
-            id="exampleCustomSwitch"
-            defaultChecked
-          />
-        </div>
-      ),
-    },
-    {
-      avatarIcon: <X size={14} />,
-      color: "light-danger",
-      subtitle: "USA Server is down due to hight CPU usage",
-      title: (
-        <p className="media-heading">
-          <span className="fw-bolder">Server down</span>&nbsp;registered
-        </p>
-      ),
-    },
-    {
-      avatarIcon: <Check size={14} />,
-      color: "light-success",
-      subtitle: "Last month sales report generated",
-      title: (
-        <p className="media-heading">
-          <span className="fw-bolder">Sales report</span>&nbsp;generated
-        </p>
-      ),
-    },
-    {
-      avatarIcon: <AlertTriangle size={14} />,
-      color: "light-warning",
-      subtitle: "BLR Server using high memory",
-      title: (
-        <p className="media-heading">
-          <span className="fw-bolder">High memory</span>&nbsp;usage
+          <span className="fw-bolder">Mário Dias</span>
         </p>
       ),
     },
@@ -177,26 +134,20 @@ const NotificationDropdown = () => {
         href="/"
         onClick={(e) => e.preventDefault()}
       >
-        <Bell size={21} />
+        <Gift size={21} />
         <Badge pill color="danger" className="badge-up">
-          6
+          3
         </Badge>
       </DropdownToggle>
       <DropdownMenu end tag="ul" className="dropdown-menu-media mt-0">
         <li className="dropdown-menu-header">
           <DropdownItem className="d-flex" tag="div" header>
-            <h4 className="notification-title mb-0 me-auto">Notifications</h4>
-            <Badge tag="div" color="light-primary" pill>
-              6 New
-            </Badge>
+            <h4 className="notification-title mb-0 me-auto">
+              Aniversariantes do dia
+            </h4>
           </DropdownItem>
         </li>
         {renderNotificationItems()}
-        <li className="dropdown-menu-footer">
-          <Button color="primary" block>
-            Read all notifications
-          </Button>
-        </li>
       </DropdownMenu>
     </UncontrolledDropdown>
   )

@@ -11,7 +11,6 @@ import Breadcrumbs from "@components/breadcrumbs"
 import Sales from "./Sales"
 import Sales2 from "./Sales2"
 import Revenue from "./Revenue"
-import Plataforma from "./Plataforma"
 import Customers from "./Customers"
 import AvgSession from "./AvgSessions"
 import GoalOverview from "./GoalOverview"
@@ -99,9 +98,7 @@ const AnalyticsCards = () => {
                 danger={context.colors.danger.main}
               />
             </Col>
-            <Col sm="12">
-              <Plataforma />
-            </Col>
+            <Col sm="12"></Col>
           </Row>
         </Col>
       </Row>

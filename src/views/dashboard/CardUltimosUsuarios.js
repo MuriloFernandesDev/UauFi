@@ -48,7 +48,7 @@ const CompanyTable = () => {
   const renderData = () => {
     return vDados?.map((col) => {
       return (
-        <tr key={col.id}>
+        <tr key={col.acesso_id}>
           <td>
             <div className="d-flex justify-content-left align-items-center">
               <Avatar

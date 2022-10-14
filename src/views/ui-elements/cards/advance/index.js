@@ -10,7 +10,6 @@ import Breadcrumbs from "@components/breadcrumbs"
 // ** Demo Components
 import CardJob from "./CardJob"
 import CardChat from "./CardChat"
-import CardUsuarioMaisVisita from "./CardUsuarioMaisVisita"
 import CardMeetup from "./CardMeetup"
 import CardPayment from "./CardPayment"
 import CardProfile from "./CardProfile"
@@ -40,9 +39,6 @@ const Cards = () => {
       <Row className="match-height">
         <Col md="6" lg="7" sm="12">
           <CardCongratulations />
-        </Col>
-        <Col md="6" lg="5" sm="12">
-          <CardUsuarioMaisVisita />
         </Col>
       </Row>
       <Row className="match-height">
