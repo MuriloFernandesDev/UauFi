@@ -123,7 +123,6 @@ const CustomHeader = ({
             className="me-0 mb-1 mb-md-0 me-md-2"
             onClick={() => downloadCSV(store.data)}
             color="secondary"
-            caret
             outline
           >
             <span className="align-middle text-nowrap">

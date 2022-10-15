@@ -25,6 +25,7 @@ const Plataforma = () => {
 
   const getDados = () => {
     setProcessando(true)
+    //return
     return api
       .get("/conexao/perc_plataforma")
       .then((res) => {

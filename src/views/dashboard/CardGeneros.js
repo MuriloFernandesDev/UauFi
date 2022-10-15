@@ -63,7 +63,7 @@ const CardGeneros = (props) => {
               borderWidth: 0,
               label: "Pessoas",
               data: [res.data.male, res.data.female, res.data.other],
-              backgroundColor: ["#0066CC", "#CC00CC", "#FF8000"],
+              backgroundColor: ["#0066CC", "#FF33BB", "#FF8000"],
               borderWidth: 0,
               pointStyle: "rectRounded",
             },

@@ -3,7 +3,6 @@ import { useContext, useState, useEffect } from "react"
 import { Link, useNavigate, useParams } from "react-router-dom"
 
 // ** Custom Hooks
-import { useSkin } from "@hooks/useSkin"
 import useJwt from "@src/auth/jwt/useJwt"
 
 // ** Third Party Components
@@ -73,7 +72,6 @@ const defaultValues = {
 const Login = () => {
   // ** Hooks
   const { slug } = useParams()
-  const { skin } = useSkin()
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const ability = useContext(AbilityContext)
@@ -92,8 +90,7 @@ const Login = () => {
     handleSubmit,
     formState: { errors },
   } = useForm({ defaultValues })
-  const illustration = skin === "dark" ? "bg-login.webp" : "bg-login.webp",
-    source = require(`@src/assets/images/pages/${illustration}`).default
+  const source = require(`@src/assets/images/pages/bg-login.webp`).default
 
   const onSubmit = (data) => {
     if (Object.values(data).every((field) => field.length > 0)) {

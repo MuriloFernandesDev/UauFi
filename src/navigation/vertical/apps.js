@@ -179,7 +179,7 @@ export default [
     children: [
       {
         id: "menuRelatorioCampanha",
-        title: "Campanhas",
+        title: "Campanha enviada",
         icon: <Circle size={12} />,
         navLink: "/relatorio/campanha",
         action: "read",

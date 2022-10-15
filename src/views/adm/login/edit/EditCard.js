@@ -31,6 +31,26 @@ const ClienteLoginEditCard = ({ data, setSalvarDados }) => {
     }))
   }
 
+  const handleChangeCBX = (e) => {
+    const { name } = e.target,
+      pos = Number(e.target.attributes.pos.value)
+
+    const vDadosAnt =
+      vDados[name] && vDados[name].length >= pos
+        ? vDados[name]
+        : (vDados[name] ?? "").padEnd(pos, "0")
+
+    const vNovoValor =
+      vDadosAnt.substring(0, pos - 1) +
+      (e.target.checked ? "1" : "0") +
+      vDadosAnt.substring(pos + 1)
+
+    setData((prevState) => ({
+      ...prevState,
+      [name]: vNovoValor,
+    }))
+  }
+
   const getClientes = () => {
     return api.get("/cliente/lista_simples").then((res) => {
       setListaClientes(res.data)
@@ -73,42 +93,62 @@ const ClienteLoginEditCard = ({ data, setSalvarDados }) => {
   }, [])
 
   // ** Table columns
-  const renderAcesso = (descricao, campo) => {
+  const renderAcesso = (descricao, campo, arrayPos) => {
     return (
       <tr>
         <td className="text-start">{descricao}</td>
-        <td>
-          <div className="d-flex form-check justify-content-center">
-            <Input
-              type="checkbox"
-              defaultChecked={vDados[campo]?.substring(0, 1) === "1"}
-            />
-          </div>
-        </td>
-        <td>
-          <div className="d-flex form-check justify-content-center">
-            <Input
-              type="checkbox"
-              defaultChecked={vDados[campo]?.substring(1, 2) === "1"}
-            />
-          </div>
-        </td>
-        <td>
-          <div className="d-flex form-check justify-content-center">
-            <Input
-              type="checkbox"
-              defaultChecked={vDados[campo]?.substring(2, 3) === "1"}
-            />
-          </div>
-        </td>
-        <td>
-          <div className="d-flex form-check justify-content-center">
-            <Input
-              type="checkbox"
-              defaultChecked={vDados[campo]?.substring(3, 4) === "1"}
-            />
-          </div>
-        </td>
+        {!arrayPos || arrayPos.includes(1) ? (
+          <td>
+            <div className="d-flex form-check justify-content-center">
+              <Input
+                type="checkbox"
+                name={campo}
+                pos={1}
+                checked={vDados[campo]?.substring(0, 1) === "1"}
+                onChange={handleChangeCBX}
+              />
+            </div>
+          </td>
+        ) : null}
+        {!arrayPos || arrayPos.includes(2) ? (
+          <td>
+            <div className="d-flex form-check justify-content-center">
+              <Input
+                type="checkbox"
+                name={campo}
+                pos={2}
+                defaultChecked={vDados[campo]?.substring(1, 2) === "1"}
+                onChange={handleChangeCBX}
+              />
+            </div>
+          </td>
+        ) : null}
+        {!arrayPos || arrayPos.includes(3) ? (
+          <td>
+            <div className="d-flex form-check justify-content-center">
+              <Input
+                type="checkbox"
+                name={campo}
+                pos={3}
+                defaultChecked={vDados[campo]?.substring(2, 3) === "1"}
+                onChange={handleChangeCBX}
+              />
+            </div>
+          </td>
+        ) : null}
+        {!arrayPos || arrayPos.includes(4) ? (
+          <td>
+            <div className="d-flex form-check justify-content-center">
+              <Input
+                type="checkbox"
+                name={campo}
+                pos={4}
+                defaultChecked={vDados[campo]?.substring(3, 4) === "1"}
+                onChange={handleChangeCBX}
+              />
+            </div>
+          </td>
+        ) : null}
       </tr>
     )
   }
@@ -184,6 +224,7 @@ const ClienteLoginEditCard = ({ data, setSalvarDados }) => {
                     <Input
                       id="nome"
                       name="nome"
+                      autoComplete="new-password"
                       value={vDados?.nome ?? ""}
                       onChange={handleChange}
                     />
@@ -196,6 +237,7 @@ const ClienteLoginEditCard = ({ data, setSalvarDados }) => {
                       id="email"
                       name="email"
                       type="email"
+                      autoComplete="new-password"
                       value={vDados?.email ?? ""}
                       onChange={handleChange}
                     />
@@ -208,6 +250,7 @@ const ClienteLoginEditCard = ({ data, setSalvarDados }) => {
                       id="senha"
                       name="senha"
                       type="password"
+                      autoComplete="new-password"
                       value={vDados?.senha ?? ""}
                       onChange={handleChange}
                     />
@@ -217,7 +260,7 @@ const ClienteLoginEditCard = ({ data, setSalvarDados }) => {
 
               <Col md="12" className="mb-2">
                 <Label className="form-label" for="clientes">
-                  Clientes com permissão de visualização
+                  Clientes permitidos
                 </Label>
                 <Select
                   isClearable
@@ -268,11 +311,9 @@ const ClienteLoginEditCard = ({ data, setSalvarDados }) => {
                       "Administrativo - Libera/Bloqueia mac",
                       "permissao_mac"
                     )}
-                    {renderAcesso("Usuários", "status_usuario")}
                     {renderAcesso("Evento", "evento")}
                     {renderAcesso("Pesquisa", "adm_pesquisa")}
                     {renderAcesso("Publicidade", "adm_publicidade")}
-                    {renderAcesso("Minha carteira", "minha_carteira")}
                     {renderAcesso("Filtros", "filtro_campanha")}
                     {renderAcesso("Campanha - Push (App)", "campanha_push")}
                     {renderAcesso("Campanha - SMS", "campanha_sms")}
@@ -285,18 +326,51 @@ const ClienteLoginEditCard = ({ data, setSalvarDados }) => {
                       "campanha_rec_sms"
                     )}
                     {renderAcesso("Encurtador de URL", "encurtador_url")}
-                    {renderAcesso("Relatórios - Campanhas", "rel_campanha")}
+                  </tbody>
+                </Table>
+              </Col>
+              <Col md="12" className="mb-2">
+                <Table
+                  className="text-nowrap text-center border-bottom"
+                  responsive
+                >
+                  <thead>
+                    <tr>
+                      <th className="text-start">Outros acessos</th>
+                      <th>Permitir</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {renderAcesso("Usuários", "status_usuario", [1])}
+                    {renderAcesso(
+                      "Minha carteira - Visualizar",
+                      "minha_carteira",
+                      [1]
+                    )}
+                    {renderAcesso(
+                      "Minha carteira - Solicitar aumento",
+                      "minha_carteira",
+                      [2]
+                    )}
+                    {renderAcesso(
+                      "Relatórios - Campanha enviada",
+                      "rel_campanha",
+                      [1]
+                    )}
                     {renderAcesso(
                       "Relatórios - Cadastros/Conexões",
-                      "rel_cad_conexoes"
+                      "rel_cad_conexoes",
+                      [1]
                     )}
                     {renderAcesso(
                       "Relatórios - Exportar e-mails",
-                      "rel_exportar_email"
+                      "rel_exportar_email",
+                      [1]
                     )}
                     {renderAcesso(
                       "Relatórios - Exportar registros",
-                      "rel_exportar_registros"
+                      "rel_exportar_registros",
+                      [1]
                     )}
                   </tbody>
                 </Table>
