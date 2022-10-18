@@ -3,31 +3,41 @@ import { useEffect, useState } from "react"
 import { useParams, Link } from "react-router-dom"
 
 // ** Store & Actions
-import { getUsuarios } from "../store"
-import { useSelector, useDispatch } from "react-redux"
+import { getUsuario } from "../store"
+import { useDispatch } from "react-redux"
 
 // ** Reactstrap Imports
-import { Row, Col, Alert } from "reactstrap"
+import { Row, Col, Alert, Spinner } from "reactstrap"
 
 // ** User View Components
 import UserTabs from "./Tabs"
-import PlanCard from "./PlanCard"
 import UserInfoCard from "./UserInfoCard"
 
 // ** Styles
 import "@styles/react/apps/app-users.scss"
 
-const UserView = () => {
+const DadosUsuario = () => {
   // ** Store Vars
-  const store = useSelector((state) => state.users)
   const dispatch = useDispatch()
+
+  // ** States
+  const [vCarregando, setCarregando] = useState(true)
+  const [vDados, setDados] = useState(true)
 
   // ** Hooks
   const { id } = useParams()
 
   // ** Get suer on mount
   useEffect(() => {
-    dispatch(getUsuarios(parseInt(id)))
+    setCarregando(true)
+    getUsuario(parseInt(id))
+      .then((response) => {
+        setCarregando(false)
+        setDados(response)
+      })
+      .catch(() => {
+        setCarregando(false)
+      })
   }, [dispatch])
 
   const [active, setActive] = useState("1")
@@ -38,12 +48,15 @@ const UserView = () => {
     }
   }
 
-  return store.selectedUser !== null && store.selectedUser !== undefined ? (
+  return vCarregando ? (
+    <div className="text-center">
+      <Spinner color="primary" />
+    </div>
+  ) : vDados?.id > 0 ? (
     <div className="app-user-view">
       <Row>
         <Col xl="4" lg="5" xs={{ order: 1 }} md={{ order: 0, size: 5 }}>
-          <UserInfoCard selectedUser={store.selectedUser} />
-          <PlanCard />
+          <UserInfoCard selectedUser={vDados} />
         </Col>
         <Col xl="8" lg="7" xs={{ order: 0 }} md={{ order: 1, size: 7 }}>
           <UserTabs active={active} toggleTab={toggleTab} />
@@ -52,12 +65,12 @@ const UserView = () => {
     </div>
   ) : (
     <Alert color="danger">
-      <h4 className="alert-heading">User not found</h4>
+      <h4 className="alert-heading">Usuário não encontrado</h4>
       <div className="alert-body">
-        User with id: {id} doesn't exist. Check list of all Users:{" "}
-        <Link to="/apps/user/list">Users List</Link>
+        Usuário: {id} não existe ou não nunca passou por aqui. Verifique a{" "}
+        <Link to="/usuario/lista">lista completa</Link>
       </div>
     </Alert>
   )
 }
-export default UserView
+export default DadosUsuario

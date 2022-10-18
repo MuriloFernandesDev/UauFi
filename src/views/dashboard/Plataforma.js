@@ -62,7 +62,7 @@ const Plataforma = () => {
                   total: {
                     show: true,
                     fontSize: "1.5rem",
-                    label: res.data?.maior_label,
+                    label: res.data?.maior_label ?? "",
                     formatter() {
                       return `${res.data?.maior_value}%`
                     },
@@ -93,7 +93,7 @@ const Plataforma = () => {
             {!vProcessando ? (
               <div>
                 <div className="font-small-2">Total</div>
-                <h5 className="mb-2">{vDados?.total}</h5>{" "}
+                <h5 className="mb-2">{vDados?.total ?? "0"}</h5>{" "}
                 <CardText className="text-muted font-small-2">
                   <span>Dispositivos</span>
                 </CardText>
@@ -107,12 +107,14 @@ const Plataforma = () => {
             className="d-flex justify-content-center text-center align-items-center"
           >
             {!vProcessando ? (
-              <Chart
-                options={vOptions}
-                series={vDados?.valores?.map(({ value }) => value)}
-                type="donut"
-                height={165}
-              />
+              vDados?.valores ? (
+                <Chart
+                  options={vOptions}
+                  series={vDados?.valores?.map(({ value }) => value)}
+                  type="donut"
+                  height={165}
+                />
+              ) : null
             ) : (
               <Spinner type="grow" size="md" color="primary" />
             )}

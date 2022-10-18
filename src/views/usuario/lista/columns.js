@@ -4,10 +4,6 @@ import { Link } from "react-router-dom"
 // ** Custom Components
 import Avatar from "@components/avatar"
 
-// ** Store & Actions
-import { store } from "@store/store"
-import { getUsuarios } from "../store"
-
 // ** Icons Imports
 import { MoreVertical, Eye, WifiOff } from "react-feather"
 
@@ -20,6 +16,7 @@ import {
   DropdownItem,
   UncontrolledTooltip,
 } from "reactstrap"
+import { formatDateTime } from "@utils"
 
 // ** Renders Client Columns
 const renderClient = (row) => {
@@ -45,60 +42,40 @@ export const columns = [
     sortField: "nome",
     selector: (row) => row.nome,
     cell: (row) => (
-      <div className="d-flex justify-content-left align-items-center">
+      <Link
+        to={`/usuario/dados/${row.id}`}
+        className="d-flex justify-content-left align-items-center"
+      >
         {renderClient(row)}
-        <div className="d-flex flex-column">
-          <Link
-            to={`/usuario/dados/${row.id}`}
-            className="user_name text-truncate text-body"
-            onClick={() => store.dispatch(getUsuarios(row.id))}
-          >
+        <div className="user_name text-truncate text-body">
+          <div className="d-flex flex-column">
             <span className="fw-bolder">{row.nome}</span>
-          </Link>
-          <small className="text-truncate text-muted mb-0">
-            Cel: {row.celular}
-          </small>
+            <small className="text-truncate text-muted mb-0">
+              {row.celular ? `Cel: ${row.celular}` : ""}
+            </small>
+            <small className="text-truncate text-muted mb-0">
+              {row.ultimo_quarto ? `Quarto: ${row.ultimo_quarto}` : ""}
+            </small>
+            <small className="text-truncate text-muted mb-0">
+              {row.cpf ? `CPF: ${row.cpf}` : ""}
+            </small>
+          </div>
         </div>
-      </div>
+      </Link>
     ),
   },
   {
-    name: "Email",
+    name: "Conexão",
     sortable: true,
     minWidth: "300px",
-    sortField: "email",
-    selector: (row) => row.email,
+    sortField: "hotspot",
+    selector: (row) => row.hotspot,
     cell: (row) => (
       <div className="d-flex justify-content-left align-items-center">
         <div className="d-flex flex-column">
-          <span className="fw-bolder">{row.email}</span>
+          <span className="fw-bolder">{row.hotspot}</span>
           <small className="text-truncate text-muted mb-0">
-            {row.ultimo_quarto ? `Quarto: ${row.ultimo_quarto}` : ""}
-          </small>
-        </div>
-      </div>
-    ),
-  },
-  {
-    name: "CPF",
-    sortable: true,
-    minWidth: "190px",
-    sortField: "cpf",
-    selector: (row) => row.cpf,
-    cell: (row) => (
-      <div className="d-flex justify-content-left align-items-center">
-        <div className="d-flex flex-column">
-          <span className="fw-bolder">{row.cpf}</span>
-          <small className="text-truncate text-muted mb-0">
-            {row.genero === "0"
-              ? "Gênero: Feminino"
-              : row.genero === "1"
-              ? "Gênero: Masculino"
-              : row.genero === "3"
-              ? "Gênero: Não informado"
-              : row.genero === "4"
-              ? "Gênero: Outro"
-              : ""}
+            {formatDateTime(row.entrada) ?? ""}
           </small>
         </div>
       </div>

@@ -46,6 +46,11 @@ export const getUsuariosNovos = createAsyncThunk(
   }
 )
 
+export const getUsuario = async (id) => {
+  const response = (await api.get(`/usuario/dados/${id}`)).data
+  return response
+}
+
 export const getUsuariosOnline = createAsyncThunk(
   "usuario/getUsuariosOnline",
   async (parametros) => {

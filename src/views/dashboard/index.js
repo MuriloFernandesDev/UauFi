@@ -13,8 +13,7 @@ import Plataforma from "./Plataforma"
 import CardUsuarioMaisVisita from "./CardUsuarioMaisVisita"
 import CardQuantidades from "./CardQuantidades"
 import NovosCad from "./NovosCad"
-import OrdersBarChart from "@src/views/ui-elements/cards/statistics/OrdersBarChart"
-import ProfitLineChart from "@src/views/ui-elements/cards/statistics/ProfitLineChart"
+import CardVisitasMes from "./CardVisitasMes"
 import CardGeneros from "./CardGeneros"
 
 // ** Styles
@@ -41,11 +40,8 @@ const EcommerceDashboard = () => {
       <Row className="match-height">
         <Col lg="4" md="12">
           <Row className="match-height">
-            <Col lg="6" md="3" xs="6">
-              <OrdersBarChart warning={colors.warning.main} />
-            </Col>
-            <Col lg="6" md="3" xs="6">
-              <ProfitLineChart info={colors.info.main} />
+            <Col lg="12" md="6" xs="12">
+              <CardVisitasMes />
             </Col>
             <Col lg="12" md="6" xs="12">
               <Plataforma />
