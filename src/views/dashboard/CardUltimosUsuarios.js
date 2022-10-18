@@ -9,6 +9,9 @@ import { Table, Card } from "reactstrap"
 
 import { useEffect, useState } from "react"
 
+// ** Default Avatar Image
+import defaultAvatar from "@src/assets/images/avatars/avatar-blank.png"
+
 // ** Utils
 import { formatDateTime } from "@utils"
 
@@ -56,7 +59,7 @@ const CompanyTable = () => {
             >
               <Avatar
                 className="me-1"
-                img={col.foto_url}
+                img={(col && col.foto_url) || defaultAvatar}
                 width="32"
                 height="32"
               />
