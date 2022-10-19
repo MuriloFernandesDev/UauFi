@@ -5,7 +5,7 @@ import { Fragment, useState, useEffect, useRef } from "react"
 import { columns } from "./columns"
 
 // ** Store & Actions
-import { getUsuarios, getUsuariosNovos, getUsuariosOnline } from "../store"
+import { getUsuarios } from "../store"
 import { useDispatch, useSelector } from "react-redux"
 
 // ** Third Party Components
@@ -13,7 +13,6 @@ import ReactPaginate from "react-paginate"
 import DataTable from "react-data-table-component"
 import StatsHorizontal from "@components/widgets/stats/StatsHorizontal"
 import { ChevronDown, Share, User, UserPlus, UserCheck } from "react-feather"
-import UILoader from "@components/ui-loader"
 
 // ** Reactstrap Imports
 import { Row, Col, Card, Input, Spinner, Button } from "reactstrap"
@@ -142,8 +141,6 @@ const arrayToString = (a) => {
   return null
 }
 
-let vPar = {}
-
 const statusOptions = [
   { value: "o", label: "Online" },
   { value: "n", label: "Cadastro novo" },
@@ -176,9 +173,6 @@ const UsuarioLista = () => {
     statusOptions.filter((item) => vSituacaoArray?.includes(item.value))
   )
   const [vPesquisando, setPesquisando] = useState(true)
-  const [vProcessando1, setProcessando1] = useState(true)
-  const [vProcessando2, setProcessando2] = useState(true)
-  const [vProcessando3, setProcessando3] = useState(true)
 
   const vTimeoutPesquisa = useRef()
 
@@ -204,23 +198,14 @@ const UsuarioLista = () => {
       }
       vTimeoutPesquisa.current = setTimeout(() => {
         setPesquisando(true)
-        setProcessando1(true)
-        setProcessando2(true)
-        setProcessando3(true)
 
-        vPar = JSON.parse(vDadosNovo)
-        vPar.situacao = "n"
-        dispatch(getUsuariosNovos(vPar)).then(() => {
-          setProcessando2(false)
-        })
-        vPar.situacao = "o"
-        dispatch(getUsuariosOnline(vPar)).then(() => {
-          setProcessando3(false)
-        })
-        dispatch(getUsuarios(dados)).then(() => {
-          setPesquisando(false)
-          setProcessando1(false)
-        })
+        dispatch(getUsuarios(dados))
+          .then(() => {
+            setPesquisando(false)
+          })
+          .catch(() => {
+            setPesquisando(false)
+          })
       }, 300)
     }
   }
@@ -253,9 +238,6 @@ const UsuarioLista = () => {
   useEffect(() => {
     const vForce = store.total === -1
     setPesquisando(vForce)
-    setProcessando1(vForce)
-    setProcessando2(vForce)
-    setProcessando3(vForce)
     handlePesquisar(
       {
         sort,
@@ -383,10 +365,10 @@ const UsuarioLista = () => {
               icon={<User size={20} />}
               renderStats={
                 <h3 className="fw-bolder mb-75">
-                  {vProcessando1 ? (
+                  {vPesquisando ? (
                     <Spinner type="grow" size="sm" color="primary" />
                   ) : (
-                    new Intl.NumberFormat().format(store.total)
+                    new Intl.NumberFormat().format(store.total_usuario)
                   )}
                 </h3>
               }
@@ -399,10 +381,10 @@ const UsuarioLista = () => {
               icon={<UserPlus size={20} />}
               renderStats={
                 <h3 className="fw-bolder mb-75">
-                  {vProcessando2 ? (
+                  {vPesquisando ? (
                     <Spinner type="grow" size="sm" color="primary" />
                   ) : (
-                    store.novos
+                    store.total_cadastro
                   )}
                 </h3>
               }
@@ -415,10 +397,10 @@ const UsuarioLista = () => {
               icon={<UserCheck size={20} />}
               renderStats={
                 <h3 className="fw-bolder mb-75">
-                  {vProcessando3 ? (
+                  {vPesquisando ? (
                     <Spinner type="grow" size="sm" color="primary" />
                   ) : (
-                    store.online
+                    store.total_online
                   )}
                 </h3>
               }
@@ -426,40 +408,39 @@ const UsuarioLista = () => {
           </Col>
         </Row>
       </div>
-      <UILoader blocking={vPesquisando}>
-        <div className="invoice-list-wrapper">
-          <Card className="overflow-hidden">
-            <div className="react-dataTable">
-              <DataTable
-                noHeader
-                subHeader
-                sortServer
-                pagination
-                noDataComponent=""
-                responsive
-                paginationServer
-                columns={columns}
-                onSort={handleSort}
-                sortIcon={<ChevronDown />}
-                className="react-dataTable"
-                paginationComponent={CustomPagination}
-                data={dataToRender()}
-                subHeaderComponent={
-                  <CustomHeader
-                    store={store}
-                    searchTerm={searchTerm}
-                    rowsPerPage={rowsPerPage}
-                    handleFilter={handleFilter}
-                    handlePerPage={handlePerPage}
-                    toggleSidebar={toggleSidebar}
-                  />
-                }
-              />
-            </div>
-          </Card>
-        </div>
-        <Sidebar open={sidebarOpen} toggleSidebar={toggleSidebar} />
-      </UILoader>
+
+      <div className="invoice-list-wrapper">
+        <Card className="overflow-hidden">
+          <div className="react-dataTable">
+            <DataTable
+              noHeader
+              subHeader
+              sortServer
+              pagination
+              noDataComponent=""
+              responsive
+              paginationServer
+              columns={columns}
+              onSort={handleSort}
+              sortIcon={<ChevronDown />}
+              className="react-dataTable"
+              paginationComponent={CustomPagination}
+              data={dataToRender()}
+              subHeaderComponent={
+                <CustomHeader
+                  store={store.dados}
+                  searchTerm={searchTerm}
+                  rowsPerPage={rowsPerPage}
+                  handleFilter={handleFilter}
+                  handlePerPage={handlePerPage}
+                  toggleSidebar={toggleSidebar}
+                />
+              }
+            />
+          </div>
+        </Card>
+      </div>
+      <Sidebar open={sidebarOpen} toggleSidebar={toggleSidebar} />
     </Fragment>
   )
 }

@@ -65,7 +65,7 @@ const CompanyTable = () => {
               />
               <div className="d-flex flex-column">
                 <div className="d-flex flex-column">
-                  <span className="fw-bolder h5">{col.nome}</span>
+                  <span className="fw-bolder h5 mb-25">{col.nome}</span>
 
                   <span className="font-small-2 text-muted">
                     {col.ultimo_quarto

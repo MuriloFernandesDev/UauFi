@@ -19,7 +19,7 @@ import {
   Button,
 } from "reactstrap"
 
-const NovosCad = (props) => {
+const CardNovosCad = (props) => {
   // ** State
   const [vDados, setDados] = useState(null)
   const [vPeriodo, setPeriodo] = useState("mes")
@@ -183,4 +183,4 @@ const NovosCad = (props) => {
     </Card>
   )
 }
-export default NovosCad
+export default CardNovosCad

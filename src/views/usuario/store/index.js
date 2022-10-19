@@ -27,21 +27,12 @@ export const getUsuarios = createAsyncThunk(
     }
     return {
       params: parametros,
-      data: response.data.slice(vRegInicial, vRegFinal),
-      allData: response.data,
-      totalPages: response.data.length,
-    }
-  }
-)
-
-export const getUsuariosNovos = createAsyncThunk(
-  "usuario/getUsuariosNovos",
-  async (parametros) => {
-    const response = await api.get("/usuario/lista_totais", {
-      params: parametros,
-    })
-    return {
-      novos: response.data.valor,
+      data: response.data.dados.slice(vRegInicial, vRegFinal),
+      allData: response.data.dados,
+      totalPages: response.data.dados.length,
+      total_online: response.data.total_online,
+      total_cadastro: response.data.total_cadastro,
+      total_usuario: response.data.total_usuario,
     }
   }
 )
@@ -50,18 +41,6 @@ export const getUsuario = async (id) => {
   const response = (await api.get(`/usuario/dados/${id}`)).data
   return response
 }
-
-export const getUsuariosOnline = createAsyncThunk(
-  "usuario/getUsuariosOnline",
-  async (parametros) => {
-    const response = await api.get("/usuario/lista_totais", {
-      params: parametros,
-    })
-    return {
-      online: response.data.valor,
-    }
-  }
-)
 
 export const deleteUsuario = createAsyncThunk(
   "usuario/deleteUsuario",
@@ -76,26 +55,23 @@ export const usuarioSlice = createSlice({
   initialState: {
     data: [],
     total: -1,
-    novos: -1,
-    online: -1,
+    total_cadastro: 0,
+    total_online: 0,
+    total_usuario: 0,
     params: {},
     allData: [],
   },
   reducers: {},
   extraReducers: (builder) => {
-    builder
-      .addCase(getUsuarios.fulfilled, (state, action) => {
-        state.data = action.payload.data
-        state.allData = action.payload.allData
-        state.total = action.payload.totalPages
-        state.params = action.payload.params
-      })
-      .addCase(getUsuariosNovos.fulfilled, (state, action) => {
-        state.novos = action.payload.novos
-      })
-      .addCase(getUsuariosOnline.fulfilled, (state, action) => {
-        state.online = action.payload.online
-      })
+    builder.addCase(getUsuarios.fulfilled, (state, action) => {
+      state.data = action.payload.data
+      state.allData = action.payload.allData
+      state.total = action.payload.totalPages
+      state.params = action.payload.params
+      state.total_cadastro = action.payload.total_cadastro
+      state.total_online = action.payload.total_online
+      state.total_usuario = action.payload.total_usuario
+    })
   },
 })
 

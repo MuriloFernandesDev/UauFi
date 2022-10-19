@@ -12,7 +12,7 @@ import CardUltimosUsuarios from "./CardUltimosUsuarios"
 import Plataforma from "./Plataforma"
 import CardUsuarioMaisVisita from "./CardUsuarioMaisVisita"
 import CardQuantidades from "./CardQuantidades"
-import NovosCad from "./NovosCad"
+import CardNovosCad from "./CardNovosCad"
 import CardVisitasMes from "./CardVisitasMes"
 import CardGeneros from "./CardGeneros"
 
@@ -49,7 +49,7 @@ const EcommerceDashboard = () => {
           </Row>
         </Col>
         <Col lg="8" md="12">
-          <NovosCad
+          <CardNovosCad
             primary={colors.primary.main}
             warning={colors.warning.main}
           />

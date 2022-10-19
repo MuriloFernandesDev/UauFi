@@ -90,7 +90,7 @@ const Login = () => {
     handleSubmit,
     formState: { errors },
   } = useForm({ defaultValues })
-  const source = require(`@src/assets/images/pages/bg-login.webp`).default
+  const source = require(`@src/assets/images/pages/bg-login.jpg`).default
 
   const onSubmit = (data) => {
     if (Object.values(data).every((field) => field.length > 0)) {
