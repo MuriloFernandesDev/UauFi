@@ -21,3 +21,80 @@ WE WILL RELEASE FUTURE UPDATES SO IN ORDER TO NOT OVERWRITE YOUR STYLES IT'S BET
 .congratulation-medal {
   right: 10px !important;
 }
+
+$border-color: rgb(240, 240, 240);
+
+.todo-list {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  border-bottom: 1px solid $border-color;
+  li {
+    transition: all 0.2s, border-color 0s;
+    position: relative;
+    padding: 0.893rem 2rem;
+    border-top: 1px solid $border-color;
+    &:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 3px 10px 0 $border-color;
+      transition: all 0.2s;
+    }
+    .todo-title-wrapper {
+      display: flex;
+      justify-content: space-between;
+    }
+    .todo-title-area,
+    .title-wrapper {
+      display: flex;
+      align-items: center;
+    }
+    // Todo Item Action
+    .todo-item-action {
+      display: flex;
+      align-items: center;
+      // justify-content: space-between;
+      > small {
+        margin-left: auto;
+      }
+      a {
+        cursor: pointer;
+        font-size: 1.2rem;
+        line-height: 1.5;
+      }
+    }
+
+    .badge-wrapper {
+      display: flex;
+      .badge:not(:last-child) {
+        margin-right: 0.5rem;
+      }
+    }
+  }
+  .todo-item {
+    &:not(:hover) {
+      transition: none !important;
+    }
+
+    &[draggable="true"] {
+      box-shadow: 0 0 10px 0 rgba(24, 28, 33, 0.25);
+    }
+  }
+}
+
+// Drag & Drop Icon
+.todo-item {
+  .drag-icon {
+    visibility: hidden;
+    cursor: move;
+    position: absolute;
+    left: 0.2rem;
+    width: 1.75rem;
+    height: 4rem;
+    padding: 0 5px;
+  }
+  &:hover {
+    .drag-icon {
+      visibility: visible;
+    }
+  }
+}

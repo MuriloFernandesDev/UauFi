@@ -10,6 +10,7 @@ import { CornerUpLeft, Check } from "react-feather"
 
 // ** Terceiros
 import Select from "react-select"
+import "@styles/react/libs/flatpickr/flatpickr.scss"
 import { getHotspot } from "../store"
 
 const vListaUnidadeTempo = [
@@ -33,7 +34,7 @@ const vListaTipoPlano = [
   },
 ]
 
-const PlanoEditCard = ({ data, setSalvarDados }) => {
+const PublicidadeEditCard = ({ data, setSalvarDados }) => {
   const navigate = useNavigate()
 
   // ** States
@@ -98,7 +99,7 @@ const PlanoEditCard = ({ data, setSalvarDados }) => {
               <div>
                 <Button.Ripple
                   color="primary"
-                  onClick={() => navigate("/adm/plano_conexao")}
+                  onClick={() => navigate("/publicidade")}
                 >
                   <CornerUpLeft size={17} />
                 </Button.Ripple>
@@ -120,7 +121,7 @@ const PlanoEditCard = ({ data, setSalvarDados }) => {
               <Row>
                 <Col md="6" className="mb-2">
                   <Label className="form-label" for="nome">
-                    Nome do plano de conexão
+                    Nome da publicidade
                   </Label>
                   <Input
                     id="nome"
@@ -263,7 +264,9 @@ const PlanoEditCard = ({ data, setSalvarDados }) => {
                       }}
                     />
                     <Label for="ativo" className="form-check-label mt-25">
-                      {vDados?.ativo ? "Plano ativo" : "Plano desativado"}
+                      {vDados?.ativo
+                        ? "Publicidade ativa"
+                        : "Publicidade desativada"}
                     </Label>
                   </div>
                 </Col>
@@ -276,4 +279,4 @@ const PlanoEditCard = ({ data, setSalvarDados }) => {
   )
 }
 
-export default PlanoEditCard
+export default PublicidadeEditCard

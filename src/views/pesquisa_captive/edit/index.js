@@ -8,9 +8,9 @@ import api from "@src/services/api"
 // ** Reactstrap
 import { Row, Col, Spinner } from "reactstrap"
 
-// ** Editar Cliente
+// ** Editar
 import EditCard from "./EditCard"
-import { getCliente } from "../store"
+import { getPesquisaCaptive } from "../store"
 import { useDispatch, useSelector } from "react-redux"
 
 // ** Terceiros
@@ -39,15 +39,14 @@ const handleError = (error, errorMessage, errorIcon) => {
   })
 }
 
-const ClienteEdit = () => {
+const PesquisaCaptiveEdit = () => {
   // ** Hooks
   const { id } = useParams()
-
   const navigate = useNavigate()
 
   // ** Store vars
   const dispatch = useDispatch()
-  const vParFiltro = useSelector((state) => state.cliente.params)
+  const vParFiltro = useSelector((state) => state.pesquisa_captive.params)
 
   // ** States
   const [data, setData] = useState(null)
@@ -56,8 +55,8 @@ const ClienteEdit = () => {
 
   const handleOK = () => {
     setSalvando(false)
-    dispatch(getCliente(vParFiltro))
-    navigate("/adm/cliente")
+    dispatch(getPesquisaCaptive(vParFiltro))
+    navigate("/pesquisa_captive")
   }
 
   // ** Função para salvar dados & respostas a erros
@@ -65,10 +64,10 @@ const ClienteEdit = () => {
     setSalvando(true)
     if (pDados.id > 0) {
       api
-        .put("/cliente", pDados)
+        .put("/pesquisa_captive", pDados)
         .then((response) => {
           if (response.status === 200) {
-            toast.success("Cliente editado com sucesso!", {
+            toast.success("Pesquisa editada com sucesso!", {
               position: "bottom-right",
             })
             handleOK()
@@ -94,10 +93,10 @@ const ClienteEdit = () => {
         })
     } else {
       api
-        .post("/cliente", pDados)
+        .post("/pesquisa_captive", pDados)
         .then((response) => {
           if (response.status === 200) {
-            toast.success("Cliente criado com sucesso!", {
+            toast.success("Pesquisa criada com sucesso!", {
               position: "bottom-right",
             })
             handleOK()
@@ -124,9 +123,9 @@ const ClienteEdit = () => {
     }
   }
 
-  // ** Get Cliente on mount based on id
+  // ** Get filter on mount based on id
   useEffect(() => {
-    api.get(`/cliente/${id}`).then((response) => {
+    api.get(`/pesquisa_captive/${id}`).then((response) => {
       setData(response.data[0])
       setCarregando(false)
     })
@@ -147,4 +146,4 @@ const ClienteEdit = () => {
   )
 }
 
-export default ClienteEdit
+export default PesquisaCaptiveEdit

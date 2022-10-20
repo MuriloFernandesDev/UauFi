@@ -82,7 +82,7 @@ const PlanoEdit = () => {
               "warning"
             )
           } else if (error.response.status === 503) {
-            handleError("Hotspot offline", error.response.data, "error")
+            handleError("Ops...", error.response.data, "error")
           } else {
             handleError(
               "Erro inesperado",
@@ -111,7 +111,7 @@ const PlanoEdit = () => {
               "warning"
             )
           } else if (error.response.status === 503) {
-            handleError("Hotspot offline", error.response.data, "error")
+            handleError("Ops...", error.response.data, "error")
           } else {
             handleError(
               "Erro inesperado",

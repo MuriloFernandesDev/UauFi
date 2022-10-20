@@ -11,6 +11,8 @@ import filtro from "@src/views/filtro/store"
 import usuario from "@src/views/usuario/store"
 import plano_conexao from "@src/views/adm/plano_conexao/store"
 import permissao_mac from "@src/views/adm/permissao_mac/store"
+import pesquisa_captive from "@src/views/pesquisa_captive/store"
+import publicidade from "@src/views/publicidade/store"
 
 const rootReducer = {
   auth,
@@ -25,6 +27,8 @@ const rootReducer = {
   usuario,
   plano_conexao,
   permissao_mac,
+  pesquisa_captive,
+  publicidade,
 }
 
 export default rootReducer

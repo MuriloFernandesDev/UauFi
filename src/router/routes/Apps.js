@@ -16,6 +16,12 @@ const UsuarioLista = lazy(() => import("../../views/usuario/lista"))
 const UsuarioDados = lazy(() => import("../../views/usuario/dados"))
 const Evento = lazy(() => import("../../views/evento"))
 const EventoEdit = lazy(() => import("../../views/evento/edit"))
+const PesquisaCaptive = lazy(() => import("../../views/pesquisa_captive"))
+const PesquisaCaptiveEdit = lazy(() =>
+  import("../../views/pesquisa_captive/edit")
+)
+const Publicidade = lazy(() => import("../../views/publicidade"))
+const PublicidadeEdit = lazy(() => import("../../views/publicidade/edit"))
 const Filtro = lazy(() => import("../../views/filtro"))
 const FiltroEdit = lazy(() => import("../../views/filtro/edit"))
 const PermissaoMAC = lazy(() => import("../../views/adm/permissao_mac"))
@@ -79,6 +85,22 @@ const AppRoutes = [
   {
     element: <EventoEdit />,
     path: "/evento/:id",
+  },
+  {
+    element: <PesquisaCaptive />,
+    path: "/pesquisa_captive",
+  },
+  {
+    element: <PesquisaCaptiveEdit />,
+    path: "/pesquisa_captive/:id",
+  },
+  {
+    element: <Publicidade />,
+    path: "/publicidade",
+  },
+  {
+    element: <PublicidadeEdit />,
+    path: "/publicidade/:id",
   },
   {
     element: <PermissaoMAC />,

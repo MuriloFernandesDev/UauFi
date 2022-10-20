@@ -24,20 +24,14 @@ const FiltroEditCard = ({ data, setSalvarDados }) => {
 
   // ** States
   const [vDados, setData] = useState(data)
-  const [genero, setGenero] = useState(null)
-  const [selectedGenero, setSelectedGenero] = useState(null)
+  const [vGenero, setGenero] = useState(null)
   const [vEstado, setEstado] = useState(null)
   const [vCidade, setCidade] = useState(null)
+  const [vCliente, setCliente] = useState(null)
+
+  const [vListaGeneros, setListaGenero] = useState(null)
   const [vListaEstados, setListaEstados] = useState(null)
   const [vListaCidades, setListaCidades] = useState(null)
-  const [vCliente, setCliente] = useState(null)
-  const [upperConnect, setUpperConnect] = useState(18)
-  const [lowerConnect, setLowerConnect] = useState(100)
-  const [appDataInicial, setAppDataInicial] = useState("")
-  const [appDataFinal, setAppDataFinal] = useState("")
-  const [visitaDataInicial, setVisitaDataInicial] = useState("")
-  const [visitaDataFinal, setVisitaDataFinal] = useState("")
-
   const [vListaClientes, setListaClientes] = useState(null)
 
   // ** Organização da informação
@@ -52,7 +46,7 @@ const FiltroEditCard = ({ data, setSalvarDados }) => {
   // ** Listagem de gêneros
   const handleGenero = async () => {
     const getGeneros = await getGenero()
-    setGenero(getGeneros)
+    setListaGenero(getGeneros)
 
     if (vDados.id !== undefined) {
       if (vDados?.genero) {
@@ -60,7 +54,7 @@ const FiltroEditCard = ({ data, setSalvarDados }) => {
           .split(",")
           .map((item) => parseInt(item))
 
-        setSelectedGenero(
+        setGenero(
           gendersArray?.map((item) => {
             const response = getGeneros?.filter((res) => res.value === item)
             if (response) {
@@ -129,20 +123,6 @@ const FiltroEditCard = ({ data, setSalvarDados }) => {
       handleGenero()
     }
     getClientes()
-    if (vDados.id !== undefined) {
-      if (vDados.app_data_inicial) {
-        setAppDataInicial(vDados.app_data_inicial.substring(0, 10))
-      }
-      if (vDados.app_data_final) {
-        setAppDataFinal(vDados.app_data_final.substring(0, 10))
-      }
-      if (vDados.visita_data_inicial) {
-        setVisitaDataInicial(vDados.visita_data_inicial.substring(0, 10))
-      }
-      if (vDados.visita_data_final) {
-        setVisitaDataFinal(vDados.visita_data_final.substring(0, 10))
-      }
-    }
   }, [])
 
   return (
@@ -184,6 +164,7 @@ const FiltroEditCard = ({ data, setSalvarDados }) => {
                   </Label>
                   <Input
                     id="nome"
+                    disabled={vDados.id > 0}
                     name="nome"
                     value={vDados?.nome ?? ""}
                     onChange={
@@ -200,15 +181,11 @@ const FiltroEditCard = ({ data, setSalvarDados }) => {
                     isClearable
                     noOptionsMessage={() => "Vazio"}
                     id="vCliente"
-                    disabled={vDados.id > 0}
+                    isDisabled={vDados?.id > 0}
                     placeholder={"Selecione..."}
                     className="react-select"
                     classNamePrefix="select"
-                    value={
-                      vListaClientes?.filter(
-                        (item) => item.value === vDados?.cliente_id
-                      )[0]
-                    }
+                    value={vCliente}
                     onChange={
                       vDados.id !== undefined
                         ? blockChange
@@ -232,17 +209,17 @@ const FiltroEditCard = ({ data, setSalvarDados }) => {
                     id="genero"
                     isMulti={true}
                     noOptionsMessage={() => "Vazio"}
-                    disabled={vDados.id > 0}
-                    value={selectedGenero}
+                    value={vGenero}
                     placeholder={"Selecione..."}
                     className="react-select"
                     classNamePrefix="select"
-                    options={genero}
+                    isDisabled={vDados?.id > 0}
+                    options={vListaGeneros}
                     onChange={
                       vDados.id !== undefined
                         ? blockChange
                         : (e) => (
-                            setSelectedGenero(e),
+                            setGenero(e),
                             handleChange({
                               target: {
                                 name: "genero",
@@ -268,7 +245,7 @@ const FiltroEditCard = ({ data, setSalvarDados }) => {
                     start={
                       vDados?.idade_inicial
                         ? [vDados?.idade_inicial, vDados?.idade_final]
-                        : [upperConnect, lowerConnect]
+                        : [18, 100]
                     }
                     step={1}
                     disabled={vDados.id > 0}
@@ -284,8 +261,6 @@ const FiltroEditCard = ({ data, setSalvarDados }) => {
                       max: 100,
                     }}
                     onChange={(e) => {
-                      setUpperConnect(e[0])
-                      setLowerConnect(e[1])
                       handleChange({
                         target: {
                           name: "idade_inicial",
@@ -347,7 +322,9 @@ const FiltroEditCard = ({ data, setSalvarDados }) => {
                         isClearable
                         className="react-select"
                         classNamePrefix="select"
-                        disabled={vDados.id > 0}
+                        isDisabled={
+                          vDados?.id > 0 || (vDados?.estado_id ?? 0) === 0
+                        }
                         value={
                           vDados.cidades
                             ? vDados.cidades.map((i) => ({
@@ -391,10 +368,9 @@ const FiltroEditCard = ({ data, setSalvarDados }) => {
                         id="app-data-inicial"
                         name="app-data-inicial"
                         type="date"
-                        value={appDataInicial}
+                        value={vDados?.app_data_inicial ?? ""}
                         disabled={vDados.id > 0}
                         onChange={(e) => {
-                          setAppDataInicial(e.target.value)
                           handleChange({
                             target: {
                               name: "app_data_inicial",
@@ -413,10 +389,9 @@ const FiltroEditCard = ({ data, setSalvarDados }) => {
                         id="app-data-final"
                         name="app-data-final"
                         type="date"
-                        value={appDataFinal}
+                        value={vDados?.app_data_final ?? ""}
                         disabled={vDados.id > 0}
                         onChange={(e) => {
-                          setAppDataFinal(e.target.value)
                           handleChange({
                             target: {
                               name: "app_data_final",
@@ -442,10 +417,9 @@ const FiltroEditCard = ({ data, setSalvarDados }) => {
                         id="visita-data-inicial"
                         name="visita-data-inicial"
                         type="date"
-                        value={visitaDataInicial}
+                        value={vDados?.visita_data_inicial ?? ""}
                         disabled={vDados.id > 0}
                         onChange={(e) => {
-                          setVisitaDataInicial(e.target.value)
                           handleChange({
                             target: {
                               name: "visita_data_inicial",
@@ -464,10 +438,9 @@ const FiltroEditCard = ({ data, setSalvarDados }) => {
                         id="visita-data-final"
                         name="visita-data-final"
                         type="date"
-                        value={visitaDataFinal}
+                        value={vDados?.visita_data_final ?? ""}
                         disabled={vDados.id > 0}
                         onChange={(e) => {
-                          setVisitaDataFinal(e.target.value)
                           handleChange({
                             target: {
                               name: "visita_data_final",

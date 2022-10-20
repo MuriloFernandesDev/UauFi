@@ -15,6 +15,9 @@ import EditCard from "./EditCard"
 import toast from "react-hot-toast"
 import Swal from "sweetalert2"
 import withReactContent from "sweetalert2-react-content"
+import UILoader from "@components/ui-loader"
+import { getFiltros } from "../store"
+import { useDispatch, useSelector } from "react-redux"
 
 // ** Modal de apresentação de erros
 
@@ -41,12 +44,24 @@ const FiltroEdit = () => {
   const { id } = useParams()
   const navigate = useNavigate()
 
+  // ** Store vars
+  const dispatch = useDispatch()
+  const vParFiltro = useSelector((state) => state.filtro.params)
+
   // ** States
   const [data, setData] = useState(null)
   const [vCarregando, setCarregando] = useState(true)
+  const [vSalvando, setSalvando] = useState(false)
+
+  const handleOK = () => {
+    setSalvando(false)
+    dispatch(getFiltros(vParFiltro))
+    navigate("/filtro")
+  }
 
   // ** Função para salvar dados & respostas a erros
   const handleSalvar = (pDados) => {
+    setSalvando(true)
     if (pDados.id > 0) {
       api
         .put("/filtro", pDados)
@@ -55,10 +70,11 @@ const FiltroEdit = () => {
             toast.success("Filtro editado com sucesso!", {
               position: "bottom-right",
             })
-            navigate("/filtro")
+            handleOK()
           }
         })
         .catch((error) => {
+          setSalvando(false)
           if (error.response.status === 400) {
             handleError(
               "Atenção!",
@@ -66,11 +82,7 @@ const FiltroEdit = () => {
               "warning"
             )
           } else if (error.response.status === 503) {
-            handleError(
-              "Hotspot offline",
-              "Tente novamente mais tarde.",
-              "error"
-            )
+            handleError("Ops...", error.response.data, "error")
           } else {
             handleError(
               "Erro inesperado",
@@ -87,10 +99,11 @@ const FiltroEdit = () => {
             toast.success("Filtro criado com sucesso!", {
               position: "bottom-right",
             })
-            navigate("/filtro")
+            handleOK()
           }
         })
         .catch((error) => {
+          setSalvando(false)
           if (error.response.status === 400) {
             handleError(
               "Atenção!",
@@ -98,11 +111,7 @@ const FiltroEdit = () => {
               "warning"
             )
           } else if (error.response.status === 503) {
-            handleError(
-              "Hotspot offline",
-              "Tente novamente mais tarde.",
-              "error"
-            )
+            handleError("Ops...", error.response.data, "error")
           } else {
             handleError(
               "Erro inesperado",
@@ -127,13 +136,13 @@ const FiltroEdit = () => {
       <Spinner color="primary" />
     </div>
   ) : (
-    <div>
+    <UILoader blocking={vSalvando}>
       <Row>
         <Col sm={12}>
           <EditCard data={data} setSalvarDados={handleSalvar} />
         </Col>
       </Row>
-    </div>
+    </UILoader>
   )
 }
 

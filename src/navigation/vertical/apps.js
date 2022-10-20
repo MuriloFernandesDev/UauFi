@@ -2,7 +2,6 @@
 import {
   Link,
   MessageSquare,
-  Wifi,
   UserCheck,
   Archive,
   Circle,
@@ -90,7 +89,7 @@ export default [
     id: "menuPesquisa",
     title: "Pesquisa",
     icon: <UserCheck size={20} />,
-    navLink: "/pesquisa",
+    navLink: "/pesquisa_captive",
     action: "read",
     resource: "adm_pesquisa",
   },

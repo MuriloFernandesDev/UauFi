@@ -83,11 +83,7 @@ const ClienteLoginEdit = () => {
               "warning"
             )
           } else if (error.response.status === 503) {
-            handleError(
-              "Hotspot offline",
-              "Tente novamente mais tarde.",
-              "error"
-            )
+            handleError("Ops...", error.response.data, "error")
           } else {
             handleError(
               "Erro inesperado",
@@ -116,11 +112,7 @@ const ClienteLoginEdit = () => {
               "warning"
             )
           } else if (error.response.status === 503) {
-            handleError(
-              "Hotspot offline",
-              "Tente novamente mais tarde.",
-              "error"
-            )
+            handleError("Ops...", error.response.data, "error")
           } else {
             handleError(
               "Erro inesperado",

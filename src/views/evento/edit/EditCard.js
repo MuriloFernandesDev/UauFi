@@ -131,7 +131,7 @@ const EventoEditCard = ({ data, setSalvarDados }) => {
                 <Col lg="12">
                   <Row>
                     <Col lg="6" md="6" className="mb-2">
-                      <Label className="form-label" for="data-inicio">
+                      <Label className="form-label" for="data_inicio">
                         Início do evento
                       </Label>
 
@@ -145,7 +145,7 @@ const EventoEditCard = ({ data, setSalvarDados }) => {
                     </Col>
 
                     <Col lg="6" md="6" className="mb-2">
-                      <Label className="form-label" for="data-fim">
+                      <Label className="form-label" for="data_fim">
                         Fim do evento
                       </Label>
                       <Input

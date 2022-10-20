@@ -4,8 +4,11 @@ import { useRef, useState, useEffect } from "react"
 
 // ** Terceiros
 import ReactPaginate from "react-paginate"
-import { ChevronDown, Eye, MoreVertical, Trash } from "react-feather"
+import { ChevronDown, Eye, Trash, MoreVertical } from "react-feather"
 import DataTable from "react-data-table-component"
+
+// ** API
+import api from "@src/services/api"
 
 // ** Reactstrap
 import {
@@ -20,14 +23,12 @@ import {
   DropdownToggle,
   UncontrolledTooltip,
   UncontrolledDropdown,
+  Badge,
 } from "reactstrap"
 
 // ** Store & Actions
-import { getFiltros, deleteFiltro } from "./store"
+import { getPublicidade } from "./store"
 import { useDispatch, useSelector } from "react-redux"
-
-// ** Utils
-import { formatDateTime } from "@utils"
 
 // ** Styles
 import "@styles/react/libs/tables/react-dataTable-component.scss"
@@ -36,8 +37,25 @@ import "@styles/react/libs/tables/react-dataTable-component.scss"
 import Swal from "sweetalert2"
 import withReactContent from "sweetalert2-react-content"
 import toast from "react-hot-toast"
+import { formatDateTime } from "@utils"
 
 const MySwal = withReactContent(Swal)
+
+const handleError = (error, errorMessage, errorIcon) => {
+  return MySwal.fire({
+    title: error,
+    text: errorMessage,
+    icon: errorIcon,
+    customClass: {
+      confirmButton: "btn btn-primary",
+      popup: "animate__animated animate__fadeIn",
+    },
+    hideClass: {
+      popup: "animate__animated animate__zoomOut",
+    },
+    buttonsStyling: false,
+  })
+}
 
 const CustomHeader = ({ handleFilter, value, handlePerPage, rowsPerPage }) => {
   return (
@@ -58,8 +76,8 @@ const CustomHeader = ({ handleFilter, value, handlePerPage, rowsPerPage }) => {
               <option value="50">50</option>
             </Input>
           </div>
-          <Button tag={Link} to="/filtro/add" color="primary">
-            Novo filtro
+          <Button tag={Link} to="/publicidade/add" color="primary">
+            Nova publicidade
           </Button>
         </Col>
         <Col
@@ -83,10 +101,10 @@ const CustomHeader = ({ handleFilter, value, handlePerPage, rowsPerPage }) => {
   )
 }
 
-const FiltroList = () => {
+const PublicidadeList = () => {
   // ** Store vars
   const dispatch = useDispatch()
-  const store = useSelector((state) => state.filtro)
+  const store = useSelector((state) => state.publicidade)
 
   // ** States
   const [value, setValue] = useState(store.params.q ?? "")
@@ -105,7 +123,7 @@ const FiltroList = () => {
   }
 
   useEffect(() => {
-    //Somente pesquisar se os parametros de filtro mudaram
+    //Somente pesquisar se os parametros mudaram
     if (
       store.params.sort !== sort ||
       store.params.q !== value ||
@@ -115,7 +133,7 @@ const FiltroList = () => {
       store.params.clienteId !== sClienteId
     ) {
       dispatch(
-        getFiltros({
+        getPublicidade({
           sort,
           q: value,
           sortColumn,
@@ -134,7 +152,7 @@ const FiltroList = () => {
     setValue(val)
     vTimeoutPesquisa.current = setTimeout(() => {
       dispatch(
-        getFiltros({
+        getPublicidade({
           sort,
           q: val,
           sortColumn,
@@ -148,7 +166,7 @@ const FiltroList = () => {
 
   const handlePerPage = (e) => {
     dispatch(
-      getFiltros({
+      getPublicidade({
         sort,
         q: value,
         sortColumn,
@@ -162,7 +180,7 @@ const FiltroList = () => {
 
   const handlePagination = (page) => {
     dispatch(
-      getFiltros({
+      getPublicidade({
         sort,
         q: value,
         sortColumn,
@@ -173,122 +191,6 @@ const FiltroList = () => {
     )
     setCurrentPage(page.selected + 1)
   }
-
-  // ** Modal de exclusão de evento
-  const handleDeleteConfirmation = (row) => {
-    return MySwal.fire({
-      title: "Tem certeza?",
-      text: "Sua ação não poderá ser revertida!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonText: "Sim, remover!",
-      cancelButtonText: "Cancelar",
-      customClass: {
-        confirmButton: "btn btn-primary",
-        cancelButton: "btn btn-outline-danger ms-1",
-        popup: "animate__animated animate__fadeIn",
-      },
-      hideClass: {
-        popup: "animate__animated animate__zoomOut",
-      },
-      buttonsStyling: false,
-    }).then(async (result) => {
-      if (result.value) {
-        await dispatch(deleteFiltro(row.id))
-        handleFilter(store.params.q)
-
-        toast.success("Removido com sucesso!", {
-          position: "bottom-right",
-        })
-      }
-    })
-  }
-
-  // ** Table columns
-  const columns = [
-    {
-      name: "Filtro",
-      sortable: true,
-      selector: (row) => row.nome,
-      cell: (row) => {
-        const nome = row.nome ? row.nome : "",
-          idadeInicial = row.idade_inicial ? row.idade_inicial : "",
-          idadeFinal = row.idade_final ? row.idade_final : ""
-        const filtroInfo = `${idadeInicial} a ${idadeFinal} anos`
-        return (
-          <div className="d-flex justify-content-left align-items-center">
-            <div className="d-flex flex-column">
-              <Link to={`/filtro/${row.id}`} id={`pw-tooltip2-${row.id}`}>
-                <h6 className="user-name text-truncate mb-0">{nome}</h6>
-                <small className="text-truncate text-muted mb-0">
-                  {filtroInfo}
-                </small>
-              </Link>
-            </div>
-          </div>
-        )
-      },
-    },
-    {
-      name: "Data de criação",
-      minWidth: "80px",
-      sortable: true,
-      selector: (row) => row.data_criacao,
-      cell: (row) => {
-        const dataCriacao = row.data_criacao ? row.data_criacao : ""
-        return (
-          <div className="d-flex justify-content-left align-items-center">
-            <div className="d-flex flex-column">
-              <Link to={`/filtro/${row.id}`} id={`pw-tooltip2-${row.id}`}>
-                <h6 className="user-name text-truncate mb-0">
-                  {formatDateTime(dataCriacao)}
-                </h6>
-              </Link>
-            </div>
-          </div>
-        )
-      },
-    },
-    {
-      name: <div className="text-end w-100">Ações</div>,
-      minWidth: "80px",
-      cell: (row) => (
-        <div className="text-end w-100">
-          <div className="column-action d-inline-flex">
-            <Link to={`/filtro/${row.id}`} id={`pw-tooltip-${row.id}`}>
-              <Eye size={17} className="mx-1" />
-            </Link>
-
-            <UncontrolledTooltip
-              placement="top"
-              target={`pw-tooltip-${row.id}`}
-            >
-              Visualizar
-            </UncontrolledTooltip>
-            <UncontrolledDropdown>
-              <DropdownToggle tag="span">
-                <MoreVertical size={17} className="cursor-pointer" />
-              </DropdownToggle>
-              <DropdownMenu end>
-                <DropdownItem
-                  tag="a"
-                  href="/"
-                  className="w-100"
-                  onClick={(e) => {
-                    e.preventDefault()
-                    handleDeleteConfirmation(row)
-                  }}
-                >
-                  <Trash size={14} className="me-50" />
-                  <span className="align-middle">Remover</span>
-                </DropdownItem>
-              </DropdownMenu>
-            </UncontrolledDropdown>
-          </div>
-        </div>
-      ),
-    },
-  ]
 
   const CustomPagination = () => {
     const count = Math.ceil(store.total / rowsPerPage)
@@ -329,7 +231,7 @@ const FiltroList = () => {
     setSort(sortDirection)
     setSortColumn(column.sortField)
     dispatch(
-      getFiltros({
+      getPublicidade({
         q: value,
         page: currentPage,
         sort: sortDirection,
@@ -339,6 +241,143 @@ const FiltroList = () => {
       })
     )
   }
+
+  // ** Modal de exclusão
+  const handleDeleteConfirmation = (row) => {
+    return MySwal.fire({
+      title: "Tem certeza?",
+      text: "Sua ação não poderá ser revertida!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Sim, remover!",
+      cancelButtonText: "Cancelar",
+      customClass: {
+        confirmButton: "btn btn-primary",
+        cancelButton: "btn btn-outline-danger ms-1",
+        popup: "animate__animated animate__fadeIn",
+      },
+      hideClass: {
+        popup: "animate__animated animate__zoomOut",
+      },
+      buttonsStyling: false,
+    }).then((result) => {
+      if (result.value) {
+        api
+          .delete(`/publicidade/${row.id}`)
+          .then((response) => {
+            if (response.status === 200) {
+              handleFilter(store.params.q)
+
+              toast.success("Removido com sucesso!", {
+                position: "bottom-right",
+              })
+            }
+          })
+          .catch((error) => {
+            if (error.response.status === 400) {
+              handleError("Atenção!", "Não autorizado.", "warning")
+            } else if (error.response.status === 503) {
+              handleError("Ops...", error.response.data, "error")
+            } else {
+              handleError(
+                "Erro inesperado",
+                "Por favor, contate um administrador.",
+                "error"
+              )
+            }
+          })
+      }
+    })
+  }
+
+  // ** Table columns
+  const columns = [
+    {
+      name: "Nome",
+      minWidth: "450px",
+      sortable: true,
+      selector: (row) => row.nome,
+      cell: (row) => {
+        return (
+          <div className="d-flex justify-content-left align-items-center">
+            <div className="d-flex flex-column">
+              <Link to={`/publicidade/${row.id}`} id={`pw-tooltip2-${row.id}`}>
+                <h6 className="user-name text-truncate mb-0">
+                  {row?.nome ?? ""}
+                </h6>
+                <small className="text-truncate text-muted mb-0">
+                  {(row?.tipo ?? 1) === 1 ? "Imagem" : "Vídeo"}
+                </small>
+              </Link>
+            </div>
+          </div>
+        )
+      },
+    },
+    {
+      name: "Período",
+      minWidth: "200px",
+      sortable: true,
+      selector: (row) => row.data_inicial,
+      cell: (row) => {
+        return (
+          <div className="d-flex justify-content-left align-items-center">
+            <div className="d-flex flex-column">
+              <Link to={`/publicidade/${row.id}`} id={`pw-tooltip2-${row.id}`}>
+                <h6 className="user-name text-truncate mb-0">
+                  {formatDateTime(row?.data_inicial) ?? ""} -{" "}
+                  {formatDateTime(row?.data_final) ?? ""}
+                </h6>
+                <small className="text-truncate text-muted mb-0">
+                  {row.ativo ? <Badge color="success">Ativa</Badge> : null}{" "}
+                  {row.qtd_views ?? 0} visualizações
+                </small>
+              </Link>
+            </div>
+          </div>
+        )
+      },
+    },
+    {
+      name: <div className="text-end w-100">Ações</div>,
+      minWidth: "80px",
+      cell: (row) => (
+        <div className="text-end w-100">
+          <div className="column-action d-inline-flex">
+            <Link to={`/publicidade/${row.id}`} id={`pw-tooltip-${row.id}`}>
+              <Eye size={17} className="mx-1" />
+            </Link>
+
+            <UncontrolledTooltip
+              placement="top"
+              target={`pw-tooltip-${row.id}`}
+            >
+              Visualizar
+            </UncontrolledTooltip>
+            <UncontrolledDropdown>
+              <DropdownToggle tag="span">
+                <MoreVertical size={17} className="cursor-pointer" />
+              </DropdownToggle>
+              <DropdownMenu end>
+                <DropdownItem
+                  tag="a"
+                  href="/"
+                  className="w-100"
+                  onClick={(e) => {
+                    e.preventDefault()
+                    handleDeleteConfirmation(row)
+                  }}
+                >
+                  <Trash size={14} className="me-50" />
+                  <span className="align-middle">Remover</span>
+                </DropdownItem>
+              </DropdownMenu>
+            </UncontrolledDropdown>
+          </div>
+        </div>
+      ),
+    },
+  ]
 
   return vPesquisando ? (
     <div className="text-center">
@@ -379,4 +418,4 @@ const FiltroList = () => {
   )
 }
 
-export default FiltroList
+export default PublicidadeList
