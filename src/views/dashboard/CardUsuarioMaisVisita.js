@@ -48,7 +48,7 @@ const CardUsuarioMaisVisita = () => {
   return (
     <Card className="card-congratulations-medal">
       <CardBody>
-        <h6 className="mb-1">Usuário que mais te visitou:</h6>
+        <h5 className="mb-1">Usuário que mais te visitou:</h5>
 
         {!vProcessando ? (
           vDados?.qtd > 0 ? (

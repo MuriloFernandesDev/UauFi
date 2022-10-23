@@ -21,7 +21,6 @@ import {
 
 const CardNovosCad = (props) => {
   // ** State
-  const [vDados, setDados] = useState(null)
   const [vPeriodo, setPeriodo] = useState("mes")
   const [vProcessando, setProcessando] = useState(true)
   const [vOptions, setOptions] = useState(null)
@@ -31,10 +30,9 @@ const CardNovosCad = (props) => {
     setProcessando(true)
     setPeriodo(p)
     return api
-      .get(`/usuario/cadastro_comparativo/${p}`)
+      .get(`/usuario/cadastro_${p}`)
       .then((res) => {
         setProcessando(false)
-        setDados(res.data)
         setOptions({
           chart: {
             toolbar: { show: false },
@@ -51,6 +49,12 @@ const CardNovosCad = (props) => {
             show: false,
           },
           colors: ["#d0ccff", "#ebe9f1"],
+          dataLabels: {
+            enabled: true,
+            formatter(val) {
+              return new Intl.NumberFormat().format(val)
+            },
+          },
           fill: {
             type: "gradient",
             gradient: {
@@ -80,7 +84,7 @@ const CardNovosCad = (props) => {
             axisTicks: {
               show: false,
             },
-            categories: res.data[0]?.dados?.map(({ label }) => label),
+            categories: res.data?.map(({ label }) => label),
             axisBorder: {
               show: false,
             },
@@ -93,8 +97,9 @@ const CardNovosCad = (props) => {
                 colors: "#b9b9c3",
                 fontSize: "1rem",
               },
+              show: false,
               formatter(val) {
-                return val > 999 ? `${(val / 1000).toFixed(0)}k` : val
+                return new Intl.NumberFormat().format(val)
               },
             },
           },
@@ -107,20 +112,19 @@ const CardNovosCad = (props) => {
             },
           },
           tooltip: {
-            x: { show: false },
+            custom() {
+              return null
+            },
           },
         })
-        setSeries(
-          res.data.length > 0
-            ? res.data?.map(({ nome, dados }) => ({
-                name: nome,
-                data: dados?.map(({ value }) => value),
-              }))
-            : []
-        )
+        setSeries([
+          {
+            data:
+              res.data.length > 0 ? res.data?.map(({ value }) => value) : [],
+          },
+        ])
       })
       .catch(() => {
-        setDados(null)
         setSeries(null)
         setProcessando(false)
       })
@@ -129,26 +133,13 @@ const CardNovosCad = (props) => {
   useEffect(() => {
     // ** Requisitar lista
 
-    getDados("ano")
+    getDados("mes")
   }, [])
-
-  const renderTitulo = () => {
-    return vDados?.map(({ nome, total }) => {
-      return (
-        <div className="me-2" key={nome}>
-          <CardText className="mb-50">{nome}</CardText>
-          <h3 className="fw-bolder">
-            <span className="text-primary">{total}</span>
-          </h3>
-        </div>
-      )
-    })
-  }
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle tag="h4">Novos cadastros</CardTitle>
+        <CardTitle tag="h5">Novos cadastros</CardTitle>
         <ButtonGroup>
           <Button
             color="primary"
@@ -170,8 +161,10 @@ const CardNovosCad = (props) => {
       </CardHeader>
 
       <CardBody>
-        <div className="d-flex justify-content-start mb-2">
-          {renderTitulo()}
+        <div className="d-flex justify-content-start mb-0">
+          <CardText className="mb-50">
+            Últimos {vPeriodo === "mes" ? "12 meses" : "10 anos"}
+          </CardText>
         </div>
         {!vProcessando ? (
           vOptions && vSeries ? (

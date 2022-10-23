@@ -86,7 +86,7 @@ const CardGeneros = (props) => {
   return (
     <Card>
       <CardHeader className="d-flex justify-content-between align-items-sm-center align-items-start flex-sm-row flex-column">
-        <CardTitle tag="h4">Usuários por gênero</CardTitle>
+        <CardTitle tag="h5">Usuários por gênero</CardTitle>
       </CardHeader>
       <CardBody>
         <div style={{ height: "275px" }}>

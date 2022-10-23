@@ -5,7 +5,7 @@ import { Link } from "react-router-dom"
 import Avatar from "@components/avatar"
 
 // ** Reactstrap Imports
-import { Table, Card } from "reactstrap"
+import { Table, Card, Spinner } from "reactstrap"
 
 import { useEffect, useState } from "react"
 
@@ -21,6 +21,7 @@ import api from "@src/services/api"
 const CompanyTable = () => {
   // ** States
   const [vDados, setDados] = useState(null)
+  const [vProcessando, setProcessando] = useState(true)
 
   // const vTimeoutPesquisa = useRef()
 
@@ -30,12 +31,15 @@ const CompanyTable = () => {
     // }
     // vTimeoutPesquisa.current = setTimeout(
     //   () => {
+    setProcessando(true)
     return api
       .get("/usuario/ultimas_conexoes")
       .then((res) => {
+        setProcessando(false)
         setDados(res.data)
       })
       .catch(() => {
+        setProcessando(false)
         setDados(null)
       })
     //   },
@@ -101,7 +105,17 @@ const CompanyTable = () => {
           <tr>
             <th>Últimos usuários conectados</th>
             <th>Dispositivo</th>
-            <th>Conexão</th>
+            <th>
+              Conexão
+              {vProcessando ? (
+                <Spinner
+                  type="grow"
+                  size="sm"
+                  color="primary"
+                  className="ms-1"
+                />
+              ) : null}
+            </th>
           </tr>
         </thead>
         <tbody>{renderData()}</tbody>

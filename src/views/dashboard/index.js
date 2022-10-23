@@ -13,7 +13,7 @@ import CardPlataforma from "./CardPlataforma"
 import CardUsuarioMaisVisita from "./CardUsuarioMaisVisita"
 import CardQuantidades from "./CardQuantidades"
 import CardNovosCad from "./CardNovosCad"
-import CardVisitasMes from "./CardVisitasMes"
+import CardFaixaEtaria from "./CardFaixaEtaria"
 import CardGeneros from "./CardGeneros"
 
 // ** Styles
@@ -41,7 +41,7 @@ const EcommerceDashboard = () => {
         <Col lg="4" md="12">
           <Row className="match-height">
             <Col lg="12" md="6">
-              <CardVisitasMes />
+              <CardFaixaEtaria />
             </Col>
             <Col lg="12" md="6">
               <CardPlataforma />
