@@ -9,7 +9,7 @@ import { ThemeColors } from "@src/utility/context/ThemeColors"
 
 // ** Demo Components
 import CardUltimosUsuarios from "./CardUltimosUsuarios"
-import Plataforma from "./Plataforma"
+import CardPlataforma from "./CardPlataforma"
 import CardUsuarioMaisVisita from "./CardUsuarioMaisVisita"
 import CardQuantidades from "./CardQuantidades"
 import CardNovosCad from "./CardNovosCad"
@@ -30,25 +30,25 @@ const EcommerceDashboard = () => {
   return (
     <div id="dashboard-ecommerce">
       <Row className="match-height">
-        <Col xl="4" md="6" xs="12">
+        <Col xl="4" md="6">
           <CardUsuarioMaisVisita />
         </Col>
-        <Col xl="8" md="6" xs="12">
+        <Col xl="8" md="6">
           <CardQuantidades cols={{ xl: "3", sm: "6" }} />
         </Col>
       </Row>
       <Row className="match-height">
         <Col lg="4" md="12">
           <Row className="match-height">
-            <Col lg="12" md="6" xs="12">
+            <Col lg="12" md="6">
               <CardVisitasMes />
             </Col>
-            <Col lg="12" md="6" xs="12">
-              <Plataforma />
+            <Col lg="12" md="6">
+              <CardPlataforma />
             </Col>
           </Row>
         </Col>
-        <Col lg="8" md="12">
+        <Col lg="8">
           <CardNovosCad
             primary={colors.primary.main}
             warning={colors.warning.main}
@@ -56,10 +56,10 @@ const EcommerceDashboard = () => {
         </Col>
       </Row>
       <Row className="match-height">
-        <Col lg="8" xs="12">
+        <Col lg="8">
           <CardUltimosUsuarios />
         </Col>
-        <Col lg="4" md="6" xs="12">
+        <Col lg="4">
           <CardGeneros />
         </Col>
       </Row>

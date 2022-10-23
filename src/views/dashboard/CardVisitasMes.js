@@ -106,7 +106,9 @@ const CardVisitasMes = () => {
         />
       </CardHeader>
       {!vProcessando ? (
-        <Chart options={vOptions} series={vSeries} type="area" height={100} />
+        vOptions && vSeries ? (
+          <Chart options={vOptions} series={vSeries} type="area" height={100} />
+        ) : null
       ) : (
         <div className="d-flex justify-content-center text-center align-items-center h-100 m-3">
           <Spinner type="grow" size="md" color="primary" />

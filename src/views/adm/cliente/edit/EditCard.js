@@ -1,6 +1,6 @@
 // ** React
 import { Fragment, useEffect, useState } from "react"
-import { useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 
 // ** Reactstrap
 import {
@@ -18,8 +18,11 @@ import {
   NavLink,
 } from "reactstrap"
 
+// ** Default Imagem
+import defaultImagem from "@src/assets/images/pages/semfoto.png"
+
 // ** Icons
-import { CornerUpLeft, Check } from "react-feather"
+import { CornerUpLeft, Check, Trash } from "react-feather"
 
 // ** Terceiros
 import Cleave from "cleave.js/react"
@@ -75,10 +78,6 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
   const [vListaAgregadores, setListaAgregadores] = useState(null)
 
   // Captive Portal
-  const [vLogoCP, setLogoCP] = useState(data?.dados_captive[0]?.logo_captive)
-  const [vImagemFundoCP, setImagemFundoCP] = useState(
-    data?.dados_captive[0]?.imagem_fundo
-  )
   const [vTipoLayout, setTipoLayout] = useState(null)
   const [vTipoIntegracao, setTipoIntegracao] = useState(null)
   const [varDadosIntegracao1, setVarDadosIntegracao1] = useState("")
@@ -219,20 +218,17 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
     reader.readAsDataURL(files[0])
   }
 
-  const onChangeLogoCP = (e) => {
+  const onChangeImagemCP = (e) => {
     const reader = new FileReader(),
-      files = e.target.files
+      files = e.target.files,
+      vName = e.target.name
     reader.onload = function () {
-      setLogoCP(reader.result)
-    }
-    reader.readAsDataURL(files[0])
-  }
-
-  const onChangeImagemFundoCP = (e) => {
-    const reader = new FileReader(),
-      files = e.target.files
-    reader.onload = function () {
-      setImagemFundoCP(reader.result)
+      handleChangeCP({
+        target: {
+          name: vName,
+          value: reader.result,
+        },
+      })
     }
     reader.readAsDataURL(files[0])
   }
@@ -352,7 +348,7 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
               <TabPane tabId="1">
                 <Card className="mb-0">
                   <Row>
-                    <Col lg="6">
+                    <Col lg="5">
                       <Row>
                         <Col className="mb-2" sm="12">
                           <div className="border rounded p-2">
@@ -360,7 +356,11 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                             <div className="d-flex flex-column flex-md-row">
                               <img
                                 className="me-2 mb-1 mb-md-0 img-fluid img-proporcional"
-                                src={vDados?.logo}
+                                src={
+                                  vDados?.logo?.length > 0
+                                    ? vDados?.logo
+                                    : defaultImagem
+                                }
                                 alt="Logotipo"
                                 width="100"
                                 height="100"
@@ -375,12 +375,34 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                                 </div>
                                 <div className="d-inline-block">
                                   <div className="mb-0">
-                                    <Input
-                                      type="file"
-                                      name="logo"
-                                      onChange={onChangeImagem}
-                                      accept=".jpg, .jpeg, .png, .gif, .webp"
-                                    />
+                                    <Button
+                                      tag={Label}
+                                      className="me-75"
+                                      size="sm"
+                                      color="secondary"
+                                      outline
+                                    >
+                                      Selecionar imagem
+                                      <Input
+                                        type="file"
+                                        name="logo"
+                                        onChange={onChangeImagem}
+                                        hidden
+                                        accept=".jpg, .jpeg, .png, .gif, .webp"
+                                      />
+                                    </Button>
+                                    <Link
+                                      to="/"
+                                      className="text-body"
+                                      onClick={(e) => {
+                                        e.preventDefault()
+                                        handleChange({
+                                          target: { name: "logo", value: null },
+                                        })
+                                      }}
+                                    >
+                                      <Trash className="font-medium-3 text-danger cursor-pointer" />
+                                    </Link>
                                   </div>
                                 </div>
                               </div>
@@ -389,7 +411,7 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                         </Col>
                       </Row>
                     </Col>
-                    <Col lg="6">
+                    <Col lg="7">
                       <Row>
                         <Col md="12" className="mb-2">
                           <Label className="form-label" for="nome">
@@ -725,7 +747,11 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                           <div className="d-flex flex-column flex-md-row">
                             <img
                               className="me-2 mb-1 mb-md-0 img-fluid img-proporcional"
-                              src={vLogoCP}
+                              src={
+                                vDadosCP?.logo_captive?.length > 0
+                                  ? vDadosCP?.logo_captive
+                                  : defaultImagem
+                              }
                               alt="Logotipo"
                               width="100"
                               height="100"
@@ -740,13 +766,37 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                               </div>
                               <div className="d-inline-block">
                                 <div className="mb-0">
-                                  <Input
-                                    type="file"
-                                    id="vLogoCP"
-                                    name="vLogoCP"
-                                    onChange={onChangeLogoCP}
-                                    accept=".jpg, .jpeg, .png, .gif, .webp"
-                                  />
+                                  <Button
+                                    tag={Label}
+                                    className="me-75"
+                                    size="sm"
+                                    color="secondary"
+                                    outline
+                                  >
+                                    Selecionar imagem
+                                    <Input
+                                      type="file"
+                                      name="logo_captive"
+                                      onChange={onChangeImagemCP}
+                                      hidden
+                                      accept=".jpg, .jpeg, .png, .gif, .webp"
+                                    />
+                                  </Button>
+                                  <Link
+                                    to="/"
+                                    className="text-body"
+                                    onClick={(e) => {
+                                      e.preventDefault()
+                                      handleChangeCP({
+                                        target: {
+                                          name: "logo_captive",
+                                          value: null,
+                                        },
+                                      })
+                                    }}
+                                  >
+                                    <Trash className="font-medium-3 text-danger cursor-pointer" />
+                                  </Link>
                                 </div>
                               </div>
                             </div>
@@ -759,7 +809,11 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                           <div className="d-flex flex-column flex-md-row">
                             <img
                               className="me-2 mb-1 mb-md-0 img-fluid img-proporcional"
-                              src={vImagemFundoCP}
+                              src={
+                                vDadosCP?.imagem_fundo?.length > 0
+                                  ? vDadosCP?.imagem_fundo
+                                  : defaultImagem
+                              }
                               alt="Imagem de fundo"
                               width="100"
                               height="100"
@@ -774,13 +828,37 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                               </div>
                               <div className="d-inline-block">
                                 <div className="mb-0">
-                                  <Input
-                                    type="file"
-                                    id="vImagemFundoCP"
-                                    name="vImagemFundoCP"
-                                    onChange={onChangeImagemFundoCP}
-                                    accept=".jpg, .jpeg, .png, .gif, .webp"
-                                  />
+                                  <Button
+                                    tag={Label}
+                                    className="me-75"
+                                    size="sm"
+                                    color="secondary"
+                                    outline
+                                  >
+                                    Selecionar imagem
+                                    <Input
+                                      type="file"
+                                      name="imagem_fundo"
+                                      onChange={onChangeImagemCP}
+                                      hidden
+                                      accept=".jpg, .jpeg, .png, .gif, .webp"
+                                    />
+                                  </Button>
+                                  <Link
+                                    to="/"
+                                    className="text-body"
+                                    onClick={(e) => {
+                                      e.preventDefault()
+                                      handleChangeCP({
+                                        target: {
+                                          name: "imagem_fundo",
+                                          value: null,
+                                        },
+                                      })
+                                    }}
+                                  >
+                                    <Trash className="font-medium-3 text-danger cursor-pointer" />
+                                  </Link>
                                 </div>
                               </div>
                             </div>

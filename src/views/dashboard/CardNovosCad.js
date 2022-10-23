@@ -121,6 +121,7 @@ const CardNovosCad = (props) => {
       })
       .catch(() => {
         setDados(null)
+        setSeries(null)
         setProcessando(false)
       })
   }
@@ -173,7 +174,14 @@ const CardNovosCad = (props) => {
           {renderTitulo()}
         </div>
         {!vProcessando ? (
-          <Chart options={vOptions} series={vSeries} type="line" height={195} />
+          vOptions && vSeries ? (
+            <Chart
+              options={vOptions}
+              series={vSeries}
+              type="line"
+              height={195}
+            />
+          ) : null
         ) : (
           <div className="d-flex justify-content-center text-center align-items-center h-100">
             <Spinner type="grow" size="md" color="primary" />

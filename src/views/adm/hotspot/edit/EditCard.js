@@ -24,7 +24,12 @@ import { CornerUpLeft, Check } from "react-feather"
 // ** Terceiros
 import Select from "react-select"
 
+// ** Utils
+import { getUserData } from "@utils"
+
 import { getClientes, getMarcas } from "../store"
+
+const vUserData = getUserData()
 
 const HotspotEditCard = ({ data, setSalvarDados }) => {
   const navigate = useNavigate()
@@ -37,6 +42,9 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
   const [vListaMarcas, setListaMarcas] = useState(null)
 
   const [active, setActive] = useState("1")
+
+  // ** Bloquear ações de onChange
+  const blockChange = () => {}
 
   const handleChange = (e) => {
     const { name, value } = e.target
@@ -151,7 +159,47 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
                         onChange={handleChange}
                       />
                     </Col>
-                    <Col md="6" className="mb-2">
+                    <Col md="3" className="mb-2">
+                      <Label className="form-label" for="marca_equipamento">
+                        Marca da controladora
+                      </Label>
+                      <Select
+                        id="marca_equipamento"
+                        noOptionsMessage={() => "Vazio"}
+                        placeholder={"Selecione..."}
+                        className="react-select"
+                        classNamePrefix="select"
+                        value={vMarca}
+                        onChange={(e) => {
+                          setMarca(e)
+                          handleChange({
+                            target: {
+                              name: "marca_equipamento",
+                              value: e.value,
+                            },
+                          })
+                        }}
+                        options={vListaMarcas}
+                      />
+                    </Col>
+                    <Col md="3" className="mb-2">
+                      <Label className="form-label" for="hash">
+                        Hash / Licença
+                      </Label>
+                      <Input
+                        id="hash"
+                        name="hash"
+                        disabled={data.id > 0}
+                        value={vDados?.hash ?? ""}
+                        onChange={
+                          data.id > 0 ? blockChange : (e) => handleChange(e)
+                        }
+                      />
+                    </Col>
+                    <Col
+                      md={vUserData.perfil === "adm" ? "6" : "9"}
+                      className="mb-2"
+                    >
                       <Label className="form-label" for="cliente_id">
                         Cliente
                       </Label>
@@ -175,41 +223,8 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
                         }}
                       />
                     </Col>
-                    <Col md="4" className="mb-2">
-                      <Label className="form-label" for="marca_equipamento">
-                        Marca da controladora
-                      </Label>
-                      <Select
-                        id="marca_equipamento"
-                        noOptionsMessage={() => "Vazio"}
-                        placeholder={"Selecione..."}
-                        className="react-select"
-                        classNamePrefix="select"
-                        value={vMarca}
-                        onChange={(e) => {
-                          setMarca(e)
-                          handleChange({
-                            target: {
-                              name: "marca_equipamento",
-                              value: e.value,
-                            },
-                          })
-                        }}
-                        options={vListaMarcas}
-                      />
-                    </Col>
-                    <Col md="4" className="mb-2">
-                      <Label className="form-label" for="hash">
-                        Hash / Licença
-                      </Label>
-                      <Input
-                        id="hash"
-                        name="hash"
-                        value={vDados?.hash ?? ""}
-                        onChange={handleChange}
-                      />
-                    </Col>
-                    <Col md="4" className="mb-2">
+
+                    <Col md="3" className="mb-2">
                       <Label className="form-label" for="mac">
                         MAC
                       </Label>
@@ -221,6 +236,23 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
                         onChange={handleChange}
                       />
                     </Col>
+                    {vUserData.perfil === "adm" ? (
+                      <Col md="3" className="mb-2">
+                        <Label className="form-label" for="id">
+                          ID do Hotspot
+                        </Label>
+                        <Input
+                          id="id"
+                          name="id"
+                          type="number"
+                          disabled={data.id > 0}
+                          value={vDados?.id ?? ""}
+                          onChange={
+                            data.id > 0 ? blockChange : (e) => handleChange(e)
+                          }
+                        />
+                      </Col>
+                    ) : null}
                     <Col md="3" className="mb-2">
                       <Label className="form-label" for="ip">
                         IP de liberação
@@ -268,44 +300,44 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
                         onChange={handleChange}
                       />
                     </Col>
-
-                    <Col md="4" className="mb-2">
-                      <Label className="form-label" for="radius_usu">
-                        Usuário RADIUS
-                      </Label>
-                      <Input
-                        id="radius_usu"
-                        name="radius_usu"
-                        value={vDados?.radius_usu ?? ""}
-                        onChange={handleChange}
-                      />
+                    <Col md="6" className="mb-2 pt-md-2">
+                      <div className="form-check form-switch">
+                        <Input
+                          type="switch"
+                          id="usa_radius"
+                          checked={vDados?.usa_radius ?? false}
+                          onChange={(e) => {
+                            handleChange({
+                              target: {
+                                name: "usa_radius",
+                                value: e.target.checked,
+                              },
+                            })
+                          }}
+                        />
+                        <Label
+                          for="usa_radius"
+                          className="form-check-label mt-25"
+                        >
+                          Utilizar servidor RADIUS
+                        </Label>
+                      </div>
                     </Col>
-                    <Col md="4" className="mb-2">
-                      <Label className="form-label" for="radius_pwd">
-                        Senha RADIUS
-                      </Label>
-                      <Input
-                        id="radius_pwd"
-                        name="radius_pwd"
-                        type="password"
-                        autoComplete="new-password"
-                        value={vDados?.radius_pwd ?? ""}
-                        onChange={handleChange}
-                      />
-                    </Col>
-                    <Col md="4" className="mb-2">
-                      <Label className="form-label" for="radius_secret">
-                        Secret RADIUS
-                      </Label>
-                      <Input
-                        id="radius_secret"
-                        name="radius_secret"
-                        type="password"
-                        autoComplete="new-password"
-                        value={vDados?.radius_secret ?? ""}
-                        onChange={handleChange}
-                      />
-                    </Col>
+                    {vDados?.usa_radius ? (
+                      <Col md="6" className="mb-2">
+                        <Label className="form-label" for="radius_secret">
+                          Secret RADIUS
+                        </Label>
+                        <Input
+                          id="radius_secret"
+                          name="radius_secret"
+                          type="password"
+                          autoComplete="new-password"
+                          value={vDados?.radius_secret ?? ""}
+                          onChange={handleChange}
+                        />
+                      </Col>
+                    ) : null}
                   </Row>
                 </Card>
               </TabPane>

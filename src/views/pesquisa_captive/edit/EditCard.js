@@ -432,7 +432,7 @@ const PlanoEditCard = ({ data, setSalvarDados }) => {
                       for="multipla_escolha"
                       className="form-check-label mt-25"
                     >
-                      Múltipla escolha
+                      Permitir que o usuário selecione mais de uma opção
                     </Label>
                   </div>
                 </Col>

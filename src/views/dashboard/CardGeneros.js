@@ -91,7 +91,9 @@ const CardGeneros = (props) => {
       <CardBody>
         <div style={{ height: "275px" }}>
           {!vProcessando ? (
-            <Doughnut data={vSeries} options={vOptions} height={275} />
+            vOptions && vSeries ? (
+              <Doughnut data={vSeries} options={vOptions} height={275} />
+            ) : null
           ) : (
             <div className="d-flex justify-content-center text-center align-items-center h-100">
               <Spinner type="grow" size="md" color="primary" />

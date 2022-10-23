@@ -37,7 +37,7 @@ import "@styles/react/libs/tables/react-dataTable-component.scss"
 import Swal from "sweetalert2"
 import withReactContent from "sweetalert2-react-content"
 import toast from "react-hot-toast"
-import { formatDateTime } from "@utils"
+import { formatDate } from "@utils"
 
 const MySwal = withReactContent(Swal)
 
@@ -325,8 +325,8 @@ const PublicidadeList = () => {
             <div className="d-flex flex-column">
               <Link to={`/publicidade/${row.id}`} id={`pw-tooltip2-${row.id}`}>
                 <h6 className="user-name text-truncate mb-0">
-                  {formatDateTime(row?.data_inicial) ?? ""} -{" "}
-                  {formatDateTime(row?.data_final) ?? ""}
+                  {formatDate(row?.data_inicial) ?? ""} -{" "}
+                  {formatDate(row?.data_final) ?? ""}
                 </h6>
                 <small className="text-truncate text-muted mb-0">
                   {row.ativo ? <Badge color="success">Ativa</Badge> : null}{" "}

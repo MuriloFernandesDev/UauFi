@@ -1,15 +1,17 @@
 // ** React
 import { Fragment, useEffect, useState } from "react"
-import { useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 
 // ** Reactstrap
 import { Row, Col, Card, Input, Button, Label, Table } from "reactstrap"
 
 // ** Icons
-import { CornerUpLeft, Check } from "react-feather"
+import { CornerUpLeft, Check, Trash } from "react-feather"
+
+// ** Default Imagem
+import defaultImagem from "@src/assets/images/avatars/avatar-blank.png"
 
 // ** Terceiros
-import "cleave.js/dist/addons/cleave-phone.br"
 import Select from "react-select"
 
 // ** API
@@ -178,7 +180,7 @@ const ClienteLoginEditCard = ({ data, setSalvarDados }) => {
         <Card className="p-2 pb-0">
           <Fragment>
             <Row>
-              <Col lg="6">
+              <Col lg="5">
                 <Row>
                   <Col className="mb-2" sm="12">
                     <div className="border rounded p-2">
@@ -186,7 +188,11 @@ const ClienteLoginEditCard = ({ data, setSalvarDados }) => {
                       <div className="d-flex flex-column flex-md-row">
                         <img
                           className="me-2 mb-1 mb-md-0 img-fluid img-proporcional"
-                          src={vDados?.foto}
+                          src={
+                            vDados?.foto?.length > 0
+                              ? vDados?.foto
+                              : defaultImagem
+                          }
                           alt="Foto"
                           width="100"
                           height="100"
@@ -201,12 +207,34 @@ const ClienteLoginEditCard = ({ data, setSalvarDados }) => {
                           </div>
                           <div className="d-inline-block">
                             <div className="mb-0">
-                              <Input
-                                type="file"
-                                name="foto"
-                                onChange={onChangeImagem}
-                                accept=".jpg, .jpeg, .png, .gif, .webp"
-                              />
+                              <Button
+                                tag={Label}
+                                className="me-75"
+                                size="sm"
+                                color="secondary"
+                                outline
+                              >
+                                Selecionar imagem
+                                <Input
+                                  type="file"
+                                  name="foto"
+                                  onChange={onChangeImagem}
+                                  hidden
+                                  accept=".jpg, .jpeg, .png, .gif, .webp"
+                                />
+                              </Button>
+                              <Link
+                                to="/"
+                                className="text-body"
+                                onClick={(e) => {
+                                  e.preventDefault()
+                                  handleChange({
+                                    target: { name: "foto", value: null },
+                                  })
+                                }}
+                              >
+                                <Trash className="font-medium-3 text-danger cursor-pointer" />
+                              </Link>
                             </div>
                           </div>
                         </div>
@@ -215,7 +243,7 @@ const ClienteLoginEditCard = ({ data, setSalvarDados }) => {
                   </Col>
                 </Row>
               </Col>
-              <Col lg="6">
+              <Col lg="7">
                 <Row>
                   <Col md="12" className="mb-2">
                     <Label className="form-label" for="nome">

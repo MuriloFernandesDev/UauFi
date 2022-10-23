@@ -1,37 +1,21 @@
 // ** React
 import { Fragment, useEffect, useState } from "react"
-import { useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 
 // ** Reactstrap
-import { Row, Col, Card, Input, Button, Label } from "reactstrap"
+import { Row, Col, Card, Input, Button, Label, CardImg } from "reactstrap"
 
 // ** Icons
-import { CornerUpLeft, Check } from "react-feather"
+import { CornerUpLeft, Check, Trash } from "react-feather"
 
 // ** Terceiros
 import Select from "react-select"
 import "@styles/react/libs/flatpickr/flatpickr.scss"
 import { getHotspot } from "../store"
 
-const vListaUnidadeTempo = [
-  { value: "m", label: "Minuto(s)" },
-  { value: "h", label: "Hora(s)" },
-  { value: "d", label: "Dia(s)" },
-]
-
-const vListaTipoPlano = [
-  {
-    value: 1,
-    label: "Visitante",
-  },
-  {
-    value: 2,
-    label: "Hóspede / Cliente",
-  },
-  {
-    value: 3,
-    label: "Evento",
-  },
+const vListaTipo = [
+  { value: 1, label: "Imagem" },
+  { value: 2, label: "Vídeo" },
 ]
 
 const PublicidadeEditCard = ({ data, setSalvarDados }) => {
@@ -41,19 +25,9 @@ const PublicidadeEditCard = ({ data, setSalvarDados }) => {
   const [vDados, setData] = useState(data)
   const [vListaHotspots, setListaHotspots] = useState(null)
   const [vHotspot, setHotspot] = useState(null)
-  const [vUnidade, setUnidade] = useState(
-    data?.unidade_tempo
-      ? vListaUnidadeTempo.filter(
-          (item) => item.value === data.unidade_tempo
-        )[0]
-      : null
+  const [vTipo, setTipo] = useState(
+    data?.tipo ? vListaTipo.filter((item) => item.value === data.tipo)[0] : null
   )
-  const [vTipoAcesso, setTipoAcesso] = useState(
-    data?.tipo_plano_id
-      ? vListaTipoPlano.filter((item) => item.value === data.tipo_plano_id)[0]
-      : null
-  )
-  let hotspotsVar
 
   // ** Organização da informação
   const handleChange = (e) => {
@@ -66,16 +40,127 @@ const PublicidadeEditCard = ({ data, setSalvarDados }) => {
 
   const handleHotspots = () => {
     getHotspot().then((res) => {
-      hotspotsVar = res
+      const hotspotsVar = res
       setListaHotspots(hotspotsVar)
 
-      if (vDados?.id !== undefined) {
-        hotspotsVar?.map((res) => {
-          if (res.value === vDados.hotspot_id) {
-            setHotspot({ value: res.value, label: res.label })
-          }
-        })
+      //Selecionar o item no componente
+      if (data?.extra_hotspot_id) {
+        const vHotspotArray = data?.extra_hotspot_id
+          ?.split(",")
+          .map((item) => parseInt(item))
+        setHotspot(
+          hotspotsVar
+            ?.filter((item) => vHotspotArray?.includes(item.value))
+            .map((ret) => ({
+              label: ret.label,
+              value: ret.value,
+            }))
+        )
       }
+    })
+  }
+
+  const handleChangeItem = (e, i) => {
+    const reader = new FileReader(),
+      files = e.target.files,
+      vI = i
+    reader.onload = function () {
+      const { propaganda_item: vItem } = vDados
+      vItem[vI] = {
+        ...vItem[vI],
+        item_path: reader.result,
+      }
+      setData((prevState) => ({
+        ...prevState,
+        propaganda_item: vItem,
+      }))
+    }
+    reader.readAsDataURL(files[0])
+  }
+
+  const handleRemoveItem = (index) => {
+    setData((prevState) => {
+      return {
+        ...prevState,
+        propaganda_item: [
+          ...prevState.propaganda_item.slice(0, index),
+          ...prevState.propaganda_item.slice(index + 1),
+        ],
+      }
+    })
+  }
+
+  const handleAddItem = (e) => {
+    const reader = new FileReader(),
+      files = e.target.files
+    reader.onload = function () {
+      setData((prevState) => {
+        return {
+          ...prevState,
+          propaganda_item: [
+            ...prevState.propaganda_item,
+            {
+              id: 0,
+              item_path: reader.result,
+            },
+          ],
+        }
+      })
+    }
+    reader.readAsDataURL(files[0])
+  }
+
+  const renderItens = () => {
+    return vDados?.propaganda_item.map((item, index) => {
+      return (
+        <Col key={`${item.id}-${index}`} className="mb-2" md="3">
+          <div className="border rounded">
+            <CardImg
+              className="img-fluid"
+              src={
+                item?.item_path?.length > 0 ? item?.item_path : defaultImagem
+              }
+              alt="Mídia"
+              top
+            />
+            <div className="m-0">
+              <div className="d-flex justify-content-between align-items-center">
+                <div>
+                  <Button
+                    tag={Label}
+                    size="sm"
+                    className="m-1"
+                    color="secondary"
+                    outline
+                  >
+                    Trocar mídia
+                    <Input
+                      type="file"
+                      name="item_path"
+                      indice={index}
+                      onChange={(e) => {
+                        handleChangeItem(e, index)
+                      }}
+                      hidden
+                      accept=".jpg, .jpeg, .png, .gif, .webp"
+                    />
+                  </Button>
+                </div>
+                <Link
+                  to="/"
+                  className="text-body m-1"
+                  onClick={(e) => {
+                    e.preventDefault()
+                    handleRemoveItem(index)
+                  }}
+                >
+                  <Trash className="font-medium-3 text-danger cursor-pointer" />
+                </Link>
+              </div>
+            </div>
+          </div>
+        </Col>
+      )
     })
   }
 
@@ -132,121 +217,133 @@ const PublicidadeEditCard = ({ data, setSalvarDados }) => {
                 </Col>
 
                 <Col md="6" className="mb-2">
-                  <Label className="form-label" for="hotspot_id">
-                    Selecione um Hotspot
+                  <Label className="form-label" for="extra_hotspot_id">
+                    Selecione o(s) Hotspot(s)
                   </Label>
                   <Select
                     isClearable
-                    id="hotspot_id"
+                    id="extra_hotspot_id"
                     noOptionsMessage={() => "Vazio"}
-                    placeholder={"Selecione..."}
-                    value={vHotspot}
-                    options={vListaHotspots}
-                    isDisabled={vDados.id === 0 && vDados.hotspot_id > 0}
+                    isMulti
+                    placeholder={""}
                     className="react-select"
                     classNamePrefix="select"
+                    value={vHotspot}
                     onChange={(e) => {
                       setHotspot(e)
                       handleChange({
                         target: {
-                          name: "hotspot_id",
-                          value: Number(e?.value),
+                          name: "extra_hotspot_id",
+                          value: e
+                            ?.map((item) => item.value.toString())
+                            .toString(),
                         },
                       })
                     }}
+                    options={vListaHotspots}
                   />
                 </Col>
-
-                <Col md="6" className="mb-2">
-                  <Label className="form-label" for="mega_download">
-                    Velocidade de download (Mbps)
+                <Col md="3" className="mb-2">
+                  <Label className="form-label" for="data_inicial">
+                    Data Inicial
                   </Label>
                   <Input
-                    id="mega_download"
-                    name="mega_download"
-                    type="number"
-                    placeholder="Mbps"
-                    value={vDados?.mega_download ?? ""}
+                    id="data_inicial"
+                    name="data_inicial"
+                    type="date"
+                    value={vDados?.data_inicial ?? ""}
+                    onChange={handleChange}
+                  />
+                </Col>
+                <Col md="3" className="mb-2">
+                  <Label className="form-label" for="data_final">
+                    Data Final
+                  </Label>
+                  <Input
+                    id="data_final"
+                    name="data_final"
+                    type="date"
+                    value={vDados?.data_final ?? ""}
                     onChange={handleChange}
                   />
                 </Col>
 
-                <Col md="6" className="mb-2">
-                  <Label className="form-label" for="mega_upload">
-                    Velocidade de upload (Mbps)
+                <Col md="3" className="mb-2">
+                  <Label className="form-label" for="duracao">
+                    Tempo de exibição (segundos)
                   </Label>
                   <Input
-                    id="mega_upload"
-                    name="mega_upload"
+                    id="duracao"
+                    name="duracao"
                     type="number"
-                    placeholder="Mbps"
-                    value={vDados?.mega_upload ?? ""}
+                    placeholder="Segundos"
+                    value={vDados?.duracao ?? ""}
                     onChange={handleChange}
                   />
                 </Col>
 
-                <Col md="4" className="mb-2">
-                  <Label className="form-label" for="tempo">
-                    Timeout da conexão
-                  </Label>
-                  <Input
-                    id="tempo"
-                    name="tempo"
-                    type="number"
-                    value={vDados?.tempo ?? ""}
-                    onChange={handleChange}
-                  />
-                </Col>
-
-                <Col md="4" className="mb-2">
-                  <Label className="form-label" for="unidade_tempo">
-                    Unidade de tempo do timeout
+                <Col md="3" className="mb-2">
+                  <Label className="form-label" for="tipo">
+                    Tipo de mídia
                   </Label>
                   <Select
-                    isClearable
-                    id="unidade_tempo"
+                    id="tipo"
                     noOptionsMessage={() => "Vazio"}
                     placeholder={"Selecione..."}
                     className="react-select"
                     classNamePrefix="select"
-                    value={vUnidade}
-                    options={vListaUnidadeTempo}
+                    value={vTipo}
+                    options={vListaTipo}
                     onChange={(e) => {
-                      setUnidade(e)
+                      setTipo(e)
                       handleChange({
                         target: {
-                          name: "unidade_tempo",
+                          name: "tipo",
                           value: e?.value,
                         },
                       })
                     }}
                   />
                 </Col>
-
-                <Col md="4" className="mb-2">
-                  <Label className="form-label" for="tipo_plano_id">
-                    Tipo do plano
-                  </Label>
-                  <Select
-                    isClearable
-                    noOptionsMessage={() => "Vazio"}
-                    id="tipo_plano_id"
-                    placeholder={"Selecione..."}
-                    className="react-select"
-                    classNamePrefix="select"
-                    value={vTipoAcesso}
-                    options={vListaTipoPlano}
-                    onChange={(e) => {
-                      setTipoAcesso(e)
-                      handleChange({
-                        target: {
-                          name: "tipo_plano_id",
-                          value: Number(e?.value),
-                        },
-                      })
-                    }}
-                  />
-                </Col>
+                {renderItens()}
+                {(vDados?.tipo === 2 &&
+                  vDados?.propaganda_item?.length === 0) ||
+                vDados?.tipo === 1 ? (
+                  <Col className="mb-2" md="3">
+                    <div className="border rounded p-2 text-center">
+                      <div className="d-flex flex-column">
+                        <div>
+                          <div className="mb-1">
+                            <small className="text-muted">
+                              Resolução recomendada: 800x500px.
+                              <br />
+                              Tamanho máximo: 5mb.
+                            </small>
+                          </div>
+                          <div className="d-inline-block">
+                            <div className="mb-0">
+                              <Button
+                                tag={Label}
+                                className="me-75"
+                                size="sm"
+                                color="secondary"
+                                outline
+                              >
+                                Adicionar mídia
+                                <Input
+                                  type="file"
+                                  onChange={handleAddItem}
+                                  hidden
+                                  accept=".jpg, .jpeg, .png, .gif, .webp"
+                                />
+                              </Button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </Col>
+                ) : null}
 
                 <Col md="12" className="mb-2">
                   <div className="form-check form-switch">
