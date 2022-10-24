@@ -138,8 +138,8 @@ const CardNovosCad = (props) => {
 
   return (
     <Card>
-      <CardHeader>
-        <CardTitle tag="h5">Novos cadastros</CardTitle>
+      <CardHeader className="pt-1 pe-1">
+        <h5>Novos cadastros</h5>
         <ButtonGroup>
           <Button
             color="primary"

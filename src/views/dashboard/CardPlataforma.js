@@ -89,7 +89,7 @@ const Plataforma = () => {
       <CardBody>
         <Row>
           <Col xs="6">
-            <CardTitle className="mb-3 text-nowrap">Plataformas</CardTitle>
+            <h5 className="mb-3 text-nowrap">Plataformas</h5>
             {!vProcessando ? (
               <div>
                 <div className="font-small-2">Total</div>

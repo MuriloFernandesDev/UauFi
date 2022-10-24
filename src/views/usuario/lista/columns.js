@@ -68,14 +68,18 @@ export const columns = [
     name: "Conexão",
     sortable: true,
     minWidth: "300px",
-    sortField: "hotspot",
-    selector: (row) => row.hotspot,
+    sortField: "entrada",
+    selector: (row) => row.entrada,
     cell: (row) => (
       <div className="d-flex justify-content-left align-items-center">
         <div className="d-flex flex-column">
           <span className="fw-bolder">{row.hotspot}</span>
-          <small className="text-truncate text-muted mb-0">
+          <small className="text-truncate text-muted mb-0 me-1">
             {formatDateTime(row.entrada) ?? ""}
+            {!row.online ? ` até ${formatDateTime(row.saida)}` : ""}
+          </small>
+          <small className="mb-0">
+            {row.online ? <Badge color="success">Online</Badge> : null}
           </small>
         </div>
       </div>
