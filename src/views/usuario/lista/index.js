@@ -144,6 +144,7 @@ const arrayToString = (a) => {
 const statusOptions = [
   { value: "o", label: "Online" },
   { value: "n", label: "Cadastro novo" },
+  { value: "niver", label: "Aniversariantes do dia" },
 ]
 
 const UsuarioLista = () => {
@@ -260,8 +261,8 @@ const UsuarioLista = () => {
       sort,
       sortColumn,
       q: searchTerm,
-      perPage: rowsPerPage,
       page: page.selected + 1,
+      perPage: rowsPerPage,
       datai: vDataInicial,
       dataf: vDataFinal,
       situacao: arrayToString(vSituacao),
@@ -278,8 +279,8 @@ const UsuarioLista = () => {
       sort,
       sortColumn,
       q: searchTerm,
-      perPage: value,
       page: currentPage,
+      perPage: value,
       datai: vDataInicial,
       dataf: vDataFinal,
       situacao: arrayToString(vSituacao),
@@ -293,8 +294,8 @@ const UsuarioLista = () => {
     setSearchTerm(val)
     handlePesquisar({
       sort,
-      q: val,
       sortColumn,
+      q: val,
       page: currentPage,
       perPage: rowsPerPage,
       datai: vDataInicial,
@@ -384,7 +385,7 @@ const UsuarioLista = () => {
                   {vPesquisando ? (
                     <Spinner type="grow" size="sm" color="primary" />
                   ) : (
-                    store.total_cadastro
+                    new Intl.NumberFormat().format(store.total_cadastro)
                   )}
                 </h3>
               }
@@ -400,7 +401,7 @@ const UsuarioLista = () => {
                   {vPesquisando ? (
                     <Spinner type="grow" size="sm" color="primary" />
                   ) : (
-                    store.total_online
+                    new Intl.NumberFormat().format(store.total_online)
                   )}
                 </h3>
               }

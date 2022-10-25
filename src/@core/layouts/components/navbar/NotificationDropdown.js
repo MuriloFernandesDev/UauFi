@@ -1,11 +1,13 @@
-// ** React Imports
-import { Fragment } from "react"
-
 // ** Custom Components
 import Avatar from "@components/avatar"
 
+// ** Hooks
+import { useEffect, useState } from "react"
+
+// ** API
+import api from "@src/services/api"
+
 // ** Third Party Components
-import classnames from "classnames"
 import PerfectScrollbar from "react-perfect-scrollbar"
 import { Gift } from "react-feather"
 
@@ -19,44 +21,30 @@ import {
   DropdownToggle,
   UncontrolledDropdown,
 } from "reactstrap"
+import { formatDate } from "@fullcalendar/core"
 
 const NotificationDropdown = () => {
-  // ** Notification Array
-  const notificationsArray = [
-    {
-      img: require("@src/assets/images/portrait/small/avatar-s-15.jpg").default,
-      subtitle: "30 anos",
-      title: (
-        <p className="media-heading">
-          <span className="fw-bolder">João Paulo</span>
-        </p>
-      ),
-    },
-    {
-      img: require("@src/assets/images/portrait/small/avatar-s-3.jpg").default,
-      subtitle: "20 anos",
-      title: (
-        <p className="media-heading">
-          <span className="fw-bolder">Maria Ângela</span>
-        </p>
-      ),
-    },
-    {
-      avatarContent: "MD",
-      color: "light-danger",
-      subtitle: "25 anos",
-      title: (
-        <p className="media-heading">
-          <span className="fw-bolder">Mário Dias</span>
-        </p>
-      ),
-    },
-  ]
+  const [vDados, setDados] = useState(null)
+  const [vProcessando, setProcessando] = useState(true)
+
+  const getDados = () => {
+    setProcessando(true)
+    return api
+      .get("/usuario/aniversariantes")
+      .then((res) => {
+        setProcessando(false)
+        setDados(res.data.valor)
+      })
+      .catch((error) => {
+        setProcessando(false)
+        console.error("Erro ao pegar dados:", error)
+      })
+  }
 
   // ** Function to render Notifications
   /*eslint-disable */
   const renderNotificationItems = () => {
-    return (
+    return vProcessando ? (
       <PerfectScrollbar
         component="li"
         className="media-list scrollable-container"
@@ -64,66 +52,49 @@ const NotificationDropdown = () => {
           wheelPropagation: false,
         }}
       >
-        {notificationsArray.map((item, index) => {
+        {vDados?.map((item, index) => {
           return (
-            <a
-              key={index}
-              className="d-flex"
-              href={item.switch ? "#" : "/"}
-              onClick={(e) => {
-                if (!item.switch) {
-                  e.preventDefault()
-                }
-              }}
-            >
-              <div
-                className={classnames("list-item d-flex", {
-                  "align-items-start": !item.switch,
-                  "align-items-center": item.switch,
-                })}
-              >
-                {!item.switch ? (
-                  <Fragment>
-                    <div className="me-1">
-                      <Avatar
-                        {...(item.img
-                          ? { img: item.img, imgHeight: 32, imgWidth: 32 }
-                          : item.avatarContent
-                          ? {
-                              content: item.avatarContent,
-                              color: item.color,
-                            }
-                          : item.avatarIcon
-                          ? {
-                              icon: item.avatarIcon,
-                              color: item.color,
-                            }
-                          : null)}
-                      />
-                    </div>
-                    <div className="list-item-body flex-grow-1">
-                      {item.title}
-                      <small className="notification-text">
-                        {item.subtitle}
-                      </small>
-                    </div>
-                  </Fragment>
-                ) : (
-                  <Fragment>
-                    {item.title}
-                    {item.switch}
-                  </Fragment>
-                )}
+            <Link to={`/usuario/dados/${item.id}`} className="d-flex">
+              <div className="list-item d-flex align-items-center">
+                <div className="me-1">
+                  {item.foto?.length ? (
+                    <Avatar
+                      className="me-1"
+                      img={item.foto_url}
+                      width="32"
+                      height="32"
+                    />
+                  ) : (
+                    <Avatar
+                      initials
+                      className="me-1"
+                      color="light-primary"
+                      content={item.nome || item.email || ""}
+                    />
+                  )}
+                </div>
+                <div className="list-item-body flex-grow-1">
+                  <p className="media-heading">
+                    <span className="fw-bolder">{item.nome}</span>
+                  </p>
+                  <small className="notification-text">
+                    {formatDate(item.nascimento)}
+                  </small>
+                </div>
               </div>
-            </a>
+            </Link>
           )
         })}
       </PerfectScrollbar>
-    )
+    ) : null
   }
-  /*eslint-enable */
 
-  return (
+  useEffect(() => {
+    // ** Requisitar lista
+    getDados()
+  }, [])
+
+  return vDados?.length > 0 ? (
     <UncontrolledDropdown
       tag="li"
       className="dropdown-notification nav-item me-25"
@@ -136,7 +107,7 @@ const NotificationDropdown = () => {
       >
         <Gift size={21} />
         <Badge pill color="danger" className="badge-up">
-          3
+          {vDados?.length}
         </Badge>
       </DropdownToggle>
       <DropdownMenu end tag="ul" className="dropdown-menu-media mt-0">
@@ -150,7 +121,7 @@ const NotificationDropdown = () => {
         {renderNotificationItems()}
       </DropdownMenu>
     </UncontrolledDropdown>
-  )
+  ) : null
 }
 
 export default NotificationDropdown
