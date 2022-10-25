@@ -85,7 +85,7 @@ const CardVisitasMes = () => {
             <Bar data={vSeries} options={vOptions} height={100} />
           ) : null
         ) : (
-          <div className="d-flex justify-content-center text-center align-items-center h-100 m-3">
+          <div className="d-flex justify-content-center text-center align-items-center m-2">
             <Spinner type="grow" size="md" color="primary" />
           </div>
         )}

@@ -31,26 +31,26 @@ const NotificationDropdown = () => {
   const [vProcessando, setProcessando] = useState(true)
   const vTimeoutPesquisa = useRef()
 
-  const getDados = () => {
+  const getDados = (t) => {
     if (vTimeoutPesquisa) {
       clearTimeout(vTimeoutPesquisa.current)
     }
-    vTimeoutPesquisa.current = setTimeout(
-      () => {
-        setProcessando(true)
-        return api
-          .get("/usuario/aniversariantes")
-          .then((res) => {
-            setProcessando(false)
-            setDados(res.data)
-          })
-          .catch((error) => {
-            setProcessando(false)
-            console.error("Erro ao pegar dados:", error)
-          })
-      },
-      vDados ? 60000 : 1
-    )
+    vTimeoutPesquisa.current = setTimeout(() => {
+      setProcessando(true)
+      return api
+        .get("/usuario/aniversariantes")
+        .then((res) => {
+          setProcessando(false)
+          setDados(res.data)
+          getDados(60000)
+        })
+        .catch((error) => {
+          setProcessando(false)
+          setDados(null)
+          getDados(60000)
+          console.error("Erro ao pegar dados:", error)
+        })
+    }, t)
   }
 
   // ** Function to render Notifications
@@ -107,7 +107,7 @@ const NotificationDropdown = () => {
 
   useEffect(() => {
     // ** Requisitar lista
-    getDados()
+    getDados(1)
   }, [])
 
   return vDados?.length > 0 ? (
@@ -130,7 +130,7 @@ const NotificationDropdown = () => {
         <li className="dropdown-menu-header">
           <DropdownItem className="d-flex" tag="div" header>
             <h4 className="notification-title mb-0 me-auto">
-              Aniversariantes do dia
+              Aniversariantes online
             </h4>
           </DropdownItem>
         </li>

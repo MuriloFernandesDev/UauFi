@@ -378,7 +378,7 @@ const UsuarioLista = () => {
           <Col md="4">
             <StatsHorizontal
               color="info"
-              statTitle="Novos cadastros"
+              statTitle="Cadastros no seu wi-fi"
               icon={<UserPlus size={20} />}
               renderStats={
                 <h3 className="fw-bolder mb-75">
