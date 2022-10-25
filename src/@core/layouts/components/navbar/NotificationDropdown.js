@@ -1,8 +1,11 @@
 // ** Custom Components
 import Avatar from "@components/avatar"
 
+// ** React Imports
+import { Link } from "react-router-dom"
+
 // ** Hooks
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
 
 // ** API
 import api from "@src/services/api"
@@ -21,30 +24,39 @@ import {
   DropdownToggle,
   UncontrolledDropdown,
 } from "reactstrap"
-import { formatDate } from "@fullcalendar/core"
+import { formatDate } from "@utils"
 
 const NotificationDropdown = () => {
   const [vDados, setDados] = useState(null)
   const [vProcessando, setProcessando] = useState(true)
+  const vTimeoutPesquisa = useRef()
 
   const getDados = () => {
-    setProcessando(true)
-    return api
-      .get("/usuario/aniversariantes")
-      .then((res) => {
-        setProcessando(false)
-        setDados(res.data.valor)
-      })
-      .catch((error) => {
-        setProcessando(false)
-        console.error("Erro ao pegar dados:", error)
-      })
+    if (vTimeoutPesquisa) {
+      clearTimeout(vTimeoutPesquisa.current)
+    }
+    vTimeoutPesquisa.current = setTimeout(
+      () => {
+        setProcessando(true)
+        return api
+          .get("/usuario/aniversariantes")
+          .then((res) => {
+            setProcessando(false)
+            setDados(res.data)
+          })
+          .catch((error) => {
+            setProcessando(false)
+            console.error("Erro ao pegar dados:", error)
+          })
+      },
+      vDados ? 60000 : 1
+    )
   }
 
   // ** Function to render Notifications
   /*eslint-disable */
   const renderNotificationItems = () => {
-    return vProcessando ? (
+    return !vProcessando ? (
       <PerfectScrollbar
         component="li"
         className="media-list scrollable-container"
@@ -54,10 +66,14 @@ const NotificationDropdown = () => {
       >
         {vDados?.map((item, index) => {
           return (
-            <Link to={`/usuario/dados/${item.id}`} className="d-flex">
+            <Link
+              key={index}
+              to={`/usuario/dados/${item.id}`}
+              className="d-flex"
+            >
               <div className="list-item d-flex align-items-center">
                 <div className="me-1">
-                  {item.foto?.length ? (
+                  {item.foto_url?.length ? (
                     <Avatar
                       className="me-1"
                       img={item.foto_url}
@@ -69,7 +85,7 @@ const NotificationDropdown = () => {
                       initials
                       className="me-1"
                       color="light-primary"
-                      content={item.nome || item.email || ""}
+                      content={item.nome || ""}
                     />
                   )}
                 </div>
@@ -106,7 +122,7 @@ const NotificationDropdown = () => {
         onClick={(e) => e.preventDefault()}
       >
         <Gift size={21} />
-        <Badge pill color="danger" className="badge-up">
+        <Badge pill color="success" className="badge-up">
           {vDados?.length}
         </Badge>
       </DropdownToggle>

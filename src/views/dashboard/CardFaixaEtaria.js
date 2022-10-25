@@ -79,17 +79,17 @@ const CardVisitasMes = () => {
       <CardHeader className="align-items-start pb-0">
         <h5>Visitas por faixa etária</h5>
       </CardHeader>
-      {!vProcessando ? (
-        vOptions && vSeries?.labels?.length > 0 ? (
-          <div style={{ height: "100px" }}>
+      <div style={{ height: "100px" }}>
+        {!vProcessando ? (
+          vOptions && vSeries?.labels?.length > 0 ? (
             <Bar data={vSeries} options={vOptions} height={100} />
+          ) : null
+        ) : (
+          <div className="d-flex justify-content-center text-center align-items-center h-100 m-3">
+            <Spinner type="grow" size="md" color="primary" />
           </div>
-        ) : null
-      ) : (
-        <div className="d-flex justify-content-center text-center align-items-center h-100 m-3">
-          <Spinner type="grow" size="md" color="primary" />
-        </div>
-      )}
+        )}
+      </div>
     </Card>
   )
 }

@@ -68,11 +68,15 @@ const UserDropdown = (props) => {
         onClick={(e) => e.preventDefault()}
       >
         <div className="user-nav d-sm-flex d-none">
-          <span className="user-name fw-bold">
-            {(userData && userData["username"]) || ""}
+          <span className="user-name text-nowrap fw-bold">
+            {(userData && (userData["fullName"] || userData["username"])) || ""}
           </span>
           <span className="user-status">
-            {(userData && userData.role) || ""}
+            {userData
+              ? userData?.fullName
+                ? userData?.username
+                : userData.role
+              : ""}
           </span>
         </div>
         <Avatar img={userAvatar} imgHeight="40" imgWidth="40" status="online" />
@@ -80,7 +84,7 @@ const UserDropdown = (props) => {
       <DropdownMenu end>
         <DropdownItem tag={Link} to="/adm/login/edit">
           <User size={14} className="me-75" />
-          <span className="align-middle">Perfil</span>
+          <span className="align-middle">Meu perfil</span>
         </DropdownItem>
         <DropdownItem tag={Link} to="/adm/login/edit">
           <Users size={14} className="me-75" />
