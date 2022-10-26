@@ -1,21 +1,49 @@
 // ** React Imports
 import { Fragment, useState, useEffect, useRef } from "react"
 
-// ** Table Columns
-import { columns } from "./columns"
-
 // ** Store & Actions
-import { getUsuarios } from "../store"
+import { getUsuarios, getPagina } from "../store"
 import { useDispatch, useSelector } from "react-redux"
 
 // ** Third Party Components
 import ReactPaginate from "react-paginate"
 import DataTable from "react-data-table-component"
 import StatsHorizontal from "@components/widgets/stats/StatsHorizontal"
-import { ChevronDown, Share, User, UserPlus, UserCheck } from "react-feather"
+import {
+  ChevronDown,
+  Share,
+  User,
+  UserPlus,
+  UserCheck,
+  MoreVertical,
+  Eye,
+  WifiOff,
+} from "react-feather"
 
 // ** Reactstrap Imports
-import { Row, Col, Card, Input, Spinner, Button } from "reactstrap"
+import {
+  Row,
+  Col,
+  Card,
+  Input,
+  Spinner,
+  Button,
+  Badge,
+  UncontrolledDropdown,
+  DropdownToggle,
+  DropdownMenu,
+  DropdownItem,
+  UncontrolledTooltip,
+} from "reactstrap"
+
+// ** API
+import api from "@src/services/api"
+
+// ** React Imports
+import { Link } from "react-router-dom"
+
+// ** Custom Components
+import Avatar from "@components/avatar"
 
 // ** Utils
 import { dateTimeNow } from "@utils"
@@ -23,7 +51,30 @@ import { dateTimeNow } from "@utils"
 // ** Sidebar
 import Sidebar from "./Sidebar"
 
+// ** Third Party Components
+import Swal from "sweetalert2"
+import withReactContent from "sweetalert2-react-content"
+import toast from "react-hot-toast"
+
+const MySwal = withReactContent(Swal)
+
 import "@styles/react/libs/tables/react-dataTable-component.scss"
+
+const handleError = (error, errorMessage, errorIcon) => {
+  return MySwal.fire({
+    title: error,
+    text: errorMessage,
+    icon: errorIcon,
+    customClass: {
+      confirmButton: "btn btn-primary",
+      popup: "animate__animated animate__fadeIn",
+    },
+    hideClass: {
+      popup: "animate__animated animate__zoomOut",
+    },
+    buttonsStyling: false,
+  })
+}
 
 // ** Table Header
 const CustomHeader = ({
@@ -144,7 +195,7 @@ const arrayToString = (a) => {
 const statusOptions = [
   { value: "o", label: "Online" },
   { value: "n", label: "Cadastro novo" },
-  { value: "niver", label: "Aniversariantes do dia" },
+  { value: "niver", label: "Aniversariantes" },
 ]
 
 const UsuarioLista = () => {
@@ -181,25 +232,22 @@ const UsuarioLista = () => {
   const sClienteId = localStorage.getItem("clienteId")
 
   const handlePesquisar = (dados, force) => {
-    const vDadosAnt = JSON.stringify({
-      sort,
-      sortColumn,
-      q: searchTerm,
-      page: currentPage,
-      perPage: rowsPerPage,
-      datai: vDataInicial,
-      dataf: vDataFinal,
-      situacao: arrayToString(vSituacao),
-      clienteId: sClienteId,
-    })
-    const vDadosNovo = JSON.stringify(dados)
-    if (vDadosAnt !== vDadosNovo || force) {
+    if (
+      force ||
+      sort !== dados.sort ||
+      sortColumn !== dados.sortColumn ||
+      searchTerm !== dados.q ||
+      vDataInicial !== dados.datai ||
+      vDataFinal !== dados.dataf ||
+      arrayToString(vSituacao) !== dados.situacao ||
+      sClienteId !== dados.clienteId
+    ) {
       if (vTimeoutPesquisa) {
         clearTimeout(vTimeoutPesquisa.current)
       }
       vTimeoutPesquisa.current = setTimeout(() => {
         setPesquisando(true)
-
+        dados.clienteId = sClienteId
         dispatch(getUsuarios(dados))
           .then(() => {
             setPesquisando(false)
@@ -235,6 +283,54 @@ const UsuarioLista = () => {
     }
   }
 
+  // ** Modal de desconexão
+  const handleDesconectar = (row) => {
+    return MySwal.fire({
+      title: "Tem certeza?",
+      text: "O usuário será desconectado e deverá conectar-se novamente!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Ok, desconectar!",
+      cancelButtonText: "Cancelar",
+      customClass: {
+        confirmButton: "btn btn-primary",
+        cancelButton: "btn btn-outline-danger ms-1",
+        popup: "animate__animated animate__fadeIn",
+      },
+      hideClass: {
+        popup: "animate__animated animate__zoomOut",
+      },
+      buttonsStyling: false,
+    }).then((result) => {
+      if (result.value) {
+        api
+          .post(`/usuario/desconectar/${row.id}`)
+          .then((response) => {
+            if (response.status === 200) {
+              handlePesquisar(store.params, true)
+
+              toast.success("Desconectado com sucesso!", {
+                position: "bottom-right",
+              })
+            }
+          })
+          .catch((error) => {
+            if (error.response.status === 400) {
+              handleError("Atenção!", "Não autorizado.", "warning")
+            } else if (error.response.status === 503) {
+              handleError("Ops...", error.response.data, "error")
+            } else {
+              handleError(
+                "Erro inesperado",
+                "Por favor, contate um administrador.",
+                "error"
+              )
+            }
+          })
+      }
+    })
+  }
+
   // ** Get data on mount
   useEffect(() => {
     const vForce = store.total === -1
@@ -257,19 +353,14 @@ const UsuarioLista = () => {
 
   // ** Function in get data on page change
   const handlePagination = (page) => {
-    handlePesquisar({
-      sort,
-      sortColumn,
-      q: searchTerm,
-      page: page.selected + 1,
-      perPage: rowsPerPage,
-      datai: vDataInicial,
-      dataf: vDataFinal,
-      situacao: arrayToString(vSituacao),
-      clienteId: sClienteId,
-    })
-
     setCurrentPage(page.selected + 1)
+    dispatch(
+      getPagina({
+        allData: store.allData,
+        page: page.selected + 1,
+        perPage: rowsPerPage,
+      })
+    )
   }
 
   // ** Function in get data on rows per page
@@ -304,6 +395,109 @@ const UsuarioLista = () => {
       clienteId: sClienteId,
     })
   }
+
+  // ** Renders Client Columns
+  const renderClient = (row) => {
+    if (row.foto?.length) {
+      return (
+        <Avatar className="me-1" img={row.foto_url} width="32" height="32" />
+      )
+    } else {
+      return (
+        <Avatar
+          initials
+          className="me-1"
+          color="light-primary"
+          content={row.nome || row.email || ""}
+        />
+      )
+    }
+  }
+
+  const columns = [
+    {
+      name: "Usuário",
+      sortable: true,
+      minWidth: "300px",
+      sortField: "nome",
+      selector: (row) => row.nome,
+      cell: (row) => (
+        <Link
+          to={`/usuario/dados/${row.id}`}
+          className="d-flex justify-content-left align-items-center"
+        >
+          {renderClient(row)}
+          <div className="user_name text-truncate text-body">
+            <div className="d-flex flex-column">
+              <span className="fw-bolder">{row.nome}</span>
+              <small className="mb-0">
+                {row.online ? <Badge color="success">Online</Badge> : null}
+              </small>
+            </div>
+          </div>
+        </Link>
+      ),
+    },
+    {
+      name: "Dados",
+      sortable: true,
+      minWidth: "300px",
+      sortField: "entrada",
+      selector: (row) => row.entrada,
+      cell: (row) => (
+        <div className="d-flex justify-content-left align-items-center">
+          <div className="d-flex flex-column">
+            <small className="mb-0">
+              {row.celular ? `Cel: ${row.celular}` : ""}
+            </small>
+            <small className="mb-0">
+              {row.ultimo_quarto ? `Quarto: ${row.ultimo_quarto}` : ""}
+            </small>
+            <small className="mb-0">{row.cpf ? `CPF: ${row.cpf}` : ""}</small>
+          </div>
+        </div>
+      ),
+    },
+    {
+      name: <div className="text-end w-100">Ações</div>,
+      minWidth: "50px",
+      cell: (row) => (
+        <div className="text-end w-100">
+          <div className="column-action d-inline-flex">
+            <Link to={`/usuario/dados/${row.id}`} id={`pw-tooltip-${row.id}`}>
+              <Eye size={17} className="mx-1" />
+            </Link>
+
+            <UncontrolledTooltip
+              placement="top"
+              target={`pw-tooltip-${row.id}`}
+            >
+              Visualizar
+            </UncontrolledTooltip>
+            <UncontrolledDropdown>
+              <DropdownToggle tag="span">
+                <MoreVertical size={17} className="cursor-pointer" />
+              </DropdownToggle>
+              <DropdownMenu end>
+                <DropdownItem
+                  tag="a"
+                  href="/"
+                  className="w-100"
+                  onClick={(e) => {
+                    e.preventDefault()
+                    handleDesconectar(row)
+                  }}
+                >
+                  <WifiOff size={14} className="me-50" />
+                  <span className="align-middle">Desconectar</span>
+                </DropdownItem>
+              </DropdownMenu>
+            </UncontrolledDropdown>
+          </div>
+        </div>
+      ),
+    },
+  ]
 
   // ** Custom Pagination
   const CustomPagination = () => {
@@ -409,7 +603,6 @@ const UsuarioLista = () => {
           </Col>
         </Row>
       </div>
-
       <div className="invoice-list-wrapper">
         <Card className="overflow-hidden">
           <div className="react-dataTable">

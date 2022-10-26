@@ -37,6 +37,27 @@ export const getUsuarios = createAsyncThunk(
   }
 )
 
+export const getPagina = createAsyncThunk(
+  "usuario/getPagina",
+  async (parametros) => {
+    let vRegInicial = (parametros.page - 1) * parametros.perPage
+    let vRegFinal = parametros.page * parametros.perPage
+    if (vRegInicial > parametros.allData.length - 1) {
+      vRegInicial = 0
+      vRegFinal = perPage
+    }
+
+    if (vRegFinal > parametros.allData.length) {
+      vRegFinal = parametros.allData.length
+    }
+    return {
+      page: parametros.page,
+      perPage: parametros.perPage,
+      data: parametros.allData.slice(vRegInicial, vRegFinal),
+    }
+  }
+)
+
 export const getUsuario = async (id) => {
   const response = (await api.get(`/usuario/dados/${id}`)).data
   return response
@@ -63,15 +84,21 @@ export const usuarioSlice = createSlice({
   },
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(getUsuarios.fulfilled, (state, action) => {
-      state.data = action.payload.data
-      state.allData = action.payload.allData
-      state.total = action.payload.totalPages
-      state.params = action.payload.params
-      state.total_cadastro = action.payload.total_cadastro
-      state.total_online = action.payload.total_online
-      state.total_usuario = action.payload.total_usuario
-    })
+    builder
+      .addCase(getUsuarios.fulfilled, (state, action) => {
+        state.data = action.payload.data
+        state.allData = action.payload.allData
+        state.total = action.payload.totalPages
+        state.params = action.payload.params
+        state.total_cadastro = action.payload.total_cadastro
+        state.total_online = action.payload.total_online
+        state.total_usuario = action.payload.total_usuario
+      })
+      .addCase(getPagina.fulfilled, (state, action) => {
+        state.data = action.payload.data
+        state.params.page = action.payload.page
+        state.params.perPage = action.payload.perPage
+      })
   },
 })
 
