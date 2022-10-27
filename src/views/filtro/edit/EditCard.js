@@ -75,7 +75,7 @@ const FiltroEditCard = ({ data, setSalvarDados }) => {
       setListaClientes(res.data)
 
       //Selecionar o item no componente
-      if (!vCliente && data?.cliente_id) {
+      if (data?.cliente_id) {
         setCliente(
           res.data?.filter((item) => item.value === Number(data?.cliente_id))[0]
         )
@@ -181,21 +181,17 @@ const FiltroEditCard = ({ data, setSalvarDados }) => {
                     isClearable
                     noOptionsMessage={() => "Vazio"}
                     id="vCliente"
-                    isDisabled={vDados?.id > 0}
+                    isDisabled={vDados.id === 0 && data.cliente_id > 0}
                     placeholder={"Selecione..."}
                     className="react-select"
                     classNamePrefix="select"
                     value={vCliente}
-                    onChange={
-                      vDados.id !== undefined
-                        ? blockChange
-                        : (e) => {
-                            setCliente(e)
-                            handleChange({
-                              target: { name: "cliente_id", value: e?.value },
-                            })
-                          }
-                    }
+                    onChange={(e) => {
+                      setCliente(e)
+                      handleChange({
+                        target: { name: "cliente_id", value: e?.value },
+                      })
+                    }}
                     options={vListaClientes}
                   />
                 </Col>

@@ -1,5 +1,8 @@
 import axios from "axios"
 
+// ** Utils
+import { getUserData } from "@utils"
+
 // ** import das configurações do JWT
 import jwtDefaultConfig from "@src/@core/auth/jwt/jwtDefaultConfig"
 
@@ -37,6 +40,8 @@ api.interceptors.response.use(
   function (error) {
     const originalRequest = error.config
 
+    const user = getUserData()
+
     if (
       error.response.status === 401 &&
       originalRequest.url === "http://127.0.0.1:3000/v1/auth/token"
@@ -47,7 +52,7 @@ api.interceptors.response.use(
 
     if (error.response.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true
-      const refreshToken = localStorageService.getRefreshToken()
+      const refreshToken = user.refreshToken
       return axios
         .post("/auth/token", {
           refresh_token: refreshToken,

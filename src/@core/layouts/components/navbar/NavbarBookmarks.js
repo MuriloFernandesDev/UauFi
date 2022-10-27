@@ -35,6 +35,9 @@ const NavbarBookmarks = (props) => {
     return api.get("/cliente/lista_simples/").then((res) => {
       setListaClientes(res.data)
       setMostrarListaClientes(res.data.length > 1)
+      if (res.data.length === 1) {
+        setClienteId(res.data[0])
+      }
     })
   }
 

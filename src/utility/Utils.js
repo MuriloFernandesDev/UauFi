@@ -49,6 +49,28 @@ export const formatDateTime = (
   return new Intl.DateTimeFormat("pt-BR", formatting).format(new Date(value))
 }
 
+export const removerAcentos = (strAccents) => {
+  strAccents = strAccents.split("")
+  let strAccentsOut = new Array()
+  const strAccentsLen = strAccents.length
+  const accents =
+    "ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëÇçðÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž"
+  const accentsOut =
+    "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeCcdDIIIIiiiiUUUUuuuuNnSsYyyZz"
+
+  for (let y = 0; y < strAccentsLen; y++) {
+    if (accents.indexOf(strAccents[y]) !== -1) {
+      strAccentsOut[y] = accentsOut.substring(
+        accents.indexOf(strAccents[y]),
+        accents.indexOf(strAccents[y]) + 1
+      )
+    } else strAccentsOut[y] = strAccents[y]
+  }
+  strAccentsOut = strAccentsOut.join("")
+
+  return strAccentsOut
+}
+
 // ** Returns short month of passed date
 export const formatDateToMonthShort = (value, toTimeForCurrentDay = true) => {
   const date = new Date(value)

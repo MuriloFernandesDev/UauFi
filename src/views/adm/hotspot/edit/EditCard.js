@@ -1,6 +1,6 @@
 // ** React
 import { Fragment, useEffect, useState } from "react"
-import { useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 
 // ** Reactstrap
 import {
@@ -18,8 +18,11 @@ import {
   NavLink,
 } from "reactstrap"
 
+// ** Default Imagem
+import defaultImagem from "@src/assets/images/pages/semfoto.png"
+
 // ** Icons
-import { CornerUpLeft, Check } from "react-feather"
+import { CornerUpLeft, Check, Trash } from "react-feather"
 
 // ** Terceiros
 import Select from "react-select"
@@ -31,6 +34,23 @@ import { getClientes, getMarcas } from "../store"
 
 const vUserData = getUserData()
 
+const vListaTipoIntegracao = [
+  { value: 0, label: "Nenhuma" },
+  { value: 1, label: "Taboca" },
+  { value: 2, label: "IXC Soft" },
+  { value: 3, label: "Max Atacadista" },
+  { value: 4, label: "Clubefato" },
+  { value: 5, label: "TOTVs API" },
+  { value: 6, label: "TOTVs Oracle" },
+  { value: 7, label: "CaririSGP" },
+  { value: 8, label: "IXC Leads" },
+]
+
+const vListaTipoLayout = [
+  { value: 0, label: "Layout Padrão" },
+  { value: 1, label: "Layout Alternativo" },
+]
+
 const HotspotEditCard = ({ data, setSalvarDados }) => {
   const navigate = useNavigate()
 
@@ -40,6 +60,16 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
   const [vMarca, setMarca] = useState(null)
   const [vListaClientes, setListaClientes] = useState(null)
   const [vListaMarcas, setListaMarcas] = useState(null)
+
+  // Captive Portal
+  const [vDadosCP, setDataCP] = useState(
+    data?.dados_captive?.length > 0 ? data.dados_captive[0] : null
+  )
+  const [vTipoLayout, setTipoLayout] = useState(null)
+  const [vTipoIntegracao, setTipoIntegracao] = useState(null)
+  const [varDadosIntegracao1, setVarDadosIntegracao1] = useState("")
+  const [varDadosIntegracao2, setVarDadosIntegracao2] = useState("")
+  const [varDadosIntegracao3, setVarDadosIntegracao3] = useState("")
 
   const [active, setActive] = useState("1")
 
@@ -52,6 +82,29 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
       ...prevState,
       [name]: value,
     }))
+  }
+
+  const handleChangeCP = (e) => {
+    const { name, value } = e.target
+    setDataCP((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }))
+  }
+
+  const onChangeImagemCP = (e) => {
+    const reader = new FileReader(),
+      files = e.target.files,
+      vName = e.target.name
+    reader.onload = function () {
+      handleChangeCP({
+        target: {
+          name: vName,
+          value: reader.result,
+        },
+      })
+    }
+    reader.readAsDataURL(files[0])
   }
 
   const toggle = (tab) => {
@@ -89,6 +142,7 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
   }
 
   const setDados = () => {
+    vDados.dados_captive = [vDadosCP]
     setSalvarDados(vDados)
   }
 
@@ -96,6 +150,51 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
   useEffect(() => {
     handleClientes()
     handleMarcas()
+
+    //Verificar dados da integração
+    if (data?.dados_captive[0]?.dados_integracao?.length > 2) {
+      const vDadosIntegracao = JSON.parse(
+        data?.dados_captive[0]?.dados_integracao
+      )
+      switch (data?.dados_captive[0]?.tipo_integracao) {
+        case 5:
+          setVarDadosIntegracao1(vDadosIntegracao.hotel_id)
+          setVarDadosIntegracao2(vDadosIntegracao.totvs_id)
+          break
+        case 6:
+          setVarDadosIntegracao1(vDadosIntegracao.hotel_id)
+          setVarDadosIntegracao2(vDadosIntegracao.service_name)
+          break
+        case 2:
+        case 8:
+          setVarDadosIntegracao1(vDadosIntegracao.url)
+          setVarDadosIntegracao2(vDadosIntegracao.usuario)
+          setVarDadosIntegracao3(vDadosIntegracao.senha)
+          break
+        case 7:
+          setVarDadosIntegracao1(vDadosIntegracao.url)
+          setVarDadosIntegracao2(vDadosIntegracao.app)
+          setVarDadosIntegracao3(vDadosIntegracao.token)
+          break
+      }
+    }
+
+    if (!vTipoLayout && data?.dados_captive[0]?.layout_captive !== null) {
+      setTipoLayout(
+        vListaTipoLayout.filter(
+          (item) =>
+            item.value === Number(data?.dados_captive[0]?.layout_captive || 0)
+        )[0]
+      )
+    }
+    if (!vTipoIntegracao && data?.dados_captive[0]?.tipo_integracao !== null) {
+      setTipoIntegracao(
+        vListaTipoIntegracao.filter(
+          (item) =>
+            item.value === Number(data?.dados_captive[0]?.tipo_integracao || 0)
+        )[0]
+      )
+    }
   }, [])
 
   return (
@@ -140,6 +239,16 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
                     toggle("2")
                   }}
                 >
+                  Captive Portal
+                </NavLink>
+              </NavItem>
+              <NavItem>
+                <NavLink
+                  active={active === "3"}
+                  onClick={() => {
+                    toggle("3")
+                  }}
+                >
                   Gerencial
                 </NavLink>
               </NavItem>
@@ -150,7 +259,7 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
                   <Row>
                     <Col md="6" className="mb-2">
                       <Label className="form-label" for="nome">
-                        Nome para identificação
+                        Nome para identificação*
                       </Label>
                       <Input
                         id="nome"
@@ -161,7 +270,7 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
                     </Col>
                     <Col md="3" className="mb-2">
                       <Label className="form-label" for="marca_equipamento">
-                        Marca da controladora
+                        Marca da controladora*
                       </Label>
                       <Select
                         id="marca_equipamento"
@@ -209,6 +318,7 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
                         noOptionsMessage={() => "Vazio"}
                         placeholder={"Selecione..."}
                         value={vCliente}
+                        isDisabled={vDados.id === 0 && data.cliente_id > 0}
                         options={vListaClientes}
                         className="react-select"
                         classNamePrefix="select"
@@ -300,8 +410,30 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
                         onChange={handleChange}
                       />
                     </Col>
-                    <Col md="6" className="mb-2 pt-md-2">
-                      <div className="form-check form-switch">
+                    <Col md="4" className="mb-2">
+                      <Label className="form-label" for="lat">
+                        Latitude*
+                      </Label>
+                      <Input
+                        id="lat"
+                        name="lat"
+                        value={vDados?.lat ?? ""}
+                        onChange={handleChange}
+                      />
+                    </Col>
+                    <Col md="4" className="mb-2">
+                      <Label className="form-label" for="lng">
+                        Longitude*
+                      </Label>
+                      <Input
+                        id="lng"
+                        name="lng"
+                        value={vDados?.lng ?? ""}
+                        onChange={handleChange}
+                      />
+                    </Col>
+                    <Col md="4" className="mb-2 pt-md-2">
+                      <div className="form-check form-switch pt-md-75">
                         <Input
                           type="switch"
                           id="usa_radius"
@@ -323,25 +455,865 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
                         </Label>
                       </div>
                     </Col>
-                    {vDados?.usa_radius ? (
-                      <Col md="6" className="mb-2">
-                        <Label className="form-label" for="radius_secret">
-                          Secret RADIUS
-                        </Label>
-                        <Input
-                          id="radius_secret"
-                          name="radius_secret"
-                          type="password"
-                          autoComplete="new-password"
-                          value={vDados?.radius_secret ?? ""}
-                          onChange={handleChange}
-                        />
-                      </Col>
-                    ) : null}
                   </Row>
                 </Card>
               </TabPane>
               <TabPane tabId="2">
+                <Card className="mb-0">
+                  <Form onSubmit={(e) => e.preventDefault()}>
+                    <Row>
+                      <Col className="mb-2" lg="6">
+                        <div className="border rounded p-2">
+                          <h5 className="mb-1">Logotipo do Captive Portal</h5>
+                          <div className="d-flex flex-column flex-md-row">
+                            <img
+                              className="me-2 mb-1 mb-md-0 img-fluid img-proporcional"
+                              src={
+                                vDadosCP?.logo_captive?.length > 0
+                                  ? vDadosCP?.logo_captive
+                                  : defaultImagem
+                              }
+                              alt="Logotipo"
+                              width="100"
+                              height="100"
+                            />
+                            <div>
+                              <div className="mb-1">
+                                <small className="text-muted">
+                                  Resolução recomendada: 900x900px.
+                                  <br />
+                                  Tamanho máximo: 250kB.
+                                </small>
+                              </div>
+                              <div className="d-inline-block">
+                                <div className="mb-0">
+                                  <Button
+                                    tag={Label}
+                                    className="me-75"
+                                    size="sm"
+                                    color="secondary"
+                                    outline
+                                  >
+                                    Selecionar imagem
+                                    <Input
+                                      type="file"
+                                      name="logo_captive"
+                                      onChange={onChangeImagemCP}
+                                      hidden
+                                      accept=".jpg, .jpeg, .png, .gif, .webp"
+                                    />
+                                  </Button>
+                                  <Link
+                                    to="/"
+                                    className="text-body"
+                                    onClick={(e) => {
+                                      e.preventDefault()
+                                      handleChangeCP({
+                                        target: {
+                                          name: "logo_captive",
+                                          value: null,
+                                        },
+                                      })
+                                    }}
+                                  >
+                                    <Trash className="font-medium-3 text-danger cursor-pointer" />
+                                  </Link>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </Col>
+                      <Col className="mb-2" lg="6">
+                        <div className="border rounded p-2">
+                          <h5 className="mb-1">Imagem de fundo</h5>
+                          <div className="d-flex flex-column flex-md-row">
+                            <img
+                              className="me-2 mb-1 mb-md-0 img-fluid img-proporcional"
+                              src={
+                                vDadosCP?.imagem_fundo?.length > 0
+                                  ? vDadosCP?.imagem_fundo
+                                  : defaultImagem
+                              }
+                              alt="Imagem de fundo"
+                              width="100"
+                              height="100"
+                            />
+                            <div>
+                              <div className="mb-1">
+                                <small className="text-muted">
+                                  Resolução recomendada: 3000x3000px.
+                                  <br />
+                                  Tamanho máximo: 250kB.
+                                </small>
+                              </div>
+                              <div className="d-inline-block">
+                                <div className="mb-0">
+                                  <Button
+                                    tag={Label}
+                                    className="me-75"
+                                    size="sm"
+                                    color="secondary"
+                                    outline
+                                  >
+                                    Selecionar imagem
+                                    <Input
+                                      type="file"
+                                      name="imagem_fundo"
+                                      onChange={onChangeImagemCP}
+                                      hidden
+                                      accept=".jpg, .jpeg, .png, .gif, .webp"
+                                    />
+                                  </Button>
+                                  <Link
+                                    to="/"
+                                    className="text-body"
+                                    onClick={(e) => {
+                                      e.preventDefault()
+                                      handleChangeCP({
+                                        target: {
+                                          name: "imagem_fundo",
+                                          value: null,
+                                        },
+                                      })
+                                    }}
+                                  >
+                                    <Trash className="font-medium-3 text-danger cursor-pointer" />
+                                  </Link>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </Col>
+                      <Col md="6" className="mb-2">
+                        <Label className="form-label" for="tituloCP">
+                          Título
+                        </Label>
+                        <Input
+                          value={vDadosCP?.titulo ?? ""}
+                          onChange={handleChangeCP}
+                          name="titulo"
+                          id="tituloCP"
+                        />
+                      </Col>
+                      <Col md="2" className="mb-2">
+                        <Label className="form-label" for="cor_primaria">
+                          Cor primária
+                        </Label>
+                        <Input
+                          id="cor_primaria"
+                          name="cor_primaria"
+                          type="color"
+                          className="p-0"
+                          value={vDadosCP?.cor_primaria ?? ""}
+                          onChange={handleChangeCP}
+                        />
+                      </Col>
+                      <Col md="4" className="mb-2">
+                        <Label className="form-label" for="vTipoLayout">
+                          Tipo de Layout
+                        </Label>
+                        <Select
+                          placeholder={"Selecione..."}
+                          noOptionsMessage={() => "Vazio"}
+                          className="react-select"
+                          classNamePrefix="select"
+                          value={vTipoLayout}
+                          onChange={(e) => {
+                            setTipoLayout(e)
+                            handleChangeCP({
+                              target: {
+                                name: "layout_captive",
+                                value: e.value,
+                              },
+                            })
+                          }}
+                          options={vListaTipoLayout}
+                        />
+                      </Col>
+                      <Col md="6" className="mb-2">
+                        <Label className="form-label" for="vMinutosDesconexao">
+                          Tempo máximo de conexão do usuário (minutos)
+                        </Label>
+                        <Input
+                          id="vMinutosDesconexao"
+                          name="minutos_desconexao"
+                          value={vDadosCP?.minutos_desconexao ?? 0}
+                          onChange={handleChangeCP}
+                        />
+                      </Col>
+                      <Col md="6" className="mb-2">
+                        <Label className="form-label" for="vRedirectUrl">
+                          URL da página exibida após a liberação do usuário*
+                        </Label>
+                        <Input
+                          id="vRedirectUrl"
+                          name="redirect_url"
+                          value={vDadosCP?.redirect_url ?? ""}
+                          onChange={handleChangeCP}
+                        />
+                      </Col>
+                      <Col md="6" className="mb-2">
+                        <Label className="form-label" for="vIntelifi">
+                          Código Intelifi para anúncios
+                        </Label>
+                        <Input
+                          id="vIntelifi"
+                          name="intelifi_hid"
+                          value={vDadosCP?.intelifi_hid ?? ""}
+                          onChange={handleChangeCP}
+                        />
+                      </Col>
+                      <Col md="6" className="mb-2">
+                        <Label className="form-label" for="vTipoIntegracao">
+                          Tipo de integração
+                        </Label>
+                        <Select
+                          id="vTipoIntegracao"
+                          placeholder={"Selecione..."}
+                          className="react-select"
+                          noOptionsMessage={() => "Vazio"}
+                          classNamePrefix="select"
+                          value={vTipoIntegracao}
+                          onChange={(e) => {
+                            setTipoIntegracao(e)
+                            handleChangeCP({
+                              target: {
+                                name: "tipo_integracao",
+                                value: e.value,
+                              },
+                            })
+                          }}
+                          options={vListaTipoIntegracao}
+                        />
+                      </Col>
+                      {vDadosCP?.tipo_integracao === 2 ||
+                      vDadosCP?.tipo_integracao === 5 ||
+                      vDadosCP?.tipo_integracao === 6 ||
+                      vDadosCP?.tipo_integracao === 7 ||
+                      vDadosCP?.tipo_integracao === 8 ? (
+                        <Fragment>
+                          <Col md="12">
+                            <div className="divider divider-dark">
+                              <div className="divider-text text-dark">
+                                Dados extras para a integração
+                              </div>
+                            </div>
+                          </Col>
+                          {vDadosCP?.tipo_integracao === 5 ? (
+                            <Fragment>
+                              <Col md="6" className="mb-2">
+                                <Label
+                                  className="form-label"
+                                  for="dados-integracao-1"
+                                >
+                                  ID do Hotel
+                                </Label>
+                                <Input
+                                  id="dados-integracao-1"
+                                  type="number"
+                                  value={varDadosIntegracao1}
+                                  onChange={(e) => {
+                                    setVarDadosIntegracao1(e.target.value)
+                                    handleChangeCP({
+                                      target: {
+                                        name: "dados_integracao",
+                                        value: JSON.stringify({
+                                          hotel_id: e.target.value,
+                                          totvs_id: varDadosIntegracao2,
+                                        }),
+                                      },
+                                    })
+                                  }}
+                                />
+                              </Col>
+
+                              <Col md="6" className="mb-2">
+                                <Label
+                                  className="form-label"
+                                  for="dados-integracao-2"
+                                >
+                                  ID TOTVs
+                                </Label>
+                                <Input
+                                  id="dados-integracao-2"
+                                  type="number"
+                                  value={varDadosIntegracao3}
+                                  onChange={(e) => {
+                                    setVarDadosIntegracao3(e.target.value)
+                                    handleChangeCP({
+                                      target: {
+                                        name: "dados_integracao",
+                                        value: JSON.stringify({
+                                          hotel_id: varDadosIntegracao1,
+                                          totvs_id: e.target.value,
+                                        }),
+                                      },
+                                    })
+                                  }}
+                                />
+                              </Col>
+                            </Fragment>
+                          ) : (
+                            ""
+                          )}
+                          {vDadosCP?.tipo_integracao === 6 ? (
+                            <Fragment>
+                              <Col md="6" className="mb-2">
+                                <Label
+                                  className="form-label"
+                                  for="dados-integracao-1"
+                                >
+                                  ID do Hotel
+                                </Label>
+                                <Input
+                                  id="dados-integracao-1"
+                                  type="number"
+                                  value={varDadosIntegracao1}
+                                  onChange={(e) => {
+                                    setVarDadosIntegracao1(e.target.value)
+                                    handleChangeCP({
+                                      target: {
+                                        name: "dados_integracao",
+                                        value: JSON.stringify({
+                                          hotel_id: e.target.value,
+                                          service_name: varDadosIntegracao2,
+                                        }),
+                                      },
+                                    })
+                                  }}
+                                />
+                              </Col>
+                              <Col md="6" className="mb-2">
+                                <Label
+                                  className="form-label"
+                                  for="dados-integracao-2"
+                                >
+                                  Prefixo do banco de dados
+                                </Label>
+                                <Input
+                                  id="dados-integracao-2"
+                                  value={varDadosIntegracao2}
+                                  onChange={(e) => {
+                                    setVarDadosIntegracao2(e.target.value)
+                                    handleChangeCP({
+                                      target: {
+                                        name: "dados_integracao",
+                                        value: JSON.stringify({
+                                          hotel_id: varDadosIntegracao1,
+                                          service_name: e.target.value,
+                                        }),
+                                      },
+                                    })
+                                  }}
+                                />
+                              </Col>
+                            </Fragment>
+                          ) : (
+                            ""
+                          )}
+                          {vDadosCP?.tipo_integracao === 2 ||
+                          vDadosCP?.tipo_integracao === 8 ? (
+                            <Fragment>
+                              <Col md="6" className="mb-2">
+                                <Label
+                                  className="form-label"
+                                  for="dados-integracao-1"
+                                >
+                                  URL da API
+                                </Label>
+                                <Input
+                                  id="dados-integracao-1"
+                                  value={varDadosIntegracao1}
+                                  onChange={(e) => {
+                                    setVarDadosIntegracao1(e.target.value)
+                                    handleChangeCP({
+                                      target: {
+                                        name: "dados_integracao",
+                                        value: JSON.stringify({
+                                          url: e.target.value,
+                                          usuario: varDadosIntegracao2,
+                                          senha: varDadosIntegracao3,
+                                        }),
+                                      },
+                                    })
+                                  }}
+                                />
+                              </Col>
+                              <Col md="3" className="mb-2">
+                                <Label
+                                  className="form-label"
+                                  for="dados-integracao-2"
+                                >
+                                  Usuário
+                                </Label>
+                                <Input
+                                  id="dados-integracao-2"
+                                  value={varDadosIntegracao2}
+                                  onChange={(e) => {
+                                    setVarDadosIntegracao2(e.target.value)
+                                    handleChangeCP({
+                                      target: {
+                                        name: "dados_integracao",
+                                        value: JSON.stringify({
+                                          url: varDadosIntegracao1,
+                                          usuario: e.target.value,
+                                          senha: varDadosIntegracao3,
+                                        }),
+                                      },
+                                    })
+                                  }}
+                                />
+                              </Col>
+                              <Col md="3" className="mb-2">
+                                <Label
+                                  className="form-label"
+                                  for="dados-integracao-3"
+                                >
+                                  Senha
+                                </Label>
+                                <Input
+                                  id="dados-integracao-3"
+                                  value={varDadosIntegracao3}
+                                  onChange={(e) => {
+                                    setVarDadosIntegracao3(e.target.value)
+                                    handleChangeCP({
+                                      target: {
+                                        name: "dados_integracao",
+                                        value: JSON.stringify({
+                                          url: varDadosIntegracao1,
+                                          usuario: varDadosIntegracao2,
+                                          senha: e.target.value,
+                                        }),
+                                      },
+                                    })
+                                  }}
+                                />
+                              </Col>
+                            </Fragment>
+                          ) : (
+                            ""
+                          )}
+                          {vDadosCP?.tipo_integracao === 7 ? (
+                            <Fragment>
+                              <Col md="5" className="mb-2">
+                                <Label
+                                  className="form-label"
+                                  for="dados-integracao-1"
+                                >
+                                  URL da API
+                                </Label>
+                                <Input
+                                  id="dados-integracao-1"
+                                  value={varDadosIntegracao1}
+                                  onChange={(e) => {
+                                    setVarDadosIntegracao1(e.target.value)
+                                    handleChangeCP({
+                                      target: {
+                                        name: "dados_integracao",
+                                        value: JSON.stringify({
+                                          url: e.target.value,
+                                          app: varDadosIntegracao2,
+                                          token: varDadosIntegracao3,
+                                        }),
+                                      },
+                                    })
+                                  }}
+                                />
+                              </Col>
+                              <Col md="3" className="mb-2">
+                                <Label
+                                  className="form-label"
+                                  for="dados-integracao-2"
+                                >
+                                  Nome do APP
+                                </Label>
+                                <Input
+                                  id="dados-integracao-2"
+                                  value={varDadosIntegracao2}
+                                  onChange={(e) => {
+                                    setVarDadosIntegracao2(e.target.value)
+                                    handleChangeCP({
+                                      target: {
+                                        name: "dados_integracao",
+                                        value: JSON.stringify({
+                                          url: varDadosIntegracao1,
+                                          app: e.target.value,
+                                          token: varDadosIntegracao3,
+                                        }),
+                                      },
+                                    })
+                                  }}
+                                />
+                              </Col>
+                              <Col md="4" className="mb-2">
+                                <Label
+                                  className="form-label"
+                                  for="dados-integracao-3"
+                                >
+                                  Senha
+                                </Label>
+                                <Input
+                                  id="dados-integracao-3"
+                                  value={varDadosIntegracao3}
+                                  onChange={(e) => {
+                                    setVarDadosIntegracao3(e.target.value)
+                                    handleChangeCP({
+                                      target: {
+                                        name: "dados_integracao",
+                                        value: JSON.stringify({
+                                          url: varDadosIntegracao1,
+                                          app: varDadosIntegracao2,
+                                          token: e.target.value,
+                                        }),
+                                      },
+                                    })
+                                  }}
+                                />
+                              </Col>
+                            </Fragment>
+                          ) : (
+                            ""
+                          )}
+                        </Fragment>
+                      ) : (
+                        ""
+                      )}
+                      <Col md="12" className="mb-1">
+                        <div className="divider divider-dark">
+                          <div className="divider-text text-dark">
+                            Dados que serão solicitados no Captive Portal
+                          </div>
+                        </div>
+                      </Col>
+                      <Col md="4" className="mb-2">
+                        <div className="form-check form-switch">
+                          <Input
+                            type="switch"
+                            id="vNomeCP"
+                            checked={vDadosCP?.nome ?? false}
+                            onChange={(e) => {
+                              handleChangeCP({
+                                target: {
+                                  name: "nome",
+                                  value: e.target.checked,
+                                },
+                              })
+                            }}
+                          />
+                          <Label
+                            for="vNomeCP"
+                            className="form-check-label mt-25"
+                          >
+                            Solicitar nome
+                          </Label>
+                        </div>
+                      </Col>
+                      <Col md="4" className="mb-2">
+                        <div className="form-check form-switch">
+                          <Input
+                            type="switch"
+                            id="vEmailCP"
+                            checked={vDadosCP?.email ?? false}
+                            onChange={(e) => {
+                              handleChangeCP({
+                                target: {
+                                  name: "email",
+                                  value: e.target.checked,
+                                },
+                              })
+                            }}
+                          />
+                          <Label
+                            for="vEmailCP"
+                            className="form-check-label mt-25"
+                          >
+                            Solicitar e-mail
+                          </Label>
+                        </div>
+                      </Col>
+                      <Col md="4" className="mb-2">
+                        <div className="form-check form-switch">
+                          <Input
+                            type="switch"
+                            id="vCpfCP"
+                            checked={vDadosCP?.cpf ?? false}
+                            onChange={(e) => {
+                              handleChangeCP({
+                                target: {
+                                  name: "cpf",
+                                  value: e.target.checked,
+                                },
+                              })
+                            }}
+                          />
+                          <Label
+                            for="vCpfCP"
+                            className="form-check-label mt-25"
+                          >
+                            Solicitar CPF
+                          </Label>
+                        </div>
+                      </Col>
+                      <Col md="4" className="mb-2">
+                        <div className="form-check form-switch">
+                          <Input
+                            type="switch"
+                            id="vNascimentoCP"
+                            checked={vDadosCP?.nascimento ?? false}
+                            onChange={(e) => {
+                              handleChangeCP({
+                                target: {
+                                  name: "nascimento",
+                                  value: e.target.checked,
+                                },
+                              })
+                            }}
+                          />
+                          <Label
+                            for="vNascimentoCP"
+                            className="form-check-label mt-25"
+                          >
+                            Solicitar data de nascimento
+                          </Label>
+                        </div>
+                      </Col>
+                      <Col md="4" className="mb-2">
+                        <div className="form-check form-switch">
+                          <Input
+                            type="switch"
+                            id="vCelularCP"
+                            checked={vDadosCP?.celular ?? false}
+                            onChange={(e) => {
+                              handleChangeCP({
+                                target: {
+                                  name: "celular",
+                                  value: e.target.checked,
+                                },
+                              })
+                            }}
+                          />
+                          <Label
+                            for="vCelularCP"
+                            className="form-check-label mt-25"
+                          >
+                            Solicitar celular
+                          </Label>
+                        </div>
+                      </Col>
+                      <Col md="4" className="mb-2">
+                        <div className="form-check form-switch">
+                          <Input
+                            type="switch"
+                            id="vPaisCP"
+                            checked={vDadosCP?.pais ?? false}
+                            onChange={(e) => {
+                              handleChangeCP({
+                                target: {
+                                  name: "pais",
+                                  value: e.target.checked,
+                                },
+                              })
+                            }}
+                          />
+                          <Label
+                            for="vPaisCP"
+                            className="form-check-label mt-25"
+                          >
+                            Solicitar país
+                          </Label>
+                        </div>
+                      </Col>
+                      <Col md="4" className="mb-2">
+                        <div className="form-check form-switch">
+                          <Input
+                            type="switch"
+                            id="vCidadeCP"
+                            checked={vDadosCP?.cidade ?? false}
+                            onChange={(e) => {
+                              handleChangeCP({
+                                target: {
+                                  name: "cidade",
+                                  value: e.target.checked,
+                                },
+                              })
+                            }}
+                          />
+                          <Label
+                            for="vCidadeCP"
+                            className="form-check-label mt-25"
+                          >
+                            Solicitar cidade
+                          </Label>
+                        </div>
+                      </Col>
+                      <Col md="4" className="mb-2">
+                        <div className="form-check form-switch">
+                          <Input
+                            type="switch"
+                            id="vSmsCP"
+                            checked={vDadosCP?.usa_sms ?? false}
+                            onChange={(e) => {
+                              handleChangeCP({
+                                target: {
+                                  name: "usa_sms",
+                                  value: e.target.checked,
+                                },
+                              })
+                            }}
+                          />
+                          <Label
+                            for="vSmsCP"
+                            className="form-check-label mt-25"
+                          >
+                            Enviar token SMS
+                          </Label>
+                        </div>
+                      </Col>
+                      <Col md="4" className="mb-2">
+                        <div className="form-check form-switch">
+                          <Input
+                            type="switch"
+                            id="vGeneroCP"
+                            checked={vDadosCP?.genero ?? false}
+                            onChange={(e) => {
+                              handleChangeCP({
+                                target: {
+                                  name: "genero",
+                                  value: e.target.checked,
+                                },
+                              })
+                            }}
+                          />
+                          <Label
+                            for="vGeneroCP"
+                            className="form-check-label mt-25"
+                          >
+                            Solicitar gênero
+                          </Label>
+                        </div>
+                      </Col>
+                      <Col md="4" className="mb-2">
+                        <div className="form-check form-switch">
+                          <Input
+                            type="switch"
+                            id="vBrasileiroCP"
+                            checked={vDadosCP?.brasileiro ?? false}
+                            onChange={(e) => {
+                              handleChangeCP({
+                                target: {
+                                  name: "brasileiro",
+                                  value: e.target.checked,
+                                },
+                              })
+                            }}
+                          />
+                          <Label
+                            for="vBrasileiroCP"
+                            className="form-check-label mt-25"
+                          >
+                            Perguntar nacionalidade
+                          </Label>
+                        </div>
+                      </Col>
+                      <Col md="4" className="mb-2">
+                        <div className="form-check form-switch">
+                          <Input
+                            type="switch"
+                            id="vLoginSocialCP"
+                            checked={vDadosCP?.login_social ?? false}
+                            onChange={(e) => {
+                              handleChangeCP({
+                                target: {
+                                  name: "login_social",
+                                  value: e.target.checked,
+                                },
+                              })
+                            }}
+                          />
+                          <Label
+                            for="vLoginSocialCP"
+                            className="form-check-label mt-25"
+                          >
+                            Permitir login social
+                          </Label>
+                        </div>
+                      </Col>
+                      <Col md="4" className="mb-2">
+                        <div className="form-check form-switch">
+                          <Input
+                            type="switch"
+                            id="vHotelCP"
+                            checked={vDadosCP?.hotel ?? false}
+                            onChange={(e) => {
+                              handleChangeCP({
+                                target: {
+                                  name: "hotel",
+                                  value: e.target.checked,
+                                },
+                              })
+                            }}
+                          />
+                          <Label
+                            for="vHotelCP"
+                            className="form-check-label mt-25"
+                          >
+                            É hotel
+                          </Label>
+                        </div>
+                      </Col>
+                      <Col md="4" className="mb-2">
+                        <div className="form-check form-switch">
+                          <Input
+                            type="switch"
+                            id="vEmpresaRepresentaCP"
+                            checked={vDadosCP?.empresa_representa ?? false}
+                            onChange={(e) => {
+                              handleChangeCP({
+                                target: {
+                                  name: "empresa_representa",
+                                  value: e.target.checked,
+                                },
+                              })
+                            }}
+                          />
+                          <Label
+                            for="vEmpresaRepresentaCP"
+                            className="form-check-label mt-25"
+                          >
+                            Perguntar se é colaborador
+                          </Label>
+                        </div>
+                      </Col>
+                      <Col md="8" className="mb-2">
+                        <div className="form-check form-switch">
+                          <Input
+                            type="switch"
+                            id="vIndicacaoCP"
+                            checked={vDadosCP?.indicacao ?? false}
+                            onChange={(e) => {
+                              handleChangeCP({
+                                target: {
+                                  name: "indicacao",
+                                  value: e.target.checked,
+                                },
+                              })
+                            }}
+                          />
+                          <Label
+                            for="vIndicacaoCP"
+                            className="form-check-label mt-25"
+                          >
+                            Perguntar quem indicou o estabelecimento
+                          </Label>
+                        </div>
+                      </Col>
+                    </Row>
+                  </Form>
+                </Card>
+              </TabPane>
+              <TabPane tabId="3">
                 <Card className="mb-0">
                   <Form onSubmit={(e) => e.preventDefault()}>
                     <Row></Row>

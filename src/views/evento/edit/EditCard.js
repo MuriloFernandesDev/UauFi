@@ -198,7 +198,7 @@ const EventoEditCard = ({ data, setSalvarDados }) => {
                         options={vListaHotspots}
                         className="react-select"
                         classNamePrefix="select"
-                        isDisabled={vDados.id === 0 && vDados.hotspot_id > 0}
+                        isDisabled={vDados.id === 0 && data.hotspot_id > 0}
                         onChange={(e) => {
                           setHotspot(e)
                           handleChange({

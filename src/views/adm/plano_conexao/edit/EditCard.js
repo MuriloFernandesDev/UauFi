@@ -141,7 +141,7 @@ const PlanoEditCard = ({ data, setSalvarDados }) => {
                     placeholder={"Selecione..."}
                     value={vHotspot}
                     options={vListaHotspots}
-                    isDisabled={vDados.id === 0 && vDados.hotspot_id > 0}
+                    isDisabled={vDados.id === 0 && data.hotspot_id > 0}
                     className="react-select"
                     classNamePrefix="select"
                     onChange={(e) => {
