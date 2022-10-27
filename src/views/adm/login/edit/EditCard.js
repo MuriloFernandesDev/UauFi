@@ -94,6 +94,14 @@ const ClienteLoginEditCard = ({ data, setSalvarDados }) => {
     setSalvarDados(vDados)
   }
 
+  const getCampo = (campo, pos) => {
+    try {
+      return vDados[campo]?.substring(pos, pos + 1) === "1"
+    } catch {
+      return false
+    }
+  }
+
   // ** Get cliente on mount based on id
   useEffect(() => {
     // ** Requisitar listas
@@ -101,64 +109,74 @@ const ClienteLoginEditCard = ({ data, setSalvarDados }) => {
   }, [])
 
   // ** Table columns
-  const renderAcesso = (descricao, campo, arrayPos) => {
-    return (
-      <tr>
-        <td className="text-start">{descricao}</td>
-        {!arrayPos || arrayPos.includes(1) ? (
-          <td>
-            <div className="d-flex form-check justify-content-center">
-              <Input
-                type="checkbox"
-                name={campo}
-                pos={1}
-                checked={vDados[campo]?.substring(0, 1) === "1"}
-                onChange={handleChangeCBX}
-              />
-            </div>
-          </td>
-        ) : null}
-        {!arrayPos || arrayPos.includes(2) ? (
-          <td>
-            <div className="d-flex form-check justify-content-center">
-              <Input
-                type="checkbox"
-                name={campo}
-                pos={2}
-                defaultChecked={vDados[campo]?.substring(1, 2) === "1"}
-                onChange={handleChangeCBX}
-              />
-            </div>
-          </td>
-        ) : null}
-        {!arrayPos || arrayPos.includes(3) ? (
-          <td>
-            <div className="d-flex form-check justify-content-center">
-              <Input
-                type="checkbox"
-                name={campo}
-                pos={3}
-                defaultChecked={vDados[campo]?.substring(2, 3) === "1"}
-                onChange={handleChangeCBX}
-              />
-            </div>
-          </td>
-        ) : null}
-        {!arrayPos || arrayPos.includes(4) ? (
-          <td>
-            <div className="d-flex form-check justify-content-center">
-              <Input
-                type="checkbox"
-                name={campo}
-                pos={4}
-                defaultChecked={vDados[campo]?.substring(3, 4) === "1"}
-                onChange={handleChangeCBX}
-              />
-            </div>
-          </td>
-        ) : null}
-      </tr>
-    )
+  const renderAcesso = (descricao, campo, arrayPos, perm) => {
+    if (permissao.can("read", campo)) {
+      return (
+        <tr>
+          <td className="text-start">{descricao}</td>
+          {!arrayPos || arrayPos.includes(1) ? (
+            <td>
+              <div className="d-flex form-check justify-content-center">
+                {permissao.can(perm ?? "create", campo) ? (
+                  <Input
+                    type="checkbox"
+                    name={campo}
+                    pos={1}
+                    checked={getCampo(campo, 0)}
+                    onChange={handleChangeCBX}
+                  />
+                ) : null}
+              </div>
+            </td>
+          ) : null}
+          {!arrayPos || arrayPos.includes(2) ? (
+            <td>
+              <div className="d-flex form-check justify-content-center">
+                {permissao.can(perm ?? "read", campo) ? (
+                  <Input
+                    type="checkbox"
+                    name={campo}
+                    pos={2}
+                    defaultChecked={getCampo(campo, 1)}
+                    onChange={handleChangeCBX}
+                  />
+                ) : null}
+              </div>
+            </td>
+          ) : null}
+          {!arrayPos || arrayPos.includes(3) ? (
+            <td>
+              <div className="d-flex form-check justify-content-center">
+                {permissao.can(perm ?? "update", campo) ? (
+                  <Input
+                    type="checkbox"
+                    name={campo}
+                    pos={3}
+                    defaultChecked={getCampo(campo, 2)}
+                    onChange={handleChangeCBX}
+                  />
+                ) : null}
+              </div>
+            </td>
+          ) : null}
+          {!arrayPos || arrayPos.includes(4) ? (
+            <td>
+              <div className="d-flex form-check justify-content-center">
+                {permissao.can(perm ?? "delete", campo) ? (
+                  <Input
+                    type="checkbox"
+                    name={campo}
+                    pos={4}
+                    defaultChecked={getCampo(campo, 3)}
+                    onChange={handleChangeCBX}
+                  />
+                ) : null}
+              </div>
+            </td>
+          ) : null}
+        </tr>
+      )
+    }
   }
 
   return (
@@ -378,36 +396,42 @@ const ClienteLoginEditCard = ({ data, setSalvarDados }) => {
                       </tr>
                     </thead>
                     <tbody>
-                      {renderAcesso("Usuários", "status_usuario", [1])}
+                      {renderAcesso("Usuários", "status_usuario", [1], "read")}
                       {renderAcesso(
                         "Minha carteira - Visualizar",
                         "minha_carteira",
-                        [1]
+                        [1],
+                        "read"
                       )}
                       {renderAcesso(
                         "Minha carteira - Solicitar aumento",
                         "minha_carteira",
-                        [2]
+                        [2],
+                        "create"
                       )}
                       {renderAcesso(
                         "Relatórios - Campanha enviada",
                         "rel_campanha",
-                        [1]
+                        [1],
+                        "read"
                       )}
                       {renderAcesso(
                         "Relatórios - Cadastros/Conexões",
                         "rel_cad_conexoes",
-                        [1]
+                        [1],
+                        "read"
                       )}
                       {renderAcesso(
                         "Relatórios - Exportar e-mails",
                         "rel_exportar_email",
-                        [1]
+                        [1],
+                        "read"
                       )}
                       {renderAcesso(
-                        "Relatórios - Exportar registros",
+                        "Exportar registros",
                         "rel_exportar_registros",
-                        [1]
+                        [1],
+                        "read"
                       )}
                     </tbody>
                   </Table>
