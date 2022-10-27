@@ -138,9 +138,17 @@ const CardNovosCad = (props) => {
 
   return (
     <Card>
-      <CardHeader className="pt-1 pe-1">
+      <CardHeader className="pt-1 pe-1 pb-0">
         <h5>Novos cadastros</h5>
         <ButtonGroup>
+          <Button
+            color="primary"
+            onClick={() => getDados("dia")}
+            active={vPeriodo === "dia"}
+            outline
+          >
+            Diário
+          </Button>
           <Button
             color="primary"
             onClick={() => getDados("mes")}
@@ -163,7 +171,12 @@ const CardNovosCad = (props) => {
       <CardBody>
         <div className="d-flex justify-content-start mb-0">
           <CardText className="mb-50">
-            Últimos {vPeriodo === "mes" ? "12 meses" : "10 anos"}
+            Últimos{" "}
+            {vPeriodo === "mes"
+              ? "12 meses"
+              : vPeriodo === "dia"
+              ? "30 dias"
+              : "10 anos"}
           </CardText>
         </div>
         {!vProcessando ? (
@@ -172,7 +185,7 @@ const CardNovosCad = (props) => {
               options={vOptions}
               series={vSeries}
               type="line"
-              height={195}
+              height={230}
             />
           ) : null
         ) : (

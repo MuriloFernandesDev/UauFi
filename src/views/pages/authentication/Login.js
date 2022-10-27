@@ -232,7 +232,7 @@ const Login = () => {
                 />
               </div>
               <div className="form-check mb-1">
-                <Input type="checkbox" id="remember-me" />
+                <Input type="checkbox" id="remember-me" checked />
                 <Label className="form-check-label" for="remember-me">
                   Manter conectado
                 </Label>

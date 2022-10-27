@@ -42,6 +42,58 @@ import toast from "react-hot-toast"
 
 const MySwal = withReactContent(Swal)
 
+const CustomHeader = ({ handleFilter, value, handlePerPage, rowsPerPage }) => {
+  // ** Context
+  const permissao = useContext(PermissaoContext)
+
+  return (
+    <div className="w-100 py-2">
+      <Row>
+        <Col lg="6" className="d-flex align-items-center px-0 px-lg-1">
+          <div className="d-flex align-items-center me-2">
+            <label htmlFor="rows-per-page">Mostrar</label>
+            <Input
+              type="select"
+              id="rows-per-page"
+              value={rowsPerPage}
+              onChange={handlePerPage}
+              className="form-control ms-50 pe-3"
+            >
+              <option value="10">10</option>
+              <option value="25">25</option>
+              <option value="50">50</option>
+            </Input>
+          </div>
+          <Button
+            tag={Link}
+            to="/evento/add"
+            color="primary"
+            disabled={!permissao.can("create", "evento")}
+          >
+            Novo evento
+          </Button>
+        </Col>
+        <Col
+          lg="6"
+          className="actions-right d-flex align-items-center justify-content-lg-end flex-lg-nowrap flex-wrap mt-lg-0 mt-1 pe-lg-1 p-0"
+        >
+          <div className="d-flex align-items-center">
+            <label htmlFor="txtPesquisa">Pesquisa</label>
+            <Input
+              id="txtPesquisa"
+              className="ms-50 me-2 w-100"
+              type="text"
+              value={value}
+              onChange={(e) => handleFilter(e.target.value)}
+              placeholder="Filtrar..."
+            />
+          </div>
+        </Col>
+      </Row>
+    </div>
+  )
+}
+
 const EventoList = () => {
   // ** Store vars
   const dispatch = useDispatch()
@@ -60,9 +112,6 @@ const EventoList = () => {
 
   // ** Guardar o Cliente selecionado para atualizar a página caso mude
   const sClienteId = localStorage.getItem("clienteId")
-
-  // ** Context
-  const permissao = useContext(PermissaoContext)
 
   if (vPesquisando && store.total >= 0) {
     setPesquisando(false)
@@ -166,60 +215,6 @@ const EventoList = () => {
         })
       }
     })
-  }
-
-  const CustomHeader = ({
-    handleFilter,
-    value,
-    handlePerPage,
-    rowsPerPage,
-  }) => {
-    return (
-      <div className="w-100 py-2">
-        <Row>
-          <Col lg="6" className="d-flex align-items-center px-0 px-lg-1">
-            <div className="d-flex align-items-center me-2">
-              <label htmlFor="rows-per-page">Mostrar</label>
-              <Input
-                type="select"
-                id="rows-per-page"
-                value={rowsPerPage}
-                onChange={handlePerPage}
-                className="form-control ms-50 pe-3"
-              >
-                <option value="10">10</option>
-                <option value="25">25</option>
-                <option value="50">50</option>
-              </Input>
-            </div>
-            <Button
-              tag={Link}
-              to="/evento/add"
-              color="primary"
-              disabled={!permissao.can("create", "evento")}
-            >
-              Novo evento
-            </Button>
-          </Col>
-          <Col
-            lg="6"
-            className="actions-right d-flex align-items-center justify-content-lg-end flex-lg-nowrap flex-wrap mt-lg-0 mt-1 pe-lg-1 p-0"
-          >
-            <div className="d-flex align-items-center">
-              <label htmlFor="txtPesquisa">Pesquisa</label>
-              <Input
-                id="txtPesquisa"
-                className="ms-50 me-2 w-100"
-                type="text"
-                value={value}
-                onChange={(e) => handleFilter(e.target.value)}
-                placeholder="Filtrar..."
-              />
-            </div>
-          </Col>
-        </Row>
-      </div>
-    )
   }
 
   // ** Table columns

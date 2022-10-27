@@ -63,6 +63,120 @@ const MySwal = withReactContent(Swal)
 
 import "@styles/react/libs/tables/react-dataTable-component.scss"
 
+// ** Table Header
+const CustomHeader = ({
+  store,
+  toggleSidebar,
+  handlePerPage,
+  rowsPerPage,
+  handleFilter,
+  searchTerm,
+}) => {
+  // ** Context
+  const permissao = useContext(PermissaoContext)
+
+  // ** Converts table to CSV
+  function convertArrayOfObjectsToCSV(array) {
+    let result
+
+    const columnDelimiter = ","
+    const lineDelimiter = "\n"
+    const keys = Object.keys(store.data[0])
+
+    result = ""
+    result += keys.join(columnDelimiter)
+    result += lineDelimiter
+
+    array.forEach((item) => {
+      let ctr = 0
+      keys.forEach((key) => {
+        if (ctr > 0) result += columnDelimiter
+
+        result += item[key]
+
+        ctr++
+      })
+      result += lineDelimiter
+    })
+
+    return result
+  }
+
+  // ** Downloads CSV
+  function downloadCSV(array) {
+    const link = document.createElement("a")
+    let csv = convertArrayOfObjectsToCSV(array)
+    if (csv === null) return
+
+    const filename = "export.csv"
+
+    if (!csv.match(/^data:text\/csv/i)) {
+      csv = `data:text/csv;charset=utf-8,${csv}`
+    }
+
+    link.setAttribute("href", encodeURI(csv))
+    link.setAttribute("download", filename)
+    link.click()
+  }
+  return (
+    <div className="invoice-list-table-header w-100 me-1 ms-50 mt-1 mb-75">
+      <Row>
+        <Col xl="6" className="d-flex align-items-center ps-0 mt-1 mb-1">
+          <div className="d-flex align-items-center me-2">
+            <label htmlFor="rows-per-page">Mostrar</label>
+            <Input
+              type="select"
+              id="rows-per-page"
+              value={rowsPerPage}
+              onChange={handlePerPage}
+              className="form-control ms-50 pe-3"
+            >
+              <option value="10">10</option>
+              <option value="25">25</option>
+              <option value="50">50</option>
+            </Input>
+          </div>
+        </Col>
+        <Col
+          xl="6"
+          className="d-flex align-items-sm-center justify-content-xl-end justify-content-start flex-xl-nowrap flex-wrap flex-sm-row flex-column mt-xl-0 mt-1 pe-0 ps-0"
+        >
+          <div className="d-flex align-items-center mb-1 mb-md-0 me-0 me-sm-1 me-md-2">
+            <label htmlFor="txtPesquisa">Pesquisa</label>
+            <Input
+              id="txtPesquisa"
+              className="ms-50 w-100"
+              type="text"
+              value={searchTerm}
+              onChange={(e) => handleFilter(e.target.value)}
+              placeholder="Filtrar..."
+            />
+          </div>
+          <Button
+            className="me-0 mb-1 mb-md-0"
+            color="primary"
+            onClick={toggleSidebar}
+          >
+            +Filtros
+          </Button>
+          {permissao.can("read", "rel_exportar_registros") ? (
+            <Button
+              className="me-0 mb-1 mb-md-0 ms-0 ms-sm-1 ms-md-2"
+              onClick={() => downloadCSV(store.data)}
+              color="secondary"
+              outline
+            >
+              <span className="align-middle text-nowrap">
+                <Share className="font-small-4" /> Exportar
+              </span>
+            </Button>
+          ) : null}
+        </Col>
+      </Row>
+    </div>
+  )
+}
+
 const handleError = (error, errorMessage, errorIcon) => {
   return MySwal.fire({
     title: error,
@@ -119,9 +233,6 @@ const UsuarioLista = () => {
     statusOptions.filter((item) => vSituacaoArray?.includes(item.value))
   )
   const [vPesquisando, setPesquisando] = useState(true)
-
-  // ** Context
-  const permissao = useContext(PermissaoContext)
 
   const vTimeoutPesquisa = useRef()
 
@@ -305,117 +416,6 @@ const UsuarioLista = () => {
         />
       )
     }
-  }
-
-  // ** Table Header
-  const CustomHeader = ({
-    store,
-    toggleSidebar,
-    handlePerPage,
-    rowsPerPage,
-    handleFilter,
-    searchTerm,
-  }) => {
-    // ** Converts table to CSV
-    function convertArrayOfObjectsToCSV(array) {
-      let result
-
-      const columnDelimiter = ","
-      const lineDelimiter = "\n"
-      const keys = Object.keys(store.data[0])
-
-      result = ""
-      result += keys.join(columnDelimiter)
-      result += lineDelimiter
-
-      array.forEach((item) => {
-        let ctr = 0
-        keys.forEach((key) => {
-          if (ctr > 0) result += columnDelimiter
-
-          result += item[key]
-
-          ctr++
-        })
-        result += lineDelimiter
-      })
-
-      return result
-    }
-
-    // ** Downloads CSV
-    function downloadCSV(array) {
-      const link = document.createElement("a")
-      let csv = convertArrayOfObjectsToCSV(array)
-      if (csv === null) return
-
-      const filename = "export.csv"
-
-      if (!csv.match(/^data:text\/csv/i)) {
-        csv = `data:text/csv;charset=utf-8,${csv}`
-      }
-
-      link.setAttribute("href", encodeURI(csv))
-      link.setAttribute("download", filename)
-      link.click()
-    }
-    return (
-      <div className="invoice-list-table-header w-100 me-1 ms-50 mt-1 mb-75">
-        <Row>
-          <Col xl="6" className="d-flex align-items-center ps-0 mt-1 mb-1">
-            <div className="d-flex align-items-center me-2">
-              <label htmlFor="rows-per-page">Mostrar</label>
-              <Input
-                type="select"
-                id="rows-per-page"
-                value={rowsPerPage}
-                onChange={handlePerPage}
-                className="form-control ms-50 pe-3"
-              >
-                <option value="10">10</option>
-                <option value="25">25</option>
-                <option value="50">50</option>
-              </Input>
-            </div>
-          </Col>
-          <Col
-            xl="6"
-            className="d-flex align-items-sm-center justify-content-xl-end justify-content-start flex-xl-nowrap flex-wrap flex-sm-row flex-column mt-xl-0 mt-1 pe-0 ps-0"
-          >
-            <div className="d-flex align-items-center mb-1 mb-md-0 me-0 me-sm-1 me-md-2">
-              <label htmlFor="txtPesquisa">Pesquisa</label>
-              <Input
-                id="txtPesquisa"
-                className="ms-50 w-100"
-                type="text"
-                value={searchTerm}
-                onChange={(e) => handleFilter(e.target.value)}
-                placeholder="Filtrar..."
-              />
-            </div>
-            <Button
-              className="me-0 mb-1 mb-md-0"
-              color="primary"
-              onClick={toggleSidebar}
-            >
-              +Filtros
-            </Button>
-            {permissao.can("read", "rel_exportar_registros") ? (
-              <Button
-                className="me-0 mb-1 mb-md-0 ms-0 ms-sm-1 ms-md-2"
-                onClick={() => downloadCSV(store.data)}
-                color="secondary"
-                outline
-              >
-                <span className="align-middle text-nowrap">
-                  <Share className="font-small-4" /> Exportar
-                </span>
-              </Button>
-            ) : null}
-          </Col>
-        </Row>
-      </div>
-    )
   }
 
   const columns = [
