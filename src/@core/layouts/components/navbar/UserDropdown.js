@@ -6,7 +6,7 @@ import { useEffect, useState } from "react"
 import Avatar from "@components/avatar"
 
 // ** Utils
-import { isUserLoggedIn } from "@utils"
+import { isUserLoggedIn, getUserData } from "@utils"
 
 // ** Store & Actions
 import { useDispatch } from "react-redux"
@@ -32,6 +32,9 @@ const UserDropdown = (props) => {
 
   // ** State
   const [userData, setUserData] = useState(null)
+
+  // ** Vars
+  const user = getUserData()
 
   // ** Props
   const { skin, setSkin } = props
@@ -86,16 +89,20 @@ const UserDropdown = (props) => {
           <User size={14} className="me-75" />
           <span className="align-middle">Meu perfil</span>
         </DropdownItem>
-        <DropdownItem tag={Link} to="/adm/login/edit">
-          <Users size={14} className="me-75" />
-          <span className="align-middle">Impersonar</span>
-        </DropdownItem>
+        {user.perfil === "adm" ? (
+          <DropdownItem tag={Link} to="/adm/login/edit">
+            <Users size={14} className="me-75" />
+            <span className="align-middle">Impersonar</span>
+          </DropdownItem>
+        ) : null}
         <DropdownItem
-          className="d-block d-lg-none"
+          className="d-lg-none w-100"
           onClick={() => handleThemeToggler()}
         >
           <ThemeToggler />
-          <span className="align-middle">Mudar tema</span>
+          <span className="align-middle">
+            {`Usar tema ${skin === "dark" ? "claro" : "escuro"}`}
+          </span>
         </DropdownItem>
         <DropdownItem
           tag={Link}

@@ -1,6 +1,5 @@
 // ** React Imports
 import { useEffect } from "react"
-import { NavLink } from "react-router-dom"
 
 // ** Icons Imports
 import { Disc, X, Circle } from "react-feather"
@@ -13,13 +12,7 @@ import { getUserData } from "@utils"
 
 const VerticalMenuHeader = (props) => {
   // ** Props
-  const {
-    menuCollapsed,
-    setMenuCollapsed,
-    setMenuVisibility,
-    setGroupOpen,
-    menuHover,
-  } = props
+  const { menuCollapsed, setMenuCollapsed, setGroupOpen, menuHover } = props
 
   // ** Vars
   const user = getUserData()
@@ -54,11 +47,8 @@ const VerticalMenuHeader = (props) => {
 
   return (
     <div className="navbar-header">
-      <ul
-        className="nav navbar-nav flex-row flex-nowrap"
-        style={{ height: "100%" }}
-      >
-        <li className="nav-item me-auto">
+      <ul className="nav navbar-nav text-center" style={{ height: "100%" }}>
+        <li className="nav-item">
           <img
             className="pt-1"
             src={
@@ -70,16 +60,6 @@ const VerticalMenuHeader = (props) => {
             height="100%"
             alt="logo"
           />
-        </li>
-        <li className="nav-item nav-toggle ms-1">
-          <div className="nav-link modern-nav-toggle cursor-pointer">
-            <Toggler />
-            <X
-              onClick={() => setMenuVisibility(false)}
-              className="toggle-icon icon-x d-block d-xl-none"
-              size={20}
-            />
-          </div>
         </li>
       </ul>
     </div>

@@ -163,7 +163,7 @@ const CardQuantidades = () => {
                 )}
 
                 <CardText className="font-small-3 mb-0">
-                  Total de cadastros
+                  Cadastrados no seu wi-fi
                 </CardText>
               </div>
             </div>
@@ -184,7 +184,7 @@ const CardQuantidades = () => {
                 )}
 
                 <CardText className="font-small-3 mb-0">
-                  Total de usuários
+                  Usuários conectaram
                 </CardText>
               </div>
             </div>

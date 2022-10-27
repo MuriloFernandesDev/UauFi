@@ -1,5 +1,5 @@
 // ** React
-import { Fragment, useEffect, useState } from "react"
+import { Fragment, useEffect, useState, useContext } from "react"
 import { Link, useNavigate } from "react-router-dom"
 
 // ** Reactstrap
@@ -17,6 +17,9 @@ import Select from "react-select"
 // ** API
 import api from "@src/services/api"
 
+// ** Context
+import { AbilityContext as PermissaoContext } from "@src/utility/context/Can"
+
 const ClienteLoginEditCard = ({ data, setSalvarDados }) => {
   const navigate = useNavigate()
 
@@ -24,6 +27,9 @@ const ClienteLoginEditCard = ({ data, setSalvarDados }) => {
   const [vDados, setData] = useState(data)
   const [vCliente, setCliente] = useState(null)
   const [vListaClientes, setListaClientes] = useState(null)
+
+  // ** Context
+  const permissao = useContext(PermissaoContext)
 
   const handleChange = (e) => {
     const { name, value } = e.target
@@ -259,7 +265,7 @@ const ClienteLoginEditCard = ({ data, setSalvarDados }) => {
                   </Col>
                   <Col md="6" className="mb-2">
                     <Label className="form-label" for="email">
-                      E-mail
+                      E-mail*
                     </Label>
                     <Input
                       id="email"
@@ -288,7 +294,7 @@ const ClienteLoginEditCard = ({ data, setSalvarDados }) => {
 
               <Col md="12" className="mb-2">
                 <Label className="form-label" for="clientes">
-                  Clientes permitidos
+                  Clientes permitidos*
                 </Label>
                 <Select
                   isClearable
@@ -313,97 +319,101 @@ const ClienteLoginEditCard = ({ data, setSalvarDados }) => {
                   options={vListaClientes}
                 />
               </Col>
-              <Col md="12" className="mb-2">
-                <Table
-                  className="text-nowrap text-center border-bottom"
-                  responsive
-                >
-                  <thead>
-                    <tr>
-                      <th className="text-start">Permissões de acesso</th>
-                      <th>Cadastra</th>
-                      <th>Visualiza</th>
-                      <th>Altera</th>
-                      <th>Remove</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {renderAcesso("Administrativo - Cliente", "adm_clientes")}
-                    {renderAcesso("Administrativo - Hotspot", "adm_hotspot")}
-                    {renderAcesso("Administrativo - Login", "adm_login")}
-                    {renderAcesso(
-                      "Administrativo - Plano de conexão",
-                      "plano_conexao"
-                    )}
-                    {renderAcesso(
-                      "Administrativo - Libera/Bloqueia mac",
-                      "permissao_mac"
-                    )}
-                    {renderAcesso("Evento", "evento")}
-                    {renderAcesso("Pesquisa", "adm_pesquisa")}
-                    {renderAcesso("Publicidade", "adm_publicidade")}
-                    {renderAcesso("Filtros", "filtro_campanha")}
-                    {renderAcesso("Campanha - Push (App)", "campanha_push")}
-                    {renderAcesso("Campanha - SMS", "campanha_sms")}
-                    {renderAcesso(
-                      "Campanha - Recorrente - Push (App)",
-                      "campanha_rec_push"
-                    )}
-                    {renderAcesso(
-                      "Campanha - Recorrente - SMS",
-                      "campanha_rec_sms"
-                    )}
-                    {renderAcesso("Encurtador de URL", "encurtador_url")}
-                  </tbody>
-                </Table>
-              </Col>
-              <Col md="12" className="mb-2">
-                <Table
-                  className="text-nowrap text-center border-bottom"
-                  responsive
-                >
-                  <thead>
-                    <tr>
-                      <th className="text-start">Outros acessos</th>
-                      <th>Permitir</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {renderAcesso("Usuários", "status_usuario", [1])}
-                    {renderAcesso(
-                      "Minha carteira - Visualizar",
-                      "minha_carteira",
-                      [1]
-                    )}
-                    {renderAcesso(
-                      "Minha carteira - Solicitar aumento",
-                      "minha_carteira",
-                      [2]
-                    )}
-                    {renderAcesso(
-                      "Relatórios - Campanha enviada",
-                      "rel_campanha",
-                      [1]
-                    )}
-                    {renderAcesso(
-                      "Relatórios - Cadastros/Conexões",
-                      "rel_cad_conexoes",
-                      [1]
-                    )}
-                    {renderAcesso(
-                      "Relatórios - Exportar e-mails",
-                      "rel_exportar_email",
-                      [1]
-                    )}
-                    {renderAcesso(
-                      "Relatórios - Exportar registros",
-                      "rel_exportar_registros",
-                      [1]
-                    )}
-                  </tbody>
-                </Table>
-              </Col>
             </Row>
+            {permissao.can("read", "adm_login") ? (
+              <Row>
+                <Col md="12" className="mb-2">
+                  <Table
+                    className="text-nowrap text-center border-bottom"
+                    responsive
+                  >
+                    <thead>
+                      <tr>
+                        <th className="text-start">Permissões de acesso</th>
+                        <th>Cadastra</th>
+                        <th>Visualiza</th>
+                        <th>Altera</th>
+                        <th>Remove</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {renderAcesso("Administrativo - Cliente", "adm_clientes")}
+                      {renderAcesso("Administrativo - Hotspot", "adm_hotspot")}
+                      {renderAcesso("Administrativo - Login", "adm_login")}
+                      {renderAcesso(
+                        "Administrativo - Plano de conexão",
+                        "plano_conexao"
+                      )}
+                      {renderAcesso(
+                        "Administrativo - Libera/Bloqueia mac",
+                        "permissao_mac"
+                      )}
+                      {renderAcesso("Evento", "evento")}
+                      {renderAcesso("Pesquisa", "adm_pesquisa")}
+                      {renderAcesso("Publicidade", "adm_publicidade")}
+                      {renderAcesso("Filtros", "filtro_campanha")}
+                      {renderAcesso("Campanha - Push (App)", "campanha_push")}
+                      {renderAcesso("Campanha - SMS", "campanha_sms")}
+                      {renderAcesso(
+                        "Campanha - Recorrente - Push (App)",
+                        "campanha_rec_push"
+                      )}
+                      {renderAcesso(
+                        "Campanha - Recorrente - SMS",
+                        "campanha_rec_sms"
+                      )}
+                      {renderAcesso("Encurtador de URL", "encurtador_url")}
+                    </tbody>
+                  </Table>
+                </Col>
+                <Col md="12" className="mb-2">
+                  <Table
+                    className="text-nowrap text-center border-bottom"
+                    responsive
+                  >
+                    <thead>
+                      <tr>
+                        <th className="text-start">Outros acessos</th>
+                        <th>Permitir</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {renderAcesso("Usuários", "status_usuario", [1])}
+                      {renderAcesso(
+                        "Minha carteira - Visualizar",
+                        "minha_carteira",
+                        [1]
+                      )}
+                      {renderAcesso(
+                        "Minha carteira - Solicitar aumento",
+                        "minha_carteira",
+                        [2]
+                      )}
+                      {renderAcesso(
+                        "Relatórios - Campanha enviada",
+                        "rel_campanha",
+                        [1]
+                      )}
+                      {renderAcesso(
+                        "Relatórios - Cadastros/Conexões",
+                        "rel_cad_conexoes",
+                        [1]
+                      )}
+                      {renderAcesso(
+                        "Relatórios - Exportar e-mails",
+                        "rel_exportar_email",
+                        [1]
+                      )}
+                      {renderAcesso(
+                        "Relatórios - Exportar registros",
+                        "rel_exportar_registros",
+                        [1]
+                      )}
+                    </tbody>
+                  </Table>
+                </Col>
+              </Row>
+            ) : null}
           </Fragment>
         </Card>
       </Col>

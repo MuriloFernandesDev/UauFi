@@ -1,5 +1,5 @@
 // ** React
-import { useEffect, useState } from "react"
+import { useEffect, useState, useContext } from "react"
 import { useParams, useNavigate } from "react-router-dom"
 
 // ** API
@@ -18,6 +18,9 @@ import toast from "react-hot-toast"
 import Swal from "sweetalert2"
 import withReactContent from "sweetalert2-react-content"
 import UILoader from "@components/ui-loader"
+
+// ** Context
+import { AbilityContext as PermissaoContext } from "@src/utility/context/Can"
 
 // ** Modal de apresentação de erros
 
@@ -54,10 +57,17 @@ const ClienteLoginEdit = () => {
   const [vCarregando, setCarregando] = useState(true)
   const [vSalvando, setSalvando] = useState(false)
 
+  // ** Context
+  const permissao = useContext(PermissaoContext)
+
   const handleOK = () => {
     setSalvando(false)
     dispatch(getClienteLogin(vParFiltro))
-    navigate("/adm/login")
+    if (permissao.can("read", "adm_login")) {
+      navigate("/adm/login")
+    } else {
+      navigate(-1)
+    }
   }
 
   // ** Função para salvar dados & respostas a erros

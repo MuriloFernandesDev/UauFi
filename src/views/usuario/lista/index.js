@@ -366,18 +366,14 @@ const UsuarioLista = () => {
   // ** Function in get data on rows per page
   const handlePerPage = (e) => {
     const value = parseInt(e.currentTarget.value)
-    handlePesquisar({
-      sort,
-      sortColumn,
-      q: searchTerm,
-      page: currentPage,
-      perPage: value,
-      datai: vDataInicial,
-      dataf: vDataFinal,
-      situacao: arrayToString(vSituacao),
-      clienteId: sClienteId,
-    })
     setRowsPerPage(value)
+    dispatch(
+      getPagina({
+        allData: store.allData,
+        page: currentPage,
+        perPage: value,
+      })
+    )
   }
 
   // ** Function in get data on search query change
