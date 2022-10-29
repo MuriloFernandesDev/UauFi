@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState, Fragment } from "react"
+import { useState, Fragment, useEffect } from "react"
 
 // ** Reactstrap Imports
 import {
@@ -20,9 +20,13 @@ import {
 // ** Third Party Components
 import Swal from "sweetalert2"
 import Select from "react-select"
-import { Check, Briefcase, X } from "react-feather"
+import { Check, X, Wifi, MapPin } from "react-feather"
 import { useForm, Controller } from "react-hook-form"
 import withReactContent from "sweetalert2-react-content"
+
+// ** Store & Actions
+import { getInfoUsuario, getTotais } from "../store"
+import { useDispatch } from "react-redux"
 
 // ** Custom Components
 import Avatar from "@components/avatar"
@@ -32,6 +36,8 @@ import { selectThemeColors, formatDate, formatDateTime } from "@utils"
 
 // ** Styles
 import "@styles/react/libs/react-select/_react-select.scss"
+
+import toast from "react-hot-toast"
 
 const statusOptions = [
   { value: "active", label: "Active" },
@@ -57,9 +63,32 @@ const languageOptions = [
 
 const MySwal = withReactContent(Swal)
 
-const UserInfoCard = ({ selectedUser }) => {
+const handleError = (error, errorMessage, errorIcon) => {
+  return MySwal.fire({
+    title: error,
+    text: errorMessage,
+    icon: errorIcon,
+    customClass: {
+      confirmButton: "btn btn-primary",
+      popup: "animate__animated animate__fadeIn",
+    },
+    hideClass: {
+      popup: "animate__animated animate__zoomOut",
+    },
+    buttonsStyling: false,
+  })
+}
+
+const UserInfoCard = ({ dados }) => {
   // ** State
   const [show, setShow] = useState(false)
+
+  // ** Store Vars
+  const dispatch = useDispatch()
+
+  // ** States
+  const [vDados, setDados] = useState(true)
+  const [vTotais, setTotais] = useState(true)
 
   // ** Hook
   const {
@@ -70,21 +99,21 @@ const UserInfoCard = ({ selectedUser }) => {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      username: selectedUser.nome,
-      lastName: selectedUser.nome.split(" ")[1],
-      firstName: selectedUser.nome.split(" ")[0],
+      username: dados.nome,
+      lastName: dados.nome.split(" ")[1],
+      firstName: dados.nome.split(" ")[0],
     },
   })
 
   // ** render user img
   const renderUserImg = () => {
-    if (selectedUser !== null && selectedUser.foto_url?.length) {
+    if (dados !== null && dados.foto_url?.length) {
       return (
         <img
           height="110"
           width="110"
-          alt="user-avatar"
-          src={selectedUser?.foto_url}
+          alt="foto"
+          src={dados?.foto_url}
           className="img-fluid rounded mt-3 mb-2"
         />
       )
@@ -94,7 +123,7 @@ const UserInfoCard = ({ selectedUser }) => {
           initials
           color={"light-primary"}
           className="rounded mt-3 mb-2"
-          content={selectedUser.nome}
+          content={dados.nome}
           contentStyles={{
             borderRadius: 0,
             fontSize: "calc(48px)",
@@ -126,46 +155,69 @@ const UserInfoCard = ({ selectedUser }) => {
 
   const handleReset = () => {
     reset({
-      username: selectedUser.nome,
-      lastName: selectedUser.nome.split(" ")[1],
-      firstName: selectedUser.nome.split(" ")[0],
+      username: dados.nome,
+      lastName: dados.nome.split(" ")[1],
+      firstName: dados.nome.split(" ")[0],
     })
   }
 
-  const handleSuspendedClick = () => {
+  // ** Modal de exclusão
+  const handleDeleteConfirmation = (row) => {
     return MySwal.fire({
-      title: "Are you sure?",
-      text: "You won't be able to revert user!",
+      title: "Tem certeza?",
+      text: "Sua ação removerá todos os dados deste usuário e isso não poderá ser revertido!",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonText: "Yes, Suspend user!",
+      confirmButtonText: "Sim, remover!",
+      cancelButtonText: "Cancelar",
       customClass: {
         confirmButton: "btn btn-primary",
         cancelButton: "btn btn-outline-danger ms-1",
+        popup: "animate__animated animate__fadeIn",
+      },
+      hideClass: {
+        popup: "animate__animated animate__zoomOut",
       },
       buttonsStyling: false,
-    }).then(function (result) {
+    }).then((result) => {
       if (result.value) {
-        MySwal.fire({
-          icon: "success",
-          title: "Suspended!",
-          text: "User has been suspended.",
-          customClass: {
-            confirmButton: "btn btn-success",
-          },
-        })
-      } else if (result.dismiss === MySwal.DismissReason.cancel) {
-        MySwal.fire({
-          title: "Cancelled",
-          text: "Cancelled Suspension :)",
-          icon: "error",
-          customClass: {
-            confirmButton: "btn btn-success",
-          },
-        })
+        api
+          .delete(`/usuario/${row.id}`)
+          .then((response) => {
+            if (response.status === 200) {
+              handleFilter(store.params.q)
+
+              toast.success("Removido com sucesso!", {
+                position: "bottom-right",
+              })
+            }
+          })
+          .catch((error) => {
+            if (error.response.status === 400) {
+              handleError("Atenção!", "Não autorizado.", "warning")
+            } else if (error.response.status === 503) {
+              handleError("Ops...", error.response.data, "error")
+            } else {
+              handleError(
+                "Erro inesperado",
+                "Por favor, contate um administrador.",
+                "error"
+              )
+            }
+          })
       }
     })
   }
+
+  // ** Get suer on mount
+  useEffect(() => {
+    getInfoUsuario(dados.id).then((response) => {
+      setDados(response)
+    })
+    getTotais(dados.id).then((response) => {
+      setTotais(response)
+    })
+  }, [dispatch])
 
   return (
     <Fragment>
@@ -176,7 +228,7 @@ const UserInfoCard = ({ selectedUser }) => {
               {renderUserImg()}
               <div className="d-flex flex-column align-items-center text-center">
                 <div className="user-info">
-                  <h4>{selectedUser.nome ?? ""}</h4>
+                  <h4>{dados.nome ?? ""}</h4>
                 </div>
               </div>
             </div>
@@ -184,95 +236,99 @@ const UserInfoCard = ({ selectedUser }) => {
           <div className="d-flex justify-content-around my-2 pt-75">
             <div className="d-flex align-items-start me-2">
               <Badge color="light-primary" className="rounded p-75">
-                <Check className="font-medium-2" />
+                <MapPin className="font-medium-2" />
               </Badge>
               <div className="ms-75">
-                <h4 className="mb-0">123</h4>
+                <h4 className="mb-0">
+                  {new Intl.NumberFormat().format(vTotais?.visitas ?? 0)}
+                </h4>
                 <small>Visitas</small>
               </div>
             </div>
             <div className="d-flex align-items-start">
               <Badge color="light-primary" className="rounded p-75">
-                <Briefcase className="font-medium-2" />
+                <Wifi className="font-medium-2" />
               </Badge>
               <div className="ms-75">
-                <h4 className="mb-0">568</h4>
+                <h4 className="mb-0">
+                  {new Intl.NumberFormat().format(vTotais?.conexoes ?? 0)}
+                </h4>
                 <small>Conexões</small>
               </div>
             </div>
           </div>
           <h4 className="fw-bolder border-bottom pb-50 mb-1">Dados</h4>
           <div className="info-container">
-            {selectedUser !== null ? (
+            {dados !== null ? (
               <ul className="list-unstyled">
                 <li className="mb-75">
                   <span className="fw-bolder me-25">Nome:</span>
-                  <span>{selectedUser.nome ?? ""}</span>
+                  <span>{dados.nome ?? ""}</span>
                 </li>
                 <li className="mb-75">
-                  <span className="fw-bolder me-25">E-mail:</span>
-                  <span>{selectedUser.email ?? ""}</span>
+                  <span className="fw-bolder me-25 text-nowrap">E-mail:</span>
+                  <span>{dados.email ?? ""}</span>
                 </li>
                 <li className="mb-75">
                   <span className="fw-bolder me-25">CPF:</span>
-                  <span>{selectedUser.cpf ?? ""}</span>
+                  <span>{dados.cpf ?? ""}</span>
                 </li>
                 <li className="mb-75">
                   <span className="fw-bolder me-25">Nascimento:</span>
-                  <span>{formatDate(selectedUser.nascimento) ?? ""}</span>
+                  <span>{formatDate(dados.nascimento) ?? ""}</span>
                 </li>
                 <li className="mb-75">
                   <span className="fw-bolder me-25">Gênero:</span>
                   <span className="text-capitalize">
-                    {selectedUser.genero ?? ""}
+                    {vDados?.genero ?? ""}
                   </span>
                 </li>
                 <li className="mb-75">
                   <span className="fw-bolder me-25">Cidade:</span>
-                  <span>
-                    {selectedUser.cidade_id ?? selectedUser.outra_cidade ?? ""}
-                  </span>
+                  <span>{vDados?.cidade ?? ""}</span>
                 </li>
                 <li className="mb-75">
                   <span className="fw-bolder me-25">Estado:</span>
-                  <span>{selectedUser.estado_id ?? ""}</span>
+                  <span>{vDados?.estado ?? ""}</span>
                 </li>
                 <li className="mb-75">
                   <span className="fw-bolder me-25">Celular:</span>
-                  <span>{selectedUser.celular ?? ""}</span>
+                  <span>{dados.celular ?? ""}</span>
                 </li>
                 <li className="mb-75">
                   <span className="fw-bolder me-25">País:</span>
-                  <span>{selectedUser.ddi ?? ""}</span>
+                  <span>{vDados?.pais ?? ""}</span>
                 </li>
                 <li className="mb-75">
                   <span className="fw-bolder me-25">Data do cadastro:</span>
-                  <span>
-                    {formatDateTime(selectedUser.data_cadastro) ?? ""}
-                  </span>
+                  <span>{formatDateTime(dados.data_cadastro) ?? ""}</span>
                 </li>
                 <li className="mb-75">
                   <span className="fw-bolder me-25">Login social:</span>
-                  <span>{selectedUser.social_type ?? ""}</span>
+                  <span>{dados.social_type ?? ""}</span>
                 </li>
-                {selectedUser.ultimo_quarto ? (
+                {dados.ultimo_quarto ? (
                   <li className="mb-75">
                     <span className="fw-bolder me-25">Último quarto:</span>
-                    <span>{selectedUser.ultimo_quarto ?? ""}</span>
+                    <span>{dados.ultimo_quarto ?? ""}</span>
                   </li>
                 ) : null}
               </ul>
             ) : null}
           </div>
           <div className="d-flex justify-content-center pt-2">
-            <Button color="primary" onClick={() => setShow(true)}>
+            <Button
+              color="primary"
+              className="d-none"
+              onClick={() => setShow(true)}
+            >
               Editar
             </Button>
             <Button
               className="ms-1"
               color="danger"
               outline
-              onClick={handleSuspendedClick}
+              onClick={handleDeleteConfirmation}
             >
               Remover cadastro
             </Button>
@@ -359,7 +415,7 @@ const UserInfoCard = ({ selectedUser }) => {
                 <Input
                   type="email"
                   id="billing-email"
-                  defaultValue={selectedUser.email}
+                  defaultValue={dados.email}
                   placeholder="example@domain.com"
                 />
               </Col>
@@ -377,7 +433,7 @@ const UserInfoCard = ({ selectedUser }) => {
                   defaultValue={
                     statusOptions[
                       statusOptions.findIndex(
-                        (i) => i.value === selectedUser.hotspot_id
+                        (i) => i.value === dados.hotspot_id
                       )
                     ]
                   }
@@ -390,7 +446,7 @@ const UserInfoCard = ({ selectedUser }) => {
                 <Input
                   id="tax-id"
                   placeholder="Tax-1234"
-                  defaultValue={selectedUser.celular}
+                  defaultValue={dados.celular}
                 />
               </Col>
               <Col md={6} xs={12}>
@@ -399,7 +455,7 @@ const UserInfoCard = ({ selectedUser }) => {
                 </Label>
                 <Input
                   id="contact"
-                  defaultValue={selectedUser.celular}
+                  defaultValue={dados.celular}
                   placeholder="+1 609 933 4422"
                 />
               </Col>

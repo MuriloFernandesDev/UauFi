@@ -274,19 +274,26 @@ const PlanoList = () => {
         }
         const planoInfo = `${planoAtivo}${tempoConexao} ${tempoUnidade}`
 
+        const velocidadeDownload = row.mega_download ?? "",
+          velocidadeUpload = row.mega_upload ?? ""
+
+        const planoInfoVel = `Download: ${velocidadeDownload}Mbps | Upload: ${velocidadeUpload}Mbps`
+
         return (
           <div className="d-flex justify-content-left align-items-center">
-            <div className="d-flex flex-column">
-              <Link
-                to={`/adm/plano_conexao/${row.id}`}
-                id={`pw-tooltip2-${row.id}`}
-              >
-                <h6 className="user-name text-truncate mb-0">{nome}</h6>
-                <small className="text-truncate text-muted mb-0">
-                  {planoInfo}
-                </small>
-              </Link>
-            </div>
+            <Link
+              className="d-flex flex-column"
+              to={`/adm/plano_conexao/${row.id}`}
+              id={`pw-tooltip2-${row.id}`}
+            >
+              <h6 className="user-name text-truncate mb-0">{nome}</h6>
+              <small className="text-truncate text-muted mb-0">
+                {planoInfo}
+              </small>
+              <small className="text-truncate text-muted mb-0">
+                {planoInfoVel}
+              </small>
+            </Link>
           </div>
         )
       },
@@ -297,8 +304,6 @@ const PlanoList = () => {
       sortable: true,
       selector: (row) => row.tipo_plano_id,
       cell: (row) => {
-        const velocidadeDownload = row.mega_download ?? "",
-          velocidadeUpload = row.mega_upload ?? ""
         let tipoPlano
         if (row.tipo_plano_id === 1) {
           tipoPlano = "Visitante"
@@ -307,21 +312,18 @@ const PlanoList = () => {
         } else {
           tipoPlano = "Evento"
         }
-        const planoInfo = `Download: ${velocidadeDownload}Mbps | Upload: ${velocidadeUpload}Mbps`
-
         return (
           <div className="d-flex justify-content-left align-items-center">
-            <div className="d-flex flex-column">
-              <Link
-                to={`/adm/plano_conexao/${row.id}`}
-                id={`pw-tooltip2-${row.id}`}
-              >
-                <h6 className="user-name text-truncate mb-0">{tipoPlano}</h6>
-                <small className="text-truncate text-muted mb-0">
-                  {planoInfo}
-                </small>
-              </Link>
-            </div>
+            <Link
+              className="d-flex flex-column"
+              to={`/adm/plano_conexao/${row.id}`}
+              id={`pw-tooltip2-${row.id}`}
+            >
+              <h6 className="user-name text-truncate mb-0">{tipoPlano}</h6>
+              <small className="text-truncate text-dark mb-0">
+                {row.hotspot.nome}
+              </small>
+            </Link>
           </div>
         )
       },

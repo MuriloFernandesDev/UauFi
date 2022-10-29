@@ -387,26 +387,26 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
                       />
                     </Col>
                     <Col md="3" className="mb-2">
-                      <Label className="form-label" for="usuario">
+                      <Label className="form-label" for="controladora_usuario">
                         Usuário de liberação
                       </Label>
                       <Input
-                        id="usuario"
-                        name="usuario"
-                        value={vDados?.usuario ?? ""}
+                        id="controladora_usuario"
+                        name="controladora_usuario"
+                        value={vDados?.controladora_usuario ?? ""}
                         onChange={handleChange}
                       />
                     </Col>
                     <Col md="3" className="mb-2">
-                      <Label className="form-label" for="senha">
+                      <Label className="form-label" for="controladora_senha">
                         Senha de liberação
                       </Label>
                       <Input
-                        id="senha"
-                        name="senha"
+                        id="controladora_senha"
+                        name="controladora_senha"
                         type="password"
                         autoComplete="new-password"
-                        value={vDados?.senha ?? ""}
+                        value={vDados?.controladora_senha ?? ""}
                         onChange={handleChange}
                       />
                     </Col>

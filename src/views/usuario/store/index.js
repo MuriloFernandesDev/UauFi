@@ -63,6 +63,26 @@ export const getUsuario = async (id) => {
   return response
 }
 
+export const getAcessos = async (id) => {
+  const response = (await api.get(`/usuario/linha_tempo/${id}`)).data
+  return response
+}
+
+export const getInfoUsuario = async (id) => {
+  const response = (await api.get(`/usuario/informacoes/${id}`)).data
+  return response
+}
+
+export const getTotais = async (id) => {
+  const response = (await api.get(`/usuario/totais/${id}`)).data
+  return response
+}
+
+export const getListaHotspot = async (id) => {
+  const response = (await api.get(`/usuario/hotspot_visitado/${id}`)).data
+  return response
+}
+
 export const deleteUsuario = createAsyncThunk(
   "usuario/deleteUsuario",
   async (id) => {

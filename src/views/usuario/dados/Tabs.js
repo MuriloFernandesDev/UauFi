@@ -11,11 +11,11 @@ import { User, Lock, Bookmark, Bell, Link } from "react-feather"
 import SecurityTab from "./SecurityTab"
 import Connections from "./Connections"
 import BillingPlanTab from "./BillingTab"
-import UserTimeline from "./UserTimeline"
+import LinhaDoTempo from "./LinhaDoTempo"
 import Notifications from "./Notifications"
-import UserProjectsList from "./UserProjectsList"
+import HotspotsVisitados from "./HotspotsVisitados"
 
-const UserTabs = ({ active, toggleTab }) => {
+const UserTabs = ({ active, toggleTab, id }) => {
   return (
     <Fragment>
       <Nav pills className="mb-2">
@@ -52,20 +52,20 @@ const UserTabs = ({ active, toggleTab }) => {
       </Nav>
       <TabContent activeTab={active}>
         <TabPane tabId="1">
-          <UserProjectsList />
-          <UserTimeline />
+          <HotspotsVisitados id={id} />
+          <LinhaDoTempo id={id} />
         </TabPane>
         <TabPane tabId="2">
-          <SecurityTab />
+          <SecurityTab id={id} />
         </TabPane>
         <TabPane tabId="3">
-          <BillingPlanTab />
+          <BillingPlanTab id={id} />
         </TabPane>
         <TabPane tabId="4">
-          <Notifications />
+          <Notifications id={id} />
         </TabPane>
         <TabPane tabId="5">
-          <Connections />
+          <Connections id={id} />
         </TabPane>
       </TabContent>
     </Fragment>

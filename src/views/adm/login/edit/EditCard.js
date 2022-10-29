@@ -382,17 +382,12 @@ const ClienteLoginEditCard = ({ data, setSalvarDados }) => {
                       )}
                       {renderAcesso("Encurtador de URL", "encurtador_url")}
                     </tbody>
-                  </Table>
-                </Col>
-                <Col md="12" className="mb-2">
-                  <Table
-                    className="text-nowrap text-center border-bottom"
-                    responsive
-                  >
+
                     <thead>
                       <tr>
                         <th className="text-start">Outros acessos</th>
                         <th>Permitir</th>
+                        <th colSpan={3}></th>
                       </tr>
                     </thead>
                     <tbody>

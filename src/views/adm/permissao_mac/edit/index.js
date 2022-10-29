@@ -96,7 +96,7 @@ const GerenciarEdit = () => {
         .post("/permissao_mac", pDados)
         .then((response) => {
           if (response.status === 200) {
-            toast.success("Permissão criado com sucesso!", {
+            toast.success("Permissão criada com sucesso!", {
               position: "bottom-right",
             })
             handleOK()
