@@ -11,7 +11,7 @@ import { CornerUpLeft, Check, Move, Trash, Plus } from "react-feather"
 // ** Terceiros
 import Select from "react-select"
 import { ReactSortable } from "react-sortablejs"
-import { getClientes, getFiltros } from "../store"
+import { getFiltros, getHotspot } from "../store"
 
 const vListaFrequencia = [
   { value: 1, label: "Sempre" },
@@ -34,8 +34,8 @@ const PlanoEditCard = ({ data, setSalvarDados }) => {
 
   // ** States
   const [vDados, setData] = useState(data)
-  const [vListaClientes, setListaClientes] = useState(null)
-  const [vCliente, setCliente] = useState(null)
+  const [vListaHotspots, setListaHotspots] = useState(null)
+  const [vHotspot, setHotspot] = useState(null)
   const [vDiaSemana, setDiaSemana] = useState(
     vListaDiaSemana
       .filter((item) =>
@@ -84,21 +84,6 @@ const PlanoEditCard = ({ data, setSalvarDados }) => {
     }))
   }
 
-  const handleClientes = () => {
-    getClientes().then((res) => {
-      const clientesVar = res
-      setListaClientes(clientesVar)
-
-      if (vDados?.id !== undefined) {
-        clientesVar?.map((res) => {
-          if (res.value === vDados.cliente_id) {
-            setCliente({ value: res.value, label: res.label })
-          }
-        })
-      }
-    })
-  }
-
   const handleFiltros = () => {
     getFiltros().then((res) => {
       const FiltrosVar = res
@@ -110,6 +95,28 @@ const PlanoEditCard = ({ data, setSalvarDados }) => {
             setFiltro({ value: res.value, label: res.label })
           }
         })
+      }
+    })
+  }
+
+  const handleHotspots = () => {
+    getHotspot().then((res) => {
+      const hotspotsVar = res
+      setListaHotspots(hotspotsVar)
+
+      //Selecionar o item no componente
+      if (data?.extra_hotspot_id) {
+        const vHotspotArray = data?.extra_hotspot_id
+          ?.split(",")
+          .map((item) => parseInt(item))
+        setHotspot(
+          hotspotsVar
+            ?.filter((item) => vHotspotArray?.includes(item.value))
+            .map((ret) => ({
+              label: ret.label,
+              value: ret.value,
+            }))
+        )
       }
     })
   }
@@ -221,8 +228,8 @@ const PlanoEditCard = ({ data, setSalvarDados }) => {
 
   useEffect(() => {
     // ** Requisitar listas
-    handleClientes()
     handleFiltros()
+    handleHotspots()
   }, [])
 
   return (
@@ -268,27 +275,30 @@ const PlanoEditCard = ({ data, setSalvarDados }) => {
                 </Col>
 
                 <Col md="8" className="mb-2">
-                  <Label className="form-label" for="cliente_id">
-                    Cliente
+                  <Label className="form-label" for="extra_hotspot_id">
+                    Selecione o(s) Hotspot(s)
                   </Label>
                   <Select
                     isClearable
-                    id="cliente_id"
+                    id="extra_hotspot_id"
                     noOptionsMessage={() => "Vazio"}
-                    placeholder={"Selecione..."}
-                    value={vCliente}
-                    options={vListaClientes}
+                    isMulti
+                    placeholder={""}
                     className="react-select"
                     classNamePrefix="select"
+                    value={vHotspot}
                     onChange={(e) => {
-                      setCliente(e)
+                      setHotspot(e)
                       handleChange({
                         target: {
-                          name: "cliente_id",
-                          value: Number(e?.value),
+                          name: "extra_hotspot_id",
+                          value: e
+                            ?.map((item) => item.value.toString())
+                            .toString(),
                         },
                       })
                     }}
+                    options={vListaHotspots}
                   />
                 </Col>
 

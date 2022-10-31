@@ -45,6 +45,11 @@ export const getFiltros = async () => {
   return response
 }
 
+export const getHotspot = async () => {
+  const response = (await api.get(`/hotspot/lista_simples`)).data
+  return response
+}
+
 export const pesquisa_captiveSlice = createSlice({
   name: "pesquisa_captive",
   initialState: {
