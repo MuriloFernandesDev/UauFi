@@ -79,7 +79,7 @@ const UserDropdown = (props) => {
     dispatch(handleLogin(dados))
     ability.update(dados.ability)
     navigate(getHomeRouteForLoggedInUser(dados.role))
-    //window.location.reload(false)
+    window.location.reload(false)
   }
 
   const handlePararImpersonar = () => {
