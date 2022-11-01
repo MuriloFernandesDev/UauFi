@@ -1,19 +1,35 @@
 // ** React Imports
-import { Link } from "react-router-dom"
-import { useEffect, useState } from "react"
+import { Link, useNavigate } from "react-router-dom"
+import { useEffect, useState, useContext } from "react"
 
 // ** Custom Components
 import Avatar from "@components/avatar"
 
 // ** Utils
-import { isUserLoggedIn, getUserData } from "@utils"
+import {
+  isUserLoggedIn,
+  getUserData,
+  getHomeRouteForLoggedInUser,
+} from "@utils"
+
+// ** Context
+import { AbilityContext } from "@src/utility/context/Can"
+
+// ** API
+import api from "@src/services/api"
 
 // ** Store & Actions
 import { useDispatch } from "react-redux"
-import { handleLogout } from "@store/authentication"
+import {
+  handleLogout,
+  handleLogin,
+  handlePararEmpersonar,
+} from "@store/authentication"
+
+import Impersonar from "./Impersonar"
 
 // ** Third Party Components
-import { User, Users, Power, Sun, Moon } from "react-feather"
+import { User, Power, Sun, Moon, Users } from "react-feather"
 
 // ** Reactstrap Imports
 import {
@@ -21,6 +37,7 @@ import {
   DropdownMenu,
   DropdownToggle,
   DropdownItem,
+  Spinner,
 } from "reactstrap"
 
 // ** Default Avatar Image
@@ -29,9 +46,14 @@ import defaultAvatar from "@src/assets/images/avatars/avatar-blank.png"
 const UserDropdown = (props) => {
   // ** Store Vars
   const dispatch = useDispatch()
+  const ability = useContext(AbilityContext)
+  const navigate = useNavigate()
 
   // ** State
   const [userData, setUserData] = useState(null)
+  const [vImpersonando, setImpersonando] = useState(false)
+
+  const [show, setShow] = useState(null)
 
   // ** Vars
   const user = getUserData()
@@ -51,6 +73,29 @@ const UserDropdown = (props) => {
 
   const handleThemeToggler = () => {
     setSkin(skin === "dark" ? "light" : "dark")
+  }
+
+  const handleImpersonar = (dados) => {
+    dispatch(handleLogin(dados))
+    ability.update(dados.ability)
+    navigate(getHomeRouteForLoggedInUser(dados.role))
+    //window.location.reload(false)
+  }
+
+  const handlePararImpersonar = () => {
+    setImpersonando(true)
+    dispatch(handlePararEmpersonar())
+    api
+      .post("/cliente_login/auth/", {
+        email: "",
+        senha: "",
+      })
+      .then((response) => {
+        handleImpersonar(response.data)
+      })
+      .catch(() => {
+        setImpersonando(false)
+      })
   }
 
   // ** Function to toggle Theme (Light/Dark)
@@ -82,17 +127,43 @@ const UserDropdown = (props) => {
               : ""}
           </span>
         </div>
-        <Avatar img={userAvatar} imgHeight="40" imgWidth="40" status="online" />
+        {!vImpersonando ? (
+          <Avatar
+            img={userAvatar}
+            imgHeight="40"
+            imgWidth="40"
+            status="online"
+          />
+        ) : (
+          <Spinner type="grow" size="md" color="primary" />
+        )}
       </DropdownToggle>
       <DropdownMenu end>
         <DropdownItem tag={Link} to="/adm/login/edit">
           <User size={14} className="me-75" />
           <span className="align-middle">Meu perfil</span>
         </DropdownItem>
+
         {user.perfil === "adm" ? (
-          <DropdownItem tag={Link} to="/adm/login/edit">
+          <DropdownItem className="w-100" onClick={() => setShow(!show)}>
             <Users size={14} className="me-75" />
             <span className="align-middle">Impersonar</span>
+            <Impersonar
+              show={show}
+              setShow={setShow}
+              pEmail={user.email}
+              handleImpersonar={handleImpersonar}
+              setImpersonando={setImpersonando}
+            />
+          </DropdownItem>
+        ) : null}
+        {user.impersonado ? (
+          <DropdownItem
+            className="w-100"
+            onClick={() => handlePararImpersonar()}
+          >
+            <Users size={14} className="me-75" />
+            <span className="align-middle">Parar de impersonar</span>
           </DropdownItem>
         ) : null}
         <DropdownItem

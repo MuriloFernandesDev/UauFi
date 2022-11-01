@@ -35,6 +35,13 @@ export const authSlice = createSlice({
       )
       localStorage.removeItem("clienteId")
     },
+    handlePararEmpersonar: () => {
+      localStorage.setItem(
+        config.storageTokenKeyName,
+        JSON.parse(localStorage.getItem("userData")).originalToken
+      )
+      localStorage.removeItem("clienteId")
+    },
     handleLogout: (state) => {
       state.userData = {}
       state[config.storageTokenKeyName] = null
@@ -47,6 +54,7 @@ export const authSlice = createSlice({
   },
 })
 
-export const { handleLogin, handleLogout } = authSlice.actions
+export const { handleLogin, handleLogout, handlePararEmpersonar } =
+  authSlice.actions
 
 export default authSlice.reducer
