@@ -14,6 +14,7 @@ import { formatDateTime } from "@utils"
 
 // ** Icons Imports
 import { Trash } from "react-feather"
+import { auto } from "@popperjs/core"
 
 const Dispositivos = (dados) => {
   // ** States
@@ -40,7 +41,7 @@ const Dispositivos = (dados) => {
   return (
     <Fragment>
       <Card>
-        <CardBody>
+        <CardBody style={{ maxHeight: "600px", overflow: auto }}>
           <CardTitle className="mb-75">Dispositivos utilizados</CardTitle>
           {!vCarregando ? (
             vDados?.length > 0 ? (

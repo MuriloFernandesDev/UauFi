@@ -59,9 +59,11 @@ const Campanhas = (dados) => {
               })
             ) : null
           ) : (
-            <div className="text-center mt-3">
-              <Spinner type="grow" size="sm" color="primary" />
-            </div>
+            <tr>
+              <td colSpan={3} className="text-center mt-3">
+                <Spinner type="grow" size="sm" color="primary" />
+              </td>
+            </tr>
           )}
         </tbody>
       </Table>

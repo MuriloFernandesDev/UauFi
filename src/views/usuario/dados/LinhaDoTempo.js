@@ -18,6 +18,7 @@ import { formatDateTime } from "@utils"
 
 // ** Reactstrap Imports
 import { Card, CardHeader, CardTitle, CardBody, Spinner } from "reactstrap"
+import { auto } from "@popperjs/core"
 
 const LinhaDoTempo = (dados) => {
   // ** Store Vars
@@ -71,7 +72,7 @@ const LinhaDoTempo = (dados) => {
             </Link>
           ),
           customContent: (
-            <div className="d-flex justify-content-between flex-wrap">
+            <div className="d-flex justify-content-between flex-wrap borda-inferior-suave">
               <div className="d-flex flex-column">
                 <h6 className="mb-0 text-truncate text-muted">
                   {d.dispositivo?.plataforma ?? ""}{" "}
@@ -111,17 +112,10 @@ const LinhaDoTempo = (dados) => {
       <CardHeader>
         <CardTitle tag="h4">Linha do tempo</CardTitle>
       </CardHeader>
-      <CardBody className="pt-1" style={{ height: "367px" }}>
+      <CardBody className="pt-1" style={{ height: "367px", overflow: auto }}>
         {!vCarregando ? (
           vDados?.length > 0 ? (
-            <PerfectScrollbar
-              className="scrollable-container media-list"
-              options={{
-                wheelPropagation: false,
-              }}
-            >
-              <Timeline data={vDados} className="me-50" />
-            </PerfectScrollbar>
+            <Timeline data={vDados} className="me-50" />
           ) : null
         ) : (
           <div className="text-center mt-3">

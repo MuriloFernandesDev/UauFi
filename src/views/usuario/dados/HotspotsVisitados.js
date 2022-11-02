@@ -23,6 +23,7 @@ import { useDispatch } from "react-redux"
 
 // ** Styles
 import "@styles/react/libs/tables/react-dataTable-component.scss"
+import { auto } from "@popperjs/core"
 
 const MySwal = withReactContent(Swal)
 
@@ -181,7 +182,7 @@ const HotspotsVisitados = (dados) => {
       <CardHeader tag="h4">Lugares visitados</CardHeader>
       <div
         className="react-dataTable user-view-account-projects"
-        style={{ maxHeight: "367px" }}
+        style={{ maxHeight: "367px", overflow: auto }}
       >
         {!vCarregando ? (
           vDados?.length > 0 ? (
