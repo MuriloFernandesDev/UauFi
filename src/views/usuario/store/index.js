@@ -68,6 +68,26 @@ export const getAcessos = async (id) => {
   return response
 }
 
+export const getRespostas = async (id) => {
+  const response = (await api.get(`/usuario/respostas/${id}`)).data
+  return response
+}
+
+export const getPublicidade = async (id) => {
+  const response = (await api.get(`/usuario/publicidade_vista/${id}`)).data
+  return response
+}
+
+export const getCampanhas = async (id) => {
+  const response = (await api.get(`/usuario/campanhas/${id}`)).data
+  return response
+}
+
+export const getDispositivos = async (id) => {
+  const response = (await api.get(`/usuario/dispositivos/${id}`)).data
+  return response
+}
+
 export const getInfoUsuario = async (id) => {
   const response = (await api.get(`/usuario/informacoes/${id}`)).data
   return response

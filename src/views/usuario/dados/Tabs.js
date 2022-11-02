@@ -5,14 +5,14 @@ import { Fragment } from "react"
 import { Nav, NavItem, NavLink, TabContent, TabPane } from "reactstrap"
 
 // ** Icons Imports
-import { User, Lock, Bookmark, Bell, Link } from "react-feather"
+import { Wifi, UserCheck, Mic, MessageSquare, Smartphone } from "react-feather"
 
 // ** User Components
-import SecurityTab from "./SecurityTab"
-import Connections from "./Connections"
-import BillingPlanTab from "./BillingTab"
+import PesquisaRespondida from "./PesquisaRespondida"
+import Dispositivos from "./Dispositivos"
+import PublicidadeVista from "./PublicidadeVista"
 import LinhaDoTempo from "./LinhaDoTempo"
-import Notifications from "./Notifications"
+import Campanhas from "./Campanhas"
 import HotspotsVisitados from "./HotspotsVisitados"
 
 const UserTabs = ({ active, toggleTab, id }) => {
@@ -21,31 +21,31 @@ const UserTabs = ({ active, toggleTab, id }) => {
       <Nav pills className="mb-2">
         <NavItem>
           <NavLink active={active === "1"} onClick={() => toggleTab("1")}>
-            <User className="font-medium-3 me-50" />
+            <Wifi className="font-medium-3 me-50" />
             <span className="fw-bold">Conexões</span>
           </NavLink>
         </NavItem>
         <NavItem>
           <NavLink active={active === "2"} onClick={() => toggleTab("2")}>
-            <Lock className="font-medium-3 me-50" />
+            <UserCheck className="font-medium-3 me-50" />
             <span className="fw-bold">Pesquisas</span>
           </NavLink>
         </NavItem>
         <NavItem>
           <NavLink active={active === "3"} onClick={() => toggleTab("3")}>
-            <Bookmark className="font-medium-3 me-50" />
+            <Mic className="font-medium-3 me-50" />
             <span className="fw-bold">Publicidade</span>
           </NavLink>
         </NavItem>
         <NavItem>
           <NavLink active={active === "4"} onClick={() => toggleTab("4")}>
-            <Bell className="font-medium-3 me-50" />
+            <MessageSquare className="font-medium-3 me-50" />
             <span className="fw-bold">Campanhas</span>
           </NavLink>
         </NavItem>
         <NavItem>
           <NavLink active={active === "5"} onClick={() => toggleTab("5")}>
-            <Link className="font-medium-3 me-50" />
+            <Smartphone className="font-medium-3 me-50" />
             <span className="fw-bold">Dispositivos</span>
           </NavLink>
         </NavItem>
@@ -56,16 +56,16 @@ const UserTabs = ({ active, toggleTab, id }) => {
           <LinhaDoTempo id={id} />
         </TabPane>
         <TabPane tabId="2">
-          <SecurityTab id={id} />
+          <PesquisaRespondida id={id} />
         </TabPane>
         <TabPane tabId="3">
-          <BillingPlanTab id={id} />
+          <PublicidadeVista id={id} />
         </TabPane>
         <TabPane tabId="4">
-          <Notifications id={id} />
+          <Campanhas id={id} />
         </TabPane>
         <TabPane tabId="5">
-          <Connections id={id} />
+          <Dispositivos id={id} />
         </TabPane>
       </TabContent>
     </Fragment>

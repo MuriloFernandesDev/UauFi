@@ -74,8 +74,8 @@ const LinhaDoTempo = (dados) => {
             <div className="d-flex justify-content-between flex-wrap">
               <div className="d-flex flex-column">
                 <h6 className="mb-0 text-truncate text-muted">
-                  {d.dispositivo?.plataforma ?? ""} {d.dispositivo?.marca ?? ""}{" "}
-                  {d.dispositivo?.modelo ?? ""}
+                  {d.dispositivo?.plataforma ?? ""}{" "}
+                  {d.dispositivo?.modelo ?? ""} {d.dispositivo?.marca ?? ""}
                 </h6>
                 <span className="text-truncate text-muted">
                   {d.dispositivo?.mac ?? ""}
