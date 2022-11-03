@@ -13,6 +13,7 @@ import {
   FileText,
   Calendar,
   Smartphone,
+  WifiOff,
 } from "react-feather"
 
 export default [
@@ -84,6 +85,14 @@ export default [
     navLink: "/evento",
     action: "read",
     resource: "evento",
+  },
+  {
+    id: "menuBloqueioQuarto",
+    title: "Bloqueio de quarto",
+    icon: <WifiOff size={20} />,
+    navLink: "/bloqueio_quarto",
+    action: "read",
+    resource: "bloqueio_quarto",
   },
   {
     id: "menuPesquisa",
