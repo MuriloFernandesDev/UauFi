@@ -4,12 +4,16 @@ import { useRef, useState, useEffect, useContext } from "react"
 
 // ** Terceiros
 import ReactPaginate from "react-paginate"
-import { ChevronDown, Eye, MoreVertical, Trash } from "react-feather"
+import { ChevronDown, Download, Eye, MoreVertical, Trash } from "react-feather"
 import DataTable from "react-data-table-component"
 
 // ** Reactstrap
 import {
   Button,
+  Modal,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
   Input,
   Row,
   Col,
@@ -39,6 +43,7 @@ import "@styles/react/libs/tables/react-dataTable-component.scss"
 import Swal from "sweetalert2"
 import withReactContent from "sweetalert2-react-content"
 import toast from "react-hot-toast"
+import QRCodeCanvas from "qrcode.react"
 
 const MySwal = withReactContent(Swal)
 
@@ -107,6 +112,15 @@ const EncurtadorList = () => {
   const [rowsPerPage, setRowsPerPage] = useState(store.params.perPage ?? 10)
   const vTimeoutPesquisa = useRef()
   const [vPesquisando, setPesquisando] = useState(true)
+  const [vModalQrCode, setModalQrCode] = useState(false)
+
+  const toggleModal = (id) => {
+    if (vModalQrCode !== id) {
+      setModalQrCode(id)
+    } else {
+      setModalQrCode(null)
+    }
+  }
 
   // ** Guardar o Cliente selecionado para atualizar a página caso mude
   const sClienteId = localStorage.getItem("clienteId")
@@ -185,6 +199,19 @@ const EncurtadorList = () => {
     setCurrentPage(page.selected + 1)
   }
 
+  const downloadQR = () => {
+    const canvas = document.getElementById("QrCode")
+    const pngUrl = canvas
+      .toDataURL("image/png")
+      .replace("image/png", "image/octet-stream")
+    const downloadLink = document.createElement("a")
+    downloadLink.href = pngUrl
+    downloadLink.download = "QrCode.png"
+    document.body.appendChild(downloadLink)
+    downloadLink.click()
+    document.body.removeChild(downloadLink)
+  }
+
   // ** Modal de exclusão de evento
   const handleDeleteConfirmation = (row) => {
     return MySwal.fire({
@@ -220,6 +247,7 @@ const EncurtadorList = () => {
     {
       name: "Descrição",
       sortable: true,
+      minWidth: "280px",
       selector: (row) => row.descricao,
       cell: (row) => {
         return (
@@ -241,7 +269,7 @@ const EncurtadorList = () => {
     },
     {
       name: "URL Original",
-      minWidth: "80px",
+      minWidth: "400px",
       sortable: true,
       selector: (row) => row.url_redirect,
       cell: (row) => {
@@ -249,7 +277,10 @@ const EncurtadorList = () => {
           <div className="d-flex justify-content-left align-items-center">
             <div className="d-flex flex-column">
               <Link to={`/encurtador/${row.id}`} id={`pw-tooltip2-${row.id}`}>
-                <h6 className="user-name text-truncate mb-0">
+                <h6
+                  className="user-name text-truncate mb-0"
+                  style={{ maxWidth: "400px" }}
+                >
                   {row.url_redirect}
                 </h6>
                 <small className="text-truncate text-muted mb-0">
@@ -263,19 +294,58 @@ const EncurtadorList = () => {
     },
     {
       name: <div className="text-end w-100">Ações</div>,
-      minWidth: "80px",
       cell: (row) => (
         <div className="text-end w-100">
           <div className="column-action d-inline-flex">
             <Link to={`/encurtador/${row.id}`} id={`pw-tooltip-${row.id}`}>
-              <Eye size={17} className="mx-1" />
+              <Eye size={17} />
             </Link>
+
+            <Link
+              to="/"
+              id={`pw-qrcode-${row.id}`}
+              onClick={(e) => {
+                e.preventDefault()
+                toggleModal(row.id)
+              }}
+            >
+              <span className="text-secondary material-symbols-sharp fs-20 mx-1">
+                qr_code
+              </span>
+            </Link>
+            <Modal
+              key={row.id}
+              isOpen={vModalQrCode === row.id}
+              toggle={() => toggleModal(row.id)}
+              className="modal-dialog-centered"
+            >
+              <ModalHeader toggle={() => toggleModal(row.id)}>
+                {row.hash}
+              </ModalHeader>
+              <ModalBody className="text-center">
+                <QRCodeCanvas
+                  id="QrCode"
+                  value={row.hash}
+                  size={400}
+                  level={"H"}
+                  includeMargin={false}
+                />
+              </ModalBody>
+              <ModalFooter>
+                <Button color="primary" onClick={() => downloadQR()} outline>
+                  Baixar QrCode
+                </Button>
+              </ModalFooter>
+            </Modal>
 
             <UncontrolledTooltip
               placement="top"
               target={`pw-tooltip-${row.id}`}
             >
               Visualizar
+            </UncontrolledTooltip>
+            <UncontrolledTooltip placement="top" target={`pw-qrcode-${row.id}`}>
+              Ver QrCode
             </UncontrolledTooltip>
             <UncontrolledDropdown>
               <DropdownToggle tag="span">

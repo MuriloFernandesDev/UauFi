@@ -84,13 +84,13 @@ const LinhaDoTempo = (dados) => {
                 <span className="text-truncate text-muted">{d.ip ?? ""}</span>
               </div>
               <div className="d-flex flex-column mt-sm-0 mt-50">
-                {d.bytes_upload ?? 0 >= 0 ? (
+                {d.bytes_upload ?? 0 > 0 ? (
                   <div>
                     <span>{formatarBytes(d.bytes_upload)}</span>
                     <Upload size={14} className="ms-50 mb-25 text-primary" />
                   </div>
                 ) : null}
-                {d.bytes_download ?? 0 >= 0 ? (
+                {d.bytes_download ?? 0 > 0 ? (
                   <div>
                     <span>{formatarBytes(d.bytes_download)}</span>
                     <Download size={14} className="ms-50 mb-25 text-primary" />
