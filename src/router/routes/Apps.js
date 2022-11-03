@@ -24,6 +24,8 @@ const Publicidade = lazy(() => import("../../views/publicidade"))
 const PublicidadeEdit = lazy(() => import("../../views/publicidade/edit"))
 const Filtro = lazy(() => import("../../views/filtro"))
 const FiltroEdit = lazy(() => import("../../views/filtro/edit"))
+const Encurtador = lazy(() => import("../../views/encurtador"))
+const EncurtadorEdit = lazy(() => import("../../views/encurtador/edit"))
 const PermissaoMAC = lazy(() => import("../../views/adm/permissao_mac"))
 const PermissaoMacEdit = lazy(() =>
   import("../../views/adm/permissao_mac/edit")
@@ -77,6 +79,14 @@ const AppRoutes = [
   {
     element: <FiltroEdit />,
     path: "/filtro/:id",
+  },
+  {
+    element: <Encurtador />,
+    path: "/encurtador",
+  },
+  {
+    element: <EncurtadorEdit />,
+    path: "/encurtador/:id",
   },
   {
     element: <Evento />,

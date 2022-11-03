@@ -144,7 +144,7 @@ const UserDropdown = (props) => {
           <span className="align-middle">Meu perfil</span>
         </DropdownItem>
 
-        {user.perfil === "adm" ? (
+        {user.perfil === "adm" && !user.impersonado ? (
           <DropdownItem className="w-100" onClick={() => setShow(!show)}>
             <Users size={14} className="me-75" />
             <span className="align-middle">Impersonar</span>

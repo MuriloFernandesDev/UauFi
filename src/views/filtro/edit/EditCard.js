@@ -139,16 +139,12 @@ const FiltroEditCard = ({ data, setSalvarDados }) => {
                   <CornerUpLeft size={17} />
                 </Button.Ripple>
               </div>
-              {vDados.id !== undefined ? (
-                ""
-              ) : (
-                <div>
-                  <Button.Ripple color="success" onClick={setDados}>
-                    <Check size={17} />
-                    <span className="align-middle ms-25">Salvar</span>
-                  </Button.Ripple>
-                </div>
-              )}
+              <div>
+                <Button.Ripple color="success" onClick={setDados}>
+                  <Check size={17} />
+                  <span className="align-middle ms-25">Salvar</span>
+                </Button.Ripple>
+              </div>
             </div>
           </Card>
         </Fragment>
