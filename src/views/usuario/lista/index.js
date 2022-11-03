@@ -434,7 +434,10 @@ const UsuarioLista = () => {
           <div className="user_name text-truncate text-body">
             <div className="d-flex flex-column">
               <span className="fw-bolder">{row.nome}</span>
-              <small className="mb-0">{row.cpf ? `CPF: ${row.cpf}` : ""}</small>
+              <small className="mb-0">
+                {row.cpf ? `CPF: ${row.cpf}` : ""}{" "}
+                {row.celular ? `Cel: ${row.celular}` : ""}
+              </small>
               <small className="mb-0">
                 {row.online ? <Badge color="success">Online</Badge> : null}
               </small>
@@ -452,9 +455,7 @@ const UsuarioLista = () => {
       cell: (row) => (
         <div className="d-flex justify-content-left align-items-center">
           <div className="d-flex flex-column">
-            <small className="mb-0">
-              {row.celular ? `Cel: ${row.celular}` : ""}
-            </small>
+            <small className="mb-0">{row.mac ? `MAC: ${row.mac}` : ""}</small>
             <small className="mb-0">{row.comentario ?? ""}</small>
           </div>
         </div>
