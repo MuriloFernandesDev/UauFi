@@ -71,6 +71,15 @@ const AuthenticationRoutes = [
     },
   },
   {
+    path: "/atlantica",
+    element: <Login s={"atlantica"} />,
+    meta: {
+      layout: "blank",
+      publicRoute: true,
+      restricted: true,
+    },
+  },
+  {
     path: "/esqueci-senha",
     element: <ForgotPassword />,
     layout: "BlankLayout",

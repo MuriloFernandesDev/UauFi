@@ -69,7 +69,7 @@ const defaultValues = {
   loginEmail: "",
 }
 
-const Login = () => {
+const Login = ({ s }) => {
   // ** Hooks
   const { slug } = useParams()
   const dispatch = useDispatch()
@@ -137,7 +137,7 @@ const Login = () => {
 
   const getDadosSlug = () => {
     return api
-      .get(`/cliente/tema?slug=${slug}`)
+      .get(`/cliente/tema?slug=${slug ?? s}`)
       .then((res) => {
         setDadosSlug(res.data)
       })
