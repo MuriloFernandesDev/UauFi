@@ -366,6 +366,7 @@ const ClienteLoginEditCard = ({ data, setSalvarDados }) => {
                         "Administrativo - Libera/Bloqueia mac",
                         "permissao_mac"
                       )}
+                      {renderAcesso("Bloqueio de quarto", "bloqueio_quarto")}
                       {renderAcesso("Evento", "evento")}
                       {renderAcesso("Pesquisa", "adm_pesquisa")}
                       {renderAcesso("Publicidade", "adm_publicidade")}

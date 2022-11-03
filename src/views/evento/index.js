@@ -101,9 +101,9 @@ const EventoList = () => {
 
   // ** States
   const [value, setValue] = useState(store.params.q ?? "")
-  const [sort, setSort] = useState(store.params.sort ?? "asc")
+  const [sort, setSort] = useState(store.params.sort ?? "desc")
   const [sortColumn, setSortColumn] = useState(
-    store.params.sortColumn ?? "nome"
+    store.params.sortColumn ?? "data_cadastro"
   )
   const [currentPage, setCurrentPage] = useState(store.params.page ?? 1)
   const [rowsPerPage, setRowsPerPage] = useState(store.params.perPage ?? 10)

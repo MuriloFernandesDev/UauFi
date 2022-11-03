@@ -434,6 +434,7 @@ const UsuarioLista = () => {
           <div className="user_name text-truncate text-body">
             <div className="d-flex flex-column">
               <span className="fw-bolder">{row.nome}</span>
+              <small className="mb-0">{row.cpf ? `CPF: ${row.cpf}` : ""}</small>
               <small className="mb-0">
                 {row.online ? <Badge color="success">Online</Badge> : null}
               </small>
@@ -454,10 +455,7 @@ const UsuarioLista = () => {
             <small className="mb-0">
               {row.celular ? `Cel: ${row.celular}` : ""}
             </small>
-            <small className="mb-0">
-              {row.ultimo_quarto ? `Quarto: ${row.ultimo_quarto}` : ""}
-            </small>
-            <small className="mb-0">{row.cpf ? `CPF: ${row.cpf}` : ""}</small>
+            <small className="mb-0">{row.comentario ?? ""}</small>
           </div>
         </div>
       ),
