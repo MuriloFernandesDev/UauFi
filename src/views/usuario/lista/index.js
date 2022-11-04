@@ -49,7 +49,7 @@ import { Link } from "react-router-dom"
 import Avatar from "@components/avatar"
 
 // ** Utils
-import { dateTimeNow } from "@utils"
+import { dateTimeNow, formatDateTime } from "@utils"
 
 // ** Sidebar
 import Sidebar from "./Sidebar"
@@ -447,16 +447,36 @@ const UsuarioLista = () => {
       ),
     },
     {
-      name: "Dados",
+      name: "Conexão",
       sortable: true,
-      minWidth: "300px",
+      minWidth: "200px",
       sortField: "entrada",
       selector: (row) => row.entrada,
       cell: (row) => (
         <div className="d-flex justify-content-left align-items-center">
           <div className="d-flex flex-column">
-            <small className="mb-0">{row.mac ? `MAC: ${row.mac}` : ""}</small>
             <small className="mb-0">{row.comentario ?? ""}</small>
+            <small className="mb-0">{formatDateTime(row.entrada)}</small>
+          </div>
+        </div>
+      ),
+    },
+    {
+      name: "Dispositivo",
+      sortable: true,
+      minWidth: "200px",
+      sortField: "mac",
+      selector: (row) => row.mac,
+      cell: (row) => (
+        <div className="d-flex justify-content-left align-items-center">
+          <div className="d-flex flex-column">
+            <small className="mb-0">
+              {row.dispositivo?.mac ? `MAC: ${row.dispositivo?.mac ?? ""}` : ""}
+            </small>
+            <small className="mb-0">{row.dispositivo?.plataforma ?? ""}</small>
+            <small className="mb-0">
+              {row.dispositivo?.modelo ?? ""} {row.dispositivo?.marca ?? ""}
+            </small>
           </div>
         </div>
       ),
