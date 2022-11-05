@@ -16,13 +16,17 @@ import {
   Nav,
   NavItem,
   NavLink,
+  ListGroup,
+  ListGroupItem,
+  CardBody,
+  Spinner,
 } from "reactstrap"
 
 // ** Default Imagem
 import defaultImagem from "@src/assets/images/pages/semfoto.png"
 
 // ** Icons
-import { CornerUpLeft, Check, Trash } from "react-feather"
+import { CornerUpLeft, Check, Trash, Frown, Smile } from "react-feather"
 
 // ** Terceiros
 import Select from "react-select"
@@ -30,7 +34,8 @@ import Select from "react-select"
 // ** Utils
 import { getUserData } from "@utils"
 
-import { getClientes, getMarcas } from "../store"
+import { getClientes, getMarcas, getConectados } from "../store"
+import { auto } from "@popperjs/core"
 
 const vUserData = getUserData()
 
@@ -60,6 +65,9 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
   const [vMarca, setMarca] = useState(null)
   const [vListaClientes, setListaClientes] = useState(null)
   const [vListaMarcas, setListaMarcas] = useState(null)
+  const [vVerificandoControladora, setVerificandoControladora] = useState(false)
+  const [vControladoraOK, setControladoraOK] = useState(false)
+  const [vListaConectados, setListaConectados] = useState(null)
 
   // Captive Portal
   const [vDadosCP, setDataCP] = useState(
@@ -127,6 +135,32 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
     })
   }
 
+  const handleConectados = () => {
+    if (vDados.marca_equipamento === 1 && !vDados.usa_radius) {
+      setVerificandoControladora(true)
+      setControladoraOK(false)
+      getConectados(vDados.id)
+        .then((re) => {
+          setListaConectados(re)
+          setVerificandoControladora(false)
+          setControladoraOK(true)
+        })
+        .catch((erro) => {
+          let vErro = ""
+          setVerificandoControladora(false)
+          if (erro.response.status === 503) {
+            vErro = erro.response.data
+          } else if (erro.response.status === 404) {
+            vErro = "Seu login não está autorizado"
+          } else {
+            vErro = "Erro inesperado"
+          }
+          setListaConectados([vErro])
+          setControladoraOK(false)
+        })
+    }
+  }
+
   const handleMarcas = () => {
     getMarcas().then((re) => {
       setListaMarcas(re)
@@ -150,6 +184,7 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
   useEffect(() => {
     handleClientes()
     handleMarcas()
+    handleConectados()
 
     //Verificar dados da integração
     if (data?.dados_captive[0]?.dados_integracao?.length > 2) {
@@ -1316,7 +1351,67 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
               <TabPane tabId="3">
                 <Card className="mb-0">
                   <Form onSubmit={(e) => e.preventDefault()}>
-                    <Row></Row>
+                    <Row>
+                      {vDados.marca_equipamento === 1 && !vDados.usa_radius ? (
+                        <Col md="12" className="mb-2">
+                          <Card className="mb-4">
+                            <CardBody
+                              style={{ maxHeight: "600px", overflow: auto }}
+                            >
+                              <h6 className="mb-75">
+                                Teste de comunicação
+                                {!vVerificandoControladora ? (
+                                  <span>
+                                    {vControladoraOK ? (
+                                      <Smile
+                                        size={24}
+                                        className="ms-1 text-success"
+                                      />
+                                    ) : (
+                                      <Frown
+                                        size={24}
+                                        className="ms-1 text-danger"
+                                      />
+                                    )}
+                                    <Button
+                                      className="ms-1"
+                                      color="primary"
+                                      outline
+                                      onClick={handleConectados}
+                                    >
+                                      Verificar agora
+                                    </Button>
+                                  </span>
+                                ) : (
+                                  <Spinner
+                                    type="grow"
+                                    size="sm"
+                                    className="ms-1"
+                                    color="primary"
+                                  />
+                                )}
+                              </h6>
+                              <ListGroup flush>
+                                {!vVerificandoControladora
+                                  ? vListaConectados?.length > 0
+                                    ? vListaConectados.map((item, index) => {
+                                        return (
+                                          <ListGroupItem
+                                            className="fonte-courier"
+                                            key={index}
+                                          >
+                                            {item}
+                                          </ListGroupItem>
+                                        )
+                                      })
+                                    : null
+                                  : null}
+                              </ListGroup>
+                            </CardBody>
+                          </Card>
+                        </Col>
+                      ) : null}
+                    </Row>
                   </Form>
                 </Card>
               </TabPane>

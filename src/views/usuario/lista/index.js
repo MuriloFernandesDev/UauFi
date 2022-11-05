@@ -216,7 +216,7 @@ const UsuarioLista = () => {
   const [searchTerm, setSearchTerm] = useState(store.params.q ?? "")
   const [currentPage, setCurrentPage] = useState(store.params.page ?? 1)
   const [sortColumn, setSortColumn] = useState(store.params.sortColumn ?? "id")
-  const [rowsPerPage, setRowsPerPage] = useState(store.params.perPage ?? 10)
+  const [rowsPerPage, setRowsPerPage] = useState(store.params.perPage ?? 25)
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [vDataInicial, setDataInicial] = useState(
     store.params.datai ?? `${dateTimeNow()} 00:00`

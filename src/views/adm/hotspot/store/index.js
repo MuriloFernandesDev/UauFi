@@ -42,6 +42,11 @@ export const deleteHotspot = createAsyncThunk(
   }
 )
 
+export const getConectados = async (id) => {
+  const response = (await api.get(`/hotspot/teste_comunicacao/${id}`)).data
+  return response
+}
+
 export const cloneHotspot = createAsyncThunk(
   "admHotspot/cloneHotspot",
   async (cloneParams) => {
