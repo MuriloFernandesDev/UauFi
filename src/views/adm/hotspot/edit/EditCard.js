@@ -1393,20 +1393,24 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
                                 style={{ maxHeight: "290px", overflow: auto }}
                               >
                                 <ListGroup flush>
-                                  {!vVerificandoControladora
-                                    ? vListaConectados?.length > 0
-                                      ? vListaConectados.map((item, index) => {
-                                          return (
-                                            <ListGroupItem
-                                              className="fonte-courier"
-                                              key={index}
-                                            >
-                                              <pre>{item}</pre>
-                                            </ListGroupItem>
+                                  <pre>
+                                    {!vVerificandoControladora
+                                      ? vListaConectados?.length > 0
+                                        ? vListaConectados.map(
+                                            (item, index) => {
+                                              return (
+                                                <ListGroupItem
+                                                  className="fonte-courier p-25"
+                                                  key={index}
+                                                >
+                                                  {item}
+                                                </ListGroupItem>
+                                              )
+                                            }
                                           )
-                                        })
-                                      : null
-                                    : null}
+                                        : null
+                                      : null}
+                                  </pre>
                                 </ListGroup>
                               </div>
                             </CardBody>
