@@ -34,6 +34,18 @@ const PermissaoMAC = lazy(() => import("../../views/adm/permissao_mac"))
 const PermissaoMacEdit = lazy(() =>
   import("../../views/adm/permissao_mac/edit")
 )
+const CampanhaAgendadaSms = lazy(() =>
+  import("../../views/campanha_agendada/sms")
+)
+const CampanhaAgendadaSmsEdit = lazy(() =>
+  import("../../views/campanha_agendada/sms/edit")
+)
+const CampanhaRecorrenteSms = lazy(() =>
+  import("../../views/campanha_recorrente/sms")
+)
+const CampanhaRecorrenteSmsEdit = lazy(() =>
+  import("../../views/campanha_recorrente/sms/edit")
+)
 
 const AppRoutes = [
   {
@@ -123,6 +135,22 @@ const AppRoutes = [
   {
     element: <PermissaoMacEdit />,
     path: "/adm/permissao_mac/:id",
+  },
+  {
+    element: <CampanhaAgendadaSms />,
+    path: "/campanha_sms",
+  },
+  {
+    element: <CampanhaAgendadaSmsEdit />,
+    path: "/campanha_sms/:id",
+  },
+  {
+    element: <CampanhaRecorrenteSms />,
+    path: "/campanha_recorrente/sms",
+  },
+  {
+    element: <CampanhaRecorrenteSmsEdit />,
+    path: "/campanha_recorrente/sms/:id",
   },
   {
     element: <BloqueioQuarto />,

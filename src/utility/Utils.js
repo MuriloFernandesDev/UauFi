@@ -49,6 +49,21 @@ export const formatDateTime = (
   return new Intl.DateTimeFormat("pt-BR", formatting).format(new Date(value))
 }
 
+export const formatInt = (value, formatting = {}) => {
+  if (!value) return value
+  return new Intl.NumberFormat("pt-BR", formatting).format(value ?? 0)
+}
+
+export const formatMoeda = (
+  value,
+  formatting = {
+    style: "currency",
+  }
+) => {
+  if (!value) return value
+  return new Intl.NumberFormat("pt-BR", formatting).format(value ?? 0)
+}
+
 export const removerAcentos = (strAccents) => {
   strAccents = strAccents.split("")
   let strAccentsOut = new Array()

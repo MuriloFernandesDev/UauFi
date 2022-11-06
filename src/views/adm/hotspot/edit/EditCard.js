@@ -1355,10 +1355,8 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
                       {vDados.marca_equipamento === 1 && !vDados.usa_radius ? (
                         <Col md="12" className="mb-2">
                           <Card className="mb-4">
-                            <CardBody
-                              style={{ maxHeight: "600px", overflow: auto }}
-                            >
-                              <h6 className="mb-75">
+                            <CardBody>
+                              <h6 className="mb-75 text-center">
                                 Teste de comunicação
                                 {!vVerificandoControladora ? (
                                   <span>
@@ -1391,22 +1389,26 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
                                   />
                                 )}
                               </h6>
-                              <ListGroup flush>
-                                {!vVerificandoControladora
-                                  ? vListaConectados?.length > 0
-                                    ? vListaConectados.map((item, index) => {
-                                        return (
-                                          <ListGroupItem
-                                            className="fonte-courier"
-                                            key={index}
-                                          >
-                                            {item}
-                                          </ListGroupItem>
-                                        )
-                                      })
-                                    : null
-                                  : null}
-                              </ListGroup>
+                              <div
+                                style={{ maxHeight: "290px", overflow: auto }}
+                              >
+                                <ListGroup flush>
+                                  {!vVerificandoControladora
+                                    ? vListaConectados?.length > 0
+                                      ? vListaConectados.map((item, index) => {
+                                          return (
+                                            <ListGroupItem
+                                              className="fonte-courier"
+                                              key={index}
+                                            >
+                                              <pre>{item}</pre>
+                                            </ListGroupItem>
+                                          )
+                                        })
+                                      : null
+                                    : null}
+                                </ListGroup>
+                              </div>
                             </CardBody>
                           </Card>
                         </Col>

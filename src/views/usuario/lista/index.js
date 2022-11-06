@@ -215,7 +215,9 @@ const UsuarioLista = () => {
   const [sort, setSort] = useState(store.params.sort ?? "desc")
   const [searchTerm, setSearchTerm] = useState(store.params.q ?? "")
   const [currentPage, setCurrentPage] = useState(store.params.page ?? 1)
-  const [sortColumn, setSortColumn] = useState(store.params.sortColumn ?? "id")
+  const [sortColumn, setSortColumn] = useState(
+    store.params.sortColumn ?? "entrada"
+  )
   const [rowsPerPage, setRowsPerPage] = useState(store.params.perPage ?? 25)
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [vDataInicial, setDataInicial] = useState(
@@ -428,12 +430,12 @@ const UsuarioLista = () => {
       cell: (row) => (
         <Link
           to={`/usuario/dados/${row.id}`}
-          className="d-flex justify-content-left align-items-center"
+          className="d-flex justify-content-left align-items-center w-100"
         >
           {renderClient(row)}
           <div className="user_name text-truncate text-body">
             <div className="d-flex flex-column">
-              <span className="fw-bolder">{row.nome}</span>
+              <span className="fw-bolder text-truncate">{row.nome}</span>
               <small className="mb-0">
                 {row.cpf ? `CPF: ${row.cpf}` : ""}{" "}
                 {row.celular ? `Cel: ${row.celular}` : ""}
@@ -474,7 +476,7 @@ const UsuarioLista = () => {
               {row.dispositivo?.mac ? `MAC: ${row.dispositivo?.mac ?? ""}` : ""}
             </small>
             <small className="mb-0">{row.dispositivo?.plataforma ?? ""}</small>
-            <small className="mb-0">
+            <small className="mb-0 text-nowrap">
               {row.dispositivo?.modelo ?? ""} {row.dispositivo?.marca ?? ""}
             </small>
           </div>
@@ -550,7 +552,7 @@ const UsuarioLista = () => {
   // ** Table data to render
   const dataToRender = () => {
     if (store.data.length > 0) {
-      return store.data
+      return vPesquisando ? [] : store.data
     } else {
       return []
     }

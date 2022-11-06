@@ -3,7 +3,18 @@ import { Fragment, useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 
 // ** Reactstrap
-import { Row, Col, Card, Input, Button, Label } from "reactstrap"
+import {
+  Row,
+  Col,
+  Card,
+  Input,
+  Button,
+  Label,
+  CardBody,
+  CardTitle,
+  CardText,
+  Spinner,
+} from "reactstrap"
 
 // ** Icons
 import { CornerUpLeft, Check } from "react-feather"
@@ -19,6 +30,9 @@ import wNumb from "wnumb"
 import api from "@src/services/api"
 import { getGenero } from "../store"
 
+// ** Utils
+import { formatInt, formatMoeda } from "@utils"
+
 const FiltroEditCard = ({ data, setSalvarDados }) => {
   const navigate = useNavigate()
 
@@ -33,6 +47,8 @@ const FiltroEditCard = ({ data, setSalvarDados }) => {
   const [vListaEstados, setListaEstados] = useState(null)
   const [vListaCidades, setListaCidades] = useState(null)
   const [vListaClientes, setListaClientes] = useState(null)
+  const [vAlcance, setAlcance] = useState(null)
+  const [vVerificandoAlcance, setVerificandoAlcance] = useState(null)
 
   // ** Organização da informação
   const handleChange = (e) => {
@@ -83,6 +99,20 @@ const FiltroEditCard = ({ data, setSalvarDados }) => {
     })
   }
 
+  const handleAlcance = () => {
+    setVerificandoAlcance(true)
+    return api
+      .post("/filtro/alcance", vDados)
+      .then((res) => {
+        setAlcance(res.data)
+        setVerificandoAlcance(false)
+      })
+      .catch(() => {
+        setAlcance(null)
+        setVerificandoAlcance(false)
+      })
+  }
+
   // ** Listagem de Estados e cidades
   const getEstados = () => {
     return api.get("/estado").then((res) => {
@@ -106,9 +136,6 @@ const FiltroEditCard = ({ data, setSalvarDados }) => {
         setCidade(null)
       })
   }
-
-  // ** Bloquear ações de onChange
-  const blockChange = () => {}
 
   const setDados = () => {
     setSalvarDados(vDados)
@@ -163,9 +190,7 @@ const FiltroEditCard = ({ data, setSalvarDados }) => {
                     disabled={vDados.id > 0}
                     name="nome"
                     value={vDados?.nome ?? ""}
-                    onChange={
-                      vDados.id !== undefined ? blockChange : handleChange
-                    }
+                    onChange={handleChange}
                   />
                 </Col>
 
@@ -207,21 +232,17 @@ const FiltroEditCard = ({ data, setSalvarDados }) => {
                     classNamePrefix="select"
                     isDisabled={vDados?.id > 0}
                     options={vListaGeneros}
-                    onChange={
-                      vDados.id !== undefined
-                        ? blockChange
-                        : (e) => (
-                            setGenero(e),
-                            handleChange({
-                              target: {
-                                name: "genero",
-                                value: e
-                                  ?.map((item) => item.value.toString())
-                                  .toString(),
-                              },
-                            })
-                          )
-                    }
+                    onChange={(e) => (
+                      setGenero(e),
+                      handleChange({
+                        target: {
+                          name: "genero",
+                          value: e
+                            ?.map((item) => item.value.toString())
+                            .toString(),
+                        },
+                      })
+                    )}
                   />
                 </Col>
                 <Col md="6" className="mb-2">
@@ -325,22 +346,18 @@ const FiltroEditCard = ({ data, setSalvarDados }) => {
                               }))
                             : vCidade
                         }
-                        onChange={
-                          vDados.id !== undefined
-                            ? blockChange
-                            : (e) => {
-                                setCidade(e)
-                                handleChange({
-                                  target: {
-                                    name: "cidades",
-                                    value: e?.map((item) => ({
-                                      id: item.value,
-                                      nome: item.label,
-                                    })),
-                                  },
-                                })
-                              }
-                        }
+                        onChange={(e) => {
+                          setCidade(e)
+                          handleChange({
+                            target: {
+                              name: "cidades",
+                              value: e?.map((item) => ({
+                                id: item.value,
+                                nome: item.label,
+                              })),
+                            },
+                          })
+                        }}
                         options={vListaCidades}
                       />
                     </Col>
@@ -447,6 +464,36 @@ const FiltroEditCard = ({ data, setSalvarDados }) => {
               </Row>
             </Card>
           </Fragment>
+        </Card>
+      </Col>
+
+      <Col md="4" className="offset-md-4">
+        <Card className="text-center mb-3">
+          <CardBody>
+            <CardTitle tag="h4">Usuários alcançados</CardTitle>
+            <CardText>
+              {!vVerificandoAlcance ? (
+                vAlcance ? (
+                  <Fragment>
+                    <h6>{formatInt(vAlcance?.com_app)} Usuário(s) com app</h6>
+                    <h6>{formatInt(vAlcance?.sem_app)} Usuário(s) sem app</h6>
+                    <h6>
+                      {formatInt(
+                        (vAlcance.sem_app ?? 0) + (vAlcance.com_app ?? 0)
+                      )}{" "}
+                      Usuário(s) no total
+                    </h6>
+                    <h6>{formatMoeda(vAlcance.valor)} será o valor gasto</h6>
+                  </Fragment>
+                ) : null
+              ) : (
+                <Spinner type="grow" size="sm" color="primary" />
+              )}
+            </CardText>
+            <Button onClick={handleAlcance} color="primary" outline>
+              Verificar
+            </Button>
+          </CardBody>
         </Card>
       </Col>
     </Row>
