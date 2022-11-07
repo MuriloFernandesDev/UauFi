@@ -343,8 +343,7 @@ const UsuarioLista = () => {
 
   // ** Get data on mount
   useEffect(() => {
-    const vForce = store.total === -1
-    setPesquisando(vForce)
+    setPesquisando(true)
     handlePesquisar(
       {
         sort,
@@ -357,7 +356,7 @@ const UsuarioLista = () => {
         situacao: arrayToString(vSituacao),
         clienteId: store.params.clienteId,
       },
-      vForce
+      true
     )
   }, [dispatch, store.data.length, sort, sortColumn, currentPage])
 
