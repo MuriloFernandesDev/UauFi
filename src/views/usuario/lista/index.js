@@ -49,7 +49,7 @@ import { Link } from "react-router-dom"
 import Avatar from "@components/avatar"
 
 // ** Utils
-import { dateTimeNow, formatDateTime } from "@utils"
+import { formatDateTime } from "@utils"
 
 // ** Sidebar
 import Sidebar from "./Sidebar"
@@ -220,12 +220,8 @@ const UsuarioLista = () => {
   )
   const [rowsPerPage, setRowsPerPage] = useState(store.params.perPage ?? 25)
   const [sidebarOpen, setSidebarOpen] = useState(false)
-  const [vDataInicial, setDataInicial] = useState(
-    store.params.datai ?? `${dateTimeNow()} 00:00`
-  )
-  const [vDataFinal, setDataFinal] = useState(
-    store.params.dataf ?? `${dateTimeNow()} 23:59`
-  )
+  const [vDataInicial, setDataInicial] = useState(null)
+  const [vDataFinal, setDataFinal] = useState(null)
   //Valor padrão da situação (Online)
   const vSituacaoArray = (store.params.situacao ?? "o")
     .split(",")
@@ -234,7 +230,7 @@ const UsuarioLista = () => {
   const [vSituacao, setSituacao] = useState(
     statusOptions.filter((item) => vSituacaoArray?.includes(item.value))
   )
-  const [vPesquisando, setPesquisando] = useState(true)
+  const [vPesquisando, setPesquisando] = useState(false)
 
   const vTimeoutPesquisa = useRef()
 
@@ -343,21 +339,23 @@ const UsuarioLista = () => {
 
   // ** Get data on mount
   useEffect(() => {
-    setPesquisando(true)
-    handlePesquisar(
-      {
-        sort,
-        sortColumn,
-        q: searchTerm,
-        page: currentPage,
-        perPage: rowsPerPage,
-        datai: vDataInicial,
-        dataf: vDataFinal,
-        situacao: arrayToString(vSituacao),
-        clienteId: store.params.clienteId,
-      },
-      true
-    )
+    if (!vPesquisando) {
+      setPesquisando(true)
+      handlePesquisar(
+        {
+          sort,
+          sortColumn,
+          q: searchTerm,
+          page: currentPage,
+          perPage: rowsPerPage,
+          datai: vDataInicial,
+          dataf: vDataFinal,
+          situacao: arrayToString(vSituacao),
+          clienteId: store.params.clienteId,
+        },
+        true
+      )
+    }
   }, [dispatch, store.data.length, sort, sortColumn, currentPage])
 
   // ** Function in get data on page change

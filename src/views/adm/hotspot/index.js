@@ -372,6 +372,7 @@ const HotspotList = () => {
     {
       name: "Última comunicação",
       minWidth: "200px",
+      sortable: true,
       sortField: "data_recebido",
       cell: (row) => {
         return (
