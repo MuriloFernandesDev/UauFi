@@ -8,9 +8,9 @@ import api from "@src/services/api"
 // ** Reactstrap
 import { Row, Col, Spinner } from "reactstrap"
 
-// ** Editar CampanhaSms de conexão
+// ** Editar CampanhaAgendada de conexão
 import EditCard from "./EditCard"
-import { getCampanhaSms } from "../store"
+import { getCampanhaAgendada } from "../store"
 import { useDispatch, useSelector } from "react-redux"
 
 // ** Terceiros
@@ -39,14 +39,14 @@ const handleError = (error, errorMessage, errorIcon) => {
   })
 }
 
-const CampanhaSmsEdit = () => {
+const CampanhaAgendadaEdit = () => {
   // ** Hooks
   const { id } = useParams()
   const navigate = useNavigate()
 
   // ** Store vars
   const dispatch = useDispatch()
-  const vParFiltro = useSelector((state) => state.campanha_sms.params)
+  const vParFiltro = useSelector((state) => state.campanha_agendada.params)
 
   // ** States
   const [data, setData] = useState(null)
@@ -55,8 +55,8 @@ const CampanhaSmsEdit = () => {
 
   const handleOK = () => {
     setSalvando(false)
-    dispatch(getCampanhaSms(vParFiltro))
-    navigate("/campanha_sms")
+    dispatch(getCampanhaAgendada(vParFiltro))
+    navigate("/campanha_agendada")
   }
 
   // ** Função para salvar dados & respostas a erros
@@ -64,7 +64,7 @@ const CampanhaSmsEdit = () => {
     setSalvando(true)
     if (pDados.id > 0) {
       api
-        .put("/campanha_sms", pDados)
+        .put("/campanha_agendada", pDados)
         .then((response) => {
           if (response.status === 200) {
             toast.success("Bloqueio de quarto editado com sucesso!", {
@@ -93,7 +93,7 @@ const CampanhaSmsEdit = () => {
         })
     } else {
       api
-        .post("/campanha_sms", pDados)
+        .post("/campanha_agendada", pDados)
         .then((response) => {
           if (response.status === 200) {
             toast.success("Bloqueio de quarto criado com sucesso!", {
@@ -125,7 +125,7 @@ const CampanhaSmsEdit = () => {
 
   // ** Get filter on mount based on id
   useEffect(() => {
-    api.get(`/campanha_sms/${id}`).then((response) => {
+    api.get(`/campanha_agendada/${id}`).then((response) => {
       setData(response.data)
       setCarregando(false)
     })
@@ -146,4 +146,4 @@ const CampanhaSmsEdit = () => {
   )
 }
 
-export default CampanhaSmsEdit
+export default CampanhaAgendadaEdit

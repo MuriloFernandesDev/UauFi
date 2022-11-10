@@ -371,15 +371,10 @@ const ClienteLoginEditCard = ({ data, setSalvarDados }) => {
                       {renderAcesso("Pesquisa", "adm_pesquisa")}
                       {renderAcesso("Publicidade", "adm_publicidade")}
                       {renderAcesso("Filtros", "filtro_campanha")}
-                      {renderAcesso("Campanha - Push (App)", "campanha_push")}
-                      {renderAcesso("Campanha - SMS", "campanha_sms")}
+                      {renderAcesso("Campanha - Agendada", "campanha_agendada")}
                       {renderAcesso(
-                        "Campanha - Recorrente - Push (App)",
-                        "campanha_rec_push"
-                      )}
-                      {renderAcesso(
-                        "Campanha - Recorrente - SMS",
-                        "campanha_rec_sms"
+                        "Campanha - Recorrente",
+                        "campanha_recorrente"
                       )}
                       {renderAcesso("Encurtador de URL", "encurtador_url")}
                     </tbody>

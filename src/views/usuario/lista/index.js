@@ -356,7 +356,7 @@ const UsuarioLista = () => {
         true
       )
     }
-  }, [dispatch, store.data.length, sort, sortColumn, currentPage])
+  }, [dispatch, sort, sortColumn])
 
   // ** Function in get data on page change
   const handlePagination = (page) => {

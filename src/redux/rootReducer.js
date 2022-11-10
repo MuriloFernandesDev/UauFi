@@ -11,8 +11,8 @@ import filtro from "@src/views/filtro/store"
 import url_encurtada from "@src/views/encurtador/store"
 import usuario from "@src/views/usuario/store"
 import plano_conexao from "@src/views/adm/plano_conexao/store"
-import campanha_sms from "@src/views/campanha_agendada/sms/store"
-import campanha_recorrente_sms from "@src/views/campanha_recorrente/sms/store"
+import campanha_agendada from "@src/views/campanha_agendada/store"
+import campanha_recorrente from "@src/views/campanha_recorrente/store"
 import permissao_mac from "@src/views/adm/permissao_mac/store"
 import bloqueio_quarto from "@src/views/bloqueio_quarto/store"
 import pesquisa_captive from "@src/views/pesquisa_captive/store"
@@ -30,8 +30,8 @@ const rootReducer = {
   filtro,
   usuario,
   plano_conexao,
-  campanha_sms,
-  campanha_recorrente_sms,
+  campanha_agendada,
+  campanha_recorrente,
   permissao_mac,
   bloqueio_quarto,
   url_encurtada,

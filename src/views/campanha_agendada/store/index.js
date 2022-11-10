@@ -4,10 +4,10 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"
 // ** Axios Imports
 import api from "@src/services/api"
 
-export const getCampanhaSms = createAsyncThunk(
-  "campanha_sms/getCampanhaSms",
+export const getCampanhaAgendada = createAsyncThunk(
+  "campanha_agendada/getCampanhaAgendada",
   async (parametros) => {
-    const response = await api.get("/campanha_sms/lista/", {
+    const response = await api.get("/campanha_agendada/lista/", {
       params: parametros,
     })
     // console.log(response)
@@ -35,10 +35,10 @@ export const getCampanhaSms = createAsyncThunk(
   }
 )
 
-export const deleteCampanhaSms = createAsyncThunk(
-  "campanha_sms/deleteCampanhaSms",
+export const deleteCampanhaAgendada = createAsyncThunk(
+  "campanha_agendada/deleteCampanhaAgendada",
   async (id) => {
-    await api.delete(`/campanha_sms/${id}`)
+    await api.delete(`/campanha_agendada/${id}`)
     return id
   }
 )
@@ -48,13 +48,18 @@ export const getFiltros = async () => {
   return response
 }
 
+export const testarCampanha = async (dados) => {
+  const response = await api.post("/campanha_agendada/teste_sms", dados)
+  return response
+}
+
 export const getClientes = async () => {
   const response = (await api.get(`/cliente/lista_simples`)).data
   return response
 }
 
-export const CampanhaSmsSlice = createSlice({
-  name: "campanha_sms",
+export const CampanhaAgendadaSlice = createSlice({
+  name: "campanha_agendada",
   initialState: {
     data: [],
     total: -1,
@@ -63,7 +68,7 @@ export const CampanhaSmsSlice = createSlice({
   },
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(getCampanhaSms.fulfilled, (state, action) => {
+    builder.addCase(getCampanhaAgendada.fulfilled, (state, action) => {
       state.data = action.payload.data
       state.allData = action.payload.allData
       state.total = action.payload.totalPages
@@ -72,4 +77,4 @@ export const CampanhaSmsSlice = createSlice({
   },
 })
 
-export default CampanhaSmsSlice.reducer
+export default CampanhaAgendadaSlice.reducer

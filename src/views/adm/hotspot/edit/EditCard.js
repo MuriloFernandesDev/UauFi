@@ -774,9 +774,9 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
                                 <Input
                                   id="dados-integracao-2"
                                   type="number"
-                                  value={varDadosIntegracao3}
+                                  value={varDadosIntegracao2}
                                   onChange={(e) => {
-                                    setVarDadosIntegracao3(e.target.value)
+                                    setVarDadosIntegracao2(e.target.value)
                                     handleChangeCP({
                                       target: {
                                         name: "dados_integracao",

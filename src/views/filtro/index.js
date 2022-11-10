@@ -254,6 +254,9 @@ const FiltroList = () => {
                 <h6 className="user-name text-truncate mb-0">
                   {formatDateTime(dataCriacao)}
                 </h6>
+                <small className="text-truncate text-muted mb-0">
+                  {row.cliente}
+                </small>
               </Link>
             </div>
           </div>

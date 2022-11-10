@@ -34,17 +34,13 @@ const PermissaoMAC = lazy(() => import("../../views/adm/permissao_mac"))
 const PermissaoMacEdit = lazy(() =>
   import("../../views/adm/permissao_mac/edit")
 )
-const CampanhaAgendadaSms = lazy(() =>
-  import("../../views/campanha_agendada/sms")
+const CampanhaAgendada = lazy(() => import("../../views/campanha_agendada"))
+const CampanhaAgendadaEdit = lazy(() =>
+  import("../../views/campanha_agendada/edit")
 )
-const CampanhaAgendadaSmsEdit = lazy(() =>
-  import("../../views/campanha_agendada/sms/edit")
-)
-const CampanhaRecorrenteSms = lazy(() =>
-  import("../../views/campanha_recorrente/sms")
-)
-const CampanhaRecorrenteSmsEdit = lazy(() =>
-  import("../../views/campanha_recorrente/sms/edit")
+const CampanhaRecorrente = lazy(() => import("../../views/campanha_recorrente"))
+const CampanhaRecorrenteEdit = lazy(() =>
+  import("../../views/campanha_recorrente/edit")
 )
 
 const AppRoutes = [
@@ -137,20 +133,20 @@ const AppRoutes = [
     path: "/adm/permissao_mac/:id",
   },
   {
-    element: <CampanhaAgendadaSms />,
-    path: "/campanha_sms",
+    element: <CampanhaAgendada />,
+    path: "/campanha_agendada",
   },
   {
-    element: <CampanhaAgendadaSmsEdit />,
-    path: "/campanha_sms/:id",
+    element: <CampanhaAgendadaEdit />,
+    path: "/campanha_agendada/:id",
   },
   {
-    element: <CampanhaRecorrenteSms />,
-    path: "/campanha_recorrente/sms",
+    element: <CampanhaRecorrente />,
+    path: "/campanha_recorrente",
   },
   {
-    element: <CampanhaRecorrenteSmsEdit />,
-    path: "/campanha_recorrente/sms/:id",
+    element: <CampanhaRecorrenteEdit />,
+    path: "/campanha_recorrente/:id",
   },
   {
     element: <BloqueioQuarto />,
