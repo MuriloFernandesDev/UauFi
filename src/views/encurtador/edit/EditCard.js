@@ -10,12 +10,16 @@ import { CornerUpLeft, Check } from "react-feather"
 
 // ** Terceiros
 import Select from "react-select"
+import { useTranslation } from "react-i18next"
 
 // ** API
 import api from "@src/services/api"
 
 const EncurtadorEditCard = ({ data, setSalvarDados }) => {
   const navigate = useNavigate()
+
+  // ** Hooks
+  const { t } = useTranslation()
 
   // ** States
   const [vDados, setData] = useState(data)
@@ -102,10 +106,10 @@ const EncurtadorEditCard = ({ data, setSalvarDados }) => {
                   </Label>
                   <Select
                     isClearable
-                    noOptionsMessage={() => "Vazio"}
+                    noOptionsMessage={() => t("Vazio")}
                     id="vCliente"
                     isDisabled={vDados.id === 0 && data.cliente_id > 0}
-                    placeholder={"Selecione..."}
+                    placeholder={t("Selecione...")}
                     className="react-select"
                     classNamePrefix="select"
                     value={vCliente}

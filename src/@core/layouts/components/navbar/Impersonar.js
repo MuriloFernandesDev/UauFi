@@ -16,6 +16,7 @@ import { Label, Modal, ModalBody, ModalHeader, Row, Col } from "reactstrap"
 // ** Third Party Components
 import { components } from "react-select"
 import AsyncSelect from "react-select/async"
+import { useTranslation } from "react-i18next"
 
 // ** Default Avatar Image
 import defaultAvatar from "@src/assets/images/avatars/avatar-blank.png"
@@ -48,6 +49,9 @@ const Impersonar = ({
 }) => {
   // ** Variáveis de estado
   const [query, setQuery] = useState("")
+
+  // ** Hooks
+  const { t } = useTranslation()
 
   const handleDBInputChange = (newValue) => {
     setQuery(newValue)
@@ -111,9 +115,9 @@ const Impersonar = ({
               <AsyncSelect
                 defaultOptions
                 isClearable={true}
-                noOptionsMessage={() => "Vazio"}
+                noOptionsMessage={() => t("Vazio")}
                 loadingMessage={() => "Pesquisando..."}
-                placeholder={"Selecione..."}
+                placeholder={t("Selecione...")}
                 id="login_id"
                 name="db-react-select"
                 className="react-select"

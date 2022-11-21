@@ -10,6 +10,7 @@ import { CornerUpLeft, Check, Move, Trash, Plus } from "react-feather"
 
 // ** Terceiros
 import Select from "react-select"
+import { useTranslation } from "react-i18next"
 import { ReactSortable } from "react-sortablejs"
 import { getCategorias } from "../store"
 
@@ -21,6 +22,9 @@ import defaultImagem from "@src/assets/images/pages/semfoto.png"
 
 const CardapioProdutoCard = ({ data, setSalvarDados }) => {
   const navigate = useNavigate()
+
+  // ** Hooks
+  const { t } = useTranslation()
 
   // ** States
   const [vDados, setData] = useState(data)
@@ -264,8 +268,8 @@ const CardapioProdutoCard = ({ data, setSalvarDados }) => {
                       <Select
                         isClearable
                         id="categoria_id"
-                        noOptionsMessage={() => "Vazio"}
-                        placeholder={"Selecione..."}
+                        noOptionsMessage={() => t("Vazio")}
+                        placeholder={t("Selecione...")}
                         value={vCategoria}
                         options={vListaCategorias}
                         className="react-select"

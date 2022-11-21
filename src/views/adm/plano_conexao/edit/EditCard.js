@@ -10,6 +10,7 @@ import { CornerUpLeft, Check } from "react-feather"
 
 // ** Terceiros
 import Select from "react-select"
+import { useTranslation } from "react-i18next"
 import { getHotspot } from "../store"
 
 const vListaUnidadeTempo = [
@@ -35,6 +36,8 @@ const vListaTipoPlano = [
 
 const PlanoEditCard = ({ data, setSalvarDados }) => {
   const navigate = useNavigate()
+  // ** Hooks
+  const { t } = useTranslation()
 
   // ** States
   const [vDados, setData] = useState(data)
@@ -137,8 +140,8 @@ const PlanoEditCard = ({ data, setSalvarDados }) => {
                   <Select
                     isClearable
                     id="hotspot_id"
-                    noOptionsMessage={() => "Vazio"}
-                    placeholder={"Selecione..."}
+                    noOptionsMessage={() => t("Vazio")}
+                    placeholder={t("Selecione...")}
                     value={vHotspot}
                     options={vListaHotspots}
                     isDisabled={vDados.id === 0 && data.hotspot_id > 0}
@@ -204,8 +207,8 @@ const PlanoEditCard = ({ data, setSalvarDados }) => {
                   <Select
                     isClearable
                     id="unidade_tempo"
-                    noOptionsMessage={() => "Vazio"}
-                    placeholder={"Selecione..."}
+                    noOptionsMessage={() => t("Vazio")}
+                    placeholder={t("Selecione...")}
                     className="react-select"
                     classNamePrefix="select"
                     value={vUnidade}
@@ -228,9 +231,9 @@ const PlanoEditCard = ({ data, setSalvarDados }) => {
                   </Label>
                   <Select
                     isClearable
-                    noOptionsMessage={() => "Vazio"}
+                    noOptionsMessage={() => t("Vazio")}
                     id="tipo_plano_id"
-                    placeholder={"Selecione..."}
+                    placeholder={t("Selecione...")}
                     className="react-select"
                     classNamePrefix="select"
                     value={vTipoAcesso}

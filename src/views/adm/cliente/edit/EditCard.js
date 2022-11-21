@@ -24,6 +24,8 @@ import defaultImagem from "@src/assets/images/pages/semfoto.png"
 // ** Icons
 import { CornerUpLeft, Check, Trash } from "react-feather"
 
+import { useTranslation } from "react-i18next"
+
 // ** Terceiros
 import Cleave from "cleave.js/react"
 import "cleave.js/dist/addons/cleave-phone.br"
@@ -50,6 +52,9 @@ const vListaArtigoGenero = [
 
 const ClienteEditCard = ({ data, setSalvarDados }) => {
   const navigate = useNavigate()
+
+  // ** Hooks
+  const { i18n, t } = useTranslation()
 
   // ** States
   const [vDados, setData] = useState(data)
@@ -252,7 +257,35 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
       })
   }
 
-  const optTel = { phone: true, phoneRegionCode: "BR" }
+  const handleArrayTelefoneBlocks = () => {
+    if (i18n.language === "br") {
+      return [2, 5, 4]
+    } else if (i18n.language === "pt") {
+      return [3, 3, 3]
+    } else if (i18n.language === "en") {
+      return [3, 3, 4]
+    } else if (i18n.language === "es") {
+      return [3, 2, 2, 2]
+    }
+  }
+  const handleArrayTelefoneDelimiters = () => {
+    if (i18n.language === "es") {
+      return [" ", " ", " "]
+    } else {
+      return [" ", " "]
+    }
+  }
+
+  let optTel = { phone: true, phoneRegionCode: "BR" }
+
+  if (i18n.language !== "br") {
+    optTel = {
+      delimiters: handleArrayTelefoneDelimiters(),
+      blocks: handleArrayTelefoneBlocks(),
+      uppercase: true,
+    }
+  }
+
   const optCep = { delimiters: [".", "-"], blocks: [2, 3, 3], uppercase: true }
 
   const setDados = () => {
@@ -431,8 +464,8 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                       <Select
                         isClearable
                         id="artigo_genero"
-                        placeholder={"Selecione..."}
-                        noOptionsMessage={() => "Vazio"}
+                        placeholder={t("Selecione...")}
+                        noOptionsMessage={() => t("Vazio")}
                         className="react-select"
                         classNamePrefix="select"
                         value={vArtigoGenero}
@@ -463,9 +496,9 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                       <Select
                         isClearable
                         id="vCategoria"
-                        placeholder={"Selecione..."}
+                        placeholder={t("Selecione...")}
                         className="react-select"
-                        noOptionsMessage={() => "Vazio"}
+                        noOptionsMessage={() => t("Vazio")}
                         classNamePrefix="select"
                         value={vCategoria}
                         onChange={(e) => {
@@ -504,7 +537,7 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                       <Select
                         isClearable
                         id="vAgregador"
-                        noOptionsMessage={() => "Vazio"}
+                        noOptionsMessage={() => t("Vazio")}
                         isMulti
                         placeholder={""}
                         className="react-select"
@@ -530,7 +563,7 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                       </Label>
                       <Cleave
                         className="form-control"
-                        placeholder="00 00000 0000"
+                        placeholder={t("mask_celular")}
                         options={optTel}
                         id="whatsapp"
                         name="whatsapp"
@@ -544,7 +577,7 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                       </Label>
                       <Cleave
                         className="form-control"
-                        placeholder="00 0000 0000"
+                        placeholder={t("mask_telefone")}
                         options={optTel}
                         id="tel_1"
                         name="tel_1"
@@ -558,7 +591,7 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                       </Label>
                       <Cleave
                         className="form-control"
-                        placeholder="00 0000 0000"
+                        placeholder={t("mask_telefone")}
                         options={optTel}
                         id="tel_2"
                         name="tel_2"
@@ -569,7 +602,7 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
 
                     <Col md="4" className="mb-2">
                       <Label className="form-label" for="vCep">
-                        CEP
+                        {t("CEP")}
                       </Label>
                       <Cleave
                         className="form-control"
@@ -584,7 +617,7 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                     </Col>
                     <Col md="8" className="mb-2">
                       <Label className="form-label" for="vEndereco">
-                        Endereço*
+                        {t("Endereço")}*
                       </Label>
                       <Input
                         id="vEndereco"
@@ -595,7 +628,7 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                     </Col>
                     <Col md="4" className="mb-2">
                       <Label className="form-label" for="vNumero">
-                        Número*
+                        {t("Número")}*
                       </Label>
                       <Input
                         id="vNumero"
@@ -607,7 +640,7 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
 
                     <Col md="4" className="mb-2">
                       <Label className="form-label" for="vBairro">
-                        Bairro
+                        {t("Bairro")}
                       </Label>
                       <Input
                         id="vBairro"
@@ -618,13 +651,13 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                     </Col>
                     <Col md="4" className="mb-2">
                       <Label className="form-label" for="vEstado">
-                        Estado
+                        {t("U.F.")}
                       </Label>
                       <Select
                         isClearable
                         id="vEstado"
-                        noOptionsMessage={() => "Vazio"}
-                        placeholder={"Selecione..."}
+                        noOptionsMessage={() => t("Vazio")}
+                        placeholder={t("Selecione...")}
                         className="react-select"
                         classNamePrefix="select"
                         value={vEstado}
@@ -647,9 +680,9 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                       </Label>
                       <Select
                         id="vCidade"
-                        noOptionsMessage={() => "vazio"}
+                        noOptionsMessage={() => t("Vazio")}
                         LoadingMessage={() => "pesquisando..."}
-                        placeholder={"Selecione..."}
+                        placeholder={t("Selecione...")}
                         mess
                         isClearable
                         className="react-select"

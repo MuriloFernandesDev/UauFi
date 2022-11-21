@@ -21,6 +21,7 @@ import { CornerUpLeft, Check } from "react-feather"
 
 // ** Terceiros
 import Select from "react-select"
+import { useTranslation } from "react-i18next"
 import "@styles/react/libs/flatpickr/flatpickr.scss"
 import Nouislider from "nouislider-react"
 import "@styles/react/libs/noui-slider/noui-slider.scss"
@@ -35,6 +36,9 @@ import { formatInt, formatMoeda } from "@utils"
 
 const FiltroEditCard = ({ data, setSalvarDados }) => {
   const navigate = useNavigate()
+
+  // ** Hooks
+  const { t } = useTranslation()
 
   // ** States
   const [vDados, setData] = useState(data)
@@ -200,10 +204,10 @@ const FiltroEditCard = ({ data, setSalvarDados }) => {
                   </Label>
                   <Select
                     isClearable
-                    noOptionsMessage={() => "Vazio"}
+                    noOptionsMessage={() => t("Vazio")}
                     id="vCliente"
                     isDisabled={vDados.id === 0 && data.cliente_id > 0}
-                    placeholder={"Selecione..."}
+                    placeholder={t("Selecione...")}
                     className="react-select"
                     classNamePrefix="select"
                     value={vCliente}
@@ -225,9 +229,9 @@ const FiltroEditCard = ({ data, setSalvarDados }) => {
                     isClearable
                     id="genero"
                     isMulti={true}
-                    noOptionsMessage={() => "Vazio"}
+                    noOptionsMessage={() => t("Vazio")}
                     value={vGenero}
-                    placeholder={"Selecione..."}
+                    placeholder={t("Selecione...")}
                     className="react-select"
                     classNamePrefix="select"
                     isDisabled={vDados?.id > 0}
@@ -300,9 +304,9 @@ const FiltroEditCard = ({ data, setSalvarDados }) => {
                         <Select
                           isClearable
                           id="vEstado"
-                          placeholder={"Selecione..."}
+                          placeholder={t("Selecione...")}
                           className="react-select"
-                          noOptionsMessage={() => "Vazio"}
+                          noOptionsMessage={() => t("Vazio")}
                           classNamePrefix="select"
                           value={vEstado}
                           onChange={(e) => {
@@ -327,9 +331,9 @@ const FiltroEditCard = ({ data, setSalvarDados }) => {
                       </Label>
                       <Select
                         id="vCidade"
-                        noOptionsMessage={() => "Vazio"}
+                        noOptionsMessage={() => t("Vazio")}
                         LoadingMessage={() => "pesquisando..."}
-                        placeholder={"Selecione..."}
+                        placeholder={t("Selecione...")}
                         mess
                         isMulti={true}
                         isClearable

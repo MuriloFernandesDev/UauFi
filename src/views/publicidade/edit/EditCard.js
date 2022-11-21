@@ -10,6 +10,7 @@ import { CornerUpLeft, Check, Trash } from "react-feather"
 
 // ** Terceiros
 import Select from "react-select"
+import { useTranslation } from "react-i18next"
 import "@styles/react/libs/flatpickr/flatpickr.scss"
 import { getHotspot } from "../store"
 
@@ -20,6 +21,9 @@ const vListaTipo = [
 
 const PublicidadeEditCard = ({ data, setSalvarDados }) => {
   const navigate = useNavigate()
+
+  // ** Hooks
+  const { t } = useTranslation()
 
   // ** States
   const [vDados, setData] = useState(data)
@@ -223,7 +227,7 @@ const PublicidadeEditCard = ({ data, setSalvarDados }) => {
                   <Select
                     isClearable
                     id="extra_hotspot_id"
-                    noOptionsMessage={() => "Vazio"}
+                    noOptionsMessage={() => t("Vazio")}
                     isMulti
                     placeholder={""}
                     className="react-select"
@@ -288,8 +292,8 @@ const PublicidadeEditCard = ({ data, setSalvarDados }) => {
                   </Label>
                   <Select
                     id="tipo"
-                    noOptionsMessage={() => "Vazio"}
-                    placeholder={"Selecione..."}
+                    noOptionsMessage={() => t("Vazio")}
+                    placeholder={t("Selecione...")}
                     className="react-select"
                     classNamePrefix="select"
                     value={vTipo}

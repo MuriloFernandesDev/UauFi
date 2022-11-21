@@ -28,6 +28,7 @@ import classnames from "classnames"
 // ** Custom Components
 import Avatar from "@components/avatar"
 import Select from "react-select"
+import { useTranslation } from "react-i18next"
 
 // ** API
 import api from "@src/services/api"
@@ -36,6 +37,9 @@ import api from "@src/services/api"
 import defaultImagem from "@src/assets/images/pages/semfoto.png"
 
 const CardapioProdutoCard = () => {
+  // ** Hooks
+  const { t } = useTranslation()
+
   // ** States
   const [vListaCategorias, setListaCategorias] = useState(null)
   const [vListaProdutos, setListaProdutos] = useState(null)
@@ -332,8 +336,8 @@ const CardapioProdutoCard = () => {
                   <Select
                     isClearable
                     id="cliente_id"
-                    noOptionsMessage={() => "Vazio"}
-                    placeholder={"Selecione..."}
+                    noOptionsMessage={() => t("Vazio")}
+                    placeholder={t("Selecione...")}
                     value={vCardapioBase}
                     options={vDados.cardapios}
                     className="react-select"

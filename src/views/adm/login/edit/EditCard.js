@@ -13,6 +13,7 @@ import defaultImagem from "@src/assets/images/avatars/avatar-blank.png"
 
 // ** Terceiros
 import Select from "react-select"
+import { useTranslation } from "react-i18next"
 
 // ** API
 import api from "@src/services/api"
@@ -22,6 +23,8 @@ import { AbilityContext as PermissaoContext } from "@src/utility/context/Can"
 
 const ClienteLoginEditCard = ({ data, setSalvarDados }) => {
   const navigate = useNavigate()
+  // ** Hooks
+  const { t } = useTranslation()
 
   // ** States
   const [vDados, setData] = useState(data)
@@ -317,7 +320,7 @@ const ClienteLoginEditCard = ({ data, setSalvarDados }) => {
                 <Select
                   isClearable
                   id="clientes"
-                  noOptionsMessage={() => "Vazio"}
+                  noOptionsMessage={() => t("Vazio")}
                   isMulti
                   placeholder={""}
                   className="react-select"

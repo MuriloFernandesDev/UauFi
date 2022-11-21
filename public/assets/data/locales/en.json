@@ -31,5 +31,16 @@
   "Usar tema escuro": "Use dark theme",
   "Usar tema claro": "Use light theme",
   "Parar de impersonar": "Stop impersonating",
+  "Endereço": "Address",
+  "Número": "Number",
+  "Bairro": "District",
+  "CEP": "Zip code",
+  "U.F.": "State",
+  "Vazio": "Empty",
+  "Visitas": "Visits",
+
+  "mask_telefone": "000 000 000",
+  "mask_celular": "000 000 0000",
+
   "Sair": "Exit"
 }

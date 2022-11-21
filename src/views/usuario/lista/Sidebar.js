@@ -6,6 +6,7 @@ import Sidebar from "@components/sidebar"
 
 // ** Third Party Components
 import Select from "react-select"
+import { useTranslation } from "react-i18next"
 import { useForm } from "react-hook-form"
 
 import { useDispatch, useSelector } from "react-redux"
@@ -22,6 +23,9 @@ const SidebarMaisFiltros = ({ open, toggleSidebar }) => {
   // ** Store Vars
   const dispatch = useDispatch()
   const store = useSelector((state) => state.usuario)
+
+  // ** Hooks
+  const { t } = useTranslation()
 
   // ** States
   const [vDataInicial, setDataInicial] = useState(null)
@@ -99,8 +103,8 @@ const SidebarMaisFiltros = ({ open, toggleSidebar }) => {
           <Select
             isClearable={true}
             isMulti={true}
-            placeholder={"Selecione..."}
-            noOptionsMessage={() => "Vazio"}
+            placeholder={t("Selecione...")}
+            noOptionsMessage={() => t("Vazio")}
             className="react-select"
             classNamePrefix="select"
             options={vListaSituacao}

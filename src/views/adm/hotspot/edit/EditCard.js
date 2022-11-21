@@ -30,6 +30,7 @@ import { CornerUpLeft, Check, Trash, Frown, Smile } from "react-feather"
 
 // ** Terceiros
 import Select from "react-select"
+import { useTranslation } from "react-i18next"
 
 // ** Utils
 import { getUserData } from "@utils"
@@ -58,6 +59,8 @@ const vListaTipoLayout = [
 
 const HotspotEditCard = ({ data, setSalvarDados }) => {
   const navigate = useNavigate()
+  // ** Hooks
+  const { t } = useTranslation()
 
   // ** States
   const [vDados, setData] = useState(data)
@@ -309,8 +312,8 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
                       </Label>
                       <Select
                         id="marca_equipamento"
-                        noOptionsMessage={() => "Vazio"}
-                        placeholder={"Selecione..."}
+                        noOptionsMessage={() => t("Vazio")}
+                        placeholder={t("Selecione...")}
                         className="react-select"
                         classNamePrefix="select"
                         value={vMarca}
@@ -350,8 +353,8 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
                       <Select
                         isClearable
                         id="cliente_id"
-                        noOptionsMessage={() => "Vazio"}
-                        placeholder={"Selecione..."}
+                        noOptionsMessage={() => t("Vazio")}
+                        placeholder={t("Selecione...")}
                         value={vCliente}
                         isDisabled={vDados.id === 0 && data.cliente_id > 0}
                         options={vListaClientes}
@@ -650,8 +653,8 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
                           Tipo de Layout
                         </Label>
                         <Select
-                          placeholder={"Selecione..."}
-                          noOptionsMessage={() => "Vazio"}
+                          placeholder={t("Selecione...")}
+                          noOptionsMessage={() => t("Vazio")}
                           className="react-select"
                           classNamePrefix="select"
                           value={vTipoLayout}
@@ -706,9 +709,9 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
                         </Label>
                         <Select
                           id="vTipoIntegracao"
-                          placeholder={"Selecione..."}
+                          placeholder={t("Selecione...")}
                           className="react-select"
-                          noOptionsMessage={() => "Vazio"}
+                          noOptionsMessage={() => t("Vazio")}
                           classNamePrefix="select"
                           value={vTipoIntegracao}
                           onChange={(e) => {

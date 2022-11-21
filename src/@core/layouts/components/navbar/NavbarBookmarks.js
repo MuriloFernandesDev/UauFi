@@ -65,7 +65,7 @@ const NavbarBookmarks = (props) => {
             <Select
               isClearable
               id="vCliente"
-              noOptionsMessage={() => "vazio"}
+              noOptionsMessage={() => t("Vazio")}
               LoadingMessage={() => "pesquisando..."}
               placeholder={"Filtrar por cliente..."}
               className="react-select d-block"

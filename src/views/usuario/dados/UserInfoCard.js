@@ -20,6 +20,7 @@ import {
 // ** Third Party Components
 import Swal from "sweetalert2"
 import Select from "react-select"
+import { useTranslation } from "react-i18next"
 import { Check, X, Wifi, MapPin } from "react-feather"
 import { useForm, Controller } from "react-hook-form"
 import withReactContent from "sweetalert2-react-content"
@@ -85,6 +86,9 @@ const UserInfoCard = ({ dados }) => {
 
   // ** Store Vars
   const dispatch = useDispatch()
+
+  // ** Hooks
+  const { t } = useTranslation()
 
   // ** States
   const [vDados, setDados] = useState(true)
@@ -242,7 +246,7 @@ const UserInfoCard = ({ dados }) => {
                 <h4 className="mb-0">
                   {new Intl.NumberFormat().format(vTotais?.visitas ?? 0)}
                 </h4>
-                <small>Visitas</small>
+                <small>{t("Visitas")}</small>
               </div>
             </div>
             <div className="d-flex align-items-start">

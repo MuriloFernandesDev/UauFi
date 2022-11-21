@@ -10,6 +10,7 @@ import { CornerUpLeft, Check } from "react-feather"
 
 // ** Terceiros
 import Select from "react-select"
+import { useTranslation } from "react-i18next"
 import Cleave from "cleave.js/react"
 import "cleave.js/dist/addons/cleave-phone.br"
 import { getHotspot } from "../store"
@@ -21,6 +22,8 @@ const vListaTipoPermissao = [
 
 const PermissaoMacEditCard = ({ data, setSalvarDados }) => {
   const navigate = useNavigate()
+  // ** Hooks
+  const { t } = useTranslation()
 
   // ** States
   const [vDados, setData] = useState(data)
@@ -119,8 +122,8 @@ const PermissaoMacEditCard = ({ data, setSalvarDados }) => {
                 </Label>
                 <Select
                   id="tipo_permissao"
-                  noOptionsMessage={() => "Vazio"}
-                  placeholder={"Selecione..."}
+                  noOptionsMessage={() => t("Vazio")}
+                  placeholder={t("Selecione...")}
                   className="react-select"
                   classNamePrefix="select"
                   value={vTipoPermissao}
@@ -159,8 +162,8 @@ const PermissaoMacEditCard = ({ data, setSalvarDados }) => {
                 <Select
                   isClearable
                   id="hotspot_id"
-                  noOptionsMessage={() => "Vazio"}
-                  placeholder={"Selecione..."}
+                  noOptionsMessage={() => t("Vazio")}
+                  placeholder={t("Selecione...")}
                   value={vHotspot}
                   options={vListaHotspots}
                   isDisabled={vDados.id === 0 && data.hotspot_id > 0}

@@ -10,10 +10,14 @@ import { CornerUpLeft, Check } from "react-feather"
 
 // ** Terceiros
 import Select from "react-select"
+import { useTranslation } from "react-i18next"
 import { getHotspot, getPlano } from "../store"
 
 const EventoEditCard = ({ data, setSalvarDados }) => {
   const navigate = useNavigate()
+
+  // ** Hooks
+  const { t } = useTranslation()
 
   // ** States
   const [vDados, setData] = useState(data)
@@ -167,8 +171,8 @@ const EventoEditCard = ({ data, setSalvarDados }) => {
                       </Label>
                       <Select
                         id="plano-conexao-id"
-                        noOptionsMessage={() => "Vazio"}
-                        placeholder={"Selecione..."}
+                        noOptionsMessage={() => t("Vazio")}
+                        placeholder={t("Selecione...")}
                         value={vPlano}
                         options={vListaPlanos}
                         className="react-select"
@@ -192,8 +196,8 @@ const EventoEditCard = ({ data, setSalvarDados }) => {
                       <Select
                         isClearable
                         id="hotspot_id"
-                        noOptionsMessage={() => "Vazio"}
-                        placeholder={"Selecione..."}
+                        noOptionsMessage={() => t("Vazio")}
+                        placeholder={t("Selecione...")}
                         value={vHotspot}
                         options={vListaHotspots}
                         className="react-select"

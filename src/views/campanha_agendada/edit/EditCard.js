@@ -27,6 +27,7 @@ import "cleave.js/dist/addons/cleave-phone.br"
 
 // ** Terceiros
 import Select from "react-select"
+import { useTranslation } from "react-i18next"
 import { getClientes, getFiltros, testarCampanha } from "../store"
 
 // ** Custom Components
@@ -34,6 +35,9 @@ import { formatMoeda, formatInt, formatDateTime } from "@utils"
 
 const CampanhaAgendadaEditCard = ({ data, setSalvarDados }) => {
   const navigate = useNavigate()
+
+  // ** Hooks
+  const { t } = useTranslation()
 
   // ** States
   const [vDados, setData] = useState(data)
@@ -213,8 +217,8 @@ const CampanhaAgendadaEditCard = ({ data, setSalvarDados }) => {
               <Select
                 isClearable
                 id="cliente_id"
-                noOptionsMessage={() => "Vazio"}
-                placeholder={"Selecione..."}
+                noOptionsMessage={() => t("Vazio")}
+                placeholder={t("Selecione...")}
                 value={vCliente}
                 options={vListaCliente}
                 isDisabled={
@@ -240,8 +244,8 @@ const CampanhaAgendadaEditCard = ({ data, setSalvarDados }) => {
               <Select
                 isClearable
                 id="filtro_id"
-                noOptionsMessage={() => "Vazio"}
-                placeholder={"Selecione..."}
+                noOptionsMessage={() => t("Vazio")}
+                placeholder={t("Selecione...")}
                 value={vFiltro}
                 options={vListaFiltros}
                 className="react-select"
