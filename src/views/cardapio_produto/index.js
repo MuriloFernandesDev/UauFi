@@ -72,7 +72,7 @@ const CustomHeader = ({ handleFilter, value, handlePerPage, rowsPerPage }) => {
             tag={Link}
             to="/cardapio_produto/add"
             color="primary"
-            disabled={!permissao.can("create", "cardapio_digital")}
+            disabled={!permissao.can("update", "cardapio_digital")}
           >
             Novo produto
           </Button>

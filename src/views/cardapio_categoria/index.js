@@ -66,7 +66,7 @@ const CustomHeader = ({ handleFilter, value, handlePerPage, rowsPerPage }) => {
             tag={Link}
             to="/cardapio_categoria/add"
             color="primary"
-            disabled={!permissao.can("create", "cardapio_digital")}
+            disabled={!permissao.can("update", "cardapio_digital")}
           >
             Nova categoria
           </Button>
