@@ -4,10 +4,10 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"
 // ** Axios Imports
 import api from "@src/services/api"
 
-export const getCampanhaRecorrente = createAsyncThunk(
-  "campanha_recorrente/getCampanhaRecorrente",
+export const getCardapioProduto = createAsyncThunk(
+  "cardapio_produto/getCardapioProduto",
   async (parametros) => {
-    const response = await api.get("/campanha_recorrente/lista/", {
+    const response = await api.get("/cardapio_produto/lista/", {
       params: parametros,
     })
     // console.log(response)
@@ -35,31 +35,13 @@ export const getCampanhaRecorrente = createAsyncThunk(
   }
 )
 
-export const deleteCampanhaRecorrente = createAsyncThunk(
-  "campanha_recorrente/deleteCampanhaRecorrente",
-  async (id) => {
-    await api.delete(`/campanha_recorrente/${id}`)
-    return id
-  }
-)
-
-export const getFiltros = async () => {
-  const response = (await api.get(`/filtro/lista_simples`)).data
+export const getCategorias = async () => {
+  const response = (await api.get(`/cardapio_categoria/lista_simples`)).data
   return response
 }
 
-export const testarCampanha = async (dados) => {
-  const response = await api.post("/campanha_recorrente/teste_sms", dados)
-  return response
-}
-
-export const getClientes = async () => {
-  const response = (await api.get(`/cliente/lista_simples`)).data
-  return response
-}
-
-export const CampanhaRecorrenteSlice = createSlice({
-  name: "campanha_recorrente",
+export const cardapio_produtoSlice = createSlice({
+  name: "cardapio_produto",
   initialState: {
     data: [],
     total: -1,
@@ -68,7 +50,7 @@ export const CampanhaRecorrenteSlice = createSlice({
   },
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(getCampanhaRecorrente.fulfilled, (state, action) => {
+    builder.addCase(getCardapioProduto.fulfilled, (state, action) => {
       state.data = action.payload.data
       state.allData = action.payload.allData
       state.total = action.payload.totalPages
@@ -77,4 +59,4 @@ export const CampanhaRecorrenteSlice = createSlice({
   },
 })
 
-export default CampanhaRecorrenteSlice.reducer
+export default cardapio_produtoSlice.reducer

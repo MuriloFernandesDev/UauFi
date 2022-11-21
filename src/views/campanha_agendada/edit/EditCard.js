@@ -1,5 +1,5 @@
 // ** React
-import { Fragment, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 
 // ** Reactstrap
@@ -12,12 +12,13 @@ import {
   Label,
   CardBody,
   CardTitle,
-  CardText,
   Spinner,
+  CardHeader,
+  ButtonGroup,
 } from "reactstrap"
 
 // ** Icons
-import { CornerUpLeft, Check } from "react-feather"
+import { CornerUpLeft, Check, DollarSign } from "react-feather"
 import toast from "react-hot-toast"
 import classnames from "classnames"
 
@@ -27,6 +28,9 @@ import "cleave.js/dist/addons/cleave-phone.br"
 // ** Terceiros
 import Select from "react-select"
 import { getClientes, getFiltros, testarCampanha } from "../store"
+
+// ** Custom Components
+import { formatMoeda, formatInt, formatDateTime } from "@utils"
 
 const CampanhaAgendadaEditCard = ({ data, setSalvarDados }) => {
   const navigate = useNavigate()
@@ -42,11 +46,13 @@ const CampanhaAgendadaEditCard = ({ data, setSalvarDados }) => {
 
   // ** Organização da informação
   const handleChange = (e) => {
-    const { name, value } = e.target
-    setData((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }))
+    if (!vDados.enviado) {
+      const { name, value } = e.target
+      setData((prevState) => ({
+        ...prevState,
+        [name]: value,
+      }))
+    }
   }
 
   const handleFiltros = () => {
@@ -149,19 +155,58 @@ const CampanhaAgendadaEditCard = ({ data, setSalvarDados }) => {
       <Col sm="12">
         <Card className="p-2 pb-0">
           <Row>
-            <Col md="4" className="mb-2">
+            <Col md="6" className="mb-2">
               <Label className="form-label" for="nome">
-                Nome da campanha
+                Nome da campanha*
               </Label>
               <Input
                 id="nome"
                 name="nome"
+                disabled={vDados.enviado}
                 value={vDados?.nome ?? ""}
                 onChange={handleChange}
               />
             </Col>
-
-            <Col md="4" className="mb-2">
+            <Col md="6" className="mb-2">
+              <Label className="form-label" for="mensagem">
+                Tipo de mensagem
+              </Label>
+              <div>
+                <ButtonGroup>
+                  <Button
+                    color="primary"
+                    onClick={() =>
+                      handleChange({
+                        target: {
+                          name: "tipo",
+                          value: 0,
+                        },
+                      })
+                    }
+                    active={(vDados.tipo ?? 0) === 0}
+                    outline
+                  >
+                    SMS
+                  </Button>
+                  <Button
+                    color="primary"
+                    onClick={() =>
+                      handleChange({
+                        target: {
+                          name: "tipo",
+                          value: 1,
+                        },
+                      })
+                    }
+                    active={(vDados.tipo ?? 0) === 1}
+                    outline
+                  >
+                    Push (App)
+                  </Button>
+                </ButtonGroup>
+              </div>
+            </Col>
+            <Col md="6" className="mb-2">
               <Label className="form-label" for="cliente_id">
                 Selecione um Cliente
               </Label>
@@ -172,7 +217,9 @@ const CampanhaAgendadaEditCard = ({ data, setSalvarDados }) => {
                 placeholder={"Selecione..."}
                 value={vCliente}
                 options={vListaCliente}
-                isDisabled={vDados.id === 0 && data.cliente_id > 0}
+                isDisabled={
+                  (vDados.id === 0 && data.cliente_id > 0) || vDados.enviado
+                }
                 className="react-select"
                 classNamePrefix="select"
                 onChange={(e) => {
@@ -186,7 +233,7 @@ const CampanhaAgendadaEditCard = ({ data, setSalvarDados }) => {
                 }}
               />
             </Col>
-            <Col md="4" className="mb-2">
+            <Col md="6" className="mb-2">
               <Label className="form-label" for="filtro_id">
                 Filtro
               </Label>
@@ -199,6 +246,7 @@ const CampanhaAgendadaEditCard = ({ data, setSalvarDados }) => {
                 options={vListaFiltros}
                 className="react-select"
                 classNamePrefix="select"
+                isDisabled={vDados.enviado}
                 onChange={(e) => {
                   setFiltro(e)
                   handleChange({
@@ -210,6 +258,7 @@ const CampanhaAgendadaEditCard = ({ data, setSalvarDados }) => {
                 }}
               />
             </Col>
+
             <Col md="12" className="mb-2">
               <Label className="form-label" for="mensagem">
                 Mensagem*
@@ -220,6 +269,7 @@ const CampanhaAgendadaEditCard = ({ data, setSalvarDados }) => {
                 id="mensagem"
                 name="mensagem"
                 style={{ minHeight: "80px" }}
+                disabled={vDados.enviado}
                 onChange={handleChange}
                 className={classnames({
                   "text-danger": (vDados?.mensagem?.length || 0) > 140,
@@ -239,6 +289,7 @@ const CampanhaAgendadaEditCard = ({ data, setSalvarDados }) => {
                   type="switch"
                   id="ativo"
                   checked={vDados?.ativo ?? false}
+                  disabled={vDados.enviado}
                   onChange={(e) => {
                     handleChange({
                       target: {
@@ -263,6 +314,7 @@ const CampanhaAgendadaEditCard = ({ data, setSalvarDados }) => {
                   id="data_hora_agendamento"
                   name="data_hora_agendamento"
                   type="datetime-local"
+                  disabled={vDados.enviado}
                   value={vDados?.data_hora_agendamento ?? ""}
                   onChange={handleChange}
                 />
@@ -272,39 +324,80 @@ const CampanhaAgendadaEditCard = ({ data, setSalvarDados }) => {
         </Card>
       </Col>
 
-      <Col md="6" className="offset-md-3">
-        <Card className="text-center">
-          <CardBody>
-            <CardTitle tag="h4">Testar campanha</CardTitle>
-            <Row>
-              <h6>*Será enviado para o número descrito como um teste</h6>
-              <Col lg="6" className="mb-2 offset-lg-3">
-                <Label className="form-label" for="vNumeroTeste">
-                  Número do celular com o ddd
-                </Label>
-                <Cleave
-                  className="form-control"
-                  placeholder="00 00000 0000"
-                  options={optTel}
-                  id="whatsapp"
-                  name="whatsapp"
-                  value={vNumeroTeste ?? ""}
-                  onChange={(e) => setNumeroTeste(e.target.value)}
-                />
-              </Col>
-              <Col md="12">
-                {vTestando ? (
-                  <Spinner color="primary" />
-                ) : (
-                  <Button onClick={handleTestarSMS} color="primary" outline>
-                    Enviar
-                  </Button>
-                )}
-              </Col>
-            </Row>
-          </CardBody>
-        </Card>
-      </Col>
+      {vDados.enviado ? (
+        <Col md="6" className="offset-md-3">
+          <Card>
+            <h4 className="text-center p-2">Informações sobre o envio</h4>
+            <CardBody>
+              <div className="transaction-item mb-2">
+                <div className="d-flex justify-content-between align-items-center">
+                  <div>
+                    <h6 className="transaction-title">Data do envio</h6>
+                  </div>
+                  <div className="fw-bolder text-primary text-end">
+                    {formatDateTime(vDados.data_hora_envio)}
+                  </div>
+                </div>
+              </div>
+              <div className="transaction-item mb-2">
+                <div className="d-flex justify-content-between align-items-center">
+                  <div>
+                    <h6 className="transaction-title">Valor total</h6>
+                  </div>
+                  <div className="fw-bolder text-secondary text-end">
+                    {formatMoeda(vDados.preco ?? 0)}
+                  </div>
+                </div>
+              </div>
+              <div className="transaction-item">
+                <div className="d-flex justify-content-between align-items-center">
+                  <div>
+                    <h6 className="transaction-title">Usuários atingidos</h6>
+                  </div>
+                  <div className="fw-bolder text-success text-end">
+                    {formatInt(vDados.quantidade ?? 0)}
+                  </div>
+                </div>
+              </div>
+            </CardBody>
+          </Card>
+        </Col>
+      ) : (
+        <Col md="6" className="offset-md-3">
+          <Card className="text-center">
+            <CardBody>
+              <CardTitle tag="h4">Testar campanha</CardTitle>
+              <Row>
+                <h6>*Será enviado para o número descrito como um teste</h6>
+                <Col lg="6" className="mb-2 offset-lg-3">
+                  <Label className="form-label" for="vNumeroTeste">
+                    Número do celular com o ddd
+                  </Label>
+                  <Cleave
+                    className="form-control"
+                    placeholder="00 00000 0000"
+                    options={optTel}
+                    id="whatsapp"
+                    name="whatsapp"
+                    disabled={vDados.enviado}
+                    value={vNumeroTeste ?? ""}
+                    onChange={(e) => setNumeroTeste(e.target.value)}
+                  />
+                </Col>
+                <Col md="12">
+                  {vTestando ? (
+                    <Spinner color="primary" />
+                  ) : (
+                    <Button onClick={handleTestarSMS} color="primary" outline>
+                      Enviar teste
+                    </Button>
+                  )}
+                </Col>
+              </Row>
+            </CardBody>
+          </Card>
+        </Col>
+      )}
     </Row>
   )
 }

@@ -8,9 +8,9 @@ import api from "@src/services/api"
 // ** Reactstrap
 import { Row, Col, Spinner } from "reactstrap"
 
-// ** Editar CampanhaRecorrente de conexão
+// ** Editar CardapioCategoria de conexão
 import EditCard from "./EditCard"
-import { getCampanhaRecorrente } from "../store"
+import { getCardapioCategoria } from "../store"
 import { useDispatch, useSelector } from "react-redux"
 
 // ** Terceiros
@@ -39,14 +39,14 @@ const handleError = (error, errorMessage, errorIcon) => {
   })
 }
 
-const CampanhaRecorrenteEdit = () => {
+const CardapioCategoriaEdit = () => {
   // ** Hooks
   const { id } = useParams()
   const navigate = useNavigate()
 
   // ** Store vars
   const dispatch = useDispatch()
-  const vParFiltro = useSelector((state) => state.campanha_recorrente.params)
+  const vParFiltro = useSelector((state) => state.cardapio_categoria.params)
 
   // ** States
   const [data, setData] = useState(null)
@@ -55,8 +55,8 @@ const CampanhaRecorrenteEdit = () => {
 
   const handleOK = () => {
     setSalvando(false)
-    dispatch(getCampanhaRecorrente(vParFiltro))
-    navigate("/campanha_recorrente")
+    dispatch(getCardapioCategoria(vParFiltro))
+    navigate("/cardapio_categoria")
   }
 
   // ** Função para salvar dados & respostas a erros
@@ -64,10 +64,10 @@ const CampanhaRecorrenteEdit = () => {
     setSalvando(true)
     if (pDados.id > 0) {
       api
-        .put("/campanha_recorrente", pDados)
+        .put("/cardapio_categoria", pDados)
         .then((response) => {
           if (response.status === 200) {
-            toast.success("Campanha editada com sucesso!", {
+            toast.success("Categoria editada com sucesso!", {
               position: "bottom-right",
             })
             handleOK()
@@ -93,10 +93,10 @@ const CampanhaRecorrenteEdit = () => {
         })
     } else {
       api
-        .post("/campanha_recorrente", pDados)
+        .post("/cardapio_categoria", pDados)
         .then((response) => {
           if (response.status === 200) {
-            toast.success("Campanha criada com sucesso!", {
+            toast.success("Categoria criada com sucesso!", {
               position: "bottom-right",
             })
             handleOK()
@@ -125,7 +125,7 @@ const CampanhaRecorrenteEdit = () => {
 
   // ** Get filter on mount based on id
   useEffect(() => {
-    api.get(`/campanha_recorrente/${id}`).then((response) => {
+    api.get(`/cardapio_categoria/${id}`).then((response) => {
       setData(response.data)
       setCarregando(false)
     })
@@ -146,4 +146,4 @@ const CampanhaRecorrenteEdit = () => {
   )
 }
 
-export default CampanhaRecorrenteEdit
+export default CardapioCategoriaEdit

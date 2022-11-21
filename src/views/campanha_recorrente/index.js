@@ -23,7 +23,7 @@ import {
 } from "reactstrap"
 
 // ** Store & Actions
-import { getBloqueioQuarto, deleteBloqueioQuarto } from "./store"
+import { getCampanhaRecorrente, deleteCampanhaRecorrente } from "./store"
 import { useDispatch, useSelector } from "react-redux"
 
 // ** Styles
@@ -63,11 +63,11 @@ const CustomHeader = ({ handleFilter, value, handlePerPage, rowsPerPage }) => {
           </div>
           <Button
             tag={Link}
-            to="/bloqueio_quarto/add"
+            to="/campanha_recorrente/add"
             color="primary"
-            disabled={!permissao.can("create", "bloqueio_quarto")}
+            disabled={!permissao.can("create", "campanha_recorrente")}
           >
-            Novo bloqueio
+            Nova campanha
           </Button>
         </Col>
         <Col
@@ -91,10 +91,10 @@ const CustomHeader = ({ handleFilter, value, handlePerPage, rowsPerPage }) => {
   )
 }
 
-const BloqueioQuartoList = () => {
+const CampanhaRecorrenteList = () => {
   // ** Store vars
   const dispatch = useDispatch()
-  const store = useSelector((state) => state.bloqueio_quarto)
+  const store = useSelector((state) => state.campanha_recorrente)
 
   // ** States
   const [value, setValue] = useState(store.params.q ?? "")
@@ -104,6 +104,9 @@ const BloqueioQuartoList = () => {
   const [rowsPerPage, setRowsPerPage] = useState(store.params.perPage ?? 10)
   const vTimeoutPesquisa = useRef()
   const [vPesquisando, setPesquisando] = useState(true)
+
+  // ** Guardar o Cliente selecionado para atualizar a página caso mude
+  const sClienteId = localStorage.getItem("clienteId")
 
   if (vPesquisando && store.total >= 0) {
     setPesquisando(false)
@@ -116,15 +119,17 @@ const BloqueioQuartoList = () => {
       store.params.q !== value ||
       store.params.sortColumn !== sortColumn ||
       store.params.page !== currentPage ||
-      store.params.perPage !== rowsPerPage
+      store.params.perPage !== rowsPerPage ||
+      store.params.clienteId !== sClienteId
     ) {
       dispatch(
-        getBloqueioQuarto({
+        getCampanhaRecorrente({
           sort,
           q: value,
           sortColumn,
           page: currentPage,
           perPage: rowsPerPage,
+          clienteId: sClienteId,
         })
       )
     }
@@ -137,12 +142,13 @@ const BloqueioQuartoList = () => {
     setValue(val)
     vTimeoutPesquisa.current = setTimeout(() => {
       dispatch(
-        getBloqueioQuarto({
+        getCampanhaRecorrente({
           sort,
           q: val,
           sortColumn,
           page: currentPage,
           perPage: rowsPerPage,
+          clienteId: sClienteId,
         })
       )
     }, 300)
@@ -150,12 +156,13 @@ const BloqueioQuartoList = () => {
 
   const handlePerPage = (e) => {
     dispatch(
-      getBloqueioQuarto({
+      getCampanhaRecorrente({
         sort,
         q: value,
         sortColumn,
         page: currentPage,
         perPage: parseInt(e.target.value),
+        clienteId: sClienteId,
       })
     )
     setRowsPerPage(parseInt(e.target.value))
@@ -163,12 +170,13 @@ const BloqueioQuartoList = () => {
 
   const handlePagination = (page) => {
     dispatch(
-      getBloqueioQuarto({
+      getCampanhaRecorrente({
         sort,
         q: value,
         sortColumn,
         perPage: rowsPerPage,
         page: page.selected + 1,
+        clienteId: sClienteId,
       })
     )
     setCurrentPage(page.selected + 1)
@@ -213,12 +221,13 @@ const BloqueioQuartoList = () => {
     setSort(sortDirection)
     setSortColumn(column.sortField)
     dispatch(
-      getBloqueioQuarto({
+      getCampanhaRecorrente({
         q: value,
         page: currentPage,
         sort: sortDirection,
         perPage: rowsPerPage,
         sortColumn: column.sortField,
+        clienteId: sClienteId,
       })
     )
   }
@@ -243,7 +252,7 @@ const BloqueioQuartoList = () => {
       buttonsStyling: false,
     }).then(async (result) => {
       if (result.value) {
-        await dispatch(deleteBloqueioQuarto(row.id))
+        await dispatch(deleteCampanhaRecorrente(row.id))
         handleFilter(store.params.q)
 
         toast.success("Removido com sucesso!", {
@@ -256,22 +265,43 @@ const BloqueioQuartoList = () => {
   // ** Table columns
   const columns = [
     {
-      name: "Quarto",
-      minWidth: "450px",
+      name: "Nome",
+      minWidth: "200px",
       sortable: true,
       selector: (row) => row.nome,
+      cell: (row) => {
+        return (
+          <div className="d-flex w-100 justify-content-left align-items-center">
+            <Link
+              className="d-flex w-100 flex-column"
+              to={`/campanha_recorrente/${row.id}`}
+              id={`pw-tooltip2-${row.id}`}
+            >
+              <h6 className="user-name text-truncate mb-0">{row.nome}</h6>
+              <small className="text-truncate text-muted mb-0">
+                {row.cliente ?? ""}
+              </small>
+            </Link>
+          </div>
+        )
+      },
+    },
+    {
+      name: "Mensagem",
+      minWidth: "450px",
+      sortable: true,
+      selector: (row) => row.mensagem,
       cell: (row) => {
         return (
           <div className="d-flex justify-content-left align-items-center">
             <Link
               className="d-flex flex-column"
-              to={`/bloqueio_quarto/${row.id}`}
+              to={`/campanha_recorrente/${row.id}`}
               id={`pw-tooltip2-${row.id}`}
             >
-              <h6 className="user-name text-truncate mb-0">nº {row.quarto}</h6>
-              <small className="text-truncate text-muted mb-0">
-                {row.hotspot_nome}
-              </small>
+              <span className="text-secondary user-name mb-0">
+                {row.mensagem}
+              </span>
             </Link>
           </div>
         )
@@ -283,7 +313,10 @@ const BloqueioQuartoList = () => {
       cell: (row) => (
         <div className="text-end w-100">
           <div className="column-action d-inline-flex">
-            <Link to={`/bloqueio_quarto/${row.id}`} id={`pw-tooltip-${row.id}`}>
+            <Link
+              to={`/campanha_recorrente/${row.id}`}
+              id={`pw-tooltip-${row.id}`}
+            >
               <Eye size={17} className="mx-1" />
             </Link>
 
@@ -357,4 +390,4 @@ const BloqueioQuartoList = () => {
   )
 }
 
-export default BloqueioQuartoList
+export default CampanhaRecorrenteList

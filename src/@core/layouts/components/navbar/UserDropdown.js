@@ -5,6 +5,9 @@ import { useEffect, useState, useContext } from "react"
 // ** Custom Components
 import Avatar from "@components/avatar"
 
+//Internacionalização
+import { useTranslation } from "react-i18next"
+
 // ** Utils
 import {
   isUserLoggedIn,
@@ -48,6 +51,9 @@ const UserDropdown = (props) => {
   const dispatch = useDispatch()
   const ability = useContext(AbilityContext)
   const navigate = useNavigate()
+
+  // ** Hooks
+  const { t } = useTranslation()
 
   // ** State
   const [userData, setUserData] = useState(null)
@@ -141,13 +147,13 @@ const UserDropdown = (props) => {
       <DropdownMenu end>
         <DropdownItem tag={Link} to="/adm/login/edit">
           <User size={14} className="me-75" />
-          <span className="align-middle">Meu perfil</span>
+          <span className="align-middle">{t("Meu perfil")}</span>
         </DropdownItem>
 
         {user.perfil === "adm" && !user.impersonado ? (
           <DropdownItem className="w-100" onClick={() => setShow(!show)}>
             <Users size={14} className="me-75" />
-            <span className="align-middle">Impersonar</span>
+            <span className="align-middle">{t("Impersonar")}</span>
             <Impersonar
               show={show}
               setShow={setShow}
@@ -163,7 +169,7 @@ const UserDropdown = (props) => {
             onClick={() => handlePararImpersonar()}
           >
             <Users size={14} className="me-75" />
-            <span className="align-middle">Parar de impersonar</span>
+            <span className="align-middle">{t("Parar de impersonar")}</span>
           </DropdownItem>
         ) : null}
         <DropdownItem
@@ -172,7 +178,9 @@ const UserDropdown = (props) => {
         >
           <ThemeToggler />
           <span className="align-middle">
-            {`Usar tema ${skin === "dark" ? "claro" : "escuro"}`}
+            {`${
+              skin === "dark" ? t("Usar tema claro") : t("Usar tema escuro")
+            }`}
           </span>
         </DropdownItem>
         <DropdownItem
@@ -181,7 +189,7 @@ const UserDropdown = (props) => {
           onClick={() => dispatch(handleLogout())}
         >
           <Power size={14} className="me-75" />
-          <span className="align-middle">Logout</span>
+          <span className="align-middle">{t("Sair")}</span>
         </DropdownItem>
       </DropdownMenu>
     </UncontrolledDropdown>

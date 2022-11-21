@@ -17,8 +17,9 @@ import { formatDateTime } from "@utils"
 
 // ** API
 import api from "@src/services/api"
+import { RefreshCw } from "react-feather"
 
-const CompanyTable = () => {
+const CardUltimosUsuarios = () => {
   // ** States
   const [vDados, setDados] = useState(null)
   const [vProcessando, setProcessando] = useState(true)
@@ -87,7 +88,7 @@ const CompanyTable = () => {
               <span className="font-small-2 text-muted">{col.mac}</span>
             </div>
           </td>
-          <td>
+          <td colSpan={2}>
             <div className="d-flex flex-column">
               <span className="mb-25">{formatDateTime(col.entrada)}</span>
               <span className="font-small-2 text-muted">{col.hotspot}</span>
@@ -105,8 +106,8 @@ const CompanyTable = () => {
           <tr>
             <th>Últimos usuários conectados</th>
             <th>Dispositivo</th>
-            <th>
-              Conexão
+            <th>Conexão</th>
+            <th style={{ width: "10px" }} className="pe-1 pb-0">
               {vProcessando ? (
                 <Spinner
                   type="grow"
@@ -114,7 +115,18 @@ const CompanyTable = () => {
                   color="primary"
                   className="ms-1"
                 />
-              ) : null}
+              ) : (
+                <Link
+                  to="/"
+                  className="text-body m-0"
+                  onClick={(e) => {
+                    e.preventDefault()
+                    getDados()
+                  }}
+                >
+                  <RefreshCw className="font-medium-3 text-success cursor-pointer" />
+                </Link>
+              )}
             </th>
           </tr>
         </thead>
@@ -124,4 +136,4 @@ const CompanyTable = () => {
   )
 }
 
-export default CompanyTable
+export default CardUltimosUsuarios

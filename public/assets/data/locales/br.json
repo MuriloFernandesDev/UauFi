@@ -1,6 +1,7 @@
 {
-  "Dashboards": "painel de controle",
-  "Analytics": "Analytics",
+  "Dashboard": "Dashboard",
+  "Administrativo": "Administrativo",
+  "Selecione...": "Seel...",
   "eCommerce": "comércio eletrônico",
   "Apps": "Apps",
   "Email": "O email",

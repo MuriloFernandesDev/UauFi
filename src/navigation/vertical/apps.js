@@ -13,6 +13,7 @@ import {
   FileText,
   Smartphone,
   WifiOff,
+  BookOpen,
 } from "react-feather"
 
 export default [
@@ -92,6 +93,37 @@ export default [
     navLink: "/bloqueio_quarto",
     action: "read",
     resource: "bloqueio_quarto",
+  },
+  {
+    id: "menuCardapio",
+    title: "Cardápio digital",
+    icon: <BookOpen size={20} />,
+    children: [
+      {
+        id: "menuCardapioCategoria",
+        title: "Categoria",
+        icon: <Circle size={12} />,
+        navLink: "/cardapio_categoria",
+        action: "read",
+        resource: "cardapio_digital",
+      },
+      {
+        id: "menuCardapioProduto",
+        title: "Produto",
+        icon: <Circle size={12} />,
+        navLink: "/cardapio_produto",
+        action: "read",
+        resource: "cardapio_digital",
+      },
+      {
+        id: "menuCardapioVisualizar",
+        title: "Visualização",
+        icon: <Circle size={12} />,
+        navLink: "/cardapio_digital",
+        action: "read",
+        resource: "cardapio_digital",
+      },
+    ],
   },
   {
     id: "menuPesquisa",
@@ -184,14 +216,6 @@ export default [
         navLink: "/relatorio/email",
         action: "read",
         resource: "rel_exportar_email",
-      },
-      {
-        id: "menuRelatorioRegistro",
-        title: "Exportar registros",
-        icon: <Circle size={12} />,
-        navLink: "/relatorio/registro",
-        action: "read",
-        resource: "rel_exportar_registros",
       },
     ],
   },

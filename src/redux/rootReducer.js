@@ -15,6 +15,8 @@ import campanha_agendada from "@src/views/campanha_agendada/store"
 import campanha_recorrente from "@src/views/campanha_recorrente/store"
 import permissao_mac from "@src/views/adm/permissao_mac/store"
 import bloqueio_quarto from "@src/views/bloqueio_quarto/store"
+import cardapio_categoria from "@src/views/cardapio_categoria/store"
+import cardapio_produto from "@src/views/cardapio_produto/store"
 import pesquisa_captive from "@src/views/pesquisa_captive/store"
 import publicidade from "@src/views/publicidade/store"
 
@@ -33,6 +35,8 @@ const rootReducer = {
   campanha_agendada,
   campanha_recorrente,
   permissao_mac,
+  cardapio_categoria,
+  cardapio_produto,
   bloqueio_quarto,
   url_encurtada,
   pesquisa_captive,

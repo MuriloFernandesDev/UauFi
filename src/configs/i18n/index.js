@@ -1,8 +1,8 @@
 // ** I18n Imports
-import i18n from 'i18next'
-import Backend from 'i18next-xhr-backend'
-import { initReactI18next } from 'react-i18next'
-import LanguageDetector from 'i18next-browser-languagedetector'
+import i18n from "i18next"
+import Backend from "i18next-xhr-backend"
+import { initReactI18next } from "react-i18next"
+import LanguageDetector from "i18next-browser-languagedetector"
 
 i18n
 
@@ -15,21 +15,21 @@ i18n
   // Enables the hook initialization module
   .use(initReactI18next)
   .init({
-    lng: 'br',
+    lng: localStorage.getItem("i18nextLng"),
     backend: {
       /* translation file path */
-      loadPath: `${process.env.PUBLIC_URL}/assets/data/locales/{{lng}}.json`
+      loadPath: `${process.env.PUBLIC_URL}/assets/data/locales/{{lng}}.json`,
     },
-    fallbackLng: 'br',
+    fallbackLng: localStorage.getItem("i18nextLng"),
     debug: false,
     keySeparator: false,
     react: {
-      useSuspense: false
+      useSuspense: false,
     },
     interpolation: {
       escapeValue: false,
-      formatSeparator: '.'
-    }
+      formatSeparator: ".",
+    },
   })
 
 export default i18n

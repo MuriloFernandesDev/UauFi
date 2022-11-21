@@ -4,7 +4,6 @@ import { Fragment } from "react"
 // ** Routes Imports
 import AppRoutes from "./Apps"
 import PagesRoutes from "./Pages"
-import DashboardRoutes from "./Dashboards"
 import UiElementRoutes from "./UiElements"
 import ExtensionsRoutes from "./Extensions"
 import PageLayoutsRoutes from "./PageLayouts"
@@ -38,7 +37,6 @@ const DefaultRoute = "/dashboard"
 // ** Merge Routes
 const Routes = [
   ...AuthenticationRoutes,
-  ...DashboardRoutes,
   ...AppRoutes,
   ...PagesRoutes,
   ...UiElementRoutes,

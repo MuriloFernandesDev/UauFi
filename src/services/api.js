@@ -22,6 +22,12 @@ api.interceptors.request.use(
       config.headers["cliente_id"] = clienteId.value
     }
 
+    const vLang = localStorage.getItem("i18nextLng")
+    //Enviar lingua selecionada
+    if (vLang) {
+      config.headers["lang"] = vLang
+    }
+
     if (accessToken && accessToken !== "undefined") {
       config.headers.Authorization = `${jwtDefaultConfig.tokenType} ${accessToken}`
     }

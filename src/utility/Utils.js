@@ -58,6 +58,7 @@ export const formatMoeda = (
   value,
   formatting = {
     style: "currency",
+    currency: "BRL",
   }
 ) => {
   if (!value) return value
@@ -128,7 +129,9 @@ export const getUserData = () => JSON.parse(localStorage.getItem("userData"))
  * @param {String} userRole Role of user
  */
 export const getHomeRouteForLoggedInUser = (userRole) => {
-  if (userRole === "admin") return DefaultRoute
+  if (userRole === "admin" && DefaultRoute) {
+    return DefaultRoute
+  }
   if (userRole === "client") return "/access-control"
   return "/login"
 }

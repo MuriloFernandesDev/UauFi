@@ -4,10 +4,10 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"
 // ** Axios Imports
 import api from "@src/services/api"
 
-export const getCampanhaRecorrente = createAsyncThunk(
-  "campanha_recorrente/getCampanhaRecorrente",
+export const getCardapioCategoria = createAsyncThunk(
+  "cardapio_categoria/getCardapioCategoria",
   async (parametros) => {
-    const response = await api.get("/campanha_recorrente/lista/", {
+    const response = await api.get("/cardapio_categoria/lista/", {
       params: parametros,
     })
     // console.log(response)
@@ -35,31 +35,21 @@ export const getCampanhaRecorrente = createAsyncThunk(
   }
 )
 
-export const deleteCampanhaRecorrente = createAsyncThunk(
-  "campanha_recorrente/deleteCampanhaRecorrente",
+export const deleteCardapioCategoria = createAsyncThunk(
+  "cardapio_categoria/deleteCardapioCategoria",
   async (id) => {
-    await api.delete(`/campanha_recorrente/${id}`)
+    await api.delete(`/cardapio_categoria/${id}`)
     return id
   }
 )
-
-export const getFiltros = async () => {
-  const response = (await api.get(`/filtro/lista_simples`)).data
-  return response
-}
-
-export const testarCampanha = async (dados) => {
-  const response = await api.post("/campanha_recorrente/teste_sms", dados)
-  return response
-}
 
 export const getClientes = async () => {
   const response = (await api.get(`/cliente/lista_simples`)).data
   return response
 }
 
-export const CampanhaRecorrenteSlice = createSlice({
-  name: "campanha_recorrente",
+export const CardapioCategoriaSlice = createSlice({
+  name: "cardapio_categoria",
   initialState: {
     data: [],
     total: -1,
@@ -68,7 +58,7 @@ export const CampanhaRecorrenteSlice = createSlice({
   },
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(getCampanhaRecorrente.fulfilled, (state, action) => {
+    builder.addCase(getCardapioCategoria.fulfilled, (state, action) => {
       state.data = action.payload.data
       state.allData = action.payload.allData
       state.total = action.payload.totalPages
@@ -77,4 +67,4 @@ export const CampanhaRecorrenteSlice = createSlice({
   },
 })
 
-export default CampanhaRecorrenteSlice.reducer
+export default CardapioCategoriaSlice.reducer

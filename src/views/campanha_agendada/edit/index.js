@@ -67,7 +67,7 @@ const CampanhaAgendadaEdit = () => {
         .put("/campanha_agendada", pDados)
         .then((response) => {
           if (response.status === 200) {
-            toast.success("Bloqueio de quarto editado com sucesso!", {
+            toast.success("Campanha editada com sucesso!", {
               position: "bottom-right",
             })
             handleOK()
@@ -96,7 +96,7 @@ const CampanhaAgendadaEdit = () => {
         .post("/campanha_agendada", pDados)
         .then((response) => {
           if (response.status === 200) {
-            toast.success("Bloqueio de quarto criado com sucesso!", {
+            toast.success("Campanha criada com sucesso!", {
               position: "bottom-right",
             })
             handleOK()

@@ -7,6 +7,12 @@ import ReactPaginate from "react-paginate"
 import { ChevronDown, Eye, Trash, MoreVertical } from "react-feather"
 import DataTable from "react-data-table-component"
 
+// ** Custom Components
+import Avatar from "@components/avatar"
+
+// ** API
+import api from "@src/services/api"
+
 // ** Reactstrap
 import {
   Button,
@@ -20,10 +26,11 @@ import {
   DropdownToggle,
   UncontrolledTooltip,
   UncontrolledDropdown,
+  Badge,
 } from "reactstrap"
 
 // ** Store & Actions
-import { getBloqueioQuarto, deleteBloqueioQuarto } from "./store"
+import { getCardapioProduto } from "./store"
 import { useDispatch, useSelector } from "react-redux"
 
 // ** Styles
@@ -63,11 +70,11 @@ const CustomHeader = ({ handleFilter, value, handlePerPage, rowsPerPage }) => {
           </div>
           <Button
             tag={Link}
-            to="/bloqueio_quarto/add"
+            to="/cardapio_produto/add"
             color="primary"
-            disabled={!permissao.can("create", "bloqueio_quarto")}
+            disabled={!permissao.can("create", "cardapio_digital")}
           >
-            Novo bloqueio
+            Novo produto
           </Button>
         </Col>
         <Col
@@ -91,15 +98,33 @@ const CustomHeader = ({ handleFilter, value, handlePerPage, rowsPerPage }) => {
   )
 }
 
-const BloqueioQuartoList = () => {
+const handleError = (error, errorMessage, errorIcon) => {
+  return MySwal.fire({
+    title: error,
+    text: errorMessage,
+    icon: errorIcon,
+    customClass: {
+      confirmButton: "btn btn-primary",
+      popup: "animate__animated animate__fadeIn",
+    },
+    hideClass: {
+      popup: "animate__animated animate__zoomOut",
+    },
+    buttonsStyling: false,
+  })
+}
+
+const CardapioProdutoList = () => {
   // ** Store vars
   const dispatch = useDispatch()
-  const store = useSelector((state) => state.bloqueio_quarto)
+  const store = useSelector((state) => state.cardapio_produto)
 
   // ** States
   const [value, setValue] = useState(store.params.q ?? "")
-  const [sort, setSort] = useState(store.params.sort ?? "desc")
-  const [sortColumn, setSortColumn] = useState(store.params.sortColumn ?? "id")
+  const [sort, setSort] = useState(store.params.sort ?? "asc")
+  const [sortColumn, setSortColumn] = useState(
+    store.params.sortColumn ?? "ordem"
+  )
   const [currentPage, setCurrentPage] = useState(store.params.page ?? 1)
   const [rowsPerPage, setRowsPerPage] = useState(store.params.perPage ?? 10)
   const vTimeoutPesquisa = useRef()
@@ -113,7 +138,7 @@ const BloqueioQuartoList = () => {
   }
 
   useEffect(() => {
-    //Somente pesquisar se os parametros de plano mudaram
+    //Somente pesquisar se os parametros de mudaram
     if (
       store.params.sort !== sort ||
       store.params.q !== value ||
@@ -123,7 +148,7 @@ const BloqueioQuartoList = () => {
       store.params.clienteId !== sClienteId
     ) {
       dispatch(
-        getBloqueioQuarto({
+        getCardapioProduto({
           sort,
           q: value,
           sortColumn,
@@ -142,7 +167,7 @@ const BloqueioQuartoList = () => {
     setValue(val)
     vTimeoutPesquisa.current = setTimeout(() => {
       dispatch(
-        getBloqueioQuarto({
+        getCardapioProduto({
           sort,
           q: val,
           sortColumn,
@@ -156,7 +181,7 @@ const BloqueioQuartoList = () => {
 
   const handlePerPage = (e) => {
     dispatch(
-      getBloqueioQuarto({
+      getCardapioProduto({
         sort,
         q: value,
         sortColumn,
@@ -170,7 +195,7 @@ const BloqueioQuartoList = () => {
 
   const handlePagination = (page) => {
     dispatch(
-      getBloqueioQuarto({
+      getCardapioProduto({
         sort,
         q: value,
         sortColumn,
@@ -221,7 +246,7 @@ const BloqueioQuartoList = () => {
     setSort(sortDirection)
     setSortColumn(column.sortField)
     dispatch(
-      getBloqueioQuarto({
+      getCardapioProduto({
         q: value,
         page: currentPage,
         sort: sortDirection,
@@ -250,37 +275,102 @@ const BloqueioQuartoList = () => {
         popup: "animate__animated animate__zoomOut",
       },
       buttonsStyling: false,
-    }).then(async (result) => {
+    }).then((result) => {
       if (result.value) {
-        await dispatch(deleteBloqueioQuarto(row.id))
-        handleFilter(store.params.q)
+        api
+          .delete(`/cardapio_produto/${row.id}`)
+          .then((response) => {
+            if (response.status === 200) {
+              handleFilter(store.params.q)
 
-        toast.success("Removido com sucesso!", {
-          position: "bottom-right",
-        })
+              toast.success("Removido com sucesso!", {
+                position: "bottom-right",
+              })
+            }
+          })
+          .catch((error) => {
+            if (error.response.status === 400) {
+              handleError("Atenção!", "Não autorizado.", "warning")
+            } else if (error.response.status === 503) {
+              handleError("Ops...", error.response.data, "error")
+            } else {
+              handleError(
+                "Erro inesperado",
+                "Por favor, contate um administrador.",
+                "error"
+              )
+            }
+          })
       }
     })
+  }
+
+  const renderFoto = (row) => {
+    if (row.imagem?.length > 0) {
+      return (
+        <Avatar className="me-50" img={row.imagem} width="32" height="32" />
+      )
+    } else {
+      return (
+        <Avatar
+          color="light-primary"
+          className="me-50"
+          content={row.titulo ?? ""}
+          initials
+        />
+      )
+    }
   }
 
   // ** Table columns
   const columns = [
     {
-      name: "Quarto",
-      minWidth: "450px",
+      name: "Título",
+      minWidth: "200px",
+      selector: (row) => row.titulo,
+      cell: (row) => {
+        return (
+          <Link
+            to={`/cardapio_produto/${row.id}`}
+            id={`pw-tooltip2-${row.id}`}
+            className="d-flex justify-content-left align-items-center"
+          >
+            {renderFoto(row)}
+            <div className="d-flex flex-column">
+              <div>
+                <h6 className="user-name text-truncate mb-0">
+                  {row.titulo ?? ""}
+                  {!row.ativo ? (
+                    <small className="text-truncate text-muted mb-0 ms-1">
+                      <Badge color="warning">Desativado</Badge>{" "}
+                    </small>
+                  ) : null}
+                </h6>
+                <small className="text-truncate text-muted mb-0">
+                  {row.categoria?.titulo ?? ""}
+                </small>
+              </div>
+            </div>
+          </Link>
+        )
+      },
+    },
+    {
+      name: "Descrição",
+      minWidth: "550px",
       sortable: true,
-      selector: (row) => row.nome,
+      selector: (row) => row.descricao,
       cell: (row) => {
         return (
           <div className="d-flex justify-content-left align-items-center">
             <Link
               className="d-flex flex-column"
-              to={`/bloqueio_quarto/${row.id}`}
+              to={`/cardapio_produto/${row.id}`}
               id={`pw-tooltip2-${row.id}`}
             >
-              <h6 className="user-name text-truncate mb-0">nº {row.quarto}</h6>
-              <small className="text-truncate text-muted mb-0">
-                {row.hotspot_nome}
-              </small>
+              <span className="text-secondary user-name mb-0">
+                {row.descricao ?? ""}
+              </span>
             </Link>
           </div>
         )
@@ -288,11 +378,14 @@ const BloqueioQuartoList = () => {
     },
     {
       name: <div className="text-end w-100">Ações</div>,
-      minWidth: "80px",
+      width: "100px",
       cell: (row) => (
         <div className="text-end w-100">
           <div className="column-action d-inline-flex">
-            <Link to={`/bloqueio_quarto/${row.id}`} id={`pw-tooltip-${row.id}`}>
+            <Link
+              to={`/cardapio_produto/${row.id}`}
+              id={`pw-tooltip-${row.id}`}
+            >
               <Eye size={17} className="mx-1" />
             </Link>
 
@@ -366,4 +459,4 @@ const BloqueioQuartoList = () => {
   )
 }
 
-export default BloqueioQuartoList
+export default CardapioProdutoList

@@ -1,7 +1,7 @@
 // ** Dropdowns Imports
 import UserDropdown from "./UserDropdown"
 import NotificationDropdown from "./NotificationDropdown"
-// import IntlDropdown from './IntlDropdown'
+import IntlDropdown from "./IntlDropdown"
 
 // ** Third Party Components
 import { Sun, Moon } from "react-feather"
@@ -24,7 +24,7 @@ const NavbarUser = (props) => {
 
   return (
     <ul className="nav navbar-nav align-items-center ms-auto flex-nowrap">
-      {/* <IntlDropdown /> */}
+      <IntlDropdown />
       <NavItem className="d-none d-lg-block">
         <NavLink className="nav-link-style">
           <ThemeToggler />

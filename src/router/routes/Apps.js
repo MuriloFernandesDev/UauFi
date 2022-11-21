@@ -1,7 +1,7 @@
 // ** React Imports
 import { lazy } from "react"
-import { Navigate } from "react-router-dom"
 
+const Dashboard = lazy(() => import("../../views/dashboard"))
 const Cliente = lazy(() => import("../../views/adm/cliente"))
 const ClienteEdit = lazy(() => import("../../views/adm/cliente/edit"))
 const Hotspot = lazy(() => import("../../views/adm/hotspot"))
@@ -42,8 +42,21 @@ const CampanhaRecorrente = lazy(() => import("../../views/campanha_recorrente"))
 const CampanhaRecorrenteEdit = lazy(() =>
   import("../../views/campanha_recorrente/edit")
 )
+const CardapioCategoria = lazy(() => import("../../views/cardapio_categoria"))
+const CardapioCategoriaEdit = lazy(() =>
+  import("../../views/cardapio_categoria/edit")
+)
+const CardapioProduto = lazy(() => import("../../views/cardapio_produto"))
+const CardapioProdutoEdit = lazy(() =>
+  import("../../views/cardapio_produto/edit")
+)
+const CardapioDigital = lazy(() => import("../../views/cardapio_digital"))
 
 const AppRoutes = [
+  {
+    path: "/dashboard",
+    element: <Dashboard />,
+  },
   {
     element: <Cliente />,
     path: "/adm/cliente",
@@ -115,6 +128,26 @@ const AppRoutes = [
   {
     element: <PesquisaCaptiveEdit />,
     path: "/pesquisa_captive/:id",
+  },
+  {
+    element: <CardapioCategoria />,
+    path: "/cardapio_categoria",
+  },
+  {
+    element: <CardapioCategoriaEdit />,
+    path: "/cardapio_categoria/:id",
+  },
+  {
+    element: <CardapioProduto />,
+    path: "/cardapio_produto",
+  },
+  {
+    element: <CardapioDigital />,
+    path: "/cardapio_digital",
+  },
+  {
+    element: <CardapioProdutoEdit />,
+    path: "/cardapio_produto/:id",
   },
   {
     element: <Publicidade />,

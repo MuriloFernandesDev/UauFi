@@ -20,10 +20,11 @@ import {
   DropdownToggle,
   UncontrolledTooltip,
   UncontrolledDropdown,
+  Badge,
 } from "reactstrap"
 
 // ** Store & Actions
-import { getBloqueioQuarto, deleteBloqueioQuarto } from "./store"
+import { getCardapioCategoria, deleteCardapioCategoria } from "./store"
 import { useDispatch, useSelector } from "react-redux"
 
 // ** Styles
@@ -63,11 +64,11 @@ const CustomHeader = ({ handleFilter, value, handlePerPage, rowsPerPage }) => {
           </div>
           <Button
             tag={Link}
-            to="/bloqueio_quarto/add"
+            to="/cardapio_categoria/add"
             color="primary"
-            disabled={!permissao.can("create", "bloqueio_quarto")}
+            disabled={!permissao.can("create", "cardapio_digital")}
           >
-            Novo bloqueio
+            Nova categoria
           </Button>
         </Col>
         <Col
@@ -91,15 +92,17 @@ const CustomHeader = ({ handleFilter, value, handlePerPage, rowsPerPage }) => {
   )
 }
 
-const BloqueioQuartoList = () => {
+const CardapioCategoriaList = () => {
   // ** Store vars
   const dispatch = useDispatch()
-  const store = useSelector((state) => state.bloqueio_quarto)
+  const store = useSelector((state) => state.cardapio_categoria)
 
   // ** States
   const [value, setValue] = useState(store.params.q ?? "")
-  const [sort, setSort] = useState(store.params.sort ?? "desc")
-  const [sortColumn, setSortColumn] = useState(store.params.sortColumn ?? "id")
+  const [sort, setSort] = useState(store.params.sort ?? "asc")
+  const [sortColumn, setSortColumn] = useState(
+    store.params.sortColumn ?? "ordem"
+  )
   const [currentPage, setCurrentPage] = useState(store.params.page ?? 1)
   const [rowsPerPage, setRowsPerPage] = useState(store.params.perPage ?? 10)
   const vTimeoutPesquisa = useRef()
@@ -123,7 +126,7 @@ const BloqueioQuartoList = () => {
       store.params.clienteId !== sClienteId
     ) {
       dispatch(
-        getBloqueioQuarto({
+        getCardapioCategoria({
           sort,
           q: value,
           sortColumn,
@@ -142,7 +145,7 @@ const BloqueioQuartoList = () => {
     setValue(val)
     vTimeoutPesquisa.current = setTimeout(() => {
       dispatch(
-        getBloqueioQuarto({
+        getCardapioCategoria({
           sort,
           q: val,
           sortColumn,
@@ -156,7 +159,7 @@ const BloqueioQuartoList = () => {
 
   const handlePerPage = (e) => {
     dispatch(
-      getBloqueioQuarto({
+      getCardapioCategoria({
         sort,
         q: value,
         sortColumn,
@@ -170,7 +173,7 @@ const BloqueioQuartoList = () => {
 
   const handlePagination = (page) => {
     dispatch(
-      getBloqueioQuarto({
+      getCardapioCategoria({
         sort,
         q: value,
         sortColumn,
@@ -221,7 +224,7 @@ const BloqueioQuartoList = () => {
     setSort(sortDirection)
     setSortColumn(column.sortField)
     dispatch(
-      getBloqueioQuarto({
+      getCardapioCategoria({
         q: value,
         page: currentPage,
         sort: sortDirection,
@@ -252,7 +255,7 @@ const BloqueioQuartoList = () => {
       buttonsStyling: false,
     }).then(async (result) => {
       if (result.value) {
-        await dispatch(deleteBloqueioQuarto(row.id))
+        await dispatch(deleteCardapioCategoria(row.id))
         handleFilter(store.params.q)
 
         toast.success("Removido com sucesso!", {
@@ -265,21 +268,27 @@ const BloqueioQuartoList = () => {
   // ** Table columns
   const columns = [
     {
-      name: "Quarto",
-      minWidth: "450px",
-      sortable: true,
-      selector: (row) => row.nome,
+      name: "Título",
+      minWidth: "200px",
+      selector: (row) => row.titulo,
       cell: (row) => {
         return (
-          <div className="d-flex justify-content-left align-items-center">
+          <div className="d-flex justify-content-left align-items-center w-100">
             <Link
-              className="d-flex flex-column"
-              to={`/bloqueio_quarto/${row.id}`}
+              className="d-flex flex-column w-100"
+              to={`/cardapio_categoria/${row.id}`}
               id={`pw-tooltip2-${row.id}`}
             >
-              <h6 className="user-name text-truncate mb-0">nº {row.quarto}</h6>
+              <h6 className="user-name text-truncate mb-0">
+                {row.titulo}
+                {!row.ativo ? (
+                  <small className="text-truncate text-muted ms-1 mb-0">
+                    <Badge color="warning">Desativada</Badge>
+                  </small>
+                ) : null}
+              </h6>
               <small className="text-truncate text-muted mb-0">
-                {row.hotspot_nome}
+                {row.cliente_nome}
               </small>
             </Link>
           </div>
@@ -287,12 +296,33 @@ const BloqueioQuartoList = () => {
       },
     },
     {
+      name: "Descrição",
+      minWidth: "350px",
+      selector: (row) => row.descricao,
+      cell: (row) => {
+        return (
+          <div className="d-flex justify-content-left align-items-center w-100">
+            <Link
+              className="d-flex flex-column w-100"
+              to={`/cardapio_categoria/${row.id}`}
+              id={`pw-tooltip2-${row.id}`}
+            >
+              <h6 className="user-name text-truncate mb-0">{row.descricao}</h6>
+            </Link>
+          </div>
+        )
+      },
+    },
+    {
       name: <div className="text-end w-100">Ações</div>,
-      minWidth: "80px",
+      width: "100px",
       cell: (row) => (
         <div className="text-end w-100">
           <div className="column-action d-inline-flex">
-            <Link to={`/bloqueio_quarto/${row.id}`} id={`pw-tooltip-${row.id}`}>
+            <Link
+              to={`/cardapio_categoria/${row.id}`}
+              id={`pw-tooltip-${row.id}`}
+            >
               <Eye size={17} className="mx-1" />
             </Link>
 
@@ -366,4 +396,4 @@ const BloqueioQuartoList = () => {
   )
 }
 
-export default BloqueioQuartoList
+export default CardapioCategoriaList

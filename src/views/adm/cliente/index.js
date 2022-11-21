@@ -71,7 +71,7 @@ const CustomHeader = ({ handleFilter, value, handlePerPage, rowsPerPage }) => {
             tag={Link}
             to="/adm/cliente/add"
             color="primary"
-            disabled={!permissao.can("create", "adm_cliente")}
+            disabled={!permissao.can("create", "adm_clientes")}
           >
             Novo cliente
           </Button>
