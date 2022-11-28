@@ -93,12 +93,12 @@ const NotificationDropdown = () => {
                   <p className="media-heading">
                     <span className="fw-bolder">{item.nome}</span>
                   </p>
-                  <small className="notification-text">
+                  <div className="notification-text m-0">
                     {formatDate(item.nascimento)}
-                  </small>
-                  <small className="notification-text">
+                  </div>
+                  <div className="notification-text m-0">
                     {item.hotspot_nome}
-                  </small>
+                  </div>
                 </div>
               </div>
             </Link>

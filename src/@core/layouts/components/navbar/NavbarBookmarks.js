@@ -19,9 +19,14 @@ import Select from "react-select"
 // ** Hooks
 import { useClienteId } from "@hooks/useClienteId"
 
+import { useTranslation } from "react-i18next"
+
 const NavbarBookmarks = (props) => {
   // ** Props
   const { setMenuVisibility } = props
+
+  // ** Hooks
+  const { t } = useTranslation()
 
   // ** Store Vars
   const dispatch = useDispatch()
@@ -66,8 +71,8 @@ const NavbarBookmarks = (props) => {
               isClearable
               id="vCliente"
               noOptionsMessage={() => t("Vazio")}
-              LoadingMessage={() => "pesquisando..."}
-              placeholder={"Filtrar por cliente..."}
+              loadingMessage={() => t("Pesquisando...")}
+              placeholder={t("Filtrar por cliente...")}
               className="react-select d-block"
               classNamePrefix="select"
               value={clienteId}

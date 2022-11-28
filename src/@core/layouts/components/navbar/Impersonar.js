@@ -116,7 +116,7 @@ const Impersonar = ({
                 defaultOptions
                 isClearable={true}
                 noOptionsMessage={() => t("Vazio")}
-                loadingMessage={() => "Pesquisando..."}
+                loadingMessage={() => t("Pesquisando...")}
                 placeholder={t("Selecione...")}
                 id="login_id"
                 name="db-react-select"
