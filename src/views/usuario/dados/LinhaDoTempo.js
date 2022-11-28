@@ -46,7 +46,7 @@ const LinhaDoTempo = (dados) => {
       valor = valor / 1024
       vUnidade = " TB"
     }
-    return `${new Intl.NumberFormat().format(valor)} ${vUnidade}`
+    return `${new Intl.NumberFormat().format(valor.toFixed(1))} ${vUnidade}`
   }
 
   // ** Get suer on mount

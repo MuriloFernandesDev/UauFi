@@ -296,12 +296,12 @@ const UserInfoCard = ({ dados }) => {
                   <span>{vDados?.estado ?? ""}</span>
                 </li>
                 <li className="mb-75">
-                  <span className="fw-bolder me-25">Celular:</span>
-                  <span>{dados.celular ?? ""}</span>
+                  <span className="fw-bolder me-25">DDI:</span>
+                  <span>{vDados?.pais ?? ""}</span>
                 </li>
                 <li className="mb-75">
-                  <span className="fw-bolder me-25">País:</span>
-                  <span>{vDados?.pais ?? ""}</span>
+                  <span className="fw-bolder me-25">Celular:</span>
+                  <span>{dados.celular ?? ""}</span>
                 </li>
                 <li className="mb-75">
                   <span className="fw-bolder me-25">Data do cadastro:</span>
