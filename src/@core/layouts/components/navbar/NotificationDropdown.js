@@ -96,6 +96,9 @@ const NotificationDropdown = () => {
                   <small className="notification-text">
                     {formatDate(item.nascimento)}
                   </small>
+                  <small className="notification-text">
+                    {item.hotspot_nome}
+                  </small>
                 </div>
               </div>
             </Link>
