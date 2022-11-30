@@ -493,6 +493,26 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
                         </Label>
                       </div>
                     </Col>
+                    <Col md="12" className="mb-1">
+                      <div className="form-check form-switch">
+                        <Input
+                          type="switch"
+                          id="ativo"
+                          checked={vDados?.ativo ?? false}
+                          onChange={(e) => {
+                            handleChange({
+                              target: {
+                                name: "ativo",
+                                value: e.target.checked,
+                              },
+                            })
+                          }}
+                        />
+                        <Label for="ativo" className="form-check-label mt-25">
+                          Hotspot {vDados?.ativo ? "ativado" : "desativado"}
+                        </Label>
+                      </div>
+                    </Col>
                   </Row>
                 </Card>
               </TabPane>
@@ -1324,7 +1344,7 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
                           </Label>
                         </div>
                       </Col>
-                      <Col md="8" className="mb-2">
+                      <Col md="4" className="mb-2">
                         <div className="form-check form-switch">
                           <Input
                             type="switch"
@@ -1343,7 +1363,30 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
                             for="vIndicacaoCP"
                             className="form-check-label mt-25"
                           >
-                            Perguntar quem indicou o estabelecimento
+                            Perguntar quem indicou o local
+                          </Label>
+                        </div>
+                      </Col>
+                      <Col md="4" className="mb-2">
+                        <div className="form-check form-switch">
+                          <Input
+                            type="switch"
+                            id="aceite_comunicacao"
+                            checked={vDadosCP?.indicacao ?? false}
+                            onChange={(e) => {
+                              handleChangeCP({
+                                target: {
+                                  name: "aceite_comunicacao",
+                                  value: e.target.checked,
+                                },
+                              })
+                            }}
+                          />
+                          <Label
+                            for="aceite_comunicacao"
+                            className="form-check-label mt-25"
+                          >
+                            Pedir aceite de comunicações
                           </Label>
                         </div>
                       </Col>

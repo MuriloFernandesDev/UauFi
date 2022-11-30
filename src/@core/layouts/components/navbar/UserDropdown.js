@@ -139,6 +139,7 @@ const UserDropdown = (props) => {
             imgHeight="40"
             imgWidth="40"
             status="online"
+            className="img-proporcional"
           />
         ) : (
           <Spinner type="grow" size="md" color="primary" />

@@ -239,7 +239,14 @@ const ClienteLoginList = () => {
   // ** renders client column
   const renderClient = (row) => {
     if (row.foto.length) {
-      return <Avatar className="me-50" img={row.foto} width="32" height="32" />
+      return (
+        <Avatar
+          className="me-50 img-proporcional"
+          img={row.foto}
+          width="32"
+          height="32"
+        />
+      )
     } else {
       return (
         <Avatar
@@ -356,14 +363,18 @@ const ClienteLoginList = () => {
   const columns = [
     {
       name: "Nome",
-      minWidth: "450px",
+      minWidth: "350px",
       sortField: "nome",
       cell: (row) => {
         return (
-          <div className="d-flex justify-content-left align-items-center">
+          <Link
+            to={`/adm/login/${row.id}`}
+            id={`pw-tooltip2-${row.id}`}
+            className="d-flex justify-content-left align-items-center"
+          >
             {renderClient(row)}
             <div className="d-flex flex-column">
-              <Link to={`/adm/login/${row.id}`} id={`pw-tooltip2-${row.id}`}>
+              <div>
                 <h6 className="user-name text-truncate mb-0">
                   {row.nome ?? row.email}
                 </h6>
@@ -374,15 +385,15 @@ const ClienteLoginList = () => {
                 ) : (
                   ""
                 )}
-              </Link>
+              </div>
             </div>
-          </div>
+          </Link>
         )
       },
     },
     {
       name: "Cliente",
-      minWidth: "450px",
+      minWidth: "350px",
       sortField: "cliente_nome",
       cell: (row) => {
         return (
@@ -400,7 +411,7 @@ const ClienteLoginList = () => {
     },
     {
       name: <div className="text-end w-100">Ações</div>,
-      minWidth: "80px",
+      width: "100px",
       cell: (row) => (
         <div className="text-end w-100">
           <div className="column-action d-inline-flex">

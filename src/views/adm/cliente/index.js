@@ -115,6 +115,9 @@ const ClienteList = () => {
   const vTimeoutPesquisa = useRef()
   const [vPesquisando, setPesquisando] = useState(true)
 
+  // ** Guardar o Cliente selecionado para atualizar a página caso mude
+  const sClienteId = localStorage.getItem("clienteId")
+
   if (vPesquisando && store.total >= 0) {
     setPesquisando(false)
   }
@@ -126,7 +129,8 @@ const ClienteList = () => {
       store.params.q !== value ||
       store.params.sortColumn !== sortColumn ||
       store.params.page !== currentPage ||
-      store.params.perPage !== rowsPerPage
+      store.params.perPage !== rowsPerPage ||
+      store.params.clienteId !== sClienteId
     ) {
       dispatch(
         getCliente({
@@ -135,6 +139,7 @@ const ClienteList = () => {
           sortColumn,
           page: currentPage,
           perPage: rowsPerPage,
+          clienteId: sClienteId,
         })
       )
     }
@@ -153,6 +158,7 @@ const ClienteList = () => {
           sortColumn,
           page: currentPage,
           perPage: rowsPerPage,
+          clienteId: sClienteId,
         })
       )
     }, 300)
@@ -166,6 +172,7 @@ const ClienteList = () => {
         sortColumn,
         page: currentPage,
         perPage: parseInt(e.target.value),
+        clienteId: sClienteId,
       })
     )
     setRowsPerPage(parseInt(e.target.value))
@@ -179,6 +186,7 @@ const ClienteList = () => {
         sortColumn,
         perPage: rowsPerPage,
         page: page.selected + 1,
+        clienteId: sClienteId,
       })
     )
     setCurrentPage(page.selected + 1)
@@ -229,6 +237,7 @@ const ClienteList = () => {
         sort: sortDirection,
         perPage: rowsPerPage,
         sortColumn: column.sortField,
+        clienteId: sClienteId,
       })
     )
   }
@@ -236,7 +245,14 @@ const ClienteList = () => {
   // ** renders client column
   const renderClient = (row) => {
     if (row.logo.length) {
-      return <Avatar className="me-50" img={row.logo} width="32" height="32" />
+      return (
+        <Avatar
+          className="me-50 img-proporcional"
+          img={row.logo}
+          width="32"
+          height="32"
+        />
+      )
     } else {
       return (
         <Avatar
@@ -362,10 +378,14 @@ const ClienteList = () => {
           telefone = row.tel_1 ? `Telefone: ${row.tel_1}` : "",
           whatsapp = row.whatsapp ? ` WhatsApp: ${row.whatsapp}` : ""
         return (
-          <div className="d-flex justify-content-left align-items-center">
+          <Link
+            to={`/adm/cliente/${row.id}`}
+            id={`pw-tooltip2-${row.id}`}
+            className="d-flex justify-content-left align-items-center"
+          >
             {renderClient(row)}
             <div className="d-flex flex-column">
-              <Link to={`/adm/cliente/${row.id}`} id={`pw-tooltip2-${row.id}`}>
+              <div>
                 <h6 className="user-name text-truncate mb-0">
                   {nome}
                   <strong className="text-muted ms-1">{hotspot_id}</strong>
@@ -373,9 +393,9 @@ const ClienteList = () => {
                 <small className="text-truncate text-muted mb-0">
                   {telefone + whatsapp}
                 </small>
-              </Link>
+              </div>
             </div>
-          </div>
+          </Link>
         )
       },
     },

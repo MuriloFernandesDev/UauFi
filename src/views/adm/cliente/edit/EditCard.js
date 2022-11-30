@@ -741,6 +741,26 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                         onChange={handleChange}
                       />
                     </Col>
+                    <Col md="12" className="mb-1">
+                      <div className="form-check form-switch">
+                        <Input
+                          type="switch"
+                          id="ativo"
+                          checked={vDados?.ativo ?? false}
+                          onChange={(e) => {
+                            handleChange({
+                              target: {
+                                name: "ativo",
+                                value: e.target.checked,
+                              },
+                            })
+                          }}
+                        />
+                        <Label for="ativo" className="form-check-label mt-25">
+                          Cliente {vDados?.ativo ? "ativado" : "desativado"}
+                        </Label>
+                      </div>
+                    </Col>
                   </Row>
                 </Card>
               </TabPane>

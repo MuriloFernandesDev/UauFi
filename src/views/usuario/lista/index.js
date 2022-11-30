@@ -403,7 +403,12 @@ const UsuarioLista = () => {
   const renderClient = (row) => {
     if (row.foto?.length) {
       return (
-        <Avatar className="me-1" img={row.foto_url} width="32" height="32" />
+        <Avatar
+          className="me-1 img-proporcional"
+          img={row.foto_url}
+          width="32"
+          height="32"
+        />
       )
     } else {
       return (

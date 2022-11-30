@@ -308,7 +308,12 @@ const CardapioProdutoList = () => {
   const renderFoto = (row) => {
     if (row.imagem?.length > 0) {
       return (
-        <Avatar className="me-50" img={row.imagem} width="32" height="32" />
+        <Avatar
+          className="me-50 img-proporcional"
+          img={row.imagem}
+          width="32"
+          height="32"
+        />
       )
     } else {
       return (

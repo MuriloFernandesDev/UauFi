@@ -63,7 +63,7 @@ const CardUltimosUsuarios = () => {
               className="d-flex justify-content-left align-items-center"
             >
               <Avatar
-                className="me-1"
+                className="me-1 img-proporcional"
                 img={(col && col.foto_url) || defaultAvatar}
                 width="32"
                 height="32"

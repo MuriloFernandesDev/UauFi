@@ -137,7 +137,7 @@ const CardapioProdutoCard = ({ setSalvarDados }) => {
                       <Move className="drag-icon" />
                       <div className="d-flex justify-content-left align-items-center">
                         <Avatar
-                          className="me-50"
+                          className="me-50 img-proporcional"
                           img={produto.imagem ?? defaultImagem}
                           width="32"
                           height="32"

@@ -75,7 +75,7 @@ const NotificationDropdown = () => {
                 <div className="me-1">
                   {item.foto_url?.length ? (
                     <Avatar
-                      className="me-1"
+                      className="me-1 img-proporcional"
                       img={item.foto_url}
                       width="32"
                       height="32"

@@ -56,7 +56,7 @@ const CardUsuarioMaisVisita = () => {
               <div>
                 <h5>
                   <Avatar
-                    className="me-1"
+                    className="me-1 img-proporcional"
                     img={(vDados && vDados.foto_url) || defaultAvatar}
                   />
                   {vDados?.nome}

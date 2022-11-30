@@ -26,7 +26,7 @@ const OptionComponent = ({ data, ...props }) => {
     <components.Option {...props}>
       <div className="d-flex justify-content-left align-items-center">
         <Avatar
-          className="my-0 me-1"
+          className="my-0 me-1 img-proporcional"
           size="sm"
           img={data?.foto?.lengt > 0 ? data.foto : defaultAvatar}
         />
