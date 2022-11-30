@@ -32,7 +32,7 @@ import api from "@src/services/api"
 import { getGenero } from "../store"
 
 // ** Utils
-import { formatInt, formatMoeda } from "@utils"
+import { formatInt } from "@utils"
 
 const FiltroEditCard = ({ data, setSalvarDados }) => {
   const navigate = useNavigate()
@@ -479,15 +479,10 @@ const FiltroEditCard = ({ data, setSalvarDados }) => {
               {!vVerificandoAlcance ? (
                 vAlcance ? (
                   <Fragment>
-                    <h6>{formatInt(vAlcance?.com_app)} Usuário(s) com app</h6>
-                    <h6>{formatInt(vAlcance?.sem_app)} Usuário(s) sem app</h6>
                     <h6>
-                      {formatInt(
-                        (vAlcance.sem_app ?? 0) + (vAlcance.com_app ?? 0)
-                      )}{" "}
-                      Usuário(s) no total
+                      {formatInt(vAlcance?.sem_app)} Usuário
+                      {vAlcance?.sem_app !== 1 ? "s" : ""}
                     </h6>
-                    <h6>{formatMoeda(vAlcance.valor)} será o valor gasto</h6>
                   </Fragment>
                 ) : null
               ) : (

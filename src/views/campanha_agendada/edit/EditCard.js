@@ -1,5 +1,5 @@
 // ** React
-import { useEffect, useState } from "react"
+import { useEffect, useState, Fragment } from "react"
 import { useNavigate } from "react-router-dom"
 
 // ** Reactstrap
@@ -13,9 +13,11 @@ import {
   CardBody,
   CardTitle,
   Spinner,
-  CardHeader,
   ButtonGroup,
 } from "reactstrap"
+
+// ** API
+import api from "@src/services/api"
 
 // ** Icons
 import { CornerUpLeft, Check, DollarSign } from "react-feather"
@@ -47,6 +49,8 @@ const CampanhaAgendadaEditCard = ({ data, setSalvarDados }) => {
   const [vFiltro, setFiltro] = useState(null)
   const [vNumeroTeste, setNumeroTeste] = useState(null)
   const [vTestando, setTestando] = useState(false)
+  const [vAlcance, setAlcance] = useState(null)
+  const [vVerificandoAlcance, setVerificandoAlcance] = useState(null)
 
   // ** Organização da informação
   const handleChange = (e) => {
@@ -118,6 +122,20 @@ const CampanhaAgendadaEditCard = ({ data, setSalvarDados }) => {
         })
       }
     })
+  }
+
+  const handleAlcance = () => {
+    setVerificandoAlcance(true)
+    return api
+      .post("/campanha_agendada/alcance", vDados)
+      .then((res) => {
+        setAlcance(res.data)
+        setVerificandoAlcance(false)
+      })
+      .catch(() => {
+        setAlcance(null)
+        setVerificandoAlcance(false)
+      })
   }
 
   const setDados = () => {
@@ -367,40 +385,86 @@ const CampanhaAgendadaEditCard = ({ data, setSalvarDados }) => {
           </Card>
         </Col>
       ) : (
-        <Col md="6" className="offset-md-3">
-          <Card className="text-center">
-            <CardBody>
-              <CardTitle tag="h4">Testar campanha</CardTitle>
-              <Row>
-                <h6>*Será enviado para o número descrito como um teste</h6>
-                <Col lg="6" className="mb-2 offset-lg-3">
-                  <Label className="form-label" for="vNumeroTeste">
-                    Número do celular com o ddd
-                  </Label>
-                  <Cleave
-                    className="form-control"
-                    placeholder="00 00000 0000"
-                    options={optTel}
-                    id="whatsapp"
-                    name="whatsapp"
-                    disabled={vDados.enviado}
-                    value={vNumeroTeste ?? ""}
-                    onChange={(e) => setNumeroTeste(e.target.value)}
-                  />
-                </Col>
-                <Col md="12">
-                  {vTestando ? (
-                    <Spinner color="primary" />
-                  ) : (
-                    <Button onClick={handleTestarSMS} color="primary" outline>
-                      Enviar teste
-                    </Button>
-                  )}
-                </Col>
-              </Row>
-            </CardBody>
-          </Card>
-        </Col>
+        <Fragment>
+          <Col md="6">
+            <Card className="text-center">
+              <CardBody>
+                <CardTitle tag="h4">Testar campanha</CardTitle>
+                <Row>
+                  <h6>*Será enviado para o número descrito como um teste</h6>
+                  <Col lg="6" className="mb-2 offset-lg-3">
+                    <Label className="form-label" for="vNumeroTeste">
+                      Número do celular com o ddd
+                    </Label>
+                    <Cleave
+                      className="form-control"
+                      placeholder="00 00000 0000"
+                      options={optTel}
+                      id="whatsapp"
+                      name="whatsapp"
+                      disabled={vDados.enviado}
+                      value={vNumeroTeste ?? ""}
+                      onChange={(e) => setNumeroTeste(e.target.value)}
+                    />
+                  </Col>
+                  <Col md="12">
+                    {vTestando ? (
+                      <Spinner color="primary" />
+                    ) : (
+                      <Button onClick={handleTestarSMS} color="primary" outline>
+                        Enviar teste
+                      </Button>
+                    )}
+                  </Col>
+                </Row>
+              </CardBody>
+            </Card>
+          </Col>
+          <Col md="6">
+            <Card>
+              <h4 className="text-center p-2">Informações sobre o envio</h4>
+              <CardBody>
+                {!vVerificandoAlcance ? (
+                  vAlcance ? (
+                    <Fragment>
+                      <div className="transaction-item mb-2">
+                        <div className="d-flex justify-content-between align-items-center">
+                          <div>
+                            <h6 className="transaction-title">Valor total</h6>
+                          </div>
+                          <div className="fw-bolder text-secondary text-end">
+                            {formatMoeda(vAlcance.valor ?? 0)}
+                          </div>
+                        </div>
+                      </div>
+                      <div className="transaction-item">
+                        <div className="d-flex justify-content-between align-items-center">
+                          <div>
+                            <h6 className="transaction-title">
+                              Usuários atingidos
+                            </h6>
+                          </div>
+                          <div className="fw-bolder text-success text-end">
+                            {formatInt(vAlcance.sem_app ?? 0)}
+                          </div>
+                        </div>
+                      </div>
+                    </Fragment>
+                  ) : null
+                ) : (
+                  <div className="text-center mb-3">
+                    <Spinner type="grow" size="sm" color="primary" />
+                  </div>
+                )}
+                <div className="text-center">
+                  <Button onClick={handleAlcance} color="primary" outline>
+                    Verificar
+                  </Button>
+                </div>
+              </CardBody>
+            </Card>
+          </Col>
+        </Fragment>
       )}
     </Row>
   )
