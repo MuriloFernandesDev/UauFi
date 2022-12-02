@@ -153,239 +153,242 @@ const CampanhaAgendadaEditCard = ({ data, setSalvarDados }) => {
   }, [])
 
   return (
-    <Row>
-      <Col sm="12">
-        <Card className="mb-1">
-          <div className="d-flex justify-content-between flex-row m-1">
-            <div>
-              <Button.Ripple
-                color="primary"
-                onClick={() => navigate("/campanha_agendada")}
-              >
-                <CornerUpLeft size={17} />
-              </Button.Ripple>
-            </div>
-            <div>
-              <Button.Ripple color="success" onClick={setDados}>
-                <Check size={17} />
-                <span className="align-middle ms-25">Salvar</span>
-              </Button.Ripple>
-            </div>
-          </div>
-        </Card>
-      </Col>
-      <Col sm="12">
-        <Card className="p-2 pb-0">
-          <Row>
-            <Col md="6" className="mb-2">
-              <Label className="form-label" for="nome">
-                Nome da campanha*
-              </Label>
-              <Input
-                id="nome"
-                name="nome"
-                disabled={vDados.enviado}
-                value={vDados?.nome ?? ""}
-                onChange={handleChange}
-              />
-            </Col>
-            <Col md="6" className="mb-2">
-              <Label className="form-label" for="mensagem">
-                Tipo de mensagem
-              </Label>
+    <Fragment>
+      <Row>
+        <Col sm="12">
+          <Card className="mb-1">
+            <div className="d-flex justify-content-between flex-row m-1">
               <div>
-                <ButtonGroup>
-                  <Button
-                    color="primary"
-                    onClick={() =>
-                      handleChange({
-                        target: {
-                          name: "tipo",
-                          value: 0,
-                        },
-                      })
-                    }
-                    active={(vDados.tipo ?? 0) === 0}
-                    outline
-                  >
-                    SMS
-                  </Button>
-                  <Button
-                    color="primary"
-                    onClick={() =>
-                      handleChange({
-                        target: {
-                          name: "tipo",
-                          value: 1,
-                        },
-                      })
-                    }
-                    active={(vDados.tipo ?? 0) === 1}
-                    outline
-                  >
-                    Push (App)
-                  </Button>
-                </ButtonGroup>
+                <Button.Ripple
+                  color="primary"
+                  onClick={() => navigate("/campanha_agendada")}
+                >
+                  <CornerUpLeft size={17} />
+                </Button.Ripple>
               </div>
-            </Col>
-            <Col md="6" className="mb-2">
-              <Label className="form-label" for="cliente_id">
-                Selecione um Cliente
-              </Label>
-              <Select
-                isClearable
-                id="cliente_id"
-                noOptionsMessage={() => t("Vazio")}
-                placeholder={t("Selecione...")}
-                value={vCliente}
-                options={vListaCliente}
-                isDisabled={
-                  (vDados.id === 0 && data.cliente_id > 0) || vDados.enviado
-                }
-                className="react-select"
-                classNamePrefix="select"
-                onChange={(e) => {
-                  setCliente(e)
-                  handleChange({
-                    target: {
-                      name: "cliente_id",
-                      value: Number(e?.value),
-                    },
-                  })
-                }}
-              />
-            </Col>
-            <Col md="6" className="mb-2">
-              <Label className="form-label" for="filtro_id">
-                Filtro
-              </Label>
-              <Select
-                isClearable
-                id="filtro_id"
-                noOptionsMessage={() => t("Vazio")}
-                placeholder={t("Selecione...")}
-                value={vFiltro}
-                options={vListaFiltros}
-                className="react-select"
-                classNamePrefix="select"
-                isDisabled={vDados.enviado}
-                onChange={(e) => {
-                  setFiltro(e)
-                  handleChange({
-                    target: {
-                      name: "filtro_id",
-                      value: Number(e?.value),
-                    },
-                  })
-                }}
-              />
-            </Col>
-
-            <Col md="12" className="mb-2">
-              <Label className="form-label" for="mensagem">
-                Mensagem*
-              </Label>
-              <Input
-                value={vDados?.mensagem ?? ""}
-                type="textarea"
-                id="mensagem"
-                name="mensagem"
-                style={{ minHeight: "80px" }}
-                disabled={vDados.enviado}
-                onChange={handleChange}
-                className={classnames({
-                  "text-danger": (vDados?.mensagem?.length || 0) > 140,
-                })}
-              />
-              <span
-                className={classnames("textarea-counter-value float-end", {
-                  "bg-danger": (vDados?.mensagem?.length || 0) > 140,
-                })}
-              >
-                {`${vDados?.mensagem?.length || 0}/140`}
-              </span>
-            </Col>
-            <Col md="4" className="mb-2 pt-md-2">
-              <div className="form-check form-switch pt-md-75">
+              <div>
+                <Button.Ripple color="success" onClick={setDados}>
+                  <Check size={17} />
+                  <span className="align-middle ms-25">Salvar</span>
+                </Button.Ripple>
+              </div>
+            </div>
+          </Card>
+        </Col>
+        <Col sm="12">
+          <Card className="p-2 pb-0">
+            <Row>
+              <Col md="6" className="mb-2">
+                <Label className="form-label" for="nome">
+                  Nome da campanha*
+                </Label>
                 <Input
-                  type="switch"
-                  id="ativo"
-                  checked={vDados?.ativo ?? false}
+                  id="nome"
+                  name="nome"
                   disabled={vDados.enviado}
+                  value={vDados?.nome ?? ""}
+                  onChange={handleChange}
+                />
+              </Col>
+              <Col md="6" className="mb-2">
+                <Label className="form-label" for="mensagem">
+                  Tipo de mensagem
+                </Label>
+                <div>
+                  <ButtonGroup>
+                    <Button
+                      color="primary"
+                      onClick={() =>
+                        handleChange({
+                          target: {
+                            name: "tipo",
+                            value: 0,
+                          },
+                        })
+                      }
+                      active={(vDados.tipo ?? 0) === 0}
+                      outline
+                    >
+                      SMS
+                    </Button>
+                    <Button
+                      color="primary"
+                      onClick={() =>
+                        handleChange({
+                          target: {
+                            name: "tipo",
+                            value: 1,
+                          },
+                        })
+                      }
+                      active={(vDados.tipo ?? 0) === 1}
+                      outline
+                    >
+                      Push (App)
+                    </Button>
+                  </ButtonGroup>
+                </div>
+              </Col>
+              <Col md="6" className="mb-2">
+                <Label className="form-label" for="cliente_id">
+                  Selecione um Cliente
+                </Label>
+                <Select
+                  isClearable
+                  id="cliente_id"
+                  noOptionsMessage={() => t("Vazio")}
+                  placeholder={t("Selecione...")}
+                  value={vCliente}
+                  options={vListaCliente}
+                  isDisabled={
+                    (vDados.id === 0 && data.cliente_id > 0) || vDados.enviado
+                  }
+                  className="react-select"
+                  classNamePrefix="select"
                   onChange={(e) => {
+                    setCliente(e)
                     handleChange({
                       target: {
-                        name: "ativo",
-                        value: e.target.checked,
+                        name: "cliente_id",
+                        value: Number(e?.value),
                       },
                     })
                   }}
                 />
-                <Label for="ativo" className="form-check-label mt-25">
-                  Campanha {vDados?.ativo ? "ativada" : "desativada"}
+              </Col>
+              <Col md="6" className="mb-2">
+                <Label className="form-label" for="filtro_id">
+                  Filtro
                 </Label>
-              </div>
-            </Col>
-
-            {vDados?.ativo ? (
-              <Col md="8" className="mb-2">
-                <Label className="form-label" for="data_hora_agendamento">
-                  Escolha a data e hora que a campanha será enviada
-                </Label>
-                <Input
-                  id="data_hora_agendamento"
-                  name="data_hora_agendamento"
-                  type="datetime-local"
-                  disabled={vDados.enviado}
-                  value={vDados?.data_hora_agendamento ?? ""}
-                  onChange={handleChange}
+                <Select
+                  isClearable
+                  id="filtro_id"
+                  noOptionsMessage={() => t("Vazio")}
+                  placeholder={t("Selecione...")}
+                  value={vFiltro}
+                  options={vListaFiltros}
+                  className="react-select"
+                  classNamePrefix="select"
+                  isDisabled={vDados.enviado}
+                  onChange={(e) => {
+                    setFiltro(e)
+                    handleChange({
+                      target: {
+                        name: "filtro_id",
+                        value: Number(e?.value),
+                      },
+                    })
+                  }}
                 />
               </Col>
-            ) : null}
-          </Row>
-        </Card>
-      </Col>
 
-      {vDados.enviado ? (
-        <Col md="6" className="offset-md-3">
-          <Card>
-            <h4 className="text-center p-2">Informações sobre o envio</h4>
-            <CardBody>
-              <div className="transaction-item mb-2">
-                <div className="d-flex justify-content-between align-items-center">
-                  <div>
-                    <h6 className="transaction-title">Data do envio</h6>
-                  </div>
-                  <div className="fw-bolder text-primary text-end">
-                    {formatDateTime(vDados.data_hora_envio)}
-                  </div>
+              <Col md="12" className="mb-2">
+                <Label className="form-label" for="mensagem">
+                  Mensagem*
+                </Label>
+                <Input
+                  value={vDados?.mensagem ?? ""}
+                  type="textarea"
+                  id="mensagem"
+                  name="mensagem"
+                  style={{ minHeight: "80px" }}
+                  disabled={vDados.enviado}
+                  onChange={handleChange}
+                  className={classnames({
+                    "text-danger": (vDados?.mensagem?.length || 0) > 140,
+                  })}
+                />
+                <span
+                  className={classnames("textarea-counter-value float-end", {
+                    "bg-danger": (vDados?.mensagem?.length || 0) > 140,
+                  })}
+                >
+                  {`${vDados?.mensagem?.length || 0}/140`}
+                </span>
+              </Col>
+              <Col md="4" className="mb-2 pt-md-2">
+                <div className="form-check form-switch pt-md-75">
+                  <Input
+                    type="switch"
+                    id="ativo"
+                    checked={vDados?.ativo ?? false}
+                    disabled={vDados.enviado}
+                    onChange={(e) => {
+                      handleChange({
+                        target: {
+                          name: "ativo",
+                          value: e.target.checked,
+                        },
+                      })
+                    }}
+                  />
+                  <Label for="ativo" className="form-check-label mt-25">
+                    Campanha {vDados?.ativo ? "ativada" : "desativada"}
+                  </Label>
                 </div>
-              </div>
-              <div className="transaction-item mb-2">
-                <div className="d-flex justify-content-between align-items-center">
-                  <div>
-                    <h6 className="transaction-title">Valor total</h6>
-                  </div>
-                  <div className="fw-bolder text-secondary text-end">
-                    {formatMoeda(vDados.preco ?? 0)}
-                  </div>
-                </div>
-              </div>
-              <div className="transaction-item">
-                <div className="d-flex justify-content-between align-items-center">
-                  <div>
-                    <h6 className="transaction-title">Usuários atingidos</h6>
-                  </div>
-                  <div className="fw-bolder text-success text-end">
-                    {formatInt(vDados.quantidade ?? 0)}
-                  </div>
-                </div>
-              </div>
-            </CardBody>
+              </Col>
+
+              {vDados?.ativo ? (
+                <Col md="8" className="mb-2">
+                  <Label className="form-label" for="data_hora_agendamento">
+                    Escolha a data e hora que a campanha será enviada
+                  </Label>
+                  <Input
+                    id="data_hora_agendamento"
+                    name="data_hora_agendamento"
+                    type="datetime-local"
+                    disabled={vDados.enviado}
+                    value={vDados?.data_hora_agendamento ?? ""}
+                    onChange={handleChange}
+                  />
+                </Col>
+              ) : null}
+            </Row>
           </Card>
         </Col>
+      </Row>
+      {vDados.enviado ? (
+        <Row>
+          <Col md="6" className="offset-md-3">
+            <Card>
+              <h4 className="text-center p-2">Informações sobre o envio</h4>
+              <CardBody>
+                <div className="transaction-item mb-2">
+                  <div className="d-flex justify-content-between align-items-center">
+                    <div>
+                      <h6 className="transaction-title">Data do envio</h6>
+                    </div>
+                    <div className="fw-bolder text-primary text-end">
+                      {formatDateTime(vDados.data_hora_envio)}
+                    </div>
+                  </div>
+                </div>
+                <div className="transaction-item mb-2">
+                  <div className="d-flex justify-content-between align-items-center">
+                    <div>
+                      <h6 className="transaction-title">Valor total</h6>
+                    </div>
+                    <div className="fw-bolder text-secondary text-end">
+                      {formatMoeda(vDados.preco ?? 0)}
+                    </div>
+                  </div>
+                </div>
+                <div className="transaction-item">
+                  <div className="d-flex justify-content-between align-items-center">
+                    <div>
+                      <h6 className="transaction-title">Usuários atingidos</h6>
+                    </div>
+                    <div className="fw-bolder text-success text-end">
+                      {formatInt(vDados.quantidade ?? 0)}
+                    </div>
+                  </div>
+                </div>
+              </CardBody>
+            </Card>
+          </Col>
+        </Row>
       ) : (
-        <Fragment>
+        <Row className="match-height">
           <Col md="6">
             <Card className="text-center">
               <CardBody>
@@ -464,9 +467,9 @@ const CampanhaAgendadaEditCard = ({ data, setSalvarDados }) => {
               </CardBody>
             </Card>
           </Col>
-        </Fragment>
+        </Row>
       )}
-    </Row>
+    </Fragment>
   )
 }
 

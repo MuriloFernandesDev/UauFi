@@ -1372,7 +1372,7 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
                           <Input
                             type="switch"
                             id="aceite_comunicacao"
-                            checked={vDadosCP?.indicacao ?? false}
+                            checked={vDadosCP?.aceite_comunicacao ?? false}
                             onChange={(e) => {
                               handleChangeCP({
                                 target: {

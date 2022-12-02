@@ -1,7 +1,7 @@
 import axios from "axios"
 
 // ** Utils
-import { getUserData } from "@utils"
+//import { getUserData } from "@utils"
 
 // ** import das configurações do JWT
 import jwtDefaultConfig from "@src/@core/auth/jwt/jwtDefaultConfig"
@@ -44,6 +44,7 @@ api.interceptors.response.use(
     return response
   },
   function (error) {
+    /*
     const originalRequest = error.config
 
     const user = getUserData()
@@ -60,7 +61,7 @@ api.interceptors.response.use(
       originalRequest._retry = true
       const refreshToken = user.refreshToken
       return axios
-        .post("/auth/token", {
+      .post("/cliente_login/auth", {
           refresh_token: refreshToken,
         })
         .then((res) => {
@@ -72,7 +73,7 @@ api.interceptors.response.use(
             return axios(originalRequest)
           }
         })
-    }
+    }*/
     return Promise.reject(error)
   }
 )
