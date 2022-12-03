@@ -1,12 +1,16 @@
 // ** React
 import { Fragment, useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
+import classnames from "classnames"
 
 // ** Reactstrap
 import { Row, Col, Card, Input, Button, Label } from "reactstrap"
 
 // ** Icons
 import { CornerUpLeft, Check } from "react-feather"
+
+// ** Utils
+import { campoInvalido, mostrarMensagem } from "@utils"
 
 // ** Terceiros
 import Select from "react-select"
@@ -36,6 +40,13 @@ const PermissaoMacEditCard = ({ data, setSalvarDados }) => {
         )[0]
       : null
   )
+  const [vErros, setErros] = useState({})
+  const vCamposObrigatorios = [
+    { nome: "mac" },
+    { nome: "comentario" },
+    { nome: "hotspot_id", tipo: "int" },
+    { nome: "tipo_permissao", tipo: "int" },
+  ]
 
   let hotspotsVar
 
@@ -62,7 +73,26 @@ const PermissaoMacEditCard = ({ data, setSalvarDados }) => {
   }
 
   const setDados = () => {
-    setSalvarDados(vDados)
+    let vCamposOK = true
+    vCamposObrigatorios.forEach((campo) => {
+      if (campoInvalido(vDados, null, campo.nome, campo.tipo)) {
+        vCamposOK = false
+        setErros((ant) => ({
+          ...ant,
+          [campo.nome]: {},
+        }))
+      }
+    })
+
+    if (vCamposOK) {
+      setSalvarDados(vDados)
+    } else {
+      mostrarMensagem(
+        "Atenção!",
+        "Preencha todos os campos obrigatórios.",
+        "warning"
+      )
+    }
   }
 
   const optTel = { phone: true, phoneRegionCode: "BR" }
@@ -104,7 +134,7 @@ const PermissaoMacEditCard = ({ data, setSalvarDados }) => {
             <Row>
               <Col md="12" className="mb-2">
                 <Label className="form-label" for="mac">
-                  Informe o(s) MAC(s)
+                  Informe o(s) MAC(s)*
                 </Label>
                 <Input
                   value={vDados?.mac ?? ""}
@@ -113,18 +143,26 @@ const PermissaoMacEditCard = ({ data, setSalvarDados }) => {
                   name="mac"
                   style={{ minHeight: "100px" }}
                   onChange={handleChange}
+                  invalid={campoInvalido(vDados, vErros, "mac")}
                 />
               </Col>
 
               <Col md="3" className="mb-2">
                 <Label className="form-label" for="tipo_permissao">
-                  Tipo de operação
+                  Tipo de operação*
                 </Label>
                 <Select
                   id="tipo_permissao"
                   noOptionsMessage={() => t("Vazio")}
                   placeholder={t("Selecione...")}
-                  className="react-select"
+                  className={classnames("react-select", {
+                    "is-invalid": campoInvalido(
+                      vDados,
+                      vErros,
+                      "tipo_permissao",
+                      "int"
+                    ),
+                  })}
                   classNamePrefix="select"
                   value={vTipoPermissao}
                   options={vListaTipoPermissao}
@@ -157,7 +195,7 @@ const PermissaoMacEditCard = ({ data, setSalvarDados }) => {
 
               <Col md="6" className="mb-2">
                 <Label className="form-label" for="hotspot_id">
-                  Selecione um Hotspot
+                  Selecione um Hotspot*
                 </Label>
                 <Select
                   isClearable
@@ -167,7 +205,14 @@ const PermissaoMacEditCard = ({ data, setSalvarDados }) => {
                   value={vHotspot}
                   options={vListaHotspots}
                   isDisabled={vDados.id === 0 && data.hotspot_id > 0}
-                  className="react-select"
+                  className={classnames("react-select", {
+                    "is-invalid": campoInvalido(
+                      vDados,
+                      vErros,
+                      "hotspot_id",
+                      "int"
+                    ),
+                  })}
                   classNamePrefix="select"
                   onChange={(e) => {
                     setHotspot(e)
@@ -182,7 +227,7 @@ const PermissaoMacEditCard = ({ data, setSalvarDados }) => {
               </Col>
               <Col md="12" className="mb-2">
                 <Label className="form-label" for="comentario">
-                  Comentário
+                  Comentário*
                 </Label>
                 <Input
                   value={vDados?.comentario ?? ""}
@@ -191,6 +236,7 @@ const PermissaoMacEditCard = ({ data, setSalvarDados }) => {
                   name="comentario"
                   style={{ minHeight: "100px" }}
                   onChange={handleChange}
+                  invalid={campoInvalido(vDados, vErros, "comentario")}
                 />
               </Col>
             </Row>

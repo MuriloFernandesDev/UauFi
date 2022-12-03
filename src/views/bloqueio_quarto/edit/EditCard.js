@@ -1,12 +1,16 @@
 // ** React
 import { Fragment, useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
+import classnames from "classnames"
 
 // ** Reactstrap
 import { Row, Col, Card, Input, Button, Label } from "reactstrap"
 
 // ** Icons
 import { CornerUpLeft, Check } from "react-feather"
+
+// ** Utils
+import { campoInvalido, mostrarMensagem } from "@utils"
 
 // ** Terceiros
 import Select from "react-select"
@@ -23,6 +27,13 @@ const BloqueioQuartoEditCard = ({ data, setSalvarDados }) => {
   const [vDados, setData] = useState(data)
   const [vListaHotspots, setListaHotspots] = useState(null)
   const [vHotspot, setHotspot] = useState(null)
+  const [vErros, setErros] = useState({})
+
+  const vCamposObrigatorios = [
+    { nome: "quarto" },
+    { nome: "hotspot_id", tipo: "int" },
+  ]
+
   let hotspotsVar
 
   // ** Organização da informação
@@ -50,7 +61,26 @@ const BloqueioQuartoEditCard = ({ data, setSalvarDados }) => {
   }
 
   const setDados = () => {
-    setSalvarDados(vDados)
+    let vCamposOK = true
+    vCamposObrigatorios.forEach((campo) => {
+      if (campoInvalido(vDados, null, campo.nome, campo.tipo)) {
+        vCamposOK = false
+        setErros((ant) => ({
+          ...ant,
+          [campo.nome]: {},
+        }))
+      }
+    })
+
+    if (vCamposOK) {
+      setSalvarDados(vDados)
+    } else {
+      mostrarMensagem(
+        "Atenção!",
+        "Preencha todos os campos obrigatórios.",
+        "warning"
+      )
+    }
   }
 
   // ** Get filter on mount based on id
@@ -91,19 +121,20 @@ const BloqueioQuartoEditCard = ({ data, setSalvarDados }) => {
               <Row>
                 <Col md="6" className="mb-2">
                   <Label className="form-label" for="quarto">
-                    Número do quarto
+                    Número do quarto*
                   </Label>
                   <Input
                     id="quarto"
                     name="quarto"
                     value={vDados?.quarto ?? ""}
                     onChange={handleChange}
+                    invalid={campoInvalido(vDados, vErros, "quarto")}
                   />
                 </Col>
 
                 <Col md="6" className="mb-2">
                   <Label className="form-label" for="hotspot_id">
-                    Selecione um Hotspot
+                    Selecione um Hotspot*
                   </Label>
                   <Select
                     isClearable
@@ -113,7 +144,14 @@ const BloqueioQuartoEditCard = ({ data, setSalvarDados }) => {
                     value={vHotspot}
                     options={vListaHotspots}
                     isDisabled={vDados.id === 0 && data.hotspot_id > 0}
-                    className="react-select"
+                    className={classnames("react-select", {
+                      "is-invalid": campoInvalido(
+                        vDados,
+                        vErros,
+                        "hotspot_id",
+                        "int"
+                      ),
+                    })}
                     classNamePrefix="select"
                     onChange={(e) => {
                       setHotspot(e)

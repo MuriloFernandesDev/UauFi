@@ -9,6 +9,9 @@ import { Row, Col, Card, Input, Button, Label, ButtonGroup } from "reactstrap"
 import { CornerUpLeft, Check, DollarSign } from "react-feather"
 import classnames from "classnames"
 
+// ** Utils
+import { campoInvalido, mostrarMensagem } from "@utils"
+
 // ** Terceiros
 import Select from "react-select"
 import { useTranslation } from "react-i18next"
@@ -30,6 +33,12 @@ const CampanhaRecorrenteEditCard = ({ data, setSalvarDados }) => {
     { label: "Uma vez por mês (dia 1º)", value: "month" },
   ]
   const [vFrequencia, setFrequencia] = useState(null)
+  const [vErros, setErros] = useState({})
+  const vCamposObrigatorios = [
+    { nome: "titulo" },
+    { nome: "clientes" },
+    { nome: "mensagem" },
+  ]
 
   // ** Organização da informação
   const handleChange = (e) => {
@@ -57,7 +66,26 @@ const CampanhaRecorrenteEditCard = ({ data, setSalvarDados }) => {
   }
 
   const setDados = () => {
-    setSalvarDados(vDados)
+    let vCamposOK = true
+    vCamposObrigatorios.forEach((campo) => {
+      if (campoInvalido(vDados, null, campo.nome, campo.tipo)) {
+        vCamposOK = false
+        setErros((ant) => ({
+          ...ant,
+          [campo.nome]: {},
+        }))
+      }
+    })
+
+    if (vCamposOK) {
+      setSalvarDados(vDados)
+    } else {
+      mostrarMensagem(
+        "Atenção!",
+        "Preencha todos os campos obrigatórios.",
+        "warning"
+      )
+    }
   }
 
   useEffect(() => {
@@ -99,6 +127,7 @@ const CampanhaRecorrenteEditCard = ({ data, setSalvarDados }) => {
                 name="titulo"
                 value={vDados?.titulo ?? ""}
                 onChange={handleChange}
+                invalid={campoInvalido(vDados, vErros, "titulo")}
               />
             </Col>
             <Col md="6" className="mb-2">
@@ -142,7 +171,7 @@ const CampanhaRecorrenteEditCard = ({ data, setSalvarDados }) => {
             </Col>
             <Col md="6" className="mb-2">
               <Label className="form-label" for="cliente_id">
-                Selecione o(s) Cliente(s)
+                Selecione o(s) Cliente(s)*
               </Label>
               <Select
                 isClearable
@@ -150,7 +179,9 @@ const CampanhaRecorrenteEditCard = ({ data, setSalvarDados }) => {
                 noOptionsMessage={() => t("Vazio")}
                 isMulti
                 placeholder={""}
-                className="react-select"
+                className={classnames("react-select", {
+                  "is-invalid": campoInvalido(vDados, vErros, "clientes"),
+                })}
                 classNamePrefix="select"
                 value={vCliente}
                 onChange={(e) => {
@@ -199,6 +230,7 @@ const CampanhaRecorrenteEditCard = ({ data, setSalvarDados }) => {
                 type="textarea"
                 id="mensagem"
                 name="mensagem"
+                invalid={campoInvalido(vDados, vErros, "mensagem")}
                 style={{ minHeight: "80px" }}
                 disabled={vDados.enviado}
                 onChange={handleChange}

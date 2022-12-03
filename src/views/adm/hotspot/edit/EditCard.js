@@ -1,6 +1,7 @@
 // ** React
 import { Fragment, useEffect, useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
+import classnames from "classnames"
 
 // ** Reactstrap
 import {
@@ -33,7 +34,7 @@ import Select from "react-select"
 import { useTranslation } from "react-i18next"
 
 // ** Utils
-import { getUserData } from "@utils"
+import { getUserData, campoInvalido, mostrarMensagem } from "@utils"
 
 import { getClientes, getMarcas, getConectados } from "../store"
 import { auto } from "@popperjs/core"
@@ -61,6 +62,18 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
   const navigate = useNavigate()
   // ** Hooks
   const { t } = useTranslation()
+  const [vErros, setErros] = useState({})
+  const [vErrosCP, setErrosCP] = useState({})
+
+  const vCamposObrigatorios = [
+    { nome: "nome" },
+    { nome: "cliente_id", tipo: "int" },
+    { nome: "marca_equipamento", tipo: "int" },
+    { nome: "lat", tipo: "int" },
+    { nome: "lng", tipo: "int" },
+  ]
+
+  const vCamposObrigatoriosCP = [{ nome: "redirect_url" }]
 
   // ** States
   const [vDados, setData] = useState(data)
@@ -179,8 +192,37 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
   }
 
   const setDados = () => {
-    vDados.dados_captive = [vDadosCP]
-    setSalvarDados(vDados)
+    let vCamposOK = true
+    vCamposObrigatorios.forEach((campo) => {
+      if (campoInvalido(vDados, null, campo.nome, campo.tipo)) {
+        vCamposOK = false
+        setErros((ant) => ({
+          ...ant,
+          [campo.nome]: {},
+        }))
+      }
+    })
+
+    vCamposObrigatoriosCP.forEach((campo) => {
+      if (campoInvalido(vDadosCP, null, campo.nome, campo.tipo)) {
+        vCamposOK = false
+        setErrosCP((ant) => ({
+          ...ant,
+          [campo.nome]: {},
+        }))
+      }
+    })
+
+    if (vCamposOK) {
+      vDados.dados_captive = [vDadosCP]
+      setSalvarDados(vDados)
+    } else {
+      mostrarMensagem(
+        "Atenção!",
+        "Preencha todos os campos obrigatórios.",
+        "warning"
+      )
+    }
   }
 
   // ** Get Hotspot on mount based on id
@@ -304,6 +346,7 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
                         name="nome"
                         value={vDados?.nome ?? ""}
                         onChange={handleChange}
+                        invalid={campoInvalido(vDados, vErros, "nome")}
                       />
                     </Col>
                     <Col md="3" className="mb-2">
@@ -314,7 +357,14 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
                         id="marca_equipamento"
                         noOptionsMessage={() => t("Vazio")}
                         placeholder={t("Selecione...")}
-                        className="react-select"
+                        className={classnames("react-select", {
+                          "is-invalid": campoInvalido(
+                            vDados,
+                            vErros,
+                            "marca_equipamento",
+                            "int"
+                          ),
+                        })}
                         classNamePrefix="select"
                         value={vMarca}
                         onChange={(e) => {
@@ -348,7 +398,7 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
                       className="mb-2"
                     >
                       <Label className="form-label" for="cliente_id">
-                        Cliente
+                        Cliente*
                       </Label>
                       <Select
                         isClearable
@@ -358,7 +408,14 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
                         value={vCliente}
                         isDisabled={vDados.id === 0 && data.cliente_id > 0}
                         options={vListaClientes}
-                        className="react-select"
+                        className={classnames("react-select", {
+                          "is-invalid": campoInvalido(
+                            vDados,
+                            vErros,
+                            "cliente_id",
+                            "int"
+                          ),
+                        })}
                         classNamePrefix="select"
                         onChange={(e) => {
                           setCliente(e)
@@ -457,6 +514,7 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
                         name="lat"
                         value={vDados?.lat ?? ""}
                         onChange={handleChange}
+                        invalid={campoInvalido(vDados, vErros, "lat", "int")}
                       />
                     </Col>
                     <Col md="4" className="mb-2">
@@ -468,6 +526,7 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
                         name="lng"
                         value={vDados?.lng ?? ""}
                         onChange={handleChange}
+                        invalid={campoInvalido(vDados, vErros, "lng", "int")}
                       />
                     </Col>
                     <Col md="4" className="mb-2 pt-md-2">
@@ -520,7 +579,7 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
                 <Card className="mb-0">
                   <Form onSubmit={(e) => e.preventDefault()}>
                     <Row>
-                      <Col className="mb-2" lg="6">
+                      <Col className="mb-2" md="6">
                         <div className="border rounded p-2">
                           <h5 className="mb-1">Logotipo do Captive Portal</h5>
                           <div className="d-flex flex-column flex-md-row">
@@ -582,7 +641,7 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
                           </div>
                         </div>
                       </Col>
-                      <Col className="mb-2" lg="6">
+                      <Col className="mb-2" md="6">
                         <div className="border rounded p-2">
                           <h5 className="mb-1">Imagem de fundo</h5>
                           <div className="d-flex flex-column flex-md-row">
@@ -710,6 +769,11 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
                           name="redirect_url"
                           value={vDadosCP?.redirect_url ?? ""}
                           onChange={handleChangeCP}
+                          invalid={campoInvalido(
+                            vDadosCP,
+                            vErrosCP,
+                            "redirect_url"
+                          )}
                         />
                       </Col>
                       <Col md="6" className="mb-2">

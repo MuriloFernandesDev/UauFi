@@ -1,12 +1,16 @@
 // ** React
 import { Fragment, useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
+import classnames from "classnames"
 
 // ** Reactstrap
 import { Row, Col, Card, Input, Button, Label } from "reactstrap"
 
 // ** Icons
 import { CornerUpLeft, Check } from "react-feather"
+
+// ** Utils
+import { campoInvalido, mostrarMensagem } from "@utils"
 
 // ** Terceiros
 import Select from "react-select"
@@ -41,6 +45,7 @@ const PlanoEditCard = ({ data, setSalvarDados }) => {
 
   // ** States
   const [vDados, setData] = useState(data)
+  const [vErros, setErros] = useState({})
   const [vListaHotspots, setListaHotspots] = useState(null)
   const [vHotspot, setHotspot] = useState(null)
   const [vUnidade, setUnidade] = useState(
@@ -56,6 +61,16 @@ const PlanoEditCard = ({ data, setSalvarDados }) => {
       : null
   )
   let hotspotsVar
+
+  const vCamposObrigatorios = [
+    { nome: "nome" },
+    { nome: "hotspot_id", tipo: "int" },
+    { nome: "mega_download", tipo: "int" },
+    { nome: "mega_upload", tipo: "int" },
+    { nome: "tempo", tipo: "int" },
+    { nome: "unidade_tempo" },
+    { nome: "tipo_plano_id", tipo: "int" },
+  ]
 
   // ** Organização da informação
   const handleChange = (e) => {
@@ -82,7 +97,26 @@ const PlanoEditCard = ({ data, setSalvarDados }) => {
   }
 
   const setDados = () => {
-    setSalvarDados(vDados)
+    let vCamposOK = true
+    vCamposObrigatorios.forEach((campo) => {
+      if (campoInvalido(vDados, null, campo.nome, campo.tipo)) {
+        vCamposOK = false
+        setErros((ant) => ({
+          ...ant,
+          [campo.nome]: {},
+        }))
+      }
+    })
+
+    if (vCamposOK) {
+      setSalvarDados(vDados)
+    } else {
+      mostrarMensagem(
+        "Atenção!",
+        "Preencha todos os campos obrigatórios.",
+        "warning"
+      )
+    }
   }
 
   // ** Get filter on mount based on id
@@ -123,19 +157,20 @@ const PlanoEditCard = ({ data, setSalvarDados }) => {
               <Row>
                 <Col md="6" className="mb-2">
                   <Label className="form-label" for="nome">
-                    Nome do plano de conexão
+                    Nome do plano de conexão*
                   </Label>
                   <Input
                     id="nome"
                     name="nome"
                     value={vDados?.nome ?? ""}
                     onChange={handleChange}
+                    invalid={campoInvalido(vDados, vErros, "nome")}
                   />
                 </Col>
 
                 <Col md="6" className="mb-2">
                   <Label className="form-label" for="hotspot_id">
-                    Selecione um Hotspot
+                    Selecione um Hotspot*
                   </Label>
                   <Select
                     isClearable
@@ -145,7 +180,14 @@ const PlanoEditCard = ({ data, setSalvarDados }) => {
                     value={vHotspot}
                     options={vListaHotspots}
                     isDisabled={vDados.id === 0 && data.hotspot_id > 0}
-                    className="react-select"
+                    className={classnames("react-select", {
+                      "is-invalid": campoInvalido(
+                        vDados,
+                        vErros,
+                        "hotspot_id",
+                        "int"
+                      ),
+                    })}
                     classNamePrefix="select"
                     onChange={(e) => {
                       setHotspot(e)
@@ -161,7 +203,7 @@ const PlanoEditCard = ({ data, setSalvarDados }) => {
 
                 <Col md="6" className="mb-2">
                   <Label className="form-label" for="mega_download">
-                    Velocidade de download (Mbps)
+                    Velocidade de download (Mbps)*
                   </Label>
                   <Input
                     id="mega_download"
@@ -170,12 +212,18 @@ const PlanoEditCard = ({ data, setSalvarDados }) => {
                     placeholder="Mbps"
                     value={vDados?.mega_download ?? ""}
                     onChange={handleChange}
+                    invalid={campoInvalido(
+                      vDados,
+                      vErros,
+                      "mega_download",
+                      "int"
+                    )}
                   />
                 </Col>
 
                 <Col md="6" className="mb-2">
                   <Label className="form-label" for="mega_upload">
-                    Velocidade de upload (Mbps)
+                    Velocidade de upload (Mbps)*
                   </Label>
                   <Input
                     id="mega_upload"
@@ -184,12 +232,18 @@ const PlanoEditCard = ({ data, setSalvarDados }) => {
                     placeholder="Mbps"
                     value={vDados?.mega_upload ?? ""}
                     onChange={handleChange}
+                    invalid={campoInvalido(
+                      vDados,
+                      vErros,
+                      "mega_upload",
+                      "int"
+                    )}
                   />
                 </Col>
 
                 <Col md="4" className="mb-2">
                   <Label className="form-label" for="tempo">
-                    Timeout da conexão
+                    Timeout da conexão*
                   </Label>
                   <Input
                     id="tempo"
@@ -197,19 +251,26 @@ const PlanoEditCard = ({ data, setSalvarDados }) => {
                     type="number"
                     value={vDados?.tempo ?? ""}
                     onChange={handleChange}
+                    invalid={campoInvalido(vDados, vErros, "tempo", "int")}
                   />
                 </Col>
 
                 <Col md="4" className="mb-2">
                   <Label className="form-label" for="unidade_tempo">
-                    Unidade de tempo do timeout
+                    Unidade de tempo do timeout*
                   </Label>
                   <Select
                     isClearable
                     id="unidade_tempo"
                     noOptionsMessage={() => t("Vazio")}
                     placeholder={t("Selecione...")}
-                    className="react-select"
+                    className={classnames("react-select", {
+                      "is-invalid": campoInvalido(
+                        vDados,
+                        vErros,
+                        "unidade_tempo"
+                      ),
+                    })}
                     classNamePrefix="select"
                     value={vUnidade}
                     options={vListaUnidadeTempo}
@@ -227,14 +288,21 @@ const PlanoEditCard = ({ data, setSalvarDados }) => {
 
                 <Col md="4" className="mb-2">
                   <Label className="form-label" for="tipo_plano_id">
-                    Tipo do plano
+                    Tipo do plano*
                   </Label>
                   <Select
                     isClearable
                     noOptionsMessage={() => t("Vazio")}
                     id="tipo_plano_id"
                     placeholder={t("Selecione...")}
-                    className="react-select"
+                    className={classnames("react-select", {
+                      "is-invalid": campoInvalido(
+                        vDados,
+                        vErros,
+                        "tipo_plano_id",
+                        "int"
+                      ),
+                    })}
                     classNamePrefix="select"
                     value={vTipoAcesso}
                     options={vListaTipoPlano}

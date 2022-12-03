@@ -1,6 +1,7 @@
 // ** React
 import { Fragment, useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
+import classnames from "classnames"
 
 // ** Reactstrap
 import {
@@ -32,7 +33,7 @@ import api from "@src/services/api"
 import { getGenero } from "../store"
 
 // ** Utils
-import { formatInt } from "@utils"
+import { formatInt, campoInvalido, mostrarMensagem } from "@utils"
 
 const FiltroEditCard = ({ data, setSalvarDados }) => {
   const navigate = useNavigate()
@@ -53,6 +54,11 @@ const FiltroEditCard = ({ data, setSalvarDados }) => {
   const [vListaClientes, setListaClientes] = useState(null)
   const [vAlcance, setAlcance] = useState(null)
   const [vVerificandoAlcance, setVerificandoAlcance] = useState(null)
+  const [vErros, setErros] = useState({})
+  const vCamposObrigatorios = [
+    { nome: "nome" },
+    { nome: "cliente_id", tipo: "int" },
+  ]
 
   // ** Organização da informação
   const handleChange = (e) => {
@@ -142,7 +148,26 @@ const FiltroEditCard = ({ data, setSalvarDados }) => {
   }
 
   const setDados = () => {
-    setSalvarDados(vDados)
+    let vCamposOK = true
+    vCamposObrigatorios.forEach((campo) => {
+      if (campoInvalido(vDados, null, campo.nome, campo.tipo)) {
+        vCamposOK = false
+        setErros((ant) => ({
+          ...ant,
+          [campo.nome]: {},
+        }))
+      }
+    })
+
+    if (vCamposOK) {
+      setSalvarDados(vDados)
+    } else {
+      mostrarMensagem(
+        "Atenção!",
+        "Preencha todos os campos obrigatórios.",
+        "warning"
+      )
+    }
   }
 
   // ** Get filter on mount based on id
@@ -187,7 +212,7 @@ const FiltroEditCard = ({ data, setSalvarDados }) => {
               <Row>
                 <Col md="6" className="mb-2">
                   <Label className="form-label" for="nome">
-                    Nome
+                    Nome*
                   </Label>
                   <Input
                     id="nome"
@@ -195,6 +220,7 @@ const FiltroEditCard = ({ data, setSalvarDados }) => {
                     name="nome"
                     value={vDados?.nome ?? ""}
                     onChange={handleChange}
+                    invalid={campoInvalido(vDados, vErros, "nome")}
                   />
                 </Col>
 
@@ -208,7 +234,14 @@ const FiltroEditCard = ({ data, setSalvarDados }) => {
                     id="vCliente"
                     isDisabled={vDados.id === 0 && data.cliente_id > 0}
                     placeholder={t("Selecione...")}
-                    className="react-select"
+                    className={classnames("react-select", {
+                      "is-invalid": campoInvalido(
+                        vDados,
+                        vErros,
+                        "cliente_id",
+                        "int"
+                      ),
+                    })}
                     classNamePrefix="select"
                     value={vCliente}
                     onChange={(e) => {

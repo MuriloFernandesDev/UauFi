@@ -1,12 +1,16 @@
 // ** React
 import { Fragment, useEffect, useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
+import classnames from "classnames"
 
 // ** Reactstrap
 import { Row, Col, Card, Input, Button, Label } from "reactstrap"
 
 // ** Icons
 import { CornerUpLeft, Check, Move, Trash, Plus } from "react-feather"
+
+// ** Utils
+import { campoInvalido, mostrarMensagem } from "@utils"
 
 // ** Terceiros
 import Select from "react-select"
@@ -65,6 +69,8 @@ const PlanoEditCard = ({ data, setSalvarDados }) => {
       ? vListaFrequencia.filter((item) => item.value === data.frequencia)[0]
       : null
   )
+  const [vErros, setErros] = useState({})
+  const vCamposObrigatorios = [{ nome: "nome" }, { nome: "extra_hotspot_id" }]
 
   // ** Organização da informação
   const handleChange = (e) => {
@@ -161,15 +167,33 @@ const PlanoEditCard = ({ data, setSalvarDados }) => {
   }
 
   const setDados = () => {
-    vDados.mostra_dom = vDiaSemana.some((item) => item.value === 1)
-    vDados.mostra_seg = vDiaSemana.some((item) => item.value === 2)
-    vDados.mostra_ter = vDiaSemana.some((item) => item.value === 3)
-    vDados.mostra_qua = vDiaSemana.some((item) => item.value === 4)
-    vDados.mostra_qui = vDiaSemana.some((item) => item.value === 5)
-    vDados.mostra_sex = vDiaSemana.some((item) => item.value === 6)
-    vDados.mostra_sab = vDiaSemana.some((item) => item.value === 7)
+    let vCamposOK = true
+    vCamposObrigatorios.forEach((campo) => {
+      if (campoInvalido(vDados, null, campo.nome, campo.tipo)) {
+        vCamposOK = false
+        setErros((ant) => ({
+          ...ant,
+          [campo.nome]: {},
+        }))
+      }
+    })
 
-    setSalvarDados(vDados)
+    if (vCamposOK) {
+      vDados.mostra_dom = vDiaSemana.some((item) => item.value === 1)
+      vDados.mostra_seg = vDiaSemana.some((item) => item.value === 2)
+      vDados.mostra_ter = vDiaSemana.some((item) => item.value === 3)
+      vDados.mostra_qua = vDiaSemana.some((item) => item.value === 4)
+      vDados.mostra_qui = vDiaSemana.some((item) => item.value === 5)
+      vDados.mostra_sex = vDiaSemana.some((item) => item.value === 6)
+      vDados.mostra_sab = vDiaSemana.some((item) => item.value === 7)
+      setSalvarDados(vDados)
+    } else {
+      mostrarMensagem(
+        "Atenção!",
+        "Preencha todos os campos obrigatórios.",
+        "warning"
+      )
+    }
   }
 
   const renderItens = () => {
@@ -267,7 +291,7 @@ const PlanoEditCard = ({ data, setSalvarDados }) => {
               <Row>
                 <Col md="12" className="mb-2">
                   <Label className="form-label" for="nome">
-                    Digite a pergunta
+                    Digite a pergunta*
                   </Label>
                   <Input
                     id="nome"
@@ -275,12 +299,13 @@ const PlanoEditCard = ({ data, setSalvarDados }) => {
                     disabled={vDados?.id > 0}
                     value={vDados?.nome ?? ""}
                     onChange={handleChange}
+                    invalid={campoInvalido(vDados, vErros, "nome")}
                   />
                 </Col>
 
                 <Col md="8" className="mb-2">
                   <Label className="form-label" for="extra_hotspot_id">
-                    Selecione o(s) Hotspot(s)
+                    Selecione o(s) Hotspot(s)*
                   </Label>
                   <Select
                     isClearable
@@ -288,7 +313,13 @@ const PlanoEditCard = ({ data, setSalvarDados }) => {
                     noOptionsMessage={() => t("Vazio")}
                     isMulti
                     placeholder={""}
-                    className="react-select"
+                    className={classnames("react-select", {
+                      "is-invalid": campoInvalido(
+                        vDados,
+                        vErros,
+                        "extra_hotspot_id"
+                      ),
+                    })}
                     classNamePrefix="select"
                     value={vHotspot}
                     onChange={(e) => {

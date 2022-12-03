@@ -33,7 +33,13 @@ import { useTranslation } from "react-i18next"
 import { getClientes, getFiltros, testarCampanha } from "../store"
 
 // ** Custom Components
-import { formatMoeda, formatInt, formatDateTime } from "@utils"
+import {
+  formatMoeda,
+  formatInt,
+  formatDateTime,
+  campoInvalido,
+  mostrarMensagem,
+} from "@utils"
 
 const CampanhaAgendadaEditCard = ({ data, setSalvarDados }) => {
   const navigate = useNavigate()
@@ -51,6 +57,12 @@ const CampanhaAgendadaEditCard = ({ data, setSalvarDados }) => {
   const [vTestando, setTestando] = useState(false)
   const [vAlcance, setAlcance] = useState(null)
   const [vVerificandoAlcance, setVerificandoAlcance] = useState(null)
+  const [vErros, setErros] = useState({})
+  const vCamposObrigatorios = [
+    { nome: "nome" },
+    { nome: "cliente_id", tipo: "int" },
+    { nome: "mensagem" },
+  ]
 
   // ** Organização da informação
   const handleChange = (e) => {
@@ -139,7 +151,26 @@ const CampanhaAgendadaEditCard = ({ data, setSalvarDados }) => {
   }
 
   const setDados = () => {
-    setSalvarDados(vDados)
+    let vCamposOK = true
+    vCamposObrigatorios.forEach((campo) => {
+      if (campoInvalido(vDados, null, campo.nome, campo.tipo)) {
+        vCamposOK = false
+        setErros((ant) => ({
+          ...ant,
+          [campo.nome]: {},
+        }))
+      }
+    })
+
+    if (vCamposOK) {
+      setSalvarDados(vDados)
+    } else {
+      mostrarMensagem(
+        "Atenção!",
+        "Preencha todos os campos obrigatórios.",
+        "warning"
+      )
+    }
   }
 
   const optTel = { phone: true, phoneRegionCode: "BR" }
@@ -188,6 +219,7 @@ const CampanhaAgendadaEditCard = ({ data, setSalvarDados }) => {
                   disabled={vDados.enviado}
                   value={vDados?.nome ?? ""}
                   onChange={handleChange}
+                  invalid={campoInvalido(vDados, vErros, "nome")}
                 />
               </Col>
               <Col md="6" className="mb-2">
@@ -231,7 +263,7 @@ const CampanhaAgendadaEditCard = ({ data, setSalvarDados }) => {
               </Col>
               <Col md="6" className="mb-2">
                 <Label className="form-label" for="cliente_id">
-                  Selecione um Cliente
+                  Selecione um Cliente*
                 </Label>
                 <Select
                   isClearable
@@ -243,7 +275,14 @@ const CampanhaAgendadaEditCard = ({ data, setSalvarDados }) => {
                   isDisabled={
                     (vDados.id === 0 && data.cliente_id > 0) || vDados.enviado
                   }
-                  className="react-select"
+                  className={classnames("react-select", {
+                    "is-invalid": campoInvalido(
+                      vDados,
+                      vErros,
+                      "cliente_id",
+                      "int"
+                    ),
+                  })}
                   classNamePrefix="select"
                   onChange={(e) => {
                     setCliente(e)
@@ -291,6 +330,7 @@ const CampanhaAgendadaEditCard = ({ data, setSalvarDados }) => {
                   type="textarea"
                   id="mensagem"
                   name="mensagem"
+                  invalid={campoInvalido(vDados, vErros, "mensagem")}
                   style={{ minHeight: "80px" }}
                   disabled={vDados.enviado}
                   onChange={handleChange}
@@ -331,7 +371,7 @@ const CampanhaAgendadaEditCard = ({ data, setSalvarDados }) => {
               {vDados?.ativo ? (
                 <Col md="8" className="mb-2">
                   <Label className="form-label" for="data_hora_agendamento">
-                    Escolha a data e hora que a campanha será enviada
+                    Escolha a data e hora que a campanha será enviada*
                   </Label>
                   <Input
                     id="data_hora_agendamento"

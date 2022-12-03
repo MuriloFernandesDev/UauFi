@@ -1,5 +1,8 @@
 import { DefaultRoute } from "../router/routes"
 
+import Swal from "sweetalert2"
+import withReactContent from "sweetalert2-react-content"
+
 // ** Checks if an object is empty (returns boolean)
 export const isObjEmpty = (obj) => Object.keys(obj).length === 0
 
@@ -63,6 +66,35 @@ export const formatMoeda = (
 ) => {
   if (!value) return value
   return new Intl.NumberFormat("pt-BR", formatting).format(value ?? 0)
+}
+
+export const campoInvalido = (dados, erros, campo, tipo) => {
+  return (
+    (erros === null || erros[campo]) &&
+    (!dados[campo] ||
+      (tipo === "int" && ((dados[campo] ?? 0) === 0 || isNaN(dados[campo]))) ||
+      (!tipo && dados[campo]?.length === 0))
+  )
+}
+
+// ** Modal de apresentação de erros
+
+const MySwal = withReactContent(Swal)
+
+export const mostrarMensagem = (titulo, mensagem, icone) => {
+  return MySwal.fire({
+    title: titulo,
+    text: mensagem,
+    icon: icone,
+    customClass: {
+      confirmButton: "btn btn-primary",
+      popup: "animate__animated animate__fadeIn",
+    },
+    hideClass: {
+      popup: "animate__animated animate__zoomOut",
+    },
+    buttonsStyling: false,
+  })
 }
 
 export const removerAcentos = (strAccents) => {

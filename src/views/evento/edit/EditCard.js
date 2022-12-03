@@ -1,12 +1,15 @@
 // ** React
 import { Fragment, useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
+import { useForm } from "react-hook-form"
+import classnames from "classnames"
 
 // ** Reactstrap
-import { Row, Col, Card, Input, Button, Label } from "reactstrap"
+import { Row, Col, Card, Input, Button, Label, Form } from "reactstrap"
 
 // ** Icons
 import { CornerUpLeft, Check } from "react-feather"
+import { campoInvalido, mostrarMensagem } from "@utils"
 
 // ** Terceiros
 import Select from "react-select"
@@ -18,6 +21,17 @@ const EventoEditCard = ({ data, setSalvarDados }) => {
 
   // ** Hooks
   const { t } = useTranslation()
+  const {
+    setError,
+    formState: { errors },
+  } = useForm()
+
+  const vCamposObrigatorios = [
+    { nome: "nome" },
+    { nome: "data_inicio" },
+    { nome: "data_fim" },
+    { nome: "hotspot_id", tipo: "int" },
+  ]
 
   // ** States
   const [vDados, setData] = useState(data)
@@ -64,10 +78,26 @@ const EventoEditCard = ({ data, setSalvarDados }) => {
   }
 
   const setDados = () => {
-    setSalvarDados(vDados)
-  }
+    let vCamposOK = true
+    vCamposObrigatorios.forEach((campo) => {
+      if (campoInvalido(vDados, null, campo.nome, campo.tipo)) {
+        vCamposOK = false
+        setError(campo.nome, {
+          type: "manual",
+        })
+      }
+    })
 
-  // ** Get filter on mount based on id
+    if (vCamposOK) {
+      setSalvarDados(vDados)
+    } else {
+      mostrarMensagem(
+        "Atenção!",
+        "Preencha todos os campos obrigatórios.",
+        "warning"
+      )
+    }
+  }
 
   useEffect(() => {
     // ** Requisitar listas
@@ -108,13 +138,14 @@ const EventoEditCard = ({ data, setSalvarDados }) => {
                   <Row>
                     <Col lg="6" md="6" className="mb-2">
                       <Label className="form-label" for="nome">
-                        Nome do evento
+                        Nome do evento*
                       </Label>
                       <Input
                         id="nome"
                         name="nome"
                         value={vDados?.nome ?? ""}
                         onChange={handleChange}
+                        invalid={campoInvalido(vDados, errors, "nome")}
                       />
                     </Col>
                     <Col lg="6" md="6" className="mb-2">
@@ -136,28 +167,30 @@ const EventoEditCard = ({ data, setSalvarDados }) => {
                   <Row>
                     <Col lg="6" md="6" className="mb-2">
                       <Label className="form-label" for="data_inicio">
-                        Início do evento
+                        Início do evento*
                       </Label>
-
                       <Input
                         id="data_inicio"
                         name="data_inicio"
                         type="datetime-local"
                         value={vDados?.data_inicio ?? ""}
                         onChange={handleChange}
+                        invalid={campoInvalido(vDados, errors, "data_inicio")}
                       />
                     </Col>
 
                     <Col lg="6" md="6" className="mb-2">
                       <Label className="form-label" for="data_fim">
-                        Fim do evento
+                        Fim do evento*
                       </Label>
+
                       <Input
                         id="data_fim"
                         name="data_fim"
                         type="datetime-local"
                         value={vDados?.data_fim ?? ""}
                         onChange={handleChange}
+                        invalid={campoInvalido(vDados, errors, "data_fim")}
                       />
                     </Col>
                   </Row>
@@ -191,17 +224,25 @@ const EventoEditCard = ({ data, setSalvarDados }) => {
 
                     <Col lg="6" md="6" className="mb-2">
                       <Label className="form-label" for="hotspot_id">
-                        Selecione um Hotspot
+                        Selecione um Hotspot*
                       </Label>
+
                       <Select
                         isClearable
-                        id="hotspot_id"
+                        name="hotspot_id"
                         noOptionsMessage={() => t("Vazio")}
                         placeholder={t("Selecione...")}
                         value={vHotspot}
                         options={vListaHotspots}
-                        className="react-select"
                         classNamePrefix="select"
+                        className={classnames("react-select", {
+                          "is-invalid": campoInvalido(
+                            vDados,
+                            errors,
+                            "hotspot_id",
+                            "int"
+                          ),
+                        })}
                         isDisabled={vDados.id === 0 && data.hotspot_id > 0}
                         onChange={(e) => {
                           setHotspot(e)

@@ -1,6 +1,7 @@
 // ** React
 import { Fragment, useEffect, useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
+import { useForm } from "react-hook-form"
 
 // ** Reactstrap
 import {
@@ -39,7 +40,7 @@ import api from "@src/services/api"
 import viacep from "@src/services/viacep"
 
 // ** Utils
-import { removerAcentos } from "@utils"
+import { removerAcentos, campoInvalido, mostrarMensagem } from "@utils"
 
 import toast from "react-hot-toast"
 
@@ -55,6 +56,21 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
 
   // ** Hooks
   const { i18n, t } = useTranslation()
+  const {
+    setError,
+    formState: { errors },
+  } = useForm()
+
+  const vCamposObrigatorios = [
+    { nome: "nome" },
+    { nome: "tel_1" },
+    { nome: "endereco" },
+    { nome: "endereco_nr" },
+    { nome: "breve_descricao" },
+    { nome: "informacoes_gerais" },
+    { nome: "cliente_agregador" },
+    { nome: "categoria_id", tipo: "int" },
+  ]
 
   // ** States
   const [vDados, setData] = useState(data)
@@ -289,7 +305,25 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
   const optCep = { delimiters: [".", "-"], blocks: [2, 3, 3], uppercase: true }
 
   const setDados = () => {
-    setSalvarDados(vDados)
+    let vCamposOK = true
+    vCamposObrigatorios.forEach((campo) => {
+      if (campoInvalido(vDados, null, campo.nome, campo.tipo)) {
+        vCamposOK = false
+        setError(campo.nome, {
+          type: "manual",
+        })
+      }
+    })
+
+    if (vCamposOK) {
+      setSalvarDados(vDados)
+    } else {
+      mostrarMensagem(
+        "Atenção!",
+        "Preencha todos os campos obrigatórios.",
+        "warning"
+      )
+    }
   }
 
   // ** Get cliente on mount based on id
@@ -428,6 +462,7 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                             name="nome"
                             value={vDados?.nome ?? ""}
                             onChange={handleChange}
+                            invalid={campoInvalido(vDados, errors, "nome")}
                           />
                         </Col>
                         <Col md="6" className="mb-2">
@@ -490,14 +525,21 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                       />
                     </Col>
                     <Col md="6" className="mb-2">
-                      <Label className="form-label" for="vCategoria">
+                      <Label className="form-label" for="categoria_id">
                         Categoria*
                       </Label>
                       <Select
                         isClearable
-                        id="vCategoria"
+                        id="categoria_id"
                         placeholder={t("Selecione...")}
-                        className="react-select"
+                        className={classnames("react-select", {
+                          "is-invalid": campoInvalido(
+                            vDados,
+                            errors,
+                            "categoria_id",
+                            "int"
+                          ),
+                        })}
                         noOptionsMessage={() => t("Vazio")}
                         classNamePrefix="select"
                         value={vCategoria}
@@ -531,16 +573,22 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                       </div>
                     </Col>
                     <Col md="6" className="mb-2">
-                      <Label className="form-label" for="vAgregador">
-                        Cliente matriz
+                      <Label className="form-label" for="cliente_agregador">
+                        Cliente matriz*
                       </Label>
                       <Select
                         isClearable
-                        id="vAgregador"
+                        id="cliente_agregador"
                         noOptionsMessage={() => t("Vazio")}
                         isMulti
                         placeholder={""}
-                        className="react-select"
+                        className={classnames("react-select", {
+                          "is-invalid": campoInvalido(
+                            vDados,
+                            errors,
+                            "cliente_agregador"
+                          ),
+                        })}
                         classNamePrefix="select"
                         value={vAgregador}
                         onChange={(e) => {
@@ -583,6 +631,7 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                         name="tel_1"
                         value={vDados?.tel_1 ?? ""}
                         onChange={handleChange}
+                        invalid={campoInvalido(vDados, errors, "tel_1")}
                       />
                     </Col>
                     <Col md="4" className="mb-2">
@@ -616,25 +665,27 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                       />
                     </Col>
                     <Col md="8" className="mb-2">
-                      <Label className="form-label" for="vEndereco">
+                      <Label className="form-label" for="endereco">
                         {t("Endereço")}*
                       </Label>
                       <Input
-                        id="vEndereco"
+                        id="endereco"
                         name="endereco"
                         value={vDados?.endereco ?? ""}
                         onChange={handleChange}
+                        invalid={campoInvalido(vDados, errors, "endereco")}
                       />
                     </Col>
                     <Col md="4" className="mb-2">
-                      <Label className="form-label" for="vNumero">
+                      <Label className="form-label" for="endereco_nr">
                         {t("Número")}*
                       </Label>
                       <Input
-                        id="vNumero"
+                        id="endereco_nr"
                         name="endereco_nr"
                         value={vDados?.endereco_nr ?? ""}
                         onChange={handleChange}
+                        invalid={campoInvalido(vDados, errors, "endereco_nr")}
                       />
                     </Col>
 
@@ -710,6 +761,11 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                         name="breve_descricao"
                         style={{ minHeight: "80px" }}
                         onChange={handleChange}
+                        invalid={campoInvalido(
+                          vDados,
+                          errors,
+                          "breve_descricao"
+                        )}
                         className={classnames({
                           "text-danger":
                             (vDados?.breve_descricao?.length || 0) > 510,
@@ -739,6 +795,11 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                         name="informacoes_gerais"
                         style={{ minHeight: "100px" }}
                         onChange={handleChange}
+                        invalid={campoInvalido(
+                          vDados,
+                          errors,
+                          "informacoes_gerais"
+                        )}
                       />
                     </Col>
                     <Col md="12" className="mb-1">

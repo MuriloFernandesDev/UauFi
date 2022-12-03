@@ -1,6 +1,7 @@
 // ** React
 import { Fragment, useEffect, useState, useContext } from "react"
 import { Link, useNavigate } from "react-router-dom"
+import classnames from "classnames"
 
 // ** Reactstrap
 import { Row, Col, Card, Input, Button, Label, Table } from "reactstrap"
@@ -15,6 +16,9 @@ import defaultImagem from "@src/assets/images/avatars/avatar-blank.png"
 import Select from "react-select"
 import { useTranslation } from "react-i18next"
 
+// ** Utils
+import { campoInvalido, mostrarMensagem } from "@utils"
+
 // ** API
 import api from "@src/services/api"
 
@@ -25,6 +29,10 @@ const ClienteLoginEditCard = ({ data, setSalvarDados }) => {
   const navigate = useNavigate()
   // ** Hooks
   const { t } = useTranslation()
+
+  const [vErros, setErros] = useState({})
+
+  const vCamposObrigatorios = [{ nome: "email" }, { nome: "clientes" }]
 
   // ** States
   const [vDados, setData] = useState(data)
@@ -54,7 +62,7 @@ const ClienteLoginEditCard = ({ data, setSalvarDados }) => {
     const vNovoValor =
       vDadosAnt.substring(0, pos - 1) +
       (e.target.checked ? "1" : "0") +
-      vDadosAnt.substring(pos + 1)
+      vDadosAnt.substring(pos)
 
     setData((prevState) => ({
       ...prevState,
@@ -94,7 +102,26 @@ const ClienteLoginEditCard = ({ data, setSalvarDados }) => {
   }
 
   const setDados = () => {
-    setSalvarDados(vDados)
+    let vCamposOK = true
+    vCamposObrigatorios.forEach((campo) => {
+      if (campoInvalido(vDados, null, campo.nome, campo.tipo)) {
+        vCamposOK = false
+        setErros((ant) => ({
+          ...ant,
+          [campo.nome]: {},
+        }))
+      }
+    })
+
+    if (vCamposOK) {
+      setSalvarDados(vDados)
+    } else {
+      mostrarMensagem(
+        "Atenção!",
+        "Preencha todos os campos obrigatórios.",
+        "warning"
+      )
+    }
   }
 
   const getCampo = (campo, pos) => {
@@ -295,6 +322,7 @@ const ClienteLoginEditCard = ({ data, setSalvarDados }) => {
                       autoComplete="new-password"
                       value={vDados?.email ?? ""}
                       onChange={handleChange}
+                      invalid={campoInvalido(vDados, vErros, "email")}
                     />
                   </Col>
                   <Col md="6" className="mb-2">
@@ -323,7 +351,9 @@ const ClienteLoginEditCard = ({ data, setSalvarDados }) => {
                   noOptionsMessage={() => t("Vazio")}
                   isMulti
                   placeholder={""}
-                  className="react-select"
+                  className={classnames("react-select", {
+                    "is-invalid": campoInvalido(vDados, vErros, "clientes"),
+                  })}
                   classNamePrefix="select"
                   value={vCliente}
                   onChange={(e) => {

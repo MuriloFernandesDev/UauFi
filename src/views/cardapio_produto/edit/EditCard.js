@@ -1,12 +1,16 @@
 // ** React
 import { Fragment, useEffect, useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
+import classnames from "classnames"
 
 // ** Reactstrap
 import { Row, Col, Card, Input, Button, Label } from "reactstrap"
 
 // ** Icons
 import { CornerUpLeft, Check, Move, Trash, Plus } from "react-feather"
+
+// ** Utils
+import { campoInvalido, mostrarMensagem } from "@utils"
 
 // ** Terceiros
 import Select from "react-select"
@@ -30,7 +34,11 @@ const CardapioProdutoCard = ({ data, setSalvarDados }) => {
   const [vDados, setData] = useState(data)
   const [vListaCategorias, setListaCategorias] = useState(null)
   const [vCategoria, setCategoria] = useState(null)
-
+  const [vErros, setErros] = useState({})
+  const vCamposObrigatorios = [
+    { nome: "titulo" },
+    { nome: "categoria_id", tipo: "int" },
+  ]
   const optMoeda = { numeral: true, numeralDecimalMark: ",", delimiter: "." }
 
   // ** Organização da informação
@@ -121,7 +129,26 @@ const CardapioProdutoCard = ({ data, setSalvarDados }) => {
   }
 
   const setDados = () => {
-    setSalvarDados(vDados)
+    let vCamposOK = true
+    vCamposObrigatorios.forEach((campo) => {
+      if (campoInvalido(vDados, null, campo.nome, campo.tipo)) {
+        vCamposOK = false
+        setErros((ant) => ({
+          ...ant,
+          [campo.nome]: {},
+        }))
+      }
+    })
+
+    if (vCamposOK) {
+      setSalvarDados(vDados)
+    } else {
+      mostrarMensagem(
+        "Atenção!",
+        "Preencha todos os campos obrigatórios.",
+        "warning"
+      )
+    }
   }
 
   const renderItens = () => {
@@ -244,6 +271,7 @@ const CardapioProdutoCard = ({ data, setSalvarDados }) => {
                         name="titulo"
                         value={vDados?.titulo ?? ""}
                         onChange={handleChange}
+                        invalid={campoInvalido(vDados, vErros, "titulo")}
                       />
                     </Col>
 
@@ -272,7 +300,14 @@ const CardapioProdutoCard = ({ data, setSalvarDados }) => {
                         placeholder={t("Selecione...")}
                         value={vCategoria}
                         options={vListaCategorias}
-                        className="react-select"
+                        className={classnames("react-select", {
+                          "is-invalid": campoInvalido(
+                            vDados,
+                            vErros,
+                            "categoria_id",
+                            "int"
+                          ),
+                        })}
                         classNamePrefix="select"
                         onChange={(e) => {
                           setCategoria(e)

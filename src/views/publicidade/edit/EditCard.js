@@ -1,12 +1,16 @@
 // ** React
 import { Fragment, useEffect, useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
+import classnames from "classnames"
 
 // ** Reactstrap
 import { Row, Col, Card, Input, Button, Label, CardImg } from "reactstrap"
 
 // ** Icons
 import { CornerUpLeft, Check, Trash } from "react-feather"
+
+// ** Utils
+import { campoInvalido, mostrarMensagem } from "@utils"
 
 // ** Terceiros
 import Select from "react-select"
@@ -32,6 +36,14 @@ const PublicidadeEditCard = ({ data, setSalvarDados }) => {
   const [vTipo, setTipo] = useState(
     data?.tipo ? vListaTipo.filter((item) => item.value === data.tipo)[0] : null
   )
+  const [vErros, setErros] = useState({})
+  const vCamposObrigatorios = [
+    { nome: "nome" },
+    { nome: "extra_hotspot_id" },
+    { nome: "data_inicial" },
+    { nome: "data_final" },
+    { nome: "duracao", tipo: "int" },
+  ]
 
   // ** Organização da informação
   const handleChange = (e) => {
@@ -169,7 +181,26 @@ const PublicidadeEditCard = ({ data, setSalvarDados }) => {
   }
 
   const setDados = () => {
-    setSalvarDados(vDados)
+    let vCamposOK = true
+    vCamposObrigatorios.forEach((campo) => {
+      if (campoInvalido(vDados, null, campo.nome, campo.tipo)) {
+        vCamposOK = false
+        setErros((ant) => ({
+          ...ant,
+          [campo.nome]: {},
+        }))
+      }
+    })
+
+    if (vCamposOK) {
+      setSalvarDados(vDados)
+    } else {
+      mostrarMensagem(
+        "Atenção!",
+        "Preencha todos os campos obrigatórios.",
+        "warning"
+      )
+    }
   }
 
   // ** Get filter on mount based on id
@@ -210,19 +241,20 @@ const PublicidadeEditCard = ({ data, setSalvarDados }) => {
               <Row>
                 <Col md="6" className="mb-2">
                   <Label className="form-label" for="nome">
-                    Nome da publicidade
+                    Nome da publicidade*
                   </Label>
                   <Input
                     id="nome"
                     name="nome"
                     value={vDados?.nome ?? ""}
                     onChange={handleChange}
+                    invalid={campoInvalido(vDados, vErros, "nome")}
                   />
                 </Col>
 
                 <Col md="6" className="mb-2">
                   <Label className="form-label" for="extra_hotspot_id">
-                    Selecione o(s) Hotspot(s)
+                    Selecione o(s) Hotspot(s)*
                   </Label>
                   <Select
                     isClearable
@@ -230,7 +262,13 @@ const PublicidadeEditCard = ({ data, setSalvarDados }) => {
                     noOptionsMessage={() => t("Vazio")}
                     isMulti
                     placeholder={""}
-                    className="react-select"
+                    className={classnames("react-select", {
+                      "is-invalid": campoInvalido(
+                        vDados,
+                        vErros,
+                        "extra_hotspot_id"
+                      ),
+                    })}
                     classNamePrefix="select"
                     value={vHotspot}
                     onChange={(e) => {
@@ -249,7 +287,7 @@ const PublicidadeEditCard = ({ data, setSalvarDados }) => {
                 </Col>
                 <Col md="3" className="mb-2">
                   <Label className="form-label" for="data_inicial">
-                    Data Inicial
+                    Data Inicial*
                   </Label>
                   <Input
                     id="data_inicial"
@@ -257,11 +295,12 @@ const PublicidadeEditCard = ({ data, setSalvarDados }) => {
                     type="date"
                     value={vDados?.data_inicial ?? ""}
                     onChange={handleChange}
+                    invalid={campoInvalido(vDados, vErros, "data_inicial")}
                   />
                 </Col>
                 <Col md="3" className="mb-2">
                   <Label className="form-label" for="data_final">
-                    Data Final
+                    Data Final*
                   </Label>
                   <Input
                     id="data_final"
@@ -269,12 +308,13 @@ const PublicidadeEditCard = ({ data, setSalvarDados }) => {
                     type="date"
                     value={vDados?.data_final ?? ""}
                     onChange={handleChange}
+                    invalid={campoInvalido(vDados, vErros, "data_final")}
                   />
                 </Col>
 
                 <Col md="3" className="mb-2">
                   <Label className="form-label" for="duracao">
-                    Tempo de exibição (segundos)
+                    Tempo de exibição (segundos)*
                   </Label>
                   <Input
                     id="duracao"
@@ -283,6 +323,7 @@ const PublicidadeEditCard = ({ data, setSalvarDados }) => {
                     placeholder="Segundos"
                     value={vDados?.duracao ?? ""}
                     onChange={handleChange}
+                    invalid={campoInvalido(vDados, vErros, "duracao", "int")}
                   />
                 </Col>
 
