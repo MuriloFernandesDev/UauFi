@@ -7,6 +7,9 @@ import ReactPaginate from "react-paginate"
 import { ChevronDown, Eye, Trash, MoreVertical } from "react-feather"
 import DataTable from "react-data-table-component"
 
+// ** Utils
+import { mostrarMensagem } from "@utils"
+
 // ** Reactstrap
 import {
   Button,
@@ -20,6 +23,7 @@ import {
   DropdownToggle,
   UncontrolledTooltip,
   UncontrolledDropdown,
+  Badge,
 } from "reactstrap"
 
 // ** Store & Actions
@@ -250,14 +254,31 @@ const CampanhaRecorrenteList = () => {
         popup: "animate__animated animate__zoomOut",
       },
       buttonsStyling: false,
-    }).then(async (result) => {
+    }).then((result) => {
       if (result.value) {
-        await dispatch(deleteCampanhaRecorrente(row.id))
-        handleFilter(store.params.q)
+        deleteCampanhaRecorrente(row.id)
+          .then((response) => {
+            if (response.status === 200) {
+              handleFilter(store.params.q)
 
-        toast.success("Removido com sucesso!", {
-          position: "bottom-right",
-        })
+              toast.success("Removido com sucesso!", {
+                position: "bottom-right",
+              })
+            }
+          })
+          .catch((error) => {
+            if (error.response.status === 400) {
+              mostrarMensagem("Atenção!", "Não autorizado.", "warning")
+            } else if (error.response.status === 503) {
+              mostrarMensagem("Ops...", error.response.data, "error")
+            } else {
+              mostrarMensagem(
+                "Erro inesperado",
+                "Por favor, contate um administrador.",
+                "error"
+              )
+            }
+          })
       }
     })
   }
@@ -280,6 +301,12 @@ const CampanhaRecorrenteList = () => {
               <h6 className="user-name text-truncate mb-0">{row.nome}</h6>
               <small className="text-truncate text-muted mb-0">
                 {row.cliente ?? ""}
+              </small>
+              <small className="text-truncate text-muted mb-0">
+                {!row.ativo ? (
+                  <Badge color="secondary">Desativada</Badge>
+                ) : null}{" "}
+                {row.tipo ?? ""}
               </small>
             </Link>
           </div>

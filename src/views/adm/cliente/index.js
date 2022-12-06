@@ -23,6 +23,7 @@ import {
   DropdownToggle,
   UncontrolledTooltip,
   UncontrolledDropdown,
+  Badge,
 } from "reactstrap"
 
 // ** Store & Actions
@@ -393,6 +394,11 @@ const ClienteList = () => {
                 <small className="text-truncate text-muted mb-0">
                   {telefone + whatsapp}
                 </small>
+                <div className="text-truncate text-muted mb-0">
+                  {!row.ativo ? (
+                    <Badge color="secondary">Desativado</Badge>
+                  ) : null}
+                </div>
               </div>
             </div>
           </Link>

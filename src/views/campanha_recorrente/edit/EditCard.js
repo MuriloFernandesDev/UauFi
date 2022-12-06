@@ -1,21 +1,31 @@
 // ** React
-import { useEffect, useState } from "react"
+import { useEffect, useState, Fragment } from "react"
 import { useNavigate } from "react-router-dom"
 
 // ** Reactstrap
-import { Row, Col, Card, Input, Button, Label, ButtonGroup } from "reactstrap"
+import {
+  Row,
+  Col,
+  Card,
+  Input,
+  Button,
+  Label,
+  ButtonGroup,
+  Alert,
+  CardBody,
+} from "reactstrap"
 
 // ** Icons
-import { CornerUpLeft, Check, DollarSign } from "react-feather"
+import { CornerUpLeft, Check } from "react-feather"
 import classnames from "classnames"
 
 // ** Utils
-import { campoInvalido, mostrarMensagem } from "@utils"
+import { campoInvalido, mostrarMensagem, formatMoeda, formatInt } from "@utils"
 
 // ** Terceiros
 import Select from "react-select"
 import { useTranslation } from "react-i18next"
-import { getClientes } from "../store"
+import { getClientes, getTipos } from "../store"
 
 const CampanhaRecorrenteEditCard = ({ data, setSalvarDados }) => {
   const navigate = useNavigate()
@@ -25,20 +35,39 @@ const CampanhaRecorrenteEditCard = ({ data, setSalvarDados }) => {
 
   // ** States
   const [vDados, setData] = useState(data)
+  // Captive Portal
+  const [vDadosCR, setDataCR] = useState(data?.campanha_recorrente)
   const [vCliente, setCliente] = useState(null)
   const [vListaClientes, setListaClientes] = useState(null)
+  const [vTipo, setTipo] = useState(null)
+  const [vListaTipo, setListaTipo] = useState(null)
   const vListaFrequencia = [
-    { label: "Diariamente", value: "day" },
-    { label: "Uma vez por semana (domingo)", value: "week" },
-    { label: "Uma vez por mês (dia 1º)", value: "month" },
+    {
+      label: "Todos os dias, enviar para os aniversariantes do dia",
+      value: "day",
+    },
+    {
+      label: "No domingo, enviar para todos aniversariantes da semana",
+      value: "week",
+    },
+    {
+      label: "No dia 1º de cada mês, enviar para todos aniversariantes do mês",
+      value: "month",
+    },
   ]
-  const [vFrequencia, setFrequencia] = useState(null)
+  const [vFrequencia, setFrequencia] = useState(
+    vListaFrequencia.filter(
+      (item) => item.value === data?.campanha_recorrente?.frequencia
+    )[0]
+  )
   const [vErros, setErros] = useState({})
+  const [vErrosCR, setErrosCR] = useState({})
   const vCamposObrigatorios = [
-    { nome: "titulo" },
-    { nome: "clientes" },
-    { nome: "mensagem" },
+    { nome: "cliente_id", tipo: "int" },
+    { nome: "campanha_recorrente_tipo_id", tipo: "int" },
   ]
+
+  const vCamposObrigatoriosCR = [{ nome: "titulo" }, { nome: "mensagem" }]
 
   // ** Organização da informação
   const handleChange = (e) => {
@@ -49,18 +78,53 @@ const CampanhaRecorrenteEditCard = ({ data, setSalvarDados }) => {
     }))
   }
 
+  const handleChangeCR = (e) => {
+    const { name, value } = e.target
+    setDataCR((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }))
+  }
+
   const handleClientes = () => {
     getClientes().then((res) => {
       setListaClientes(res)
 
-      //Selecionar o item no componente
-      if (data?.clientes) {
-        const vClienteArray = data?.clientes
-          ?.split(",")
-          .map((item) => parseInt(item))
-        setCliente(
-          res.data?.filter((item) => vClienteArray?.includes(item.value))
-        )
+      if (vDados?.id !== undefined) {
+        res?.map((res) => {
+          if (res.value === vDados.cliente_id) {
+            setCliente({ value: res.value, label: res.label })
+          }
+        })
+      }
+    })
+  }
+
+  const handleTipos = () => {
+    getTipos().then((res) => {
+      const TiposVar = res
+      setListaTipo(
+        TiposVar.map((ret) => ({
+          label: ret.nome,
+          value: ret.id,
+          codigo: ret.codigo,
+          cor: ret.cor,
+          descricao: ret.descricao,
+        }))
+      )
+
+      if (vDados?.id !== undefined) {
+        TiposVar?.map((res) => {
+          if (res.id === vDados.campanha_recorrente_tipo_id) {
+            setTipo({
+              label: res.nome,
+              value: res.id,
+              codigo: res.codigo,
+              cor: res.cor,
+              descricao: res.descricao,
+            })
+          }
+        })
       }
     })
   }
@@ -77,7 +141,18 @@ const CampanhaRecorrenteEditCard = ({ data, setSalvarDados }) => {
       }
     })
 
+    vCamposObrigatoriosCR.forEach((campo) => {
+      if (campoInvalido(vDadosCR, null, campo.nome, campo.tipo)) {
+        vCamposOK = false
+        setErrosCR((ant) => ({
+          ...ant,
+          [campo.nome]: {},
+        }))
+      }
+    })
+
     if (vCamposOK) {
+      vDados.campanha_recorrente = vDadosCR
       setSalvarDados(vDados)
     } else {
       mostrarMensagem(
@@ -91,202 +166,288 @@ const CampanhaRecorrenteEditCard = ({ data, setSalvarDados }) => {
   useEffect(() => {
     // ** Requisitar listas
     handleClientes()
+    handleTipos()
   }, [])
 
   return (
-    <Row>
-      <Col sm="12">
-        <Card className="mb-1">
-          <div className="d-flex justify-content-between flex-row m-1">
-            <div>
-              <Button.Ripple
-                color="primary"
-                onClick={() => navigate("/campanha_recorrente")}
-              >
-                <CornerUpLeft size={17} />
-              </Button.Ripple>
-            </div>
-            <div>
-              <Button.Ripple color="success" onClick={setDados}>
-                <Check size={17} />
-                <span className="align-middle ms-25">Salvar</span>
-              </Button.Ripple>
-            </div>
-          </div>
-        </Card>
-      </Col>
-      <Col sm="12">
-        <Card className="p-2 pb-0">
-          <Row>
-            <Col md="6" className="mb-2">
-              <Label className="form-label" for="titulo">
-                Título da campanha*
-              </Label>
-              <Input
-                id="titulo"
-                name="titulo"
-                value={vDados?.titulo ?? ""}
-                onChange={handleChange}
-                invalid={campoInvalido(vDados, vErros, "titulo")}
-              />
-            </Col>
-            <Col md="6" className="mb-2">
-              <Label className="form-label" for="mensagem">
-                Tipo de mensagem
-              </Label>
+    <Fragment>
+      <Row>
+        <Col sm="12">
+          <Card className="mb-1">
+            <div className="d-flex justify-content-between flex-row m-1">
               <div>
-                <ButtonGroup>
-                  <Button
-                    color="primary"
-                    onClick={() =>
-                      handleChange({
-                        target: {
-                          name: "tipo",
-                          value: "sms",
-                        },
-                      })
-                    }
-                    active={(vDados.tipo ?? "sms") === "sms"}
-                    outline
-                  >
-                    SMS
-                  </Button>
-                  <Button
-                    color="primary"
-                    onClick={() =>
-                      handleChange({
-                        target: {
-                          name: "tipo",
-                          value: "push",
-                        },
-                      })
-                    }
-                    active={(vDados.tipo ?? "sms") === "push"}
-                    outline
-                  >
-                    Push (App)
-                  </Button>
-                </ButtonGroup>
+                <Button.Ripple
+                  color="primary"
+                  onClick={() => navigate("/campanha_recorrente")}
+                >
+                  <CornerUpLeft size={17} />
+                </Button.Ripple>
               </div>
-            </Col>
-            <Col md="6" className="mb-2">
-              <Label className="form-label" for="cliente_id">
-                Selecione o(s) Cliente(s)*
-              </Label>
-              <Select
-                isClearable
-                id="clientes"
-                noOptionsMessage={() => t("Vazio")}
-                isMulti
-                placeholder={""}
-                className={classnames("react-select", {
-                  "is-invalid": campoInvalido(vDados, vErros, "clientes"),
-                })}
-                classNamePrefix="select"
-                value={vCliente}
-                onChange={(e) => {
-                  setCliente(e)
-                  handleChange({
-                    target: {
-                      name: "clientes",
-                      value: e?.map((item) => item.value.toString()).toString(),
-                    },
-                  })
-                }}
-                options={vListaClientes}
-              />
-            </Col>
-            <Col md="6" className="mb-2">
-              <Label className="form-label" for="frequencia">
-                Frequência
-              </Label>
-              <Select
-                isClearable
-                id="frequencia"
-                noOptionsMessage={() => t("Vazio")}
-                placeholder={t("Selecione...")}
-                value={vFrequencia}
-                options={vListaFrequencia}
-                className="react-select"
-                classNamePrefix="select"
-                onChange={(e) => {
-                  setFrequencia(e)
-                  handleChange({
-                    target: {
-                      name: "frequencia",
-                      value: e?.value,
-                    },
-                  })
-                }}
-              />
-            </Col>
-
-            <Col md="12" className="mb-2">
-              <Label className="form-label" for="mensagem">
-                Mensagem*
-              </Label>
-              <Input
-                value={vDados?.mensagem ?? ""}
-                type="textarea"
-                id="mensagem"
-                name="mensagem"
-                invalid={campoInvalido(vDados, vErros, "mensagem")}
-                style={{ minHeight: "80px" }}
-                disabled={vDados.enviado}
-                onChange={handleChange}
-                className={classnames({
-                  "text-danger": (vDados?.mensagem?.length || 0) > 140,
-                })}
-              />
-              <span
-                className={classnames("textarea-counter-value float-end", {
-                  "bg-danger": (vDados?.mensagem?.length || 0) > 140,
-                })}
-              >
-                {`${vDados?.mensagem?.length || 0}/140`}
-              </span>
-            </Col>
-            <Col md="4" className="mb-2 pt-md-2">
-              <div className="form-check form-switch pt-md-75">
+              <div>
+                <Button.Ripple color="success" onClick={setDados}>
+                  <Check size={17} />
+                  <span className="align-middle ms-25">Salvar</span>
+                </Button.Ripple>
+              </div>
+            </div>
+          </Card>
+        </Col>
+        <Col sm="12">
+          <Card className="p-2 pb-0">
+            <Row>
+              <Col md="4" className="mb-2">
+                <Label className="form-label" for="titulo">
+                  Título da campanha*
+                </Label>
                 <Input
-                  type="switch"
-                  id="ativo"
-                  checked={vDados?.ativo ?? false}
-                  disabled={vDados.enviado}
+                  id="titulo"
+                  name="titulo"
+                  value={vDadosCR?.titulo ?? ""}
+                  onChange={handleChangeCR}
+                  invalid={campoInvalido(vDadosCR, vErrosCR, "titulo")}
+                />
+              </Col>
+              <Col md="3" className="mb-2">
+                <Label className="form-label" for="mensagem">
+                  Tipo de mensagem
+                </Label>
+                <div>
+                  <ButtonGroup>
+                    <Button
+                      color="primary"
+                      onClick={() =>
+                        handleChangeCR({
+                          target: {
+                            name: "tipo",
+                            value: "sms",
+                          },
+                        })
+                      }
+                      active={(vDadosCR.tipo ?? "sms") === "sms"}
+                      outline
+                    >
+                      SMS
+                    </Button>
+                    <Button
+                      color="primary"
+                      onClick={() =>
+                        handleChangeCR({
+                          target: {
+                            name: "tipo",
+                            value: "push",
+                          },
+                        })
+                      }
+                      active={(vDadosCR.tipo ?? "sms") === "push"}
+                      outline
+                    >
+                      Push (App)
+                    </Button>
+                  </ButtonGroup>
+                </div>
+              </Col>
+              <Col md="5" className="mb-2">
+                <Label className="form-label" for="cliente_id">
+                  Selecione um Cliente*
+                </Label>
+                <Select
+                  isClearable
+                  id="cliente_id"
+                  noOptionsMessage={() => t("Vazio")}
+                  placeholder={t("Selecione...")}
+                  value={vCliente}
+                  options={vListaClientes}
+                  isDisabled={vDados.id === 0 && data.cliente_id > 0}
+                  className={classnames("react-select", {
+                    "is-invalid": campoInvalido(
+                      vDados,
+                      vErros,
+                      "cliente_id",
+                      "int"
+                    ),
+                  })}
+                  classNamePrefix="select"
                   onChange={(e) => {
+                    setCliente(e)
                     handleChange({
                       target: {
-                        name: "ativo",
-                        value: e.target.checked,
+                        name: "cliente_id",
+                        value: Number(e?.value),
                       },
                     })
                   }}
                 />
-                <Label for="ativo" className="form-check-label mt-25">
-                  Campanha {vDados?.ativo ? "ativada" : "desativada"}
+              </Col>
+              <Col md="5" className="mb-2">
+                <Label className="form-label" for="campanha_recorrente_tipo_id">
+                  Tipo de campanha recorrente*
                 </Label>
-              </div>
-            </Col>
-
-            {vDados?.ativo ? (
-              <Col md="8" className="mb-2">
-                <Label className="form-label" for="data_hora_agendamento">
-                  Escolha a data e hora que a campanha será enviada
-                </Label>
-                <Input
-                  id="data_hora_agendamento"
-                  name="data_hora_agendamento"
-                  type="datetime-local"
-                  disabled={vDados.enviado}
-                  value={vDados?.data_hora_agendamento ?? ""}
-                  onChange={handleChange}
+                <Select
+                  isClearable
+                  id="campanha_recorrente_tipo_id"
+                  noOptionsMessage={() => t("Vazio")}
+                  placeholder={t("Selecione...")}
+                  value={vTipo}
+                  options={vListaTipo}
+                  className={classnames("react-select", {
+                    "is-invalid": campoInvalido(
+                      vDados,
+                      vErros,
+                      "campanha_recorrente_tipo_id",
+                      "int"
+                    ),
+                  })}
+                  classNamePrefix="select"
+                  onChange={(e) => {
+                    setTipo(e)
+                    handleChange({
+                      target: {
+                        name: "campanha_recorrente_tipo_id",
+                        value: e?.value,
+                      },
+                    })
+                  }}
                 />
               </Col>
-            ) : null}
-          </Row>
-        </Card>
-      </Col>
-    </Row>
+              {vTipo &&
+              vTipo?.codigo !== "checkout" &&
+              vTipo?.codigo !== "welcome" &&
+              vTipo?.codigo !== "welcomeback" ? (
+                <Col md="2" className="mb-2">
+                  <Label className="form-label" for="hora">
+                    Horário do envio
+                  </Label>
+                  <Input
+                    id="hora"
+                    name="hora"
+                    type="time"
+                    value={vDadosCR?.hora ?? ""}
+                    onChange={handleChangeCR}
+                  />
+                </Col>
+              ) : null}
+              {vTipo?.codigo === "birthday" ? (
+                <Col md="5" className="mb-2">
+                  <Label className="form-label" for="frequencia">
+                    Frequência de envio
+                  </Label>
+                  <Select
+                    isClearable
+                    id="frequencia"
+                    noOptionsMessage={() => t("Vazio")}
+                    placeholder={t("Selecione...")}
+                    value={vFrequencia}
+                    options={vListaFrequencia}
+                    className="react-select"
+                    classNamePrefix="select"
+                    onChange={(e) => {
+                      setFrequencia(e)
+                      handleChangeCR({
+                        target: {
+                          name: "frequencia",
+                          value: e?.value,
+                        },
+                      })
+                    }}
+                  />
+                </Col>
+              ) : null}
+              {vTipo ? (
+                <Col md="12">
+                  <Alert
+                    color={vTipo?.cor ?? "primary"}
+                    isOpen={vTipo && true}
+                    className="p-1"
+                  >
+                    <span>
+                      <strong>{vTipo?.label}</strong>
+                      <br />
+                      {vTipo?.descricao}
+                    </span>
+                  </Alert>
+                </Col>
+              ) : null}
+              <Col md="12" className="mb-1">
+                <Label className="form-label" for="mensagem">
+                  Mensagem*
+                </Label>
+                <Input
+                  value={vDadosCR?.mensagem ?? ""}
+                  type="textarea"
+                  id="mensagem"
+                  name="mensagem"
+                  invalid={campoInvalido(vDadosCR, vErrosCR, "mensagem")}
+                  style={{ minHeight: "80px" }}
+                  onChange={handleChangeCR}
+                  className={classnames({
+                    "text-danger": (vDadosCR?.mensagem?.length || 0) > 140,
+                  })}
+                />
+                <span
+                  className={classnames("textarea-counter-value float-end", {
+                    "bg-danger": (vDadosCR?.mensagem?.length || 0) > 140,
+                  })}
+                >
+                  {`${vDadosCR?.mensagem?.length || 0}/140`}
+                </span>
+              </Col>
+              <Col md="4" className="mb-2">
+                <div className="form-check form-switch">
+                  <Input
+                    type="switch"
+                    id="ativo"
+                    checked={vDados?.ativo ?? false}
+                    disabled={vDados.enviado}
+                    onChange={(e) => {
+                      handleChange({
+                        target: {
+                          name: "ativo",
+                          value: e.target.checked,
+                        },
+                      })
+                    }}
+                  />
+                  <Label for="ativo" className="form-check-label mt-25">
+                    Campanha {vDados?.ativo ? "ativada" : "desativada"}
+                  </Label>
+                </div>
+              </Col>
+            </Row>
+          </Card>
+        </Col>
+      </Row>
+      {vDados?.qtd > 0 ? (
+        <Row>
+          <Col md="6" className="offset-md-3">
+            <Card>
+              <h4 className="text-center p-2">Informações sobre o envio</h4>
+              <CardBody>
+                <div className="transaction-item mb-2">
+                  <div className="d-flex justify-content-between align-items-center">
+                    <div>
+                      <h6 className="transaction-title">Valor total</h6>
+                    </div>
+                    <div className="fw-bolder text-secondary text-end">
+                      {formatMoeda(vDados.total_gasto ?? 0)}
+                    </div>
+                  </div>
+                </div>
+                <div className="transaction-item">
+                  <div className="d-flex justify-content-between align-items-center">
+                    <div>
+                      <h6 className="transaction-title">Usuários atingidos</h6>
+                    </div>
+                    <div className="fw-bolder text-success text-end">
+                      {formatInt(vDados.qtd ?? 0)}
+                    </div>
+                  </div>
+                </div>
+              </CardBody>
+            </Card>
+          </Col>
+        </Row>
+      ) : null}
+    </Fragment>
   )
 }
 

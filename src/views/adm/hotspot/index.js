@@ -372,6 +372,11 @@ const HotspotList = () => {
                 <strong className="text-truncate text-muted mb-0">
                   {row.mac}
                 </strong>
+                <div className="text-truncate text-muted mb-0">
+                  {!row.ativo ? (
+                    <Badge color="secondary">Desativado</Badge>
+                  ) : null}
+                </div>
               </Link>
             </div>
           </div>

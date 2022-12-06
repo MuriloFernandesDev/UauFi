@@ -51,6 +51,7 @@ const CardapioProdutoEdit = lazy(() =>
   import("../../views/cardapio_produto/edit")
 )
 const CardapioDigital = lazy(() => import("../../views/cardapio_digital"))
+const Carteira = lazy(() => import("../../views/carteira"))
 
 const AppRoutes = [
   {
@@ -188,6 +189,10 @@ const AppRoutes = [
   {
     element: <BloqueioQuartoEdit />,
     path: "/bloqueio_quarto/:id",
+  },
+  {
+    element: <Carteira />,
+    path: "/carteira",
   },
 ]
 

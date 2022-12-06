@@ -35,21 +35,13 @@ export const getCampanhaRecorrente = createAsyncThunk(
   }
 )
 
-export const deleteCampanhaRecorrente = createAsyncThunk(
-  "campanha_recorrente/deleteCampanhaRecorrente",
-  async (id) => {
-    await api.delete(`/campanha_recorrente/${id}`)
-    return id
-  }
-)
-
-export const getFiltros = async () => {
-  const response = (await api.get(`/filtro/lista_simples`)).data
+export const deleteCampanhaRecorrente = async (id) => {
+  const response = await api.delete(`/campanha_recorrente/${id}`)
   return response
 }
 
-export const testarCampanha = async (dados) => {
-  const response = await api.post("/campanha_recorrente/teste_sms", dados)
+export const getTipos = async () => {
+  const response = (await api.get(`/listas/tipo_campanha_recorrente`)).data
   return response
 }
 

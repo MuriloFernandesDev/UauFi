@@ -20,6 +20,7 @@ import {
   DropdownToggle,
   UncontrolledTooltip,
   UncontrolledDropdown,
+  Badge,
 } from "reactstrap"
 
 // ** Store & Actions
@@ -280,6 +281,12 @@ const CampanhaAgendadaList = () => {
               <h6 className="user-name text-truncate mb-0">{row.nome}</h6>
               <small className="text-truncate text-muted mb-0">
                 {row.cliente ?? ""}
+              </small>
+              <small className="text-truncate text-muted mb-0">
+                {!row.ativo ? (
+                  <Badge color="secondary">Desativada</Badge>
+                ) : null}{" "}
+                {row.enviado ? <Badge color="info">Enviada</Badge> : null}
               </small>
             </Link>
           </div>

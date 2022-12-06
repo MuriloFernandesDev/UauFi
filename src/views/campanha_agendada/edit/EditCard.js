@@ -20,7 +20,7 @@ import {
 import api from "@src/services/api"
 
 // ** Icons
-import { CornerUpLeft, Check, DollarSign } from "react-feather"
+import { CornerUpLeft, Check } from "react-feather"
 import toast from "react-hot-toast"
 import classnames from "classnames"
 
