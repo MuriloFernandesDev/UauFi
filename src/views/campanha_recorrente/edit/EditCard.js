@@ -223,7 +223,7 @@ const CampanhaRecorrenteEditCard = ({ data, setSalvarDados }) => {
                           },
                         })
                       }
-                      active={(vDadosCR.tipo ?? "sms") === "sms"}
+                      active={(vDadosCR?.tipo ?? "sms") === "sms"}
                       outline
                     >
                       SMS
@@ -238,7 +238,7 @@ const CampanhaRecorrenteEditCard = ({ data, setSalvarDados }) => {
                           },
                         })
                       }
-                      active={(vDadosCR.tipo ?? "sms") === "push"}
+                      active={(vDadosCR?.tipo ?? "sms") === "push"}
                       outline
                     >
                       Push (App)
