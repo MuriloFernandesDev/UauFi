@@ -39,6 +39,9 @@
   "Vazio": "Empty",
   "Visitas": "Visits",
   "Exportar": "Export",
+  "Masculino": "Male",
+  "Feminino": "Female",
+  "Outro": "Other",
 
   "mask_telefone": "000 000 000",
   "mask_celular": "000 000 0000",
