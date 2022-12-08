@@ -65,6 +65,9 @@ export const formatMoeda = (
   }
 ) => {
   if (!value) return value
+  if (isNaN(value)) {
+    value = Number(value.replace(".", "").replace(",", "."))
+  }
   return new Intl.NumberFormat("pt-BR", formatting).format(value ?? 0)
 }
 

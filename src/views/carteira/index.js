@@ -1,17 +1,30 @@
 // ** React Imports
 import { Fragment, useState, useEffect, useRef, useContext } from "react"
 
-// ** Store & Actions
-import { useDispatch } from "react-redux"
-
 // ** Third Party Components
-import ReactPaginate from "react-paginate"
 import DataTable from "react-data-table-component"
 import StatsHorizontal from "@components/widgets/stats/StatsHorizontal"
-import { ChevronDown, DollarSign } from "react-feather"
+import {
+  ChevronDown,
+  DollarSign,
+  Trash,
+  MoreVertical,
+  Check,
+} from "react-feather"
 
 // ** Reactstrap Imports
-import { Row, Col, Card, Input, Spinner, Button } from "reactstrap"
+import {
+  Row,
+  Col,
+  Card,
+  Spinner,
+  Badge,
+  Button,
+  DropdownItem,
+  DropdownMenu,
+  DropdownToggle,
+  UncontrolledDropdown,
+} from "reactstrap"
 
 // ** Context
 import { AbilityContext as PermissaoContext } from "@src/utility/context/Can"
@@ -20,21 +33,21 @@ import { AbilityContext as PermissaoContext } from "@src/utility/context/Can"
 import api from "@src/services/api"
 
 // ** Utils
-import { formatDateTime, formatMoeda } from "@utils"
+import { formatDateTime, formatMoeda, mostrarMensagem } from "@utils"
 
 // ** Sidebar
 import Sidebar from "./Sidebar"
 
 import "@styles/react/libs/tables/react-dataTable-component.scss"
 
+// ** Third Party Components
+import Swal from "sweetalert2"
+import withReactContent from "sweetalert2-react-content"
+
+const MySwal = withReactContent(Swal)
+
 // ** Table Header
-const CustomHeader = ({
-  toggleSidebar,
-  handlePerPage,
-  rowsPerPage,
-  handleFilter,
-  searchTerm,
-}) => {
+const CustomHeader = ({ toggleSidebar }) => {
   // ** Context
   const permissao = useContext(PermissaoContext)
 
@@ -43,35 +56,13 @@ const CustomHeader = ({
       <Row>
         <Col xl="6" className="d-flex align-items-center ps-0 mt-1 mb-1">
           <div className="d-flex align-items-center me-2">
-            <label htmlFor="rows-per-page">Mostrar</label>
-            <Input
-              type="select"
-              id="rows-per-page"
-              value={rowsPerPage}
-              onChange={handlePerPage}
-              className="form-control ms-50 pe-3"
-            >
-              <option value="10">10</option>
-              <option value="25">25</option>
-              <option value="50">50</option>
-            </Input>
+            <h5>Créditos adicionados</h5>
           </div>
         </Col>
         <Col
           xl="6"
           className="d-flex align-items-sm-center justify-content-xl-end justify-content-start flex-xl-nowrap flex-wrap flex-sm-row flex-column mt-xl-0 mt-1 pe-0 ps-0"
         >
-          <div className="d-flex align-items-center mb-1 mb-md-0 me-0 me-sm-1 me-md-2">
-            <label htmlFor="txtPesquisa">Pesquisa</label>
-            <Input
-              id="txtPesquisa"
-              className="ms-50 w-100"
-              type="text"
-              value={searchTerm}
-              onChange={(e) => handleFilter(e.target.value)}
-              placeholder="Filtrar..."
-            />
-          </div>
           {permissao.can("create", "minha_carteira") ? (
             <Button
               className="me-0 mb-1 mb-md-0"
@@ -89,15 +80,10 @@ const CustomHeader = ({
 
 const Carteira = () => {
   // ** Store Vars
-  const dispatch = useDispatch()
+  const permissao = useContext(PermissaoContext)
 
   // ** States
-  const [sort, setSort] = useState("desc")
   const [vDados, setDados] = useState(null)
-  const [searchTerm, setSearchTerm] = useState("")
-  const [currentPage, setCurrentPage] = useState(1)
-  const [sortColumn, setSortColumn] = useState("data_cadastro")
-  const [rowsPerPage, setRowsPerPage] = useState(25)
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
   const [vPesquisando, setPesquisando] = useState(false)
@@ -108,13 +94,7 @@ const Carteira = () => {
   const sClienteId = localStorage.getItem("clienteId")
 
   const handlePesquisar = (dados, force) => {
-    if (
-      force ||
-      sort !== dados.sort ||
-      sortColumn !== dados.sortColumn ||
-      searchTerm !== dados.q ||
-      sClienteId !== dados.clienteId
-    ) {
+    if (force || sClienteId !== dados.clienteId) {
       if (vTimeoutPesquisa) {
         clearTimeout(vTimeoutPesquisa.current)
       }
@@ -122,7 +102,7 @@ const Carteira = () => {
         setPesquisando(true)
         dados.clienteId = sClienteId
         api
-          .get("/cliente/carteira")
+          .get("/cliente_credito/carteira")
           .then((res) => {
             setDados(res.data)
             setPesquisando(false)
@@ -136,20 +116,132 @@ const Carteira = () => {
 
   // ** Function to toggle sidebar
   const toggleSidebar = (valor) => {
-    setSidebarOpen(!sidebarOpen)
-    if (sidebarOpen && valor > 0) {
-      handlePesquisar(
-        {
-          sort,
-          sortColumn,
-          q: searchTerm,
-          page: currentPage,
-          perPage: rowsPerPage,
-          clienteId: sClienteId,
-        },
-        true
-      )
+    if (sidebarOpen && valor) {
+      const vDados = {
+        id: 0,
+        cliente_id: 0,
+        valor,
+      }
+      api
+        .post("/cliente_credito/pedir", vDados)
+        .then((response) => {
+          if (response.status === 200) {
+            handlePesquisar(
+              {
+                clienteId: sClienteId,
+              },
+              true
+            )
+          }
+        })
+        .catch((error) => {
+          if (error.response.status === 400) {
+            mostrarMensagem(
+              "Atenção!",
+              "Preencha todos os campos corretamente.",
+              "warning"
+            )
+          } else if (error.response.status === 503) {
+            mostrarMensagem("Ops...", error.response.data, "error")
+          } else {
+            mostrarMensagem(
+              "Erro inesperado",
+              "Por favor, contate um administrador.",
+              "error"
+            )
+          }
+        })
     }
+    setSidebarOpen(!sidebarOpen)
+  }
+
+  const handleAprovar = (id) => {
+    api
+      .post(`/cliente_credito/aprovar/${id}`)
+      .then((response) => {
+        if (response.status === 200) {
+          handlePesquisar(
+            {
+              clienteId: sClienteId,
+            },
+            true
+          )
+        }
+      })
+      .catch((error) => {
+        if (error.response.status === 400) {
+          mostrarMensagem(
+            "Atenção!",
+            "Preencha todos os campos corretamente.",
+            "warning"
+          )
+        } else if (error.response.status === 503) {
+          mostrarMensagem("Ops...", error.response.data, "error")
+        } else {
+          mostrarMensagem(
+            "Erro inesperado",
+            "Por favor, contate um administrador.",
+            "error"
+          )
+        }
+      })
+  }
+
+  const handleRemover = (id) => {
+    api
+      .delete(`/cliente_credito/${id}`)
+      .then((response) => {
+        if (response.status === 200) {
+          handlePesquisar(
+            {
+              clienteId: sClienteId,
+            },
+            true
+          )
+        }
+      })
+      .catch((error) => {
+        if (error.response.status === 400) {
+          mostrarMensagem(
+            "Atenção!",
+            "Preencha todos os campos corretamente.",
+            "warning"
+          )
+        } else if (error.response.status === 503) {
+          mostrarMensagem("Ops...", error.response.data, "error")
+        } else {
+          mostrarMensagem(
+            "Erro inesperado",
+            "Por favor, contate um administrador.",
+            "error"
+          )
+        }
+      })
+  }
+
+  // ** Modal de exclusão
+  const handleDeleteConfirmation = (id) => {
+    return MySwal.fire({
+      title: "Tem certeza?",
+      text: "Sua ação não poderá ser revertida!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Sim, remover!",
+      cancelButtonText: "Cancelar",
+      customClass: {
+        confirmButton: "btn btn-primary",
+        cancelButton: "btn btn-outline-danger ms-1",
+        popup: "animate__animated animate__fadeIn",
+      },
+      hideClass: {
+        popup: "animate__animated animate__zoomOut",
+      },
+      buttonsStyling: false,
+    }).then(async (result) => {
+      if (result.value) {
+        handleRemover(id)
+      }
+    })
   }
 
   // ** Get data on mount
@@ -158,55 +250,12 @@ const Carteira = () => {
       setPesquisando(true)
       handlePesquisar(
         {
-          sort,
-          sortColumn,
-          q: searchTerm,
-          page: currentPage,
-          perPage: rowsPerPage,
           clienteId: sClienteId,
         },
         true
       )
     }
-  }, [dispatch, sort, sortColumn])
-
-  // ** Function in get data on page change
-  const handlePagination = (page) => {
-    setCurrentPage(page.selected + 1)
-    dispatch(
-      getPagina({
-        allData: store.allData,
-        page: page.selected + 1,
-        perPage: rowsPerPage,
-      })
-    )
-  }
-
-  // ** Function in get data on rows per page
-  const handlePerPage = (e) => {
-    const value = parseInt(e.currentTarget.value)
-    setRowsPerPage(value)
-    dispatch(
-      getPagina({
-        allData: store.allData,
-        page: currentPage,
-        perPage: value,
-      })
-    )
-  }
-
-  // ** Function in get data on search query change
-  const handleFilter = (val) => {
-    setSearchTerm(val)
-    handlePesquisar({
-      sort,
-      sortColumn,
-      q: val,
-      page: currentPage,
-      perPage: rowsPerPage,
-      clienteId: sClienteId,
-    })
-  }
+  }, [])
 
   const columns = [
     {
@@ -237,6 +286,11 @@ const Carteira = () => {
         <div className="d-flex justify-content-left align-items-center">
           <div className="d-flex flex-column">
             <small className="mb-0">{row.descricao}</small>
+            {row.data_aprovacao === null ? (
+              <small className="text-truncate text-muted mb-0">
+                <Badge color="warning">Aguardando aprovação</Badge>
+              </small>
+            ) : null}
           </div>
         </div>
       ),
@@ -254,31 +308,56 @@ const Carteira = () => {
     },
   ]
 
-  // ** Custom Pagination
-  const CustomPagination = () => {
-    const count = Number(
-      Math.ceil(vDados?.cliente_credito?.length / rowsPerPage)
-    )
-
-    return (
-      <ReactPaginate
-        previousLabel={""}
-        nextLabel={""}
-        pageCount={count || 1}
-        activeClassName="active"
-        forcePage={currentPage !== 0 ? currentPage - 1 : 0}
-        onPageChange={(page) => handlePagination(page)}
-        pageClassName={"page-item"}
-        nextLinkClassName={"page-link"}
-        nextClassName={"page-item next"}
-        previousClassName={"page-item prev"}
-        previousLinkClassName={"page-link"}
-        pageLinkClassName={"page-link"}
-        containerClassName={
-          "pagination react-paginate justify-content-end my-2 pe-1"
-        }
-      />
-    )
+  if (
+    permissao.can("update", "minha_carteira") ||
+    permissao.can("delete", "minha_carteira")
+  ) {
+    columns.push({
+      name: <div className="text-end w-100">Ações</div>,
+      width: "100px",
+      cell: (row) => (
+        <div className="text-end w-100">
+          <div className="column-action d-inline-flex">
+            <UncontrolledDropdown>
+              <DropdownToggle tag="span">
+                <MoreVertical size={17} className="cursor-pointer" />
+              </DropdownToggle>
+              <DropdownMenu end>
+                {permissao.can("update", "minha_carteira") &&
+                row.data_aprovacao === null ? (
+                  <DropdownItem
+                    tag="a"
+                    href="/"
+                    className="w-100"
+                    onClick={(e) => {
+                      e.preventDefault()
+                      handleAprovar(row.id)
+                    }}
+                  >
+                    <Check size={14} className="me-50" />
+                    <span className="align-middle">Aprovar</span>
+                  </DropdownItem>
+                ) : null}
+                {permissao.can("delete", "minha_carteira") ? (
+                  <DropdownItem
+                    tag="a"
+                    href="/"
+                    className="w-100"
+                    onClick={(e) => {
+                      e.preventDefault()
+                      handleDeleteConfirmation(row.id)
+                    }}
+                  >
+                    <Trash size={14} className="me-50" />
+                    <span className="align-middle">Remover</span>
+                  </DropdownItem>
+                ) : null}
+              </DropdownMenu>
+            </UncontrolledDropdown>
+          </div>
+        </div>
+      ),
+    })
   }
 
   // ** Table data to render
@@ -290,20 +369,7 @@ const Carteira = () => {
     }
   }
 
-  const handleSort = (column, sortDirection) => {
-    setSort(sortDirection)
-    setSortColumn(column.sortField)
-    handlePesquisar({
-      sort: sortDirection,
-      sortColumn: column.sortField,
-      q: searchTerm,
-      page: currentPage,
-      perPage: rowsPerPage,
-      clienteId: sClienteId,
-    })
-  }
-
-  return (
+  return sClienteId?.length > 0 ? (
     <Fragment>
       <div className="app-user-list">
         <Row>
@@ -331,24 +397,15 @@ const Carteira = () => {
             <DataTable
               noHeader
               subHeader
-              sortServer
-              pagination
               noDataComponent=""
               responsive
-              paginationServer
               columns={columns}
-              onSort={handleSort}
               sortIcon={<ChevronDown />}
               className="react-dataTable"
-              paginationComponent={CustomPagination}
               data={dataToRender()}
               subHeaderComponent={
                 <CustomHeader
                   store={vDados?.carteira_cliente}
-                  searchTerm={searchTerm}
-                  rowsPerPage={rowsPerPage}
-                  handleFilter={handleFilter}
-                  handlePerPage={handlePerPage}
                   toggleSidebar={toggleSidebar}
                 />
               }
@@ -358,6 +415,14 @@ const Carteira = () => {
       </div>
       <Sidebar open={sidebarOpen} toggleSidebar={toggleSidebar} />
     </Fragment>
+  ) : (
+    <Card className="mb-0">
+      <Row>
+        <Col md="12" className="m-2 text-center">
+          <h5 className="m-0">Selecione um cliente no campo acima</h5>
+        </Col>
+      </Row>
+    </Card>
   )
 }
 

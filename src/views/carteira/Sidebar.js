@@ -13,6 +13,9 @@ import { useDispatch } from "react-redux"
 // ** Reactstrap Imports
 import { Button, Label, Form, Input } from "reactstrap"
 
+// ** Third Party Components
+import Cleave from "cleave.js/react"
+
 const SidebarCreditos = ({ open, toggleSidebar }) => {
   // ** Store Vars
   const dispatch = useDispatch()
@@ -26,11 +29,11 @@ const SidebarCreditos = ({ open, toggleSidebar }) => {
   // ** Vars
   const { handleSubmit } = useForm()
 
+  const optMoeda = { numeral: true, numeralDecimalMark: ",", delimiter: "." }
+
   // ** Function to handle form submit
   const onSubmit = () => {
-    toggleSidebar({
-      valor: vValor,
-    })
+    toggleSidebar(vValor)
   }
 
   // ** Get data on mount
@@ -52,14 +55,13 @@ const SidebarCreditos = ({ open, toggleSidebar }) => {
           <Label className="form-label" for="data-inicio">
             {t("Valor")}
           </Label>
-
-          <Input
-            id="data-inicio"
-            name="data-inicio"
-            value={vValor}
+          <Cleave
+            className="form-control w-100"
+            value={vValor ?? ""}
             onChange={(e) => {
               setValor(e.target.value)
             }}
+            options={optMoeda}
           />
         </div>
 

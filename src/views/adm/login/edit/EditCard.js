@@ -425,14 +425,26 @@ const ClienteLoginEditCard = ({ data, setSalvarDados }) => {
                       {renderAcesso(
                         "Minha carteira - Visualizar",
                         "minha_carteira",
-                        [1],
+                        [2],
                         "read"
                       )}
                       {renderAcesso(
                         "Minha carteira - Solicitar aumento",
                         "minha_carteira",
-                        [2],
+                        [1],
                         "create"
+                      )}
+                      {renderAcesso(
+                        "Minha carteira - Aprovar crédito",
+                        "minha_carteira",
+                        [3],
+                        "update"
+                      )}
+                      {renderAcesso(
+                        "Minha carteira - Remover crédito",
+                        "minha_carteira",
+                        [4],
+                        "delete"
                       )}
                       {renderAcesso(
                         "Relatórios - Campanha enviada",
