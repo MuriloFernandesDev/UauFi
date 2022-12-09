@@ -357,42 +357,52 @@ const CardapioCategoriaList = () => {
     },
   ]
 
-  return vPesquisando ? (
-    <div className="text-center">
-      <Spinner color="primary" />
-    </div>
+  return sClienteId?.length > 0 ? (
+    vPesquisando ? (
+      <div className="text-center">
+        <Spinner color="primary" />
+      </div>
+    ) : (
+      <div className="invoice-list-wrapper">
+        <Card>
+          <div className="react-dataTable">
+            <DataTable
+              noHeader
+              pagination
+              // sortServer
+              noDataComponent=""
+              paginationServer
+              subHeader={true}
+              columns={columns}
+              responsive={true}
+              onSort={handleSort}
+              data={dataToRender()}
+              sortIcon={<ChevronDown />}
+              className="react-dataTable"
+              defaultSortField="id"
+              paginationDefaultPage={currentPage}
+              paginationComponent={CustomPagination}
+              subHeaderComponent={
+                <CustomHeader
+                  value={value}
+                  rowsPerPage={rowsPerPage}
+                  handleFilter={handleFilter}
+                  handlePerPage={handlePerPage}
+                />
+              }
+            />
+          </div>
+        </Card>
+      </div>
+    )
   ) : (
-    <div className="invoice-list-wrapper">
-      <Card>
-        <div className="react-dataTable">
-          <DataTable
-            noHeader
-            pagination
-            // sortServer
-            noDataComponent=""
-            paginationServer
-            subHeader={true}
-            columns={columns}
-            responsive={true}
-            onSort={handleSort}
-            data={dataToRender()}
-            sortIcon={<ChevronDown />}
-            className="react-dataTable"
-            defaultSortField="id"
-            paginationDefaultPage={currentPage}
-            paginationComponent={CustomPagination}
-            subHeaderComponent={
-              <CustomHeader
-                value={value}
-                rowsPerPage={rowsPerPage}
-                handleFilter={handleFilter}
-                handlePerPage={handlePerPage}
-              />
-            }
-          />
-        </div>
-      </Card>
-    </div>
+    <Card className="mb-0">
+      <Row>
+        <Col md="12" className="m-2 text-center">
+          <h5 className="m-0">Selecione um cliente no campo acima</h5>
+        </Col>
+      </Row>
+    </Card>
   )
 }
 

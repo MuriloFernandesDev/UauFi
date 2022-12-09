@@ -16,11 +16,27 @@ import { campoInvalido, mostrarMensagem } from "@utils"
 import Select from "react-select"
 import { useTranslation } from "react-i18next"
 import "@styles/react/libs/flatpickr/flatpickr.scss"
-import { getHotspot } from "../store"
+import { getFiltros, getHotspot } from "../store"
 
 const vListaTipo = [
   { value: 1, label: "Imagem" },
   { value: 2, label: "Vídeo" },
+]
+
+const vListaFrequencia = [
+  { value: 1, label: "Sempre" },
+  { value: 2, label: "Uma vez por dia para cada usuário" },
+  { value: 3, label: "Uma vez para cada usuário" },
+]
+
+const vListaDiaSemana = [
+  { value: 1, label: "Dom" },
+  { value: 2, label: "Seg" },
+  { value: 3, label: "Ter" },
+  { value: 4, label: "Qua" },
+  { value: 5, label: "Qui" },
+  { value: 6, label: "Sex" },
+  { value: 7, label: "Sab" },
 ]
 
 const PublicidadeEditCard = ({ data, setSalvarDados }) => {
@@ -35,6 +51,31 @@ const PublicidadeEditCard = ({ data, setSalvarDados }) => {
   const [vHotspot, setHotspot] = useState(null)
   const [vTipo, setTipo] = useState(
     data?.tipo ? vListaTipo.filter((item) => item.value === data.tipo)[0] : null
+  )
+  const [vDiaSemana, setDiaSemana] = useState(
+    vListaDiaSemana
+      .filter((item) =>
+        [
+          data.mostra_dom ? 1 : 0,
+          data.mostra_seg ? 2 : 0,
+          data.mostra_ter ? 3 : 0,
+          data.mostra_qua ? 4 : 0,
+          data.mostra_qui ? 5 : 0,
+          data.mostra_sex ? 6 : 0,
+          data.mostra_sab ? 7 : 0,
+        ].includes(item.value)
+      )
+      .map((ret) => ({
+        label: ret.label,
+        value: ret.value,
+      }))
+  )
+  const [vListaFiltros, setListaFiltros] = useState(null)
+  const [vFiltro, setFiltro] = useState(null)
+  const [vFrequencia, setFrequencia] = useState(
+    data?.frequencia
+      ? vListaFrequencia.filter((item) => item.value === data.frequencia)[0]
+      : null
   )
   const [vErros, setErros] = useState({})
   const vCamposObrigatorios = [
@@ -72,6 +113,21 @@ const PublicidadeEditCard = ({ data, setSalvarDados }) => {
               value: ret.value,
             }))
         )
+      }
+    })
+  }
+
+  const handleFiltros = () => {
+    getFiltros().then((res) => {
+      const FiltrosVar = res
+      setListaFiltros(FiltrosVar)
+
+      if (vDados?.id !== undefined) {
+        FiltrosVar?.map((res) => {
+          if (res.value === vDados.filtro_id) {
+            setFiltro({ value: res.value, label: res.label })
+          }
+        })
       }
     })
   }
@@ -193,6 +249,13 @@ const PublicidadeEditCard = ({ data, setSalvarDados }) => {
     })
 
     if (vCamposOK) {
+      vDados.mostra_dom = vDiaSemana.some((item) => item.value === 1)
+      vDados.mostra_seg = vDiaSemana.some((item) => item.value === 2)
+      vDados.mostra_ter = vDiaSemana.some((item) => item.value === 3)
+      vDados.mostra_qua = vDiaSemana.some((item) => item.value === 4)
+      vDados.mostra_qui = vDiaSemana.some((item) => item.value === 5)
+      vDados.mostra_sex = vDiaSemana.some((item) => item.value === 6)
+      vDados.mostra_sab = vDiaSemana.some((item) => item.value === 7)
       setSalvarDados(vDados)
     } else {
       mostrarMensagem(
@@ -207,6 +270,7 @@ const PublicidadeEditCard = ({ data, setSalvarDados }) => {
 
   useEffect(() => {
     // ** Requisitar listas
+    handleFiltros()
     handleHotspots()
   }, [])
 
@@ -239,7 +303,7 @@ const PublicidadeEditCard = ({ data, setSalvarDados }) => {
           <Fragment>
             <Card className="mb-0">
               <Row>
-                <Col md="6" className="mb-2">
+                <Col md="12" className="mb-2">
                   <Label className="form-label" for="nome">
                     Nome da publicidade*
                   </Label>
@@ -252,7 +316,7 @@ const PublicidadeEditCard = ({ data, setSalvarDados }) => {
                   />
                 </Col>
 
-                <Col md="6" className="mb-2">
+                <Col md="8" className="mb-2">
                   <Label className="form-label" for="extra_hotspot_id">
                     Selecione o(s) Hotspot(s)*
                   </Label>
@@ -283,6 +347,71 @@ const PublicidadeEditCard = ({ data, setSalvarDados }) => {
                       })
                     }}
                     options={vListaHotspots}
+                  />
+                </Col>
+                <Col md="4" className="mb-2">
+                  <Label className="form-label" for="filtro_id">
+                    Filtro
+                  </Label>
+                  <Select
+                    isClearable
+                    id="filtro_id"
+                    noOptionsMessage={() => t("Vazio")}
+                    placeholder={t("Selecione...")}
+                    value={vFiltro}
+                    options={vListaFiltros}
+                    className="react-select"
+                    classNamePrefix="select"
+                    onChange={(e) => {
+                      setFiltro(e)
+                      handleChange({
+                        target: {
+                          name: "filtro_id",
+                          value: Number(e?.value),
+                        },
+                      })
+                    }}
+                  />
+                </Col>
+                <Col md="8" className="mb-2">
+                  <Label className="form-label" for="dia_semana">
+                    Dia da semana
+                  </Label>
+                  <Select
+                    isClearable
+                    id="dia_semana"
+                    isMulti={true}
+                    noOptionsMessage={() => t("Vazio")}
+                    value={vDiaSemana}
+                    placeholder={"Todos os dias"}
+                    className="react-select"
+                    classNamePrefix="select"
+                    options={vListaDiaSemana}
+                    onChange={(e) => setDiaSemana(e)}
+                  />
+                </Col>
+                <Col md="4" className="mb-2">
+                  <Label className="form-label" for="frequencia">
+                    Frequência
+                  </Label>
+                  <Select
+                    isClearable
+                    id="frequencia"
+                    noOptionsMessage={() => t("Vazio")}
+                    placeholder={t("Selecione...")}
+                    className="react-select"
+                    classNamePrefix="select"
+                    value={vFrequencia}
+                    options={vListaFrequencia}
+                    onChange={(e) => {
+                      setFrequencia(e)
+                      handleChange({
+                        target: {
+                          name: "frequencia",
+                          value: e?.value,
+                        },
+                      })
+                    }}
                   />
                 </Col>
                 <Col md="3" className="mb-2">

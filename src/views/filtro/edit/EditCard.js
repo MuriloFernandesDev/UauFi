@@ -44,11 +44,13 @@ const FiltroEditCard = ({ data, setSalvarDados }) => {
   // ** States
   const [vDados, setData] = useState(data)
   const [vGenero, setGenero] = useState(null)
+  const [vRespostaCaptive, setRespostaCaptive] = useState(null)
   const [vEstado, setEstado] = useState(null)
   const [vCidade, setCidade] = useState(null)
   const [vCliente, setCliente] = useState(null)
 
   const [vListaGeneros, setListaGenero] = useState(null)
+  const [vListaRespostaCaptive, setListaRespostaCaptive] = useState(null)
   const [vListaEstados, setListaEstados] = useState(null)
   const [vListaCidades, setListaCidades] = useState(null)
   const [vListaClientes, setListaClientes] = useState(null)
@@ -147,6 +149,22 @@ const FiltroEditCard = ({ data, setSalvarDados }) => {
       })
   }
 
+  const getPesquisa = () => {
+    return api.get("/pesquisa_captive/lista_resposta").then((res) => {
+      setListaRespostaCaptive(res.data)
+
+      //Selecionar o item no componente
+      if (data?.pesquisa_resposta && true) {
+        const vArray = data?.pesquisa_resposta?.split(",").map((item) => item)
+        setRespostaCaptive(
+          res.data
+            ?.filter((item) => vArray?.includes(item.value))
+            .map((item) => item)
+        )
+      }
+    })
+  }
+
   const setDados = () => {
     let vCamposOK = true
     vCamposObrigatorios.forEach((campo) => {
@@ -179,6 +197,7 @@ const FiltroEditCard = ({ data, setSalvarDados }) => {
       handleGenero()
     }
     getClientes()
+    getPesquisa()
   }, [])
 
   return (
@@ -326,7 +345,56 @@ const FiltroEditCard = ({ data, setSalvarDados }) => {
                     }}
                   />
                 </Col>
-
+                <Col md="6" className="mb-2 pt-2">
+                  <div className="form-check form-switch">
+                    <Input
+                      type="switch"
+                      id="retornante"
+                      checked={vDados?.retornante ?? false}
+                      disabled={vDados.id > 0}
+                      onChange={(e) => {
+                        handleChange({
+                          target: {
+                            name: "retornante",
+                            value: e.target.checked,
+                          },
+                        })
+                      }}
+                    />
+                    <Label for="retornante" className="form-check-label mt-25">
+                      Usuário retornante (a partir da segunda visita)
+                    </Label>
+                  </div>
+                </Col>
+                <Col md="6" className="mb-2">
+                  <Label className="form-label" for="genero">
+                    Usuários que selecionaram uma ou mais opções na pesquisa do
+                    captive portal
+                  </Label>
+                  <Select
+                    isClearable
+                    id="pesquisa_resposta"
+                    isMulti={true}
+                    noOptionsMessage={() => t("Vazio")}
+                    value={vRespostaCaptive}
+                    placeholder={t("Selecione...")}
+                    className="react-select"
+                    classNamePrefix="select"
+                    isDisabled={vDados?.id > 0}
+                    options={vListaRespostaCaptive}
+                    onChange={(e) => (
+                      setRespostaCaptive(e),
+                      handleChange({
+                        target: {
+                          name: "pesquisa_resposta",
+                          value: e
+                            ?.map((item) => item.value.toString())
+                            .toString(),
+                        },
+                      })
+                    )}
+                  />
+                </Col>
                 <Col lg="12">
                   <Row>
                     {!vDados.id ? (

@@ -35,13 +35,10 @@ const CardNovosCad = (props) => {
     },
     stroke: {
       curve: "smooth",
-      dashArray: [0, 12],
-      width: [4, 3],
+      width: [4],
     },
-    legend: {
-      show: false,
-    },
-    colors: ["#d0ccff", "#ebe9f1"],
+
+    colors: ["#d0ccff"],
     dataLabels: {
       enabled: true,
       formatter(val) {
@@ -71,7 +68,7 @@ const CardNovosCad = (props) => {
       labels: {
         style: {
           colors: "#b9b9c3",
-          fontSize: "1rem",
+          fontSize: "0.8rem",
         },
       },
       axisTicks: {
@@ -82,15 +79,16 @@ const CardNovosCad = (props) => {
         show: false,
       },
       tickPlacement: "on",
+      tickAmount: 10,
     },
     yaxis: {
       tickAmount: 5,
       labels: {
         style: {
           colors: "#b9b9c3",
-          fontSize: "1rem",
+          fontSize: "0.8rem",
         },
-        show: false,
+        show: true,
         formatter(val) {
           return new Intl.NumberFormat().format(val)
         },
@@ -104,15 +102,11 @@ const CardNovosCad = (props) => {
         left: 20,
       },
     },
-    tooltip: {
-      custom() {
-        return null
-      },
-    },
   }
 
   const vSeries = [
     {
+      name: "",
       data:
         props.dados?.length > 0 ? props.dados?.map(({ value }) => value) : [],
     },
@@ -148,7 +142,7 @@ const CardNovosCad = (props) => {
                 options={vOptions}
                 series={vSeries}
                 type="line"
-                height={330}
+                height={300}
               />
             ) : null
           ) : (

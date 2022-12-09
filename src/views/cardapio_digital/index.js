@@ -51,6 +51,9 @@ const CardapioProdutoCard = () => {
   const [activeList, setActiveLIst] = useState("0")
   const [active, setActive] = useState("1")
 
+  // ** Guardar o Cliente selecionado para atualizar a página caso mude
+  const sClienteId = localStorage.getItem("clienteId")
+
   const toggleList = (list) => {
     if (activeList !== list) {
       setActiveLIst(list)
@@ -230,7 +233,7 @@ const CardapioProdutoCard = () => {
     getDados()
   }, [])
 
-  return (
+  return sClienteId?.length > 0 ? (
     <Row>
       <Col sm="12">
         <Card className="p-2 pb-0">
@@ -358,18 +361,18 @@ const CardapioProdutoCard = () => {
                 </Col>
               </Row>
             </Card>
-          ) : (
-            <Card className="mb-0">
-              <Row>
-                <Col md="12" className="mb-2 text-center">
-                  <h5 className="m-0">Selecione um cliente no campo acima</h5>
-                </Col>
-              </Row>
-            </Card>
-          )}
+          ) : null}
         </Card>
       </Col>
     </Row>
+  ) : (
+    <Card className="mb-0">
+      <Row>
+        <Col md="12" className="m-2 text-center">
+          <h5 className="m-0">Selecione um cliente no campo acima</h5>
+        </Col>
+      </Row>
+    </Card>
   )
 }
 

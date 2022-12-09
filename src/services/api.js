@@ -20,6 +20,7 @@ api.interceptors.request.use(
     //Enviar Cliente selecionado
     if (clienteId) {
       config.headers["cliente_id"] = clienteId.value
+      config.headers["hotspot_id"] = clienteId.hs_id
     }
 
     const vLang = localStorage.getItem("i18nextLng")

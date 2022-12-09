@@ -28,7 +28,7 @@ const OptionComponent = ({ data, ...props }) => {
         <Avatar
           className="my-0 me-1 img-proporcional"
           size="sm"
-          img={data?.foto?.lengt > 0 ? data.foto : defaultAvatar}
+          img={data?.foto?.length > 0 ? data.foto : defaultAvatar}
         />
         <div className="d-flex flex-column">
           <h6 className="user-name text-truncate mb-0">{data.email}</h6>

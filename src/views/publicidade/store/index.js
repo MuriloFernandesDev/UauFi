@@ -40,6 +40,11 @@ export const getHotspot = async () => {
   return response
 }
 
+export const getFiltros = async () => {
+  const response = (await api.get(`/filtro/lista_simples`)).data
+  return response
+}
+
 export const publicidadeSlice = createSlice({
   name: "publicidade",
   initialState: {

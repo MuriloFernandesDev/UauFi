@@ -13,13 +13,23 @@ import api from "@src/services/api"
 // ** Store & Actions
 import { useDispatch } from "react-redux"
 import { getBookmarks } from "@store/navbar"
-
-import Select from "react-select"
+import Select, { components } from "react-select"
 
 // ** Hooks
 import { useClienteId } from "@hooks/useClienteId"
 
 import { useTranslation } from "react-i18next"
+
+const OptionComponent = ({ data, ...props }) => {
+  return (
+    <components.Option {...props}>
+      <div>
+        <strong>{data.nome}</strong>
+      </div>
+      <div>{data.hs_nome}</div>
+    </components.Option>
+  )
+}
 
 const NavbarBookmarks = (props) => {
   // ** Props
@@ -37,7 +47,7 @@ const NavbarBookmarks = (props) => {
   const [clienteId, setClienteId] = useClienteId()
 
   const getClientes = () => {
-    return api.get("/cliente/lista_simples/").then((res) => {
+    return api.get("/cliente/lista_select_topo").then((res) => {
       setListaClientes(res.data)
       setMostrarListaClientes(res.data.length > 1)
       if (res.data.length === 1) {
@@ -78,6 +88,9 @@ const NavbarBookmarks = (props) => {
               value={clienteId}
               onChange={(e) => {
                 setClienteId(e)
+              }}
+              components={{
+                Option: OptionComponent,
               }}
               options={vListaClientes}
             />
