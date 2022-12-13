@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom"
 import classnames from "classnames"
 
 // ** Reactstrap
-import { Row, Col, Card, Input, Button, Label } from "reactstrap"
+import { Row, Col, Card, Input, Button, Label, Badge } from "reactstrap"
 
 // ** Icons
 import { CornerUpLeft, Check, Move, Trash, Plus } from "react-feather"
@@ -82,11 +82,11 @@ const PlanoEditCard = ({ data, setSalvarDados }) => {
   }
 
   // ** Organização da informação
-  const handleChangeItem = (v, i) => {
+  const handleChangeItem = (v, i, n) => {
     const { itens: vItem } = vDados
     vItem[i] = {
       ...vItem[i],
-      texto: v,
+      [n]: v,
     }
     setData((prevState) => ({
       ...prevState,
@@ -215,16 +215,50 @@ const PlanoEditCard = ({ data, setSalvarDados }) => {
                       {vDados?.id > 0 ? null : <Move className="drag-icon" />}
                       <div className="w-100 pe-2">
                         {vDados?.id > 0 ? (
-                          <span className="text-body">{item.texto ?? ""}</span>
+                          <span className="text-body">
+                            {item.texto ?? ""}{" "}
+                            {item.texto_livre ? (
+                              <Badge color="secondary">Opção texto livre</Badge>
+                            ) : null}
+                          </span>
                         ) : (
-                          <Input
-                            className="w-100"
-                            value={item.texto ?? ""}
-                            placeholder="Digite a opção de resposta aqui..."
-                            onChange={(e) => {
-                              handleChangeItem(e?.target.value, index)
-                            }}
-                          />
+                          <Row>
+                            <Col md="8">
+                              <Input
+                                value={item.texto ?? ""}
+                                placeholder="Digite a opção de resposta aqui..."
+                                onChange={(e) => {
+                                  handleChangeItem(
+                                    e?.target.value,
+                                    index,
+                                    "texto"
+                                  )
+                                }}
+                              />
+                            </Col>
+                            <Col md="4" className="pt-50">
+                              <div className="form-check form-switch">
+                                <Input
+                                  type="switch"
+                                  id={`texto_livre${item.id}-${index}`}
+                                  checked={item.texto_livre ?? false}
+                                  onChange={(e) => {
+                                    handleChangeItem(
+                                      e?.target.checked,
+                                      index,
+                                      "texto_livre"
+                                    )
+                                  }}
+                                />
+                                <Label
+                                  for={`texto_livre${item.id}-${index}`}
+                                  className="form-check-label mt-25"
+                                >
+                                  Opção texto livre
+                                </Label>
+                              </div>
+                            </Col>
+                          </Row>
                         )}
                       </div>
                     </div>

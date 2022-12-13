@@ -138,7 +138,7 @@ const EventoEditCard = ({ data, setSalvarDados }) => {
                   <Row>
                     <Col lg="6" md="6" className="mb-2">
                       <Label className="form-label" for="nome">
-                        Nome do evento*
+                        Nome*
                       </Label>
                       <Input
                         id="nome"
@@ -167,7 +167,7 @@ const EventoEditCard = ({ data, setSalvarDados }) => {
                   <Row>
                     <Col lg="6" md="6" className="mb-2">
                       <Label className="form-label" for="data_inicio">
-                        Início do evento*
+                        Data de início*
                       </Label>
                       <Input
                         id="data_inicio"
@@ -181,7 +181,7 @@ const EventoEditCard = ({ data, setSalvarDados }) => {
 
                     <Col lg="6" md="6" className="mb-2">
                       <Label className="form-label" for="data_fim">
-                        Fim do evento*
+                        Data final*
                       </Label>
 
                       <Input
@@ -276,7 +276,9 @@ const EventoEditCard = ({ data, setSalvarDados }) => {
                           }}
                         />
                         <Label for="ativo" className="form-check-label mt-25">
-                          {vDados?.ativo ? "Evento ativo" : "Evento desativado"}
+                          {vDados?.ativo
+                            ? "Voucher ativo"
+                            : "Voucher desativado"}
                         </Label>
                       </div>
                     </Col>

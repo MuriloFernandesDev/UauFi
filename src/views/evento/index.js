@@ -70,7 +70,7 @@ const CustomHeader = ({ handleFilter, value, handlePerPage, rowsPerPage }) => {
             color="primary"
             disabled={!permissao.can("create", "evento")}
           >
-            Novo evento
+            Novo voucher
           </Button>
         </Col>
         <Col

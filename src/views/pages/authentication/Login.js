@@ -185,14 +185,14 @@ const Login = ({ s }) => {
             <CardTitle tag="h3" className="fw-bold mb-1">
               Bem-vindo ao seu dashboard!
             </CardTitle>
-            <CardText className="mb-2">Entre usando seu email e senha</CardText>
+            <CardText className="mb-2">Entre usando seu login e senha</CardText>
             <Form
               className="auth-login-form mt-2"
               onSubmit={handleSubmit(onSubmit)}
             >
               <div className="mb-1">
                 <Label className="form-label" for="login-email">
-                  E-mail
+                  Login
                 </Label>
                 <Controller
                   id="loginEmail"
@@ -201,8 +201,8 @@ const Login = ({ s }) => {
                   render={({ field }) => (
                     <Input
                       autoFocus
-                      type="email"
-                      placeholder="email@empresa.com"
+                      type="text"
+                      placeholder="seu login"
                       invalid={errors.loginEmail && true}
                       {...field}
                     />

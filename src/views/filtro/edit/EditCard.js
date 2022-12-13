@@ -235,7 +235,6 @@ const FiltroEditCard = ({ data, setSalvarDados }) => {
                   </Label>
                   <Input
                     id="nome"
-                    disabled={vDados.id > 0}
                     name="nome"
                     value={vDados?.nome ?? ""}
                     onChange={handleChange}
@@ -286,7 +285,6 @@ const FiltroEditCard = ({ data, setSalvarDados }) => {
                     placeholder={t("Selecione...")}
                     className="react-select"
                     classNamePrefix="select"
-                    isDisabled={vDados?.id > 0}
                     options={vListaGeneros}
                     onChange={(e) => (
                       setGenero(e),
@@ -317,7 +315,6 @@ const FiltroEditCard = ({ data, setSalvarDados }) => {
                         : [18, 100]
                     }
                     step={1}
-                    disabled={vDados.id > 0}
                     tooltips={true}
                     style={{ zIndex: 0 }}
                     format={wNumb({
@@ -351,7 +348,6 @@ const FiltroEditCard = ({ data, setSalvarDados }) => {
                       type="switch"
                       id="retornante"
                       checked={vDados?.retornante ?? false}
-                      disabled={vDados.id > 0}
                       onChange={(e) => {
                         handleChange({
                           target: {
@@ -380,7 +376,6 @@ const FiltroEditCard = ({ data, setSalvarDados }) => {
                     placeholder={t("Selecione...")}
                     className="react-select"
                     classNamePrefix="select"
-                    isDisabled={vDados?.id > 0}
                     options={vListaRespostaCaptive}
                     onChange={(e) => (
                       setRespostaCaptive(e),
@@ -440,9 +435,7 @@ const FiltroEditCard = ({ data, setSalvarDados }) => {
                         isClearable
                         className="react-select"
                         classNamePrefix="select"
-                        isDisabled={
-                          vDados?.id > 0 || (vDados?.estado_id ?? 0) === 0
-                        }
+                        isDisabled={(vDados?.estado_id ?? 0) === 0}
                         value={
                           vDados.cidades
                             ? vDados.cidades.map((i) => ({
@@ -483,7 +476,6 @@ const FiltroEditCard = ({ data, setSalvarDados }) => {
                         name="app-data-inicial"
                         type="date"
                         value={vDados?.app_data_inicial ?? ""}
-                        disabled={vDados.id > 0}
                         onChange={(e) => {
                           handleChange({
                             target: {
@@ -504,7 +496,6 @@ const FiltroEditCard = ({ data, setSalvarDados }) => {
                         name="app-data-final"
                         type="date"
                         value={vDados?.app_data_final ?? ""}
-                        disabled={vDados.id > 0}
                         onChange={(e) => {
                           handleChange({
                             target: {
@@ -532,7 +523,6 @@ const FiltroEditCard = ({ data, setSalvarDados }) => {
                         name="visita-data-inicial"
                         type="date"
                         value={vDados?.visita_data_inicial ?? ""}
-                        disabled={vDados.id > 0}
                         onChange={(e) => {
                           handleChange({
                             target: {
@@ -553,7 +543,6 @@ const FiltroEditCard = ({ data, setSalvarDados }) => {
                         name="visita-data-final"
                         type="date"
                         value={vDados?.visita_data_final ?? ""}
-                        disabled={vDados.id > 0}
                         onChange={(e) => {
                           handleChange({
                             target: {
