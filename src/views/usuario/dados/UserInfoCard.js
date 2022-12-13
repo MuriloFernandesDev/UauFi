@@ -123,7 +123,7 @@ const UserInfoCard = ({ dados }) => {
           initials
           color={"light-primary"}
           className="rounded mt-3 mb-2"
-          content={dados.nome}
+          content={dados?.nome ?? ""}
           contentStyles={{
             borderRadius: 0,
             fontSize: "calc(48px)",
