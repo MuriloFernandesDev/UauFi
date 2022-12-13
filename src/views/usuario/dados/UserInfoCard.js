@@ -102,11 +102,7 @@ const UserInfoCard = ({ dados }) => {
     handleSubmit,
     formState: { errors },
   } = useForm({
-    defaultValues: {
-      username: dados.nome,
-      lastName: dados.nome.split(" ")[1],
-      firstName: dados.nome.split(" ")[0],
-    },
+    defaultValues: {},
   })
 
   // ** render user img
