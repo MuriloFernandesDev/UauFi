@@ -15,8 +15,6 @@ import withReactContent from "sweetalert2-react-content"
 // ** React Imports
 import { useEffect, useState } from "react"
 
-import PerfectScrollbar from "react-perfect-scrollbar"
-
 // ** Store & Actions
 import { getListaHotspot } from "../store"
 import { useDispatch } from "react-redux"
@@ -186,21 +184,14 @@ const HotspotsVisitados = (dados) => {
       >
         {!vCarregando ? (
           vDados?.length > 0 ? (
-            <PerfectScrollbar
-              className="scrollable-container media-list"
-              options={{
-                wheelPropagation: false,
-              }}
-            >
-              <DataTable
-                noHeader
-                responsive
-                columns={columns}
-                data={vDados}
-                className="react-dataTable"
-                sortIcon={<ChevronDown size={10} />}
-              />
-            </PerfectScrollbar>
+            <DataTable
+              noHeader
+              responsive
+              columns={columns}
+              data={vDados}
+              className="react-dataTable"
+              sortIcon={<ChevronDown size={10} />}
+            />
           ) : null
         ) : (
           <div className="text-center mt-3">

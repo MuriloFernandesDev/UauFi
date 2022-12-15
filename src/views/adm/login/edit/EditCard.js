@@ -401,7 +401,7 @@ const ClienteLoginEditCard = ({ data, setSalvarDados }) => {
                       )}
                       {renderAcesso("Bloqueio de quarto", "bloqueio_quarto")}
                       {renderAcesso("Cardápio digital", "cardapio_digital")}
-                      {renderAcesso("Evento", "evento")}
+                      {renderAcesso("Voucher", "evento")}
                       {renderAcesso("Pesquisa", "adm_pesquisa")}
                       {renderAcesso("Publicidade", "adm_publicidade")}
                       {renderAcesso("Filtros", "filtro_campanha")}

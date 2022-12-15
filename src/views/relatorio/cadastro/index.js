@@ -145,7 +145,7 @@ const ExportarEmail = () => {
     setProcessando5(true)
     return api
       .get(
-        `/conexao/qtd_conexoes/${vDados.data_inicial}/${vDados.data_final}/${p}`
+        `/conexao/qtd_usuario_periodo/${vDados.data_inicial}/${vDados.data_final}/${p}`
       )
       .then((res) => {
         setProcessando5(false)

@@ -7,7 +7,7 @@ import Avatar from "@components/avatar"
 // ** Reactstrap Imports
 import { Table, Card, Spinner } from "reactstrap"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
 
 // ** Default Avatar Image
 import defaultAvatar from "@src/assets/images/avatars/avatar-blank.png"
@@ -24,33 +24,30 @@ const CardUltimosUsuarios = () => {
   const [vDados, setDados] = useState(null)
   const [vProcessando, setProcessando] = useState(true)
 
-  // const vTimeoutPesquisa = useRef()
+  const vTimeoutPesquisa = useRef()
 
-  const getDados = () => {
-    // if (vTimeoutPesquisa) {
-    //   clearTimeout(vTimeoutPesquisa.current)
-    // }
-    // vTimeoutPesquisa.current = setTimeout(
-    //   () => {
-    setProcessando(true)
-    return api
-      .get("/usuario/ultimas_conexoes")
-      .then((res) => {
-        setProcessando(false)
-        setDados(res.data)
-      })
-      .catch(() => {
-        setProcessando(false)
-        setDados(null)
-      })
-    //   },
-    //   vDados ? 60000 : 1
-    // )
+  const getDados = (tempo) => {
+    if (vTimeoutPesquisa) {
+      clearTimeout(vTimeoutPesquisa.current)
+    }
+    vTimeoutPesquisa.current = setTimeout(() => {
+      setProcessando(true)
+      return api
+        .get("/usuario/ultimas_conexoes")
+        .then((res) => {
+          setProcessando(false)
+          setDados(res.data)
+        })
+        .catch(() => {
+          setProcessando(false)
+          setDados(null)
+        })
+    }, tempo)
   }
 
   useEffect(() => {
     // ** Requisitar lista
-    getDados()
+    getDados(vDados ? 60000 : 1)
   }, [])
 
   const renderData = () => {
@@ -121,7 +118,7 @@ const CardUltimosUsuarios = () => {
                   className="text-body m-0"
                   onClick={(e) => {
                     e.preventDefault()
-                    getDados()
+                    getDados(1)
                   }}
                 >
                   <RefreshCw className="font-medium-3 text-success cursor-pointer" />
