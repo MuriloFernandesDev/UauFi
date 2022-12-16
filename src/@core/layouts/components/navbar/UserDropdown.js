@@ -1,5 +1,5 @@
 // ** React Imports
-import { Link, useNavigate } from "react-router-dom"
+import { Link } from "react-router-dom"
 import { useEffect, useState, useContext } from "react"
 
 // ** Custom Components
@@ -9,11 +9,7 @@ import Avatar from "@components/avatar"
 import { useTranslation } from "react-i18next"
 
 // ** Utils
-import {
-  isUserLoggedIn,
-  getUserData,
-  getHomeRouteForLoggedInUser,
-} from "@utils"
+import { isUserLoggedIn, getUserData } from "@utils"
 
 // ** Context
 import { AbilityContext } from "@src/utility/context/Can"
@@ -50,7 +46,6 @@ const UserDropdown = (props) => {
   // ** Store Vars
   const dispatch = useDispatch()
   const ability = useContext(AbilityContext)
-  const navigate = useNavigate()
 
   // ** Hooks
   const { t } = useTranslation()
@@ -84,7 +79,7 @@ const UserDropdown = (props) => {
   const handleImpersonar = (dados) => {
     dispatch(handleLogin(dados))
     ability.update(dados.ability)
-    navigate(getHomeRouteForLoggedInUser(dados.role))
+    //navigate(getHomeRouteForLoggedInUser(dados.role))
     window.location.reload(false)
   }
 
