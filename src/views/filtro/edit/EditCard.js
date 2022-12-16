@@ -111,29 +111,23 @@ const FiltroEditCard = ({ data, setSalvarDados }) => {
     })
   }
 
-  const handleAlcance = () => {
-    setVerificandoAlcance(true)
-    return api
-      .post("/filtro/alcance", vDados)
-      .then((res) => {
-        setAlcance(res.data)
-        setVerificandoAlcance(false)
-      })
-      .catch(() => {
-        setAlcance(null)
-        setVerificandoAlcance(false)
-      })
-  }
-
   // ** Listagem de Estados e cidades
   const getEstados = () => {
     return api.get("/estado").then((res) => {
-      setListaEstados(
-        res.data.map((ret) => ({ label: ret.nome, value: ret.id }))
-      )
+      const vArrayEstado = res.data.map((ret) => ({
+        label: ret.nome,
+        value: ret.id,
+      }))
+      setListaEstados(vArrayEstado)
 
-      //Limpar o estado para setar o select
-      setEstado(null)
+      //Selecionar o item no componente
+      if (data?.estado_id > 0) {
+        setEstado(
+          vArrayEstado?.filter(
+            (item) => item.value === Number(data?.estado_id)
+          )[0]
+        )
+      }
     })
   }
 
@@ -165,7 +159,7 @@ const FiltroEditCard = ({ data, setSalvarDados }) => {
     })
   }
 
-  const setDados = () => {
+  const setDados = (somente_validar) => {
     let vCamposOK = true
     vCamposObrigatorios.forEach((campo) => {
       if (campoInvalido(vDados, null, campo.nome, campo.tipo)) {
@@ -178,7 +172,10 @@ const FiltroEditCard = ({ data, setSalvarDados }) => {
     })
 
     if (vCamposOK) {
-      setSalvarDados(vDados)
+      if (!somente_validar) {
+        setSalvarDados(vDados)
+      }
+      return true
     } else {
       mostrarMensagem(
         "Atenção!",
@@ -188,14 +185,28 @@ const FiltroEditCard = ({ data, setSalvarDados }) => {
     }
   }
 
+  const handleAlcance = () => {
+    if (setDados(true)) {
+      setVerificandoAlcance(true)
+      return api
+        .post("/filtro/alcance/", vDados)
+        .then((res) => {
+          setAlcance(res.data)
+          setVerificandoAlcance(false)
+        })
+        .catch(() => {
+          setAlcance(null)
+          setVerificandoAlcance(false)
+        })
+    }
+  }
+
   // ** Get filter on mount based on id
 
   useEffect(() => {
     // ** Requisitar listas
-    if (vListaEstados === null) {
-      getEstados()
-      handleGenero()
-    }
+    getEstados()
+    handleGenero()
     getClientes()
     getPesquisa()
   }, [])
@@ -215,7 +226,7 @@ const FiltroEditCard = ({ data, setSalvarDados }) => {
                 </Button.Ripple>
               </div>
               <div>
-                <Button.Ripple color="success" onClick={setDados}>
+                <Button.Ripple color="success" onClick={() => setDados(false)}>
                   <Check size={17} />
                   <span className="align-middle ms-25">Salvar</span>
                 </Button.Ripple>
@@ -342,7 +353,7 @@ const FiltroEditCard = ({ data, setSalvarDados }) => {
                     }}
                   />
                 </Col>
-                <Col md="6" className="mb-2 pt-2">
+                <Col md="6" className="mb-2">
                   <div className="form-check form-switch">
                     <Input
                       type="switch"
@@ -358,14 +369,34 @@ const FiltroEditCard = ({ data, setSalvarDados }) => {
                       }}
                     />
                     <Label for="retornante" className="form-check-label mt-25">
-                      Usuário retornante (a partir da segunda visita)
+                      Somente usuário retornante (a partir da segunda visita)
                     </Label>
                   </div>
                 </Col>
                 <Col md="6" className="mb-2">
+                  <div className="form-check form-switch">
+                    <Input
+                      type="switch"
+                      id="online"
+                      checked={vDados?.online ?? false}
+                      onChange={(e) => {
+                        handleChange({
+                          target: {
+                            name: "online",
+                            value: e.target.checked,
+                          },
+                        })
+                      }}
+                    />
+                    <Label for="online" className="form-check-label mt-25">
+                      Somente usuário online no momento
+                    </Label>
+                  </div>
+                </Col>
+                <Col md="12" className="mb-2">
                   <Label className="form-label" for="genero">
-                    Usuários que selecionaram uma ou mais opções na pesquisa do
-                    captive portal
+                    Atingir somente usuários que selecionaram uma ou mais opções
+                    abaixo na pesquisa do captive portal
                   </Label>
                   <Select
                     isClearable
@@ -392,36 +423,32 @@ const FiltroEditCard = ({ data, setSalvarDados }) => {
                 </Col>
                 <Col lg="12">
                   <Row>
-                    {!vDados.id ? (
-                      <Col md="6" className="mb-2">
-                        <Label className="form-label" for="vEstado">
-                          Selecione o Estado para listar as cidades
-                        </Label>
-                        <Select
-                          isClearable
-                          id="vEstado"
-                          placeholder={t("Selecione...")}
-                          className="react-select"
-                          noOptionsMessage={() => t("Vazio")}
-                          classNamePrefix="select"
-                          value={vEstado}
-                          onChange={(e) => {
-                            setEstado(e)
-                            handleChange({
-                              target: { name: "estado_id", value: e?.value },
-                            })
-                            getCidades(e)
-                            handleChange({
-                              target: { name: "cidades", value: null },
-                            })
-                          }}
-                          options={vListaEstados}
-                        />
-                      </Col>
-                    ) : (
-                      ""
-                    )}
-                    <Col md={vDados.id ? "12" : "6"} className="mb-2">
+                    <Col md="6" className="mb-2">
+                      <Label className="form-label" for="vEstado">
+                        Selecione o Estado para listar as cidades
+                      </Label>
+                      <Select
+                        isClearable
+                        id="vEstado"
+                        placeholder={t("Selecione...")}
+                        className="react-select"
+                        noOptionsMessage={() => t("Vazio")}
+                        classNamePrefix="select"
+                        value={vEstado}
+                        onChange={(e) => {
+                          setEstado(e)
+                          handleChange({
+                            target: { name: "estado_id", value: e?.value },
+                          })
+                          getCidades(e)
+                          handleChange({
+                            target: { name: "cidades", value: null },
+                          })
+                        }}
+                        options={vListaEstados}
+                      />
+                    </Col>
+                    <Col md="6" className="mb-2">
                       <Label className="form-label" for="vCidade">
                         Cidades atingidas
                       </Label>

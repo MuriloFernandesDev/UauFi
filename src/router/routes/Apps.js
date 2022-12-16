@@ -4,6 +4,7 @@ import { lazy } from "react"
 const Dashboard = lazy(() => import("../../views/dashboard"))
 const Cliente = lazy(() => import("../../views/adm/cliente"))
 const ClienteEdit = lazy(() => import("../../views/adm/cliente/edit"))
+const HotspotStatus = lazy(() => import("../../views/adm/hotspot/status"))
 const Hotspot = lazy(() => import("../../views/adm/hotspot"))
 const HotspotEdit = lazy(() => import("../../views/adm/hotspot/edit"))
 const ClienteLogin = lazy(() => import("../../views/adm/login"))
@@ -13,6 +14,7 @@ const PlanoConexaoEdit = lazy(() =>
   import("../../views/adm/plano_conexao/edit")
 )
 const UsuarioLista = lazy(() => import("../../views/usuario/lista"))
+const UsuarioOnline = lazy(() => import("../../views/usuario/online"))
 const UsuarioDados = lazy(() => import("../../views/usuario/dados"))
 const Evento = lazy(() => import("../../views/evento"))
 const EventoEdit = lazy(() => import("../../views/evento/edit"))
@@ -74,6 +76,10 @@ const AppRoutes = [
     path: "/adm/hotspot",
   },
   {
+    element: <HotspotStatus />,
+    path: "/hotspot/status",
+  },
+  {
     element: <HotspotEdit />,
     path: "/adm/hotspot/:id",
   },
@@ -96,6 +102,10 @@ const AppRoutes = [
   {
     element: <UsuarioLista />,
     path: "/usuario/lista",
+  },
+  {
+    element: <UsuarioOnline />,
+    path: "/usuario/online",
   },
   {
     element: <UsuarioDados />,

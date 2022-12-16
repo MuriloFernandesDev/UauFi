@@ -1270,29 +1270,31 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
                           </Label>
                         </div>
                       </Col>
-                      <Col md="4" className="mb-2">
-                        <div className="form-check form-switch">
-                          <Input
-                            type="switch"
-                            id="vSmsCP"
-                            checked={vDadosCP?.usa_sms ?? false}
-                            onChange={(e) => {
-                              handleChangeCP({
-                                target: {
-                                  name: "usa_sms",
-                                  value: e.target.checked,
-                                },
-                              })
-                            }}
-                          />
-                          <Label
-                            for="vSmsCP"
-                            className="form-check-label mt-25"
-                          >
-                            Enviar token SMS
-                          </Label>
-                        </div>
-                      </Col>
+                      {vUserData.perfil === "adm" ? (
+                        <Col md="4" className="mb-2">
+                          <div className="form-check form-switch">
+                            <Input
+                              type="switch"
+                              id="vSmsCP"
+                              checked={vDadosCP?.usa_sms ?? false}
+                              onChange={(e) => {
+                                handleChangeCP({
+                                  target: {
+                                    name: "usa_sms",
+                                    value: e.target.checked,
+                                  },
+                                })
+                              }}
+                            />
+                            <Label
+                              for="vSmsCP"
+                              className="form-check-label mt-25"
+                            >
+                              Enviar token SMS
+                            </Label>
+                          </div>
+                        </Col>
+                      ) : null}
                       <Col md="4" className="mb-2">
                         <div className="form-check form-switch">
                           <Input

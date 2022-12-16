@@ -401,7 +401,7 @@ const UsuarioLista = () => {
 
   // ** Renders Client Columns
   const renderClient = (row) => {
-    if (row.foto?.length) {
+    if (row.foto_url?.length > 0) {
       return (
         <Avatar
           className="me-1 img-proporcional"

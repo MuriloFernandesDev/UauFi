@@ -421,7 +421,18 @@ const ClienteLoginEditCard = ({ data, setSalvarDados }) => {
                       </tr>
                     </thead>
                     <tbody>
-                      {renderAcesso("Usuários", "status_usuario", [1], "read")}
+                      {renderAcesso(
+                        "Usuários online",
+                        "status_usuario",
+                        [1],
+                        "read"
+                      )}
+                      {renderAcesso(
+                        "Status hotspot",
+                        "status_hotspot",
+                        [1],
+                        "read"
+                      )}
                       {renderAcesso(
                         "Minha carteira - Visualizar",
                         "minha_carteira",
@@ -465,7 +476,7 @@ const ClienteLoginEditCard = ({ data, setSalvarDados }) => {
                         "read"
                       )}
                       {renderAcesso(
-                        "Exportar registros",
+                        "Relatórios - Usuários",
                         "rel_exportar_registros",
                         [1],
                         "read"

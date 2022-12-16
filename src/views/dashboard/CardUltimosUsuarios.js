@@ -37,17 +37,19 @@ const CardUltimosUsuarios = () => {
         .then((res) => {
           setProcessando(false)
           setDados(res.data)
+          getDados(60000)
         })
         .catch(() => {
           setProcessando(false)
           setDados(null)
+          getDados(60000)
         })
     }, tempo)
   }
 
   useEffect(() => {
     // ** Requisitar lista
-    getDados(vDados ? 60000 : 1)
+    getDados(1)
   }, [])
 
   const renderData = () => {

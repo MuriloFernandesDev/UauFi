@@ -98,6 +98,11 @@ export const getTotais = async (id) => {
   return response
 }
 
+export const getUsuarioOnline = async () => {
+  const response = (await api.get("/usuario/online")).data
+  return response
+}
+
 export const getListaHotspot = async (id) => {
   const response = (await api.get(`/usuario/hotspot_visitado/${id}`)).data
   return response

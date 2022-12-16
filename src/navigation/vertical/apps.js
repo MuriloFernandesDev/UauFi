@@ -14,6 +14,7 @@ import {
   Smartphone,
   WifiOff,
   BookOpen,
+  Activity,
 } from "react-feather"
 
 export default [
@@ -72,11 +73,19 @@ export default [
   },
   {
     id: "menuUsuarios",
-    title: "Usuários",
+    title: "Usuários online",
     icon: <Smartphone size={20} />,
-    navLink: "/usuario/lista",
+    navLink: "/usuario/online",
     action: "read",
     resource: "status_usuario",
+  },
+  {
+    id: "menuStatusHS",
+    title: "Status hotspot",
+    icon: <Activity size={20} />,
+    navLink: "/hotspot/status",
+    action: "read",
+    resource: "status_hotspot",
   },
   {
     id: "menuEvento",
@@ -216,6 +225,14 @@ export default [
         navLink: "/relatorio/email",
         action: "read",
         resource: "rel_exportar_email",
+      },
+      {
+        id: "menuRelatorioUsuario",
+        title: "Usuários",
+        icon: <Circle size={12} />,
+        navLink: "/usuario/lista",
+        action: "read",
+        resource: "rel_exportar_registros",
       },
     ],
   },

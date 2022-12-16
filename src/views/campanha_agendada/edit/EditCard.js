@@ -136,21 +136,7 @@ const CampanhaAgendadaEditCard = ({ data, setSalvarDados }) => {
     })
   }
 
-  const handleAlcance = () => {
-    setVerificandoAlcance(true)
-    return api
-      .post("/campanha_agendada/alcance", vDados)
-      .then((res) => {
-        setAlcance(res.data)
-        setVerificandoAlcance(false)
-      })
-      .catch(() => {
-        setAlcance(null)
-        setVerificandoAlcance(false)
-      })
-  }
-
-  const setDados = () => {
+  const setDados = (somente_validar) => {
     let vCamposOK = true
     vCamposObrigatorios.forEach((campo) => {
       if (campoInvalido(vDados, null, campo.nome, campo.tipo)) {
@@ -163,13 +149,32 @@ const CampanhaAgendadaEditCard = ({ data, setSalvarDados }) => {
     })
 
     if (vCamposOK) {
-      setSalvarDados(vDados)
+      if (!somente_validar) {
+        setSalvarDados(vDados)
+      }
+      return true
     } else {
       mostrarMensagem(
         "Atenção!",
         "Preencha todos os campos obrigatórios.",
         "warning"
       )
+    }
+  }
+
+  const handleAlcance = () => {
+    if (setDados(true)) {
+      setVerificandoAlcance(true)
+      return api
+        .post("/campanha_agendada/alcance", vDados)
+        .then((res) => {
+          setAlcance(res.data)
+          setVerificandoAlcance(false)
+        })
+        .catch(() => {
+          setAlcance(null)
+          setVerificandoAlcance(false)
+        })
     }
   }
 
@@ -198,7 +203,7 @@ const CampanhaAgendadaEditCard = ({ data, setSalvarDados }) => {
                 </Button.Ripple>
               </div>
               <div>
-                <Button.Ripple color="success" onClick={setDados}>
+                <Button.Ripple color="success" onClick={() => setDados(false)}>
                   <Check size={17} />
                   <span className="align-middle ms-25">Salvar</span>
                 </Button.Ripple>
