@@ -49,7 +49,7 @@ const SidebarMaisFiltros = ({ open, toggleSidebar }) => {
     setDataInicial(store.params.datai)
     setDataFinal(store.params.dataf)
     //Valor padrão da situação (Online)
-    const vSituacaoArray = (store.params.situacao ?? "o")
+    const vSituacaoArray = (store.params.situacao ?? "")
       .split(",")
       .map((item) => item)
 
@@ -76,7 +76,7 @@ const SidebarMaisFiltros = ({ open, toggleSidebar }) => {
           <Input
             id="data-inicio"
             name="data-inicio"
-            type="datetime-local"
+            type="date"
             value={vDataInicial}
             onChange={(e) => {
               setDataInicial(e.target.value)
@@ -91,7 +91,7 @@ const SidebarMaisFiltros = ({ open, toggleSidebar }) => {
           <Input
             id="data-fim"
             name="data-fim"
-            type="datetime-local"
+            type="date"
             value={vDataFinal}
             onChange={(e) => {
               setDataFinal(e.target.value)

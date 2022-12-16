@@ -59,6 +59,9 @@ import Swal from "sweetalert2"
 import withReactContent from "sweetalert2-react-content"
 import toast from "react-hot-toast"
 
+// ** Terceiros
+import { useTranslation } from "react-i18next"
+
 const MySwal = withReactContent(Swal)
 
 import "@styles/react/libs/tables/react-dataTable-component.scss"
@@ -70,54 +73,36 @@ const CustomHeader = ({
   handlePerPage,
   rowsPerPage,
   handleFilter,
+  parametros,
   searchTerm,
 }) => {
   // ** Context
   const permissao = useContext(PermissaoContext)
 
-  // ** Converts table to CSV
-  function convertArrayOfObjectsToCSV(array) {
-    let result
+  // ** Hooks
+  const { t } = useTranslation()
 
-    const columnDelimiter = ","
-    const lineDelimiter = "\n"
-    const keys = Object.keys(store.data[0])
+  const [vCarregando, setCarregando] = useState(false)
 
-    result = ""
-    result += keys.join(columnDelimiter)
-    result += lineDelimiter
-
-    array.forEach((item) => {
-      let ctr = 0
-      keys.forEach((key) => {
-        if (ctr > 0) result += columnDelimiter
-
-        result += item[key]
-
-        ctr++
+  const handleExportar = (parametros) => {
+    setCarregando(true)
+    api
+      .get("/usuario/exportar_cadastros", {
+        responseType: "blob",
+        params: parametros,
       })
-      result += lineDelimiter
-    })
-
-    return result
+      .then((response) => {
+        const url = window.URL.createObjectURL(new Blob([response.data]))
+        const link = document.createElement("a")
+        link.href = url
+        link.setAttribute("download", "cadastros.xlsx")
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+        setCarregando(false)
+      })
   }
 
-  // ** Downloads CSV
-  function downloadCSV(array) {
-    const link = document.createElement("a")
-    let csv = convertArrayOfObjectsToCSV(array)
-    if (csv === null) return
-
-    const filename = "export.csv"
-
-    if (!csv.match(/^data:text\/csv/i)) {
-      csv = `data:text/csv;charset=utf-8,${csv}`
-    }
-
-    link.setAttribute("href", encodeURI(csv))
-    link.setAttribute("download", filename)
-    link.click()
-  }
   return (
     <div className="invoice-list-table-header w-100 me-1 ms-50 mt-1 mb-75">
       <Row>
@@ -159,15 +144,23 @@ const CustomHeader = ({
           >
             +Filtros
           </Button>
-          {permissao.can("read", "rel_exportar_registros") ? (
+          {permissao.can("read", "rel_exportar_registros") &&
+          store?.length > 0 ? (
             <Button
               className="me-0 mb-1 mb-md-0 ms-0 ms-sm-1 ms-md-2"
-              onClick={() => downloadCSV(store.data)}
+              onClick={() => handleExportar(parametros)}
               color="secondary"
               outline
             >
               <span className="align-middle text-nowrap">
-                <Share className="font-small-4" /> Exportar
+                {!vCarregando ? (
+                  <Fragment>
+                    <Share className="font-small-4" />
+                    {t("Exportar")}
+                  </Fragment>
+                ) : (
+                  <Spinner size="sm" color="secondary" />
+                )}
               </span>
             </Button>
           ) : null}
@@ -223,7 +216,7 @@ const UsuarioLista = () => {
   const [vDataInicial, setDataInicial] = useState(null)
   const [vDataFinal, setDataFinal] = useState(null)
   //Valor padrão da situação (Online)
-  const vSituacaoArray = (store.params.situacao ?? "o")
+  const vSituacaoArray = (store.params.situacao ?? "")
     .split(",")
     .map((item) => item)
 
@@ -649,9 +642,10 @@ const UsuarioLista = () => {
               data={dataToRender()}
               subHeaderComponent={
                 <CustomHeader
-                  store={store.dados}
-                  searchTerm={searchTerm}
+                  store={store.data}
+                  parametros={store.params}
                   rowsPerPage={rowsPerPage}
+                  searchTerm={searchTerm}
                   handleFilter={handleFilter}
                   handlePerPage={handlePerPage}
                   toggleSidebar={toggleSidebar}

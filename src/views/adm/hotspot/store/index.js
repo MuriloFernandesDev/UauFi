@@ -52,6 +52,11 @@ export const getHotspotStatus = async () => {
   return response
 }
 
+export const getHotspotStatusTotais = async () => {
+  const response = (await api.get("/hotspot/status_qtd")).data
+  return response
+}
+
 export const cloneHotspot = createAsyncThunk(
   "admHotspot/cloneHotspot",
   async (cloneParams) => {

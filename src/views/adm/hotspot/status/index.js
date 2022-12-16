@@ -16,6 +16,9 @@ import {
   CardTitle,
 } from "reactstrap"
 
+// ** API
+import api from "@src/services/api"
+
 import { Link } from "react-router-dom"
 
 import StatsHorizontal from "@components/widgets/stats/StatsHorizontal"
@@ -23,13 +26,22 @@ import StatsHorizontal from "@components/widgets/stats/StatsHorizontal"
 import classnames from "classnames"
 
 // ** Store & Actions
-import { getHotspotStatus } from "../store"
+import { getHotspotStatus, getHotspotStatusTotais } from "../store"
 
 // ** Utils
 import { formatDateTime, formatInt, mostrarMensagem } from "@utils"
 
 // ** Icons Imports
-import { Eye, MoreVertical, User, Wifi, WifiOff } from "react-feather"
+import {
+  AlertTriangle,
+  Check,
+  Clock,
+  Eye,
+  MoreVertical,
+  User,
+  Wifi,
+  WifiOff,
+} from "react-feather"
 
 // ** Third Party Components
 import Swal from "sweetalert2"
@@ -41,8 +53,20 @@ const UsuarioOnline = () => {
   // ** States
   const [vCarregando, setCarregando] = useState(true)
   const [vDados, setDados] = useState(true)
+  const [vTotais, setTotais] = useState(true)
 
   const vTimeoutPesquisa = useRef()
+
+  const getTotais = () => {
+    return getHotspotStatusTotais()
+      .then((res) => {
+        setCarregando(false)
+        setTotais(res)
+      })
+      .catch(() => {
+        setCarregando(false)
+      })
+  }
 
   const getDados = (tempo) => {
     if (vTimeoutPesquisa) {
@@ -52,7 +76,7 @@ const UsuarioOnline = () => {
       setCarregando(true)
       return getHotspotStatus()
         .then((res) => {
-          setCarregando(false)
+          getTotais()
           setDados(res)
           getDados(300000)
         })
@@ -115,13 +139,13 @@ const UsuarioOnline = () => {
   return (
     <Fragment>
       <Row>
-        <Col md="4" className="offset-md-4">
+        <Col md="">
           <StatsHorizontal
             color="primary"
             statTitle={
               vCarregando
                 ? "Verificando..."
-                : `Hotspot${vDados?.length !== 1 ? "s" : ""}`
+                : `Hotspot${vDados?.qtd_total !== 1 ? "s" : ""}`
             }
             icon={<Wifi size={20} />}
             renderStats={
@@ -131,7 +155,79 @@ const UsuarioOnline = () => {
                     <Spinner type="grow" size="sm" color="primary" />{" "}
                   </div>
                 ) : (
-                  formatInt(vDados?.length)
+                  formatInt(vTotais?.qtd_total ?? 0)
+                )}
+              </h3>
+            }
+          />
+        </Col>
+        <Col md="">
+          <StatsHorizontal
+            color="danger"
+            statTitle={vCarregando ? "Verificando..." : "Offline"}
+            icon={<AlertTriangle size={20} />}
+            renderStats={
+              <h3 className="fw-bolder mb-75">
+                {vCarregando ? (
+                  <div>
+                    <Spinner type="grow" size="sm" color="primary" />{" "}
+                  </div>
+                ) : (
+                  formatInt(vTotais?.qtd_off ?? 0)
+                )}
+              </h3>
+            }
+          />
+        </Col>
+        <Col md="">
+          <StatsHorizontal
+            color="success"
+            statTitle={vCarregando ? "Verificando..." : "Online"}
+            icon={<Check size={20} />}
+            renderStats={
+              <h3 className="fw-bolder mb-75">
+                {vCarregando ? (
+                  <div>
+                    <Spinner type="grow" size="sm" color="primary" />{" "}
+                  </div>
+                ) : (
+                  formatInt(vTotais?.qtd_on ?? 0)
+                )}
+              </h3>
+            }
+          />
+        </Col>
+        <Col md="">
+          <StatsHorizontal
+            color="secondary"
+            statTitle={vCarregando ? "Verificando..." : "Desativado"}
+            icon={<WifiOff size={20} />}
+            renderStats={
+              <h3 className="fw-bolder mb-75">
+                {vCarregando ? (
+                  <div>
+                    <Spinner type="grow" size="sm" color="primary" />{" "}
+                  </div>
+                ) : (
+                  formatInt(vTotais?.qtd_inativo ?? 0)
+                )}
+              </h3>
+            }
+          />
+        </Col>
+        <Col md="">
+          <StatsHorizontal
+            color="warning"
+            statTitle={vCarregando ? "Verificando..." : "Não utilizado"}
+            icon={<Clock size={20} />}
+            renderStats={
+              <h3 className="fw-bolder mb-75">
+                {vCarregando ? (
+                  <div>
+                    <Spinner type="grow" size="sm" color="primary" />{" "}
+                  </div>
+                ) : (
+                  formatInt(vTotais?.qtd_nao_utilizado ?? 0)
                 )}
               </h3>
             }
@@ -147,7 +243,10 @@ const UsuarioOnline = () => {
                     <Card>
                       <CardHeader
                         className={classnames("p-1", {
-                          "bg-danger": !row.online,
+                          "bg-danger": row.status === 0,
+                          "bg-success": row.status === 1,
+                          "bg-secondary": row.status === 2,
+                          "bg-warning": row.status === 3,
                         })}
                       >
                         <div className="d-flex justify-content-between align-items-center">
@@ -159,9 +258,7 @@ const UsuarioOnline = () => {
                               >
                                 <MoreVertical
                                   size={18}
-                                  className={classnames("cursor-pointer", {
-                                    "text-white": !row.online,
-                                  })}
+                                  className="cursor-pointer text-white"
                                 />
                               </DropdownToggle>
                               <DropdownMenu end>
@@ -193,7 +290,7 @@ const UsuarioOnline = () => {
                             </UncontrolledDropdown>
                             <Link to={`/adm/hotspot/${row.id}`}>
                               <CardTitle
-                                tag="h4"
+                                tag="h5"
                                 className={classnames({
                                   "text-white": !row.online,
                                 })}
