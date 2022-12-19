@@ -313,7 +313,7 @@ const ClienteLoginEditCard = ({ data, setSalvarDados }) => {
                   </Col>
                   <Col md="6" className="mb-2">
                     <Label className="form-label" for="email">
-                      E-mail*
+                      Login/e-mail*
                     </Label>
                     <Input
                       id="email"

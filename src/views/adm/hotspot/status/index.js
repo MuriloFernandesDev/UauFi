@@ -49,7 +49,7 @@ import withReactContent from "sweetalert2-react-content"
 
 const MySwal = withReactContent(Swal)
 
-const UsuarioOnline = () => {
+const StatusHotspot = () => {
   // ** States
   const [vCarregando, setCarregando] = useState(true)
   const [vDados, setDados] = useState(true)
@@ -289,12 +289,7 @@ const UsuarioOnline = () => {
                               </DropdownMenu>
                             </UncontrolledDropdown>
                             <Link to={`/adm/hotspot/${row.id}`}>
-                              <CardTitle
-                                tag="h5"
-                                className={classnames({
-                                  "text-white": !row.online,
-                                })}
-                              >
+                              <CardTitle tag="h5" className="text-white">
                                 {row.nome ?? ""}
                               </CardTitle>
                             </Link>
@@ -305,10 +300,6 @@ const UsuarioOnline = () => {
                         <div className="d-flex flex-column pt-1">
                           <small className=" mb-0">
                             <strong>ID: </strong> {row.id}
-                          </small>
-                          <small className=" mb-0">
-                            <strong>Status: </strong>{" "}
-                            {row.online ? "Online" : "Offline"}
                           </small>
                           <small className=" mb-0">
                             <strong>IP público: </strong> {row.ip_recebido}
@@ -338,4 +329,4 @@ const UsuarioOnline = () => {
   )
 }
 
-export default UsuarioOnline
+export default StatusHotspot
