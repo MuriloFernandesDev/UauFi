@@ -460,7 +460,13 @@ const ClienteLoginEditCard = ({ data, setSalvarDados }) => {
                       {renderAcesso(
                         "Relatórios - Campanha enviada",
                         "rel_campanha",
-                        [1],
+                        [2],
+                        "read"
+                      )}
+                      {renderAcesso(
+                        "Relatórios - Pesquisa respondida",
+                        "rel_pesquisa",
+                        [2],
                         "read"
                       )}
                       {renderAcesso(
@@ -469,6 +475,27 @@ const ClienteLoginEditCard = ({ data, setSalvarDados }) => {
                         [1],
                         "read"
                       )}
+                    </tbody>
+                    <thead>
+                      <tr>
+                        <th className="text-start">Exportação de dados</th>
+                        <th>Permitir</th>
+                        <th colSpan={3}></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {renderAcesso(
+                        "Relatórios - Campanha enviada",
+                        "rel_campanha",
+                        [1],
+                        "create"
+                      )}
+                      {renderAcesso(
+                        "Relatórios - Pesquisa respondida",
+                        "rel_pesquisa",
+                        [1],
+                        "create"
+                      )}
                       {renderAcesso(
                         "Relatórios - Exportar e-mails",
                         "rel_exportar_email",
@@ -476,7 +503,7 @@ const ClienteLoginEditCard = ({ data, setSalvarDados }) => {
                         "read"
                       )}
                       {renderAcesso(
-                        "Relatórios - Usuários",
+                        "Relatórios - Dados de usuários",
                         "rel_exportar_registros",
                         [1],
                         "read"

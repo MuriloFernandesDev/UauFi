@@ -211,6 +211,14 @@ export default [
         resource: "rel_campanha",
       },
       {
+        id: "menuRelatorioPesquisa",
+        title: "Pesquisa respondida",
+        icon: <Circle size={12} />,
+        navLink: "/relatorio/pesquisa",
+        action: "read",
+        resource: "rel_pesquisa",
+      },
+      {
         id: "menuRelatorioCadastro",
         title: "Cadastros/Conexões",
         icon: <Circle size={12} />,
@@ -228,7 +236,7 @@ export default [
       },
       {
         id: "menuRelatorioUsuario",
-        title: "Usuários",
+        title: "Dados de usuários",
         icon: <Circle size={12} />,
         navLink: "/usuario/lista",
         action: "read",
