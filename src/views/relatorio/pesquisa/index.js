@@ -2,10 +2,20 @@
 import { useEffect, useState } from "react"
 
 // ** Reactstrap Imports
-import { Spinner, Card, CardBody } from "reactstrap"
+import {
+  UncontrolledTooltip,
+  Badge,
+  Spinner,
+  Card,
+  CardBody,
+  Modal,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+} from "reactstrap"
 
 // ** Icons Imports
-import { Clock, RefreshCw, ChevronDown } from "react-feather"
+import { PieChart, ChevronDown, Download } from "react-feather"
 
 import DataTable from "react-data-table-component"
 import { Link } from "react-router-dom"
@@ -21,15 +31,22 @@ import { formatDateTime, formatInt } from "@utils"
 // ** API
 import api from "@src/services/api"
 
-// ** Third Party Components
-import "chart.js/auto"
-
 const RelatorioPesquisa = () => {
   const vDefault = [{ nome: "", valor: 0, qtd: 0, percentual: 0 }]
   const vParametrosGet = { sortColumn: "data_cadastro", sort: "desc" }
   // ** States
   const [vDados, setDados] = useState(vDefault)
   const [vCarregando, setCarregando] = useState(true)
+
+  const [vModalQrCode, setModalQrCode] = useState(false)
+
+  const toggleModal = (id) => {
+    if (vModalQrCode !== id) {
+      setModalQrCode(id)
+    } else {
+      setModalQrCode(null)
+    }
+  }
 
   const getLista = () => {
     setCarregando(true)
@@ -108,22 +125,57 @@ const RelatorioPesquisa = () => {
       },
     },
     {
-      name: <div className="text-end w-100">Exportar usuários</div>,
+      name: <div className="text-end w-100">Ações</div>,
       minWidth: "80px",
-      selector: (row) => row.id,
-      cell: (row) => {
-        return (
-          <div className="d-flex justify-content-left align-items-center w-100 text-end">
-            <Link
-              className="d-flex flex-column w-100"
-              to={`/pesquisa_captive/${row.id}`}
-              id={`pw-tooltip2-${row.id}`}
+      cell: (row) => (
+        <div className="text-end w-100">
+          <div className="column-action d-inline-flex">
+            <Modal
+              key={row.id}
+              isOpen={vModalQrCode === row.id}
+              toggle={() => toggleModal(row.id)}
+              className="modal-dialog-centered"
             >
-              <span className="text-secondary user-name mb-0">...</span>
+              <ModalHeader toggle={() => toggleModal(row.id)}>
+                {row.nome}
+              </ModalHeader>
+              <ModalBody className="text-center">
+                <PesquisaDados id={row.id} />
+              </ModalBody>
+            </Modal>
+            <Link
+              to="/"
+              id={`pw-grafico-${row.id}`}
+              onClick={(e) => {
+                e.preventDefault()
+                toggleModal(row.id)
+              }}
+            >
+              <PieChart size={17} className="mx-1" />
             </Link>
+
+            <UncontrolledTooltip
+              placement="top"
+              target={`pw-grafico-${row.id}`}
+            >
+              Visualizar o gráfico
+            </UncontrolledTooltip>
+            <Link
+              to={`/pesquisa_captive/${row.id}`}
+              id={`pw-tooltip-export-${row.id}`}
+            >
+              <Download size={17} className="mx-1" />
+            </Link>
+
+            <UncontrolledTooltip
+              placement="top"
+              target={`pw-tooltip-export-${row.id}`}
+            >
+              Exportar usuários e respostas
+            </UncontrolledTooltip>
           </div>
-        )
-      },
+        </div>
+      ),
     },
   ]
 
