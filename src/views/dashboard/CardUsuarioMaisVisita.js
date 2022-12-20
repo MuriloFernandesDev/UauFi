@@ -61,12 +61,13 @@ const CardUsuarioMaisVisita = () => {
                   />
                   {vDados?.nome}
                 </h5>
-                <CardText className="font-small-3">
-                  <span>
+                <small>
+                  <div>{vDados?.hotspot_nome}</div>
+                  <div>
                     Última visita {formatDateTime(vDados?.ultima_visita)}
-                  </span>
-                </CardText>
-                <h3 className="mb-75 mt-1">{vDados?.qtd} visitas</h3>
+                  </div>
+                </small>
+                <h3 className="mb-0 mt-50">{vDados?.qtd} visitas</h3>
               </div>
             </Link>
           ) : (

@@ -11,7 +11,6 @@ import {
   Modal,
   ModalHeader,
   ModalBody,
-  ModalFooter,
 } from "reactstrap"
 
 // ** Icons Imports
@@ -37,7 +36,7 @@ const RelatorioPesquisa = () => {
   // ** States
   const [vDados, setDados] = useState(vDefault)
   const [vCarregando, setCarregando] = useState(true)
-
+  const [vExportando, setExportando] = useState(null)
   const [vModalQrCode, setModalQrCode] = useState(false)
 
   const toggleModal = (id) => {
@@ -58,6 +57,27 @@ const RelatorioPesquisa = () => {
       })
       .catch(() => {
         setCarregando(false)
+      })
+  }
+
+  const handleExportar = (id) => {
+    setExportando(id)
+    api
+      .get(`/pesquisa_captive/exportar/${id}`, {
+        responseType: "blob",
+      })
+      .then((response) => {
+        const url = window.URL.createObjectURL(new Blob([response.data]))
+        const link = document.createElement("a")
+        link.href = url
+        link.setAttribute("download", "respostas.xlsx")
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+        setExportando(null)
+      })
+      .catch(() => {
+        setExportando(null)
       })
   }
 
@@ -160,12 +180,20 @@ const RelatorioPesquisa = () => {
             >
               Visualizar o gráfico
             </UncontrolledTooltip>
-            <Link
-              to={`/pesquisa_captive/${row.id}`}
-              id={`pw-tooltip-export-${row.id}`}
-            >
-              <Download size={17} className="mx-1" />
-            </Link>
+            {vExportando === row.id ? (
+              <Spinner size="sm" color="light" />
+            ) : (
+              <Link
+                to="/"
+                id={`pw-tooltip-export-${row.id}`}
+                onClick={(e) => {
+                  e.preventDefault()
+                  handleExportar(row.id)
+                }}
+              >
+                <Download size={17} className="mx-1" />
+              </Link>
+            )}
 
             <UncontrolledTooltip
               placement="top"
@@ -195,6 +223,7 @@ const RelatorioPesquisa = () => {
         <DataTable
           noHeader
           responsive
+          noDataComponent=""
           columns={columns}
           data={vDados}
           className="react-dataTable"

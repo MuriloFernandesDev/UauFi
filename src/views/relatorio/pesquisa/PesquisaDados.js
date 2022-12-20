@@ -8,6 +8,9 @@ import Chart from "react-apexcharts"
 
 import { useTranslation } from "react-i18next"
 
+// ** Styles
+import "@styles/react/libs/tables/react-dataTable-component.scss"
+
 // ** Utils
 import { formatInt } from "@utils"
 import { Spinner } from "reactstrap"
@@ -36,7 +39,7 @@ const PesquisaDados = (dados) => {
             show: true,
             position: "bottom",
           },
-          labels: res.data?.map(({ texto }) => texto),
+          labels: res.data?.map(({ texto, qtd }) => `${texto} (${qtd})`),
 
           dataLabels: {
             enabled: true,

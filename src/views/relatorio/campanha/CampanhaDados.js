@@ -180,6 +180,7 @@ const CampanhaDonut = (dados) => {
             <DataTable
               noHeader
               responsive
+              noDataComponent=""
               columns={columns}
               data={dados.valores}
               className="react-dataTable"
