@@ -20,6 +20,7 @@ import {
   DropdownToggle,
   UncontrolledTooltip,
   UncontrolledDropdown,
+  Badge,
 } from "reactstrap"
 
 // ** Store & Actions
@@ -103,7 +104,7 @@ const EventoList = () => {
   const [value, setValue] = useState(store.params.q ?? "")
   const [sort, setSort] = useState(store.params.sort ?? "desc")
   const [sortColumn, setSortColumn] = useState(
-    store.params.sortColumn ?? "data_cadastro"
+    store.params.sortColumn ?? "data_fim"
   )
   const [currentPage, setCurrentPage] = useState(store.params.page ?? 1)
   const [rowsPerPage, setRowsPerPage] = useState(store.params.perPage ?? 10)
@@ -246,16 +247,18 @@ const EventoList = () => {
       name: "Período de realização",
       minWidth: "200px",
       cell: (row) => {
+        let vAndamento = false
         const eventoInicio = formatDateTime(row.data_inicio) ?? "",
           eventoFim = formatDateTime(row.data_fim) ?? "",
           eventoPeriodo = `${eventoInicio} a ${eventoFim}`
         let eventoInfo
         if (new Date().toISOString() < row.data_inicio) {
-          eventoInfo = `Evento ainda não iniciado`
+          eventoInfo = `ainda não iniciado`
         } else if (new Date().toISOString() > row.data_fim) {
-          eventoInfo = `Evento finalizado`
+          eventoInfo = `finalizado`
         } else {
-          eventoInfo = `Evento em andamento`
+          eventoInfo = `em andamento`
+          vAndamento = true
         }
 
         return (
@@ -266,7 +269,11 @@ const EventoList = () => {
                   {eventoPeriodo}
                 </h6>
                 <small className="text-truncate text-muted mb-0">
-                  {eventoInfo}
+                  {vAndamento ? (
+                    <Badge color="success">{eventoInfo}</Badge>
+                  ) : (
+                    eventoInfo
+                  )}
                 </small>
               </Link>
             </div>
