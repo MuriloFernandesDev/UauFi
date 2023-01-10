@@ -63,6 +63,9 @@ const ExportarEmail = () => {
   const [vValor6, setValor6] = useState(null)
   const [vProcessando6, setProcessando6] = useState(true)
 
+  const [vValor10, setValor10] = useState(null)
+  const [vProcessando10, setProcessando10] = useState(true)
+
   const [vValor7, setValor7] = useState(null)
   const [vProcessando7, setProcessando7] = useState(true)
 
@@ -99,7 +102,7 @@ const ExportarEmail = () => {
     setProcessando2(true)
     return api
       .get(
-        `/conexao/media_conexoes/${vDados.data_inicial}/${vDados.data_final}`
+        `/conexao/total_conexoes/${vDados.data_inicial}/${vDados.data_final}`
       )
       .then((res) => {
         setProcessando2(false)
@@ -161,7 +164,7 @@ const ExportarEmail = () => {
     setProcessando6(true)
     return api
       .get(
-        `/conexao/qtd_conexoes/${vDados.data_inicial}/${vDados.data_final}/${p}`
+        `/conexao/qtd_conexoes_autenticadas/${vDados.data_inicial}/${vDados.data_final}/${p}`
       )
       .then((res) => {
         setProcessando6(false)
@@ -169,6 +172,22 @@ const ExportarEmail = () => {
       })
       .catch((error) => {
         setProcessando6(false)
+        console.error("Erro ao pegar dados:", error)
+      })
+  }
+
+  const getDados10 = (p) => {
+    setProcessando10(true)
+    return api
+      .get(
+        `/conexao/qtd_conexoes_nao_autenticadas/${vDados.data_inicial}/${vDados.data_final}/${p}`
+      )
+      .then((res) => {
+        setProcessando10(false)
+        setValor10(res.data)
+      })
+      .catch((error) => {
+        setProcessando10(false)
         console.error("Erro ao pegar dados:", error)
       })
   }
@@ -242,6 +261,7 @@ const ExportarEmail = () => {
       getDados7("day")
       getDados8()
       getDados9()
+      getDados10("day")
       setDatasOK(true)
     } else {
       mostrarMensagem("Atenção!", "Selecione as duas datas.", "warning")
@@ -388,12 +408,12 @@ const ExportarEmail = () => {
           </Row>
           <Row className="match-height">
             <Col md="6">
-              <CardGenero
+              <CardQtdUsuario
                 primary={colors.primary.main}
-                titulo={"Gêneros por período"}
-                dados={vValor7}
-                proc={vProcessando7}
-                getdados={getDados7}
+                titulo={"Total de MACs não autenticados"}
+                dados={vValor10}
+                proc={vProcessando10}
+                getdados={getDados10}
               />
             </Col>
             <Col md="6">
@@ -407,8 +427,17 @@ const ExportarEmail = () => {
               />
             </Col>
           </Row>
-          <Row>
-            <Col md="12">
+          <Row className="match-height">
+            <Col md="6">
+              <CardGenero
+                primary={colors.primary.main}
+                titulo={"Gêneros por período"}
+                dados={vValor7}
+                proc={vProcessando7}
+                getdados={getDados7}
+              />
+            </Col>
+            <Col md="6">
               <CardFaixaEtaria
                 primary={colors.primary.main}
                 titulo={"Usuários por faixa etária"}

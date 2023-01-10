@@ -4,7 +4,7 @@ import { Bar } from "react-chartjs-2"
 // ** Reactstrap Imports
 import { Card, CardHeader, Spinner } from "reactstrap"
 
-const CardVisitasMes = (props) => {
+const CardFaixaEtaria = (props) => {
   // ** State
   const vSeries = {
     labels:
@@ -53,10 +53,10 @@ const CardVisitasMes = (props) => {
       <CardHeader className="align-items-start pb-0">
         <h5>{props.titulo}</h5>
       </CardHeader>
-      <div style={{ height: "200px" }}>
+      <div style={{ height: "300px" }}>
         {!props.proc ? (
           vOptions && vSeries?.labels?.length > 0 ? (
-            <Bar data={vSeries} options={vOptions} height={200} />
+            <Bar data={vSeries} options={vOptions} height={300} />
           ) : null
         ) : (
           <div className="d-flex justify-content-center text-center align-items-center m-2">
@@ -68,4 +68,4 @@ const CardVisitasMes = (props) => {
   )
 }
 
-export default CardVisitasMes
+export default CardFaixaEtaria
