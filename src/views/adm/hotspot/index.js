@@ -372,11 +372,6 @@ const HotspotList = () => {
                 <strong className="text-truncate text-muted mb-0">
                   {row.mac}
                 </strong>
-                <div className="text-truncate text-muted mb-0">
-                  {!row.ativo ? (
-                    <Badge color="secondary">Desativado</Badge>
-                  ) : null}
-                </div>
               </Link>
             </div>
           </div>
@@ -397,10 +392,14 @@ const HotspotList = () => {
                   {formatDateTime(row.data_recebido)}
                 </h6>
                 <small className="text-truncate text-muted mb-0">
-                  {row.online ? (
-                    <Badge color="success">Online</Badge>
-                  ) : (
+                  {row.status === 0 ? (
                     <Badge color="danger">Offline</Badge>
+                  ) : row.status === 1 ? (
+                    <Badge color="success">Online</Badge>
+                  ) : row.status === 2 ? (
+                    <Badge color="secondary">Desativado</Badge>
+                  ) : (
+                    <Badge color="warning">Não utilizado</Badge>
                   )}
                 </small>
               </Link>
