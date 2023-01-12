@@ -63,7 +63,7 @@ const HotspotEdit = () => {
   // ** Função para salvar dados & respostas a erros
   const handleSalvar = (pDados) => {
     setSalvando(true)
-    if (pDados.id > 0) {
+    if (id !== "add") {
       api
         .put("/hotspot", pDados)
         .then((response) => {
