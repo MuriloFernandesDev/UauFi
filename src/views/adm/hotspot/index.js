@@ -368,7 +368,7 @@ const HotspotList = () => {
           <div className="d-flex justify-content-left align-items-center">
             <div className="d-flex flex-column">
               <Link to={`/adm/hotspot/${row.id}`} id={`pw-tooltip2-${row.id}`}>
-                <h6 className="user-name text-truncate mb-0">{nome}</h6>
+                <h6 className="user-name mb-0">{nome}</h6>
                 <strong className="text-truncate text-muted mb-0">
                   {row.mac}
                 </strong>

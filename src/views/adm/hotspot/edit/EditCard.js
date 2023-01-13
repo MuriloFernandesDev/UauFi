@@ -505,7 +505,23 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
                         onChange={handleChange}
                       />
                     </Col>
-                    <Col md="4" className="mb-2">
+                    {vDados?.marca_equipamento === 8 ? (
+                      <Col md="3" className="mb-2">
+                        <Label
+                          className="form-label"
+                          for="controladora_usuario"
+                        >
+                          Nome do site Unifi
+                        </Label>
+                        <Input
+                          id="site_unifi"
+                          name="site_unifi"
+                          value={vDados?.site_unifi ?? ""}
+                          onChange={handleChange}
+                        />
+                      </Col>
+                    ) : null}
+                    <Col md="3" className="mb-2">
                       <Label className="form-label" for="lat">
                         Latitude*
                       </Label>
@@ -517,7 +533,7 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
                         invalid={campoInvalido(vDados, vErros, "lat", "int")}
                       />
                     </Col>
-                    <Col md="4" className="mb-2">
+                    <Col md="3" className="mb-2">
                       <Label className="form-label" for="lng">
                         Longitude*
                       </Label>
@@ -529,7 +545,7 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
                         invalid={campoInvalido(vDados, vErros, "lng", "int")}
                       />
                     </Col>
-                    <Col md="4" className="mb-2 pt-md-2">
+                    <Col md="3" className="mb-2 pt-md-2">
                       <div className="form-check form-switch pt-md-75">
                         <Input
                           type="switch"
@@ -548,7 +564,7 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
                           for="usa_radius"
                           className="form-check-label mt-25"
                         >
-                          Utilizar servidor RADIUS
+                          Utilizar RADIUS
                         </Label>
                       </div>
                     </Col>
