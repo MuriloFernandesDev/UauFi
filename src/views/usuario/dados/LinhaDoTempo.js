@@ -61,7 +61,7 @@ const LinhaDoTempo = (dados) => {
           color: d.id > 0 ? "success" : "primary",
           content: `${d.id === 0 ? "Dia do cadastro - " : ""}${formatDateTime(
             d.entrada
-          )}${d.id > 0 ? ` - ${formatDateTime(d.saida)}` : ""}`,
+          )}${d.id > 0 ? ` - ${formatDateTime(d.saida ?? "")}` : ""}`,
           meta: (
             <Link
               to="/"
