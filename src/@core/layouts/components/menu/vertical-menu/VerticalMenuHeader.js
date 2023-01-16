@@ -13,6 +13,7 @@ const VerticalMenuHeader = (props) => {
   // ** Vars
   const user = getUserData()
 
+  // ** Hooks
   const { skin } = useSkin()
 
   // ** Reset open group
@@ -27,7 +28,7 @@ const VerticalMenuHeader = (props) => {
         <li className="nav-item">
           <img
             src={
-              skin === "dark"
+              skin === "dark" && user.url_logo_dark
                 ? user.url_logo_dark
                 : user.url_logo_light
             }

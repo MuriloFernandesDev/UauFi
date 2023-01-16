@@ -388,11 +388,11 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
               <TabPane tabId="1">
                 <Card className="mb-0">
                   <Row>
-                    <Col lg="5">
+                    <Col lg="6">
                       <Row>
                         <Col className="mb-2" sm="12">
                           <div className="border rounded p-2">
-                            <h5 className="mb-1">Logotipo do Dashboard</h5>
+                            <h5 className="mb-1">Logotipo do Dashboard - modo claro</h5>
                             <div className="d-flex flex-column flex-md-row">
                               <img
                                 className="me-2 mb-1 mb-md-0 img-fluid img-proporcional"
@@ -451,7 +451,71 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                         </Col>
                       </Row>
                     </Col>
-                    <Col lg="7">
+                    <Col lg="6">
+                      <Row>
+                        <Col className="mb-2" sm="12">
+                          <div className="border rounded p-2">
+                            <h5 className="mb-1">Logotipo do Dashboard - modo escuro</h5>
+                            <div className="d-flex flex-column flex-md-row">
+                              <img
+                                className="me-2 mb-1 mb-md-0 img-fluid img-proporcional"
+                                src={
+                                  vDados?.logo_dark?.length > 0
+                                    ? vDados?.logo_dark
+                                    : defaultImagem
+                                }
+                                alt="Logotipo"
+                                width="100"
+                                height="100"
+                              />
+                              <div>
+                                <div className="mb-1">
+                                  <small className="text-muted">
+                                    Resolução recomendada: 800x800px.
+                                    <br />
+                                    Tamanho máximo: 250kB.
+                                  </small>
+                                </div>
+                                <div className="d-inline-block">
+                                  <div className="mb-0">
+                                    <Button
+                                      tag={Label}
+                                      className="me-75"
+                                      size="sm"
+                                      color="secondary"
+                                      outline
+                                    >
+                                      Selecionar imagem
+                                      <Input
+                                        type="file"
+                                        name="logo_dark"
+                                        onChange={onChangeImagem}
+                                        hidden
+                                        accept=".jpg, .jpeg, .png, .gif, .webp"
+                                      />
+                                    </Button>
+                                    <Link
+                                      to="/"
+                                      className="text-body"
+                                      onClick={(e) => {
+                                        e.preventDefault()
+                                        handleChange({
+                                          target: { name: "logo_dark", value: null },
+                                        })
+                                      }}
+                                    >
+                                      <Trash className="font-medium-3 text-danger cursor-pointer" />
+                                    </Link>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </Col>
+                      </Row>
+                    </Col>
+                    
+                    <Col lg="12">
                       <Row>
                         <Col md="12" className="mb-2">
                           <Label className="form-label" for="nome">
@@ -492,7 +556,7 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                       </Row>
                     </Col>
 
-                    <Col md="3" className="mb-2">
+                    <Col md="5" className="mb-2">
                       <Label className="form-label" for="artigo_genero">
                         Tratamento
                       </Label>
@@ -513,7 +577,7 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                         options={vListaArtigoGenero}
                       />
                     </Col>
-                    <Col md="3" className="mb-2">
+                    <Col md="7" className="mb-2">
                       <Label className="form-label" for="slug">
                         Slug
                       </Label>
@@ -524,7 +588,7 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                         onChange={handleChange}
                       />
                     </Col>
-                    <Col md="6" className="mb-2">
+                    <Col md="7" className="mb-2">
                       <Label className="form-label" for="categoria_id">
                         Categoria*
                       </Label>
@@ -605,7 +669,7 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                         options={vListaAgregadores}
                       />
                     </Col>
-                    <Col md="4" className="mb-2">
+                    <Col md="6" className="mb-2">
                       <Label className="form-label" for="whatsapp">
                         WhatsApp
                       </Label>
