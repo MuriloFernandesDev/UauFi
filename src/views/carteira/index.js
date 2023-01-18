@@ -102,7 +102,7 @@ const Carteira = () => {
         setPesquisando(true)
         dados.clienteId = sClienteId
         api
-          .get("/cliente_credito/carteira")
+          .get(`/cliente_credito/${dados.clienteId?.length >= 1 ? 'carteira' : 'credito_nao_aprovado'}`)
           .then((res) => {
             setDados(res.data)
             setPesquisando(false)
@@ -369,7 +369,7 @@ const Carteira = () => {
     }
   }
 
-  return sClienteId?.length > 0 ? (
+  return (
     <Fragment>
       <div className="app-user-list">
         <Row>
@@ -415,14 +415,6 @@ const Carteira = () => {
       </div>
       <Sidebar open={sidebarOpen} toggleSidebar={toggleSidebar} />
     </Fragment>
-  ) : (
-    <Card className="mb-0">
-      <Row>
-        <Col md="12" className="m-2 text-center">
-          <h5 className="m-0">Selecione um cliente no campo acima</h5>
-        </Col>
-      </Row>
-    </Card>
   )
 }
 
