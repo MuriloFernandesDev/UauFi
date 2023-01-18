@@ -84,6 +84,12 @@ const ClienteEdit = () => {
             )
           } else if (error.response.status === 503) {
             handleError("Ops...", error.response.data, "error")
+          } else if (error.response.status === 401) {
+            handleError(
+              "Ops...",
+              "Seu login não tem permissão para esta operação",
+              "error"
+            )
           } else {
             handleError(
               "Erro inesperado",
@@ -113,6 +119,12 @@ const ClienteEdit = () => {
             )
           } else if (error.response.status === 503) {
             handleError("Ops...", error.response.data, "error")
+          } else if (error.response.status === 401) {
+            handleError(
+              "Ops...",
+              "Seu login não tem permissão para esta operação",
+              "error"
+            )
           } else {
             handleError(
               "Erro inesperado",
