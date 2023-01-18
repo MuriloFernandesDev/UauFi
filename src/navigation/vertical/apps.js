@@ -141,6 +141,7 @@ export default [
     navLink: "/carteira",
     action: "read",
     resource: "minha_carteira",
+    badge: true,
   },
   {
     id: "menuFiltro",

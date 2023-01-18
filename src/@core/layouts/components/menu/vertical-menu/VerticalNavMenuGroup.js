@@ -29,6 +29,7 @@ const VerticalNavMenuGroup = ({
   setCurrentActiveGroup,
   ...rest
 }) => {
+
   // ** Hooks
   const { t } = useTranslation()
   const location = useLocation()
