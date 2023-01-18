@@ -1,8 +1,7 @@
 // ** React Imports
 import { useEffect } from "react"
 
-// ** Config
-import themeConfig from "@configs/themeConfig"
+import { useSkin } from '@hooks/useSkin'
 
 // ** Utils
 import { getUserData } from "@utils"
@@ -14,10 +13,14 @@ const VerticalMenuHeader = (props) => {
   // ** Vars
   const user = getUserData()
 
+  // ** Hooks
+  const { skin } = useSkin()
+
   // ** Reset open group
   useEffect(() => {
     if (!menuHover && menuCollapsed) setGroupOpen([])
   }, [menuHover, menuCollapsed])
+
 
   return (
     <div className="navbar-header pe-1 ps-1">
@@ -25,7 +28,7 @@ const VerticalMenuHeader = (props) => {
         <li className="nav-item">
           <img
             src={
-              themeConfig.layout.skin === "dark"
+              skin === "dark" && user.url_logo_dark
                 ? user.url_logo_dark
                 : user.url_logo_light
             }
