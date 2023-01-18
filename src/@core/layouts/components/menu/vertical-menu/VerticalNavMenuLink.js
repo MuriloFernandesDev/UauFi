@@ -31,7 +31,8 @@ const VerticalNavMenuLink = ({ item, activeItem }) => {
 
   const handlePesquisar = (dados) => {
     dados.clienteId = sClienteId
-    api
+    if (item.badge) {
+      api
       .get(`/cliente_credito/${dados.clienteId?.length >= 1 ? 'carteira' : 'credito_nao_aprovado'}`)
       .then((res) => {
         setClientCredit(res.data)
@@ -39,6 +40,7 @@ const VerticalNavMenuLink = ({ item, activeItem }) => {
       .catch((error) => {
         console.log(error)
       })
+    }
   }
 
   // ** Hooks
