@@ -6,13 +6,13 @@ module.exports = {
     sass: {
       loaderOptions: {
         sassOptions: {
-          includePaths: ['node_modules', 'src/assets']
-        }
-      }
+          includePaths: ['node_modules', 'src/assets'],
+        },
+      },
     },
     postcss: {
-      plugins: [require('postcss-rtl')()]
-    }
+      plugins: [require('postcss-rtl')()],
+    },
   },
   webpack: {
     alias: {
@@ -24,7 +24,7 @@ module.exports = {
       '@styles': path.resolve(__dirname, 'src/@core/scss'),
       '@configs': path.resolve(__dirname, 'src/configs'),
       '@utils': path.resolve(__dirname, 'src/utility/Utils'),
-      '@hooks': path.resolve(__dirname, 'src/utility/hooks')
-    }
-  }
+      '@hooks': path.resolve(__dirname, 'src/utility/hooks'),
+    },
+  },
 }

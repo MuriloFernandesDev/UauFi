@@ -7,7 +7,6 @@ import api from "@src/services/api"
 export const getUsuarios = createAsyncThunk(
   "usuario/getUsuarios",
   async (parametros) => {
-    //console.log(parametros)
     const response = await api.get("/usuario/lista", { params: parametros })
     // console.log(response)
     let vRegInicial = (parametros.page - 1) * parametros.perPage
@@ -63,8 +62,11 @@ export const getUsuario = async (id) => {
   return response
 }
 
-export const getAcessos = async (id) => {
-  const response = (await api.get(`/usuario/linha_tempo/${id}`)).data
+export const getAcessos = async ({id, page, perPage}) => {
+  const parametros = {
+    page, perPage
+  }
+  const response = await api.get(`/usuario/linha_tempo/${id}`, { params: parametros })
   return response
 }
 
