@@ -1,42 +1,42 @@
 // ** Reactstrap
-import { Card, CardBody, CardText, Spinner } from "reactstrap"
+import { Card, CardBody, CardText, Spinner } from 'reactstrap'
 
 // ** Imagens
-import medal from "@src/assets/images/illustration/badge.svg"
+import medal from '@src/assets/images/illustration/badge.svg'
 
 // ** Hooks
-import { useEffect, useState } from "react"
+import { useEffect, useState } from 'react'
 
 // ** API
-import api from "@src/services/api"
+import api from '@src/services/api'
 
 // ** Utils
-import { formatDateTime } from "@utils"
+import { formatDateTime } from '@utils'
 
 // ** Custom Components
-import Avatar from "@components/avatar"
+import Avatar from '@components/avatar'
 
 // ** Default Avatar Image
-import defaultAvatar from "@src/assets/images/avatars/avatar-blank.png"
-import { Link } from "react-router-dom"
+import defaultAvatar from '@src/assets/images/avatars/avatar-blank.png'
+import { Link } from 'react-router-dom'
 
 const CardUsuarioMaisVisita = () => {
   // ** States
-  const [vDados, setDados] = useState({ nome: "", qtd: "0", ultima_visita: "" })
+  const [vDados, setDados] = useState({ nome: '', qtd: '0', ultima_visita: '' })
 
   const [vProcessando, setProcessando] = useState(true)
 
   const getDados = () => {
     setProcessando(true)
     return api
-      .get("/conexao/usuario_mais_visita")
+      .get('/conexao/usuario_mais_visita')
       .then((res) => {
         setProcessando(false)
         setDados(res.data)
       })
       .catch((error) => {
         setProcessando(false)
-        console.error("Erro ao pegar dados:", error)
+        console.error('Erro ao pegar dados:', error)
       })
   }
 
