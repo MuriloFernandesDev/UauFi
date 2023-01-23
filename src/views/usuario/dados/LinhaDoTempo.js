@@ -1,40 +1,34 @@
-// ** Custom Components
-import Timeline from "@components/timeline"
+// ** Imports
+import Timeline from '@components/timeline'
 import { Download, Trash, Upload, User, Wifi } from 'react-feather'
-// ** React Imports
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-// ** Store & Actions
 import { getAcessos } from '../store'
 import { useDispatch } from 'react-redux'
-// ** Utils
-import { formatDateTime } from "@utils"
-// ** Reactstrap Imports
+import { formatDateTime } from '@utils'
 import { Card, CardHeader, CardTitle, CardBody, Spinner } from 'reactstrap'
 import { auto } from '@popperjs/core'
 import ReactPaginate from 'react-paginate'
 
 const LinhaDoTempo = (dados) => {
-  // ** Store Vars
   const dispatch = useDispatch()
 
-  // ** States
   const [vCarregando, setCarregando] = useState(true)
   const [vDados, setDados] = useState(true)
   const [total, setTotal] = useState(0)
-  const [currentPage, setCurrentPage] = useState(0)
+  const [currentPage, setCurrentPage] = useState(1)
 
   const handlePagination = async (propsPage) => {
-   setCarregando(true)
+    setCarregando(true)
     getAcessos({ id: dados.id, page: propsPage.selected + 1, perPage: 25 })
       .then((response) => {
         setCarregando(false)
         const { data } = response
-        setTotal(data.total)
         setDados(data.dados)
-        setCurrentPage(propsPage)
+        setCurrentPage(propsPage.selected + 1)
       })
-      .catch(() => {
+      .catch((error) => {
+        console.log(error)
         setCarregando(false)
       })
   }
@@ -60,14 +54,12 @@ const LinhaDoTempo = (dados) => {
     return `${new Intl.NumberFormat().format(valor.toFixed(1))} ${vUnidade}`
   }
 
-  // ** Get suer on mount
   useEffect(() => {
     setCarregando(true)
     getAcessos({ id: dados.id, page: 1, perPage: 25 })
       .then((response) => {
         setCarregando(false)
         const { data } = response
-        setCurrentPage(currentPage + 1)
         setTotal(data.total)
         setDados(data.dados)
       })
@@ -172,7 +164,11 @@ const LinhaDoTempo = (dados) => {
                 }
               />
             </>
-          ) : null
+          ) : (
+            <div className="mb-2">
+              <h6>Nenhum registro encontrado 😔</h6>
+            </div>
+          )
         ) : (
           <div className="text-center mt-3">
             <Spinner type="grow" size="sm" color="primary" />
