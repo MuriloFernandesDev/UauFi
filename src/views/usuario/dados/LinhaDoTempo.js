@@ -141,7 +141,7 @@ const LinhaDoTempo = (dados) => {
                 nextLabel=""
                 breakLabel="..."
                 previousLabel=""
-                pageCount={Math.ceil(total / 25) || 1}
+                pageCount={Math.ceil(total / 25) - 1 || 1}
                 activeClassName="active"
                 breakClassName="page-item"
                 pageClassName={'page-item'}
