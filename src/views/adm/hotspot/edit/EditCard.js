@@ -1,7 +1,7 @@
 // ** React
-import { Fragment, useEffect, useState } from "react"
-import { Link, useNavigate } from "react-router-dom"
-import classnames from "classnames"
+import { Fragment, useEffect, useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import classnames from 'classnames'
 
 // ** Reactstrap
 import {
@@ -21,41 +21,49 @@ import {
   ListGroupItem,
   CardBody,
   Spinner,
-} from "reactstrap"
+} from 'reactstrap'
 
 // ** Default Imagem
-import defaultImagem from "@src/assets/images/pages/semfoto.png"
+import defaultImagem from '@src/assets/images/pages/semfoto.png'
 
 // ** Icons
-import { CornerUpLeft, Check, Trash, Frown, Smile } from "react-feather"
+import {
+  CornerUpLeft,
+  Check,
+  Trash,
+  Frown,
+  Smile,
+  Plus,
+  Move,
+} from 'react-feather'
 
 // ** Terceiros
-import Select from "react-select"
-import { useTranslation } from "react-i18next"
+import Select from 'react-select'
+import { useTranslation } from 'react-i18next'
 
 // ** Utils
-import { getUserData, campoInvalido, mostrarMensagem } from "@utils"
+import { getUserData, campoInvalido, mostrarMensagem } from '@utils'
 
-import { getClientes, getMarcas, getConectados } from "../store"
-import { auto } from "@popperjs/core"
+import { getClientes, getMarcas, getConectados } from '../store'
+import { auto } from '@popperjs/core'
 
 const vUserData = getUserData()
 
 const vListaTipoIntegracao = [
-  { value: 0, label: "Nenhuma" },
-  { value: 1, label: "Taboca" },
-  { value: 2, label: "IXC Soft" },
-  { value: 3, label: "Max Atacadista" },
-  { value: 4, label: "Clubefato" },
-  { value: 5, label: "TOTVs API" },
-  { value: 6, label: "TOTVs Oracle" },
-  { value: 7, label: "CaririSGP" },
-  { value: 8, label: "IXC Leads" },
+  { value: 0, label: 'Nenhuma' },
+  { value: 1, label: 'Taboca' },
+  { value: 2, label: 'IXC Soft' },
+  { value: 3, label: 'Max Atacadista' },
+  { value: 4, label: 'Clubefato' },
+  { value: 5, label: 'TOTVs API' },
+  { value: 6, label: 'TOTVs Oracle' },
+  { value: 7, label: 'CaririSGP' },
+  { value: 8, label: 'IXC Leads' },
 ]
 
 const vListaTipoLayout = [
-  { value: 0, label: "Layout Padrão" },
-  { value: 1, label: "Layout Alternativo" },
+  { value: 0, label: 'Layout Padrão' },
+  { value: 1, label: 'Layout Alternativo' },
 ]
 
 const HotspotEditCard = ({ data, setSalvarDados }) => {
@@ -66,14 +74,14 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
   const [vErrosCP, setErrosCP] = useState({})
 
   const vCamposObrigatorios = [
-    { nome: "nome" },
-    { nome: "cliente_id", tipo: "int" },
-    { nome: "marca_equipamento", tipo: "int" },
-    { nome: "lat", tipo: "int" },
-    { nome: "lng", tipo: "int" },
+    { nome: 'nome' },
+    { nome: 'cliente_id', tipo: 'int' },
+    { nome: 'marca_equipamento', tipo: 'int' },
+    { nome: 'lat', tipo: 'int' },
+    { nome: 'lng', tipo: 'int' },
   ]
 
-  const vCamposObrigatoriosCP = [{ nome: "redirect_url" }]
+  const vCamposObrigatoriosCP = [{ nome: 'redirect_url' }]
 
   // ** States
   const [vDados, setData] = useState(data)
@@ -91,11 +99,11 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
   )
   const [vTipoLayout, setTipoLayout] = useState(null)
   const [vTipoIntegracao, setTipoIntegracao] = useState(null)
-  const [varDadosIntegracao1, setVarDadosIntegracao1] = useState("")
-  const [varDadosIntegracao2, setVarDadosIntegracao2] = useState("")
-  const [varDadosIntegracao3, setVarDadosIntegracao3] = useState("")
+  const [varDadosIntegracao1, setVarDadosIntegracao1] = useState('')
+  const [varDadosIntegracao2, setVarDadosIntegracao2] = useState('')
+  const [varDadosIntegracao3, setVarDadosIntegracao3] = useState('')
 
-  const [active, setActive] = useState("1")
+  const [active, setActive] = useState('1')
 
   // ** Bloquear ações de onChange
   const blockChange = () => {}
@@ -162,14 +170,14 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
           setControladoraOK(true)
         })
         .catch((erro) => {
-          let vErro = ""
+          let vErro = ''
           setVerificandoControladora(false)
           if (erro.response.status === 503) {
             vErro = erro.response.data
           } else if (erro.response.status === 404) {
-            vErro = "Seu login não está autorizado"
+            vErro = 'Seu login não está autorizado'
           } else {
-            vErro = "Erro inesperado"
+            vErro = 'Erro inesperado'
           }
           setListaConectados([vErro])
           setControladoraOK(false)
@@ -218,9 +226,9 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
       setSalvarDados(vDados)
     } else {
       mostrarMensagem(
-        "Atenção!",
-        "Preencha todos os campos obrigatórios.",
-        "warning"
+        'Atenção!',
+        'Preencha todos os campos obrigatórios.',
+        'warning'
       )
     }
   }
@@ -277,6 +285,190 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
     }
   }, [])
 
+  const handleChangeItem = (v, i, n) => {
+    const { access_point: vItem } = vDados
+    vItem[i] = {
+      ...vItem[i],
+      [n]: v,
+    }
+    setData((prevState) => ({
+      ...prevState,
+      access_point: vItem,
+    }))
+  }
+
+  const handleRemoveItem = (index) => {
+    setData((prevState) => {
+      return {
+        ...prevState,
+        access_point: [
+          ...prevState.access_point.slice(0, index),
+          ...prevState.access_point.slice(index + 1),
+        ],
+      }
+    })
+  }
+
+  const renderItens = () => {
+    return (
+      <ul
+        className={`todo-app-list list-group ${
+          vDados?.access_point.length && 'py-5'
+        }`}
+      >
+        {vDados?.access_point.map((item, index) => {
+          const marca_equip =
+            vListaMarcas &&
+            vListaMarcas.map((data) => {
+              if (data.value === item.marca_equipamento) {
+                return data
+              }
+            })[item.marca_equipamento - 1]
+
+          return (
+            <li
+              key={`${item.id}-${index}`}
+              className="todo-item list-group-item pt-2 py-5"
+            >
+              <div className="todo-title-wrapper mb-3">
+                <div className="todo-title-area w-100">
+                  <Row>
+                    <Col md="8" className="mt-2">
+                      <Label className="form-label" for="nome">
+                        Nome para identificação*
+                      </Label>
+                      <Input
+                        value={item.nome ?? ''}
+                        onChange={(e) => {
+                          handleChangeItem(e?.target.value, index, 'nome')
+                        }}
+                      />
+                    </Col>
+                    <Col md="4" className="mt-2">
+                      <Label className="form-label" for="nome">
+                        Marca do equipamento*
+                      </Label>
+
+                      <Select
+                        id="marca_equipamento"
+                        noOptionsMessage={() => t('Vazio')}
+                        placeholder={t(
+                          (marca_equip && marca_equip.label) ?? 'Selecione...'
+                        )}
+                        classNamePrefix="select"
+                        value={(marca_equip && marca_equip.label) ?? ''}
+                        onChange={(e) => {
+                          handleChangeItem(e?.value, index, 'marca_equipamento')
+                          handleChangeItem(
+                            e?.label,
+                            index,
+                            'marca_equipamento_name'
+                          )
+                        }}
+                        options={vListaMarcas}
+                      />
+                    </Col>
+                    <Col md="4" className="mt-2">
+                      <Label className="form-label" for="nome">
+                        MAC
+                      </Label>
+                      <Input
+                        value={item.mac ?? ''}
+                        onChange={(e) => {
+                          handleChangeItem(e?.target.value, index, 'mac')
+                        }}
+                      />
+                    </Col>
+
+                    {vDados?.access_point.id === item.id &&
+                    vDados?.access_point.marca_equipamento === 8 ? (
+                      <Col md="4" className="mt-2">
+                        <Label
+                          className="form-label"
+                          for="controladora_usuario"
+                        >
+                          Nome do site Unifi
+                        </Label>
+                        <Input
+                          id="site_unifi"
+                          name="site_unifi"
+                          value={vDados?.site_unifi ?? ''}
+                          onChange={handleChange}
+                        />
+                      </Col>
+                    ) : null}
+                    <Col md="4" className="mt-2">
+                      <Label className="form-label" for="nome">
+                        Latitude*
+                      </Label>
+                      <Input
+                        value={item.lat ?? 0}
+                        // invalid={campoInvalido(
+                        //   vDados,
+                        //   vErros,
+                        //   'lat_access',
+                        //   'int'
+                        // )}
+                        onChange={(e) => {
+                          handleChangeItem(e?.target.value, index, 'lat')
+                        }}
+                      />
+                    </Col>
+                    <Col md="4" className="mt-2">
+                      <Label className="form-label" for="nome">
+                        Longitude*
+                      </Label>
+                      <Input
+                        value={item.lng ?? 0}
+                        // invalid={campoInvalido(
+                        //   vDados,
+                        //   vErros,
+                        //   'lng_access',
+                        //   'int'
+                        // )}
+                        onChange={(e) => {
+                          handleChangeItem(e?.target.value, index, 'lng')
+                        }}
+                      />
+                    </Col>
+                  </Row>
+                </div>
+
+                <div className="todo-item-action mt-2">
+                  <Link
+                    to="/"
+                    className="text-body d-flex align-items-center"
+                    onClick={(e) => {
+                      e.preventDefault()
+                      handleRemoveItem(index)
+                    }}
+                  >
+                    <Trash className="font-medium-3 text-danger cursor-pointer" />
+                    Excluir Access Point #{index + 1}
+                  </Link>
+                </div>
+              </div>
+            </li>
+          )
+        })}
+      </ul>
+    )
+  }
+
+  const handleAddItem = () => {
+    setData((prevState) => {
+      return {
+        ...prevState,
+        access_point: [
+          ...prevState.access_point,
+          {
+            id: 0,
+          },
+        ],
+      }
+    })
+  }
+
   return (
     <Row>
       <Col sm="12">
@@ -304,9 +496,9 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
             <Nav tabs>
               <NavItem>
                 <NavLink
-                  active={active === "1"}
+                  active={active === '1'}
                   onClick={() => {
-                    toggle("1")
+                    toggle('1')
                   }}
                 >
                   Dados principais
@@ -314,9 +506,9 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
               </NavItem>
               <NavItem>
                 <NavLink
-                  active={active === "2"}
+                  active={active === '2'}
                   onClick={() => {
-                    toggle("2")
+                    toggle('2')
                   }}
                 >
                   Captive Portal
@@ -324,9 +516,9 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
               </NavItem>
               <NavItem>
                 <NavLink
-                  active={active === "3"}
+                  active={active === '3'}
                   onClick={() => {
-                    toggle("3")
+                    toggle('3')
                   }}
                 >
                   Gerencial
@@ -344,9 +536,9 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
                       <Input
                         id="nome"
                         name="nome"
-                        value={vDados?.nome ?? ""}
+                        value={vDados?.nome ?? ''}
                         onChange={handleChange}
-                        invalid={campoInvalido(vDados, vErros, "nome")}
+                        invalid={campoInvalido(vDados, vErros, 'nome')}
                       />
                     </Col>
                     <Col md="3" className="mb-2">
@@ -355,14 +547,14 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
                       </Label>
                       <Select
                         id="marca_equipamento"
-                        noOptionsMessage={() => t("Vazio")}
-                        placeholder={t("Selecione...")}
-                        className={classnames("react-select", {
-                          "is-invalid": campoInvalido(
+                        noOptionsMessage={() => t('Vazio')}
+                        placeholder={t('Selecione...')}
+                        className={classnames('react-select', {
+                          'is-invalid': campoInvalido(
                             vDados,
                             vErros,
-                            "marca_equipamento",
-                            "int"
+                            'marca_equipamento',
+                            'int'
                           ),
                         })}
                         classNamePrefix="select"
@@ -371,7 +563,7 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
                           setMarca(e)
                           handleChange({
                             target: {
-                              name: "marca_equipamento",
+                              name: 'marca_equipamento',
                               value: e.value,
                             },
                           })
@@ -387,14 +579,14 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
                         id="hash"
                         name="hash"
                         disabled={data.id > 0}
-                        value={vDados?.hash ?? ""}
+                        value={vDados?.hash ?? ''}
                         onChange={
                           data.id > 0 ? blockChange : (e) => handleChange(e)
                         }
                       />
                     </Col>
                     <Col
-                      md={vUserData.perfil === "adm" ? "6" : "9"}
+                      md={vUserData.perfil === 'adm' ? '6' : '9'}
                       className="mb-2"
                     >
                       <Label className="form-label" for="cliente_id">
@@ -403,17 +595,17 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
                       <Select
                         isClearable
                         id="cliente_id"
-                        noOptionsMessage={() => t("Vazio")}
-                        placeholder={t("Selecione...")}
+                        noOptionsMessage={() => t('Vazio')}
+                        placeholder={t('Selecione...')}
                         value={vCliente}
                         isDisabled={vDados.id === 0 && data.cliente_id > 0}
                         options={vListaClientes}
-                        className={classnames("react-select", {
-                          "is-invalid": campoInvalido(
+                        className={classnames('react-select', {
+                          'is-invalid': campoInvalido(
                             vDados,
                             vErros,
-                            "cliente_id",
-                            "int"
+                            'cliente_id',
+                            'int'
                           ),
                         })}
                         classNamePrefix="select"
@@ -421,7 +613,7 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
                           setCliente(e)
                           handleChange({
                             target: {
-                              name: "cliente_id",
+                              name: 'cliente_id',
                               value: Number(e?.value),
                             },
                           })
@@ -437,11 +629,11 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
                       <Input
                         id="mac"
                         name="mac"
-                        value={vDados?.mac ?? ""}
+                        value={vDados?.mac ?? ''}
                         onChange={handleChange}
                       />
                     </Col>
-                    {vUserData.perfil === "adm" ? (
+                    {vUserData.perfil === 'adm' ? (
                       <Col md="3" className="mb-2">
                         <Label className="form-label" for="id">
                           ID do Hotspot
@@ -451,7 +643,7 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
                           name="id"
                           type="number"
                           disabled={data.id > 0}
-                          value={vDados?.id ?? ""}
+                          value={vDados?.id ?? ''}
                           onChange={
                             data.id > 0 ? blockChange : (e) => handleChange(e)
                           }
@@ -465,7 +657,7 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
                       <Input
                         id="ip"
                         name="ip"
-                        value={vDados?.ip ?? ""}
+                        value={vDados?.ip ?? ''}
                         onChange={handleChange}
                       />
                     </Col>
@@ -477,7 +669,7 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
                         id="porta"
                         name="porta"
                         type="number"
-                        value={vDados?.porta ?? ""}
+                        value={vDados?.porta ?? ''}
                         onChange={handleChange}
                       />
                     </Col>
@@ -488,7 +680,7 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
                       <Input
                         id="controladora_usuario"
                         name="controladora_usuario"
-                        value={vDados?.controladora_usuario ?? ""}
+                        value={vDados?.controladora_usuario ?? ''}
                         onChange={handleChange}
                       />
                     </Col>
@@ -501,7 +693,7 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
                         name="controladora_senha"
                         type="password"
                         autoComplete="new-password"
-                        value={vDados?.controladora_senha ?? ""}
+                        value={vDados?.controladora_senha ?? ''}
                         onChange={handleChange}
                       />
                     </Col>
@@ -516,7 +708,7 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
                         <Input
                           id="site_unifi"
                           name="site_unifi"
-                          value={vDados?.site_unifi ?? ""}
+                          value={vDados?.site_unifi ?? ''}
                           onChange={handleChange}
                         />
                       </Col>
@@ -528,9 +720,9 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
                       <Input
                         id="lat"
                         name="lat"
-                        value={vDados?.lat ?? ""}
+                        value={vDados?.lat ?? ''}
                         onChange={handleChange}
-                        invalid={campoInvalido(vDados, vErros, "lat", "int")}
+                        invalid={campoInvalido(vDados, vErros, 'lat', 'int')}
                       />
                     </Col>
                     <Col md="3" className="mb-2">
@@ -540,9 +732,9 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
                       <Input
                         id="lng"
                         name="lng"
-                        value={vDados?.lng ?? ""}
+                        value={vDados?.lng ?? ''}
                         onChange={handleChange}
-                        invalid={campoInvalido(vDados, vErros, "lng", "int")}
+                        invalid={campoInvalido(vDados, vErros, 'lng', 'int')}
                       />
                     </Col>
                     <Col md="3" className="mb-2 pt-md-2">
@@ -554,7 +746,7 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
                           onChange={(e) => {
                             handleChange({
                               target: {
-                                name: "usa_radius",
+                                name: 'usa_radius',
                                 value: e.target.checked,
                               },
                             })
@@ -577,18 +769,32 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
                           onChange={(e) => {
                             handleChange({
                               target: {
-                                name: "ativo",
+                                name: 'ativo',
                                 value: e.target.checked,
                               },
                             })
                           }}
                         />
                         <Label for="ativo" className="form-check-label mt-25">
-                          Hotspot {vDados?.ativo ? "ativado" : "desativado"}
+                          Hotspot {vDados?.ativo ? 'ativado' : 'desativado'}
                         </Label>
                       </div>
                     </Col>
+                    <Col md="12" className="mt-2 mb-1">
+                      <Link
+                        to="/"
+                        className="text-primary d-flex justify-content-left align-items-center"
+                        onClick={(e) => {
+                          e.preventDefault()
+                          handleAddItem()
+                        }}
+                      >
+                        <Plus className="font-medium-3 cursor-pointer" />
+                        <span className="ms-25">Adicionar Access Point</span>
+                      </Link>
+                    </Col>
                   </Row>
+                  <Col md="12">{renderItens()}</Col>
                 </Card>
               </TabPane>
               <TabPane tabId="2">
@@ -643,7 +849,7 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
                                       e.preventDefault()
                                       handleChangeCP({
                                         target: {
-                                          name: "logo_captive",
+                                          name: 'logo_captive',
                                           value: null,
                                         },
                                       })
@@ -705,7 +911,7 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
                                       e.preventDefault()
                                       handleChangeCP({
                                         target: {
-                                          name: "imagem_fundo",
+                                          name: 'imagem_fundo',
                                           value: null,
                                         },
                                       })
@@ -724,7 +930,7 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
                           Título
                         </Label>
                         <Input
-                          value={vDadosCP?.titulo ?? ""}
+                          value={vDadosCP?.titulo ?? ''}
                           onChange={handleChangeCP}
                           name="titulo"
                           id="tituloCP"
@@ -739,7 +945,7 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
                           name="cor_primaria"
                           type="color"
                           className="p-0"
-                          value={vDadosCP?.cor_primaria ?? ""}
+                          value={vDadosCP?.cor_primaria ?? ''}
                           onChange={handleChangeCP}
                         />
                       </Col>
@@ -748,8 +954,8 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
                           Tipo de Layout
                         </Label>
                         <Select
-                          placeholder={t("Selecione...")}
-                          noOptionsMessage={() => t("Vazio")}
+                          placeholder={t('Selecione...')}
+                          noOptionsMessage={() => t('Vazio')}
                           className="react-select"
                           classNamePrefix="select"
                           value={vTipoLayout}
@@ -757,7 +963,7 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
                             setTipoLayout(e)
                             handleChangeCP({
                               target: {
-                                name: "layout_captive",
+                                name: 'layout_captive',
                                 value: e.value,
                               },
                             })
@@ -783,12 +989,12 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
                         <Input
                           id="vRedirectUrl"
                           name="redirect_url"
-                          value={vDadosCP?.redirect_url ?? ""}
+                          value={vDadosCP?.redirect_url ?? ''}
                           onChange={handleChangeCP}
                           invalid={campoInvalido(
                             vDadosCP,
                             vErrosCP,
-                            "redirect_url"
+                            'redirect_url'
                           )}
                         />
                       </Col>
@@ -799,7 +1005,7 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
                         <Input
                           id="vIntelifi"
                           name="intelifi_hid"
-                          value={vDadosCP?.intelifi_hid ?? ""}
+                          value={vDadosCP?.intelifi_hid ?? ''}
                           onChange={handleChangeCP}
                         />
                       </Col>
@@ -809,16 +1015,16 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
                         </Label>
                         <Select
                           id="vTipoIntegracao"
-                          placeholder={t("Selecione...")}
+                          placeholder={t('Selecione...')}
                           className="react-select"
-                          noOptionsMessage={() => t("Vazio")}
+                          noOptionsMessage={() => t('Vazio')}
                           classNamePrefix="select"
                           value={vTipoIntegracao}
                           onChange={(e) => {
                             setTipoIntegracao(e)
                             handleChangeCP({
                               target: {
-                                name: "tipo_integracao",
+                                name: 'tipo_integracao',
                                 value: e.value,
                               },
                             })
@@ -856,7 +1062,7 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
                                     setVarDadosIntegracao1(e.target.value)
                                     handleChangeCP({
                                       target: {
-                                        name: "dados_integracao",
+                                        name: 'dados_integracao',
                                         value: JSON.stringify({
                                           hotel_id: e.target.value,
                                           totvs_id: varDadosIntegracao2,
@@ -882,7 +1088,7 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
                                     setVarDadosIntegracao2(e.target.value)
                                     handleChangeCP({
                                       target: {
-                                        name: "dados_integracao",
+                                        name: 'dados_integracao',
                                         value: JSON.stringify({
                                           hotel_id: varDadosIntegracao1,
                                           totvs_id: e.target.value,
@@ -894,7 +1100,7 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
                               </Col>
                             </Fragment>
                           ) : (
-                            ""
+                            ''
                           )}
                           {vDadosCP?.tipo_integracao === 6 ? (
                             <Fragment>
@@ -913,7 +1119,7 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
                                     setVarDadosIntegracao1(e.target.value)
                                     handleChangeCP({
                                       target: {
-                                        name: "dados_integracao",
+                                        name: 'dados_integracao',
                                         value: JSON.stringify({
                                           hotel_id: e.target.value,
                                           service_name: varDadosIntegracao2,
@@ -937,7 +1143,7 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
                                     setVarDadosIntegracao2(e.target.value)
                                     handleChangeCP({
                                       target: {
-                                        name: "dados_integracao",
+                                        name: 'dados_integracao',
                                         value: JSON.stringify({
                                           hotel_id: varDadosIntegracao1,
                                           service_name: e.target.value,
@@ -949,7 +1155,7 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
                               </Col>
                             </Fragment>
                           ) : (
-                            ""
+                            ''
                           )}
                           {vDadosCP?.tipo_integracao === 2 ||
                           vDadosCP?.tipo_integracao === 8 ? (
@@ -968,7 +1174,7 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
                                     setVarDadosIntegracao1(e.target.value)
                                     handleChangeCP({
                                       target: {
-                                        name: "dados_integracao",
+                                        name: 'dados_integracao',
                                         value: JSON.stringify({
                                           url: e.target.value,
                                           usuario: varDadosIntegracao2,
@@ -993,7 +1199,7 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
                                     setVarDadosIntegracao2(e.target.value)
                                     handleChangeCP({
                                       target: {
-                                        name: "dados_integracao",
+                                        name: 'dados_integracao',
                                         value: JSON.stringify({
                                           url: varDadosIntegracao1,
                                           usuario: e.target.value,
@@ -1018,7 +1224,7 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
                                     setVarDadosIntegracao3(e.target.value)
                                     handleChangeCP({
                                       target: {
-                                        name: "dados_integracao",
+                                        name: 'dados_integracao',
                                         value: JSON.stringify({
                                           url: varDadosIntegracao1,
                                           usuario: varDadosIntegracao2,
@@ -1031,7 +1237,7 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
                               </Col>
                             </Fragment>
                           ) : (
-                            ""
+                            ''
                           )}
                           {vDadosCP?.tipo_integracao === 7 ? (
                             <Fragment>
@@ -1049,7 +1255,7 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
                                     setVarDadosIntegracao1(e.target.value)
                                     handleChangeCP({
                                       target: {
-                                        name: "dados_integracao",
+                                        name: 'dados_integracao',
                                         value: JSON.stringify({
                                           url: e.target.value,
                                           app: varDadosIntegracao2,
@@ -1074,7 +1280,7 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
                                     setVarDadosIntegracao2(e.target.value)
                                     handleChangeCP({
                                       target: {
-                                        name: "dados_integracao",
+                                        name: 'dados_integracao',
                                         value: JSON.stringify({
                                           url: varDadosIntegracao1,
                                           app: e.target.value,
@@ -1099,7 +1305,7 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
                                     setVarDadosIntegracao3(e.target.value)
                                     handleChangeCP({
                                       target: {
-                                        name: "dados_integracao",
+                                        name: 'dados_integracao',
                                         value: JSON.stringify({
                                           url: varDadosIntegracao1,
                                           app: varDadosIntegracao2,
@@ -1112,11 +1318,11 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
                               </Col>
                             </Fragment>
                           ) : (
-                            ""
+                            ''
                           )}
                         </Fragment>
                       ) : (
-                        ""
+                        ''
                       )}
                       <Col md="12" className="mb-1">
                         <div className="divider divider-dark">
@@ -1134,7 +1340,7 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
                             onChange={(e) => {
                               handleChangeCP({
                                 target: {
-                                  name: "nome",
+                                  name: 'nome',
                                   value: e.target.checked,
                                 },
                               })
@@ -1157,7 +1363,7 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
                             onChange={(e) => {
                               handleChangeCP({
                                 target: {
-                                  name: "email",
+                                  name: 'email',
                                   value: e.target.checked,
                                 },
                               })
@@ -1180,7 +1386,7 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
                             onChange={(e) => {
                               handleChangeCP({
                                 target: {
-                                  name: "cpf",
+                                  name: 'cpf',
                                   value: e.target.checked,
                                 },
                               })
@@ -1203,7 +1409,7 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
                             onChange={(e) => {
                               handleChangeCP({
                                 target: {
-                                  name: "nascimento",
+                                  name: 'nascimento',
                                   value: e.target.checked,
                                 },
                               })
@@ -1226,7 +1432,7 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
                             onChange={(e) => {
                               handleChangeCP({
                                 target: {
-                                  name: "celular",
+                                  name: 'celular',
                                   value: e.target.checked,
                                 },
                               })
@@ -1249,7 +1455,7 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
                             onChange={(e) => {
                               handleChangeCP({
                                 target: {
-                                  name: "pais",
+                                  name: 'pais',
                                   value: e.target.checked,
                                 },
                               })
@@ -1272,7 +1478,7 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
                             onChange={(e) => {
                               handleChangeCP({
                                 target: {
-                                  name: "cidade",
+                                  name: 'cidade',
                                   value: e.target.checked,
                                 },
                               })
@@ -1286,7 +1492,7 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
                           </Label>
                         </div>
                       </Col>
-                      {vUserData.perfil === "adm" ? (
+                      {vUserData.perfil === 'adm' ? (
                         <Col md="4" className="mb-2">
                           <div className="form-check form-switch">
                             <Input
@@ -1296,7 +1502,7 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
                               onChange={(e) => {
                                 handleChangeCP({
                                   target: {
-                                    name: "usa_sms",
+                                    name: 'usa_sms',
                                     value: e.target.checked,
                                   },
                                 })
@@ -1320,7 +1526,7 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
                             onChange={(e) => {
                               handleChangeCP({
                                 target: {
-                                  name: "genero",
+                                  name: 'genero',
                                   value: e.target.checked,
                                 },
                               })
@@ -1343,7 +1549,7 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
                             onChange={(e) => {
                               handleChangeCP({
                                 target: {
-                                  name: "brasileiro",
+                                  name: 'brasileiro',
                                   value: e.target.checked,
                                 },
                               })
@@ -1366,7 +1572,7 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
                             onChange={(e) => {
                               handleChangeCP({
                                 target: {
-                                  name: "login_social",
+                                  name: 'login_social',
                                   value: e.target.checked,
                                 },
                               })
@@ -1389,7 +1595,7 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
                             onChange={(e) => {
                               handleChangeCP({
                                 target: {
-                                  name: "hotel",
+                                  name: 'hotel',
                                   value: e.target.checked,
                                 },
                               })
@@ -1412,7 +1618,7 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
                             onChange={(e) => {
                               handleChangeCP({
                                 target: {
-                                  name: "empresa_representa",
+                                  name: 'empresa_representa',
                                   value: e.target.checked,
                                 },
                               })
@@ -1435,7 +1641,7 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
                             onChange={(e) => {
                               handleChangeCP({
                                 target: {
-                                  name: "indicacao",
+                                  name: 'indicacao',
                                   value: e.target.checked,
                                 },
                               })
@@ -1458,7 +1664,7 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
                             onChange={(e) => {
                               handleChangeCP({
                                 target: {
-                                  name: "aceite_comunicacao",
+                                  name: 'aceite_comunicacao',
                                   value: e.target.checked,
                                 },
                               })
@@ -1518,7 +1724,7 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
                                 )}
                               </h6>
                               <div
-                                style={{ maxHeight: "290px", overflow: auto }}
+                                style={{ maxHeight: '290px', overflow: auto }}
                               >
                                 <ListGroup flush>
                                   <pre>

@@ -1,13 +1,13 @@
 // ** React
-import { Link } from "react-router-dom"
-import { useRef, useState, useEffect, useContext } from "react"
+import { Link } from 'react-router-dom'
+import { useRef, useState, useEffect, useContext } from 'react'
 
 // ** Utils
-import { formatDateTime } from "@utils"
+import { formatDateTime } from '@utils'
 
 // ** Terceiros
-import ReactPaginate from "react-paginate"
-import DataTable from "react-data-table-component"
+import ReactPaginate from 'react-paginate'
+import DataTable from 'react-data-table-component'
 
 // ** Reactstrap
 import {
@@ -23,23 +23,23 @@ import {
   UncontrolledTooltip,
   UncontrolledDropdown,
   Badge,
-} from "reactstrap"
+} from 'reactstrap'
 
 // ** Store & Actions
-import { getHotspot, cloneHotspot, deleteHotspot } from "./store"
-import { useDispatch, useSelector } from "react-redux"
+import { getHotspot, cloneHotspot, deleteHotspot } from './store'
+import { useDispatch, useSelector } from 'react-redux'
 
 // ** Styles
-import "@styles/react/libs/tables/react-dataTable-component.scss"
+import '@styles/react/libs/tables/react-dataTable-component.scss'
 
 // ** Context
-import { AbilityContext as PermissaoContext } from "@src/utility/context/Can"
+import { AbilityContext as PermissaoContext } from '@src/utility/context/Can'
 
 // ** Third Party Components
-import { Eye, Copy, Trash, MoreVertical, ChevronDown } from "react-feather"
-import Swal from "sweetalert2"
-import withReactContent from "sweetalert2-react-content"
-import toast from "react-hot-toast"
+import { Eye, Copy, Trash, MoreVertical, ChevronDown } from 'react-feather'
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
+import toast from 'react-hot-toast'
 
 const MySwal = withReactContent(Swal)
 
@@ -68,7 +68,7 @@ const CustomHeader = ({ handleFilter, value, handlePerPage, rowsPerPage }) => {
             tag={Link}
             to="/adm/hotspot/add"
             color="primary"
-            disabled={!permissao.can("create", "adm_hotspot")}
+            disabled={!permissao.can('create', 'adm_hotspot')}
           >
             Novo hotspot
           </Button>
@@ -100,16 +100,16 @@ const HotspotList = () => {
   const store = useSelector((state) => state.hotspot)
 
   // ** States
-  const [value, setValue] = useState(store.params.q ?? "")
-  const [sort, setSort] = useState(store.params.sort ?? "desc")
-  const [sortColumn, setSortColumn] = useState(store.params.sortColumn ?? "id")
+  const [value, setValue] = useState(store.params.q ?? '')
+  const [sort, setSort] = useState(store.params.sort ?? 'desc')
+  const [sortColumn, setSortColumn] = useState(store.params.sortColumn ?? 'id')
   const [currentPage, setCurrentPage] = useState(store.params.page ?? 1)
   const [rowsPerPage, setRowsPerPage] = useState(store.params.perPage ?? 10)
   const vTimeoutPesquisa = useRef()
   const [vPesquisando, setPesquisando] = useState(true)
 
   // ** Guardar o Cliente selecionado para atualizar a página caso mude
-  const sClienteId = localStorage.getItem("clienteId")
+  const sClienteId = localStorage.getItem('clienteId')
 
   if (vPesquisando && store.total >= 0) {
     setPesquisando(false)
@@ -196,18 +196,18 @@ const HotspotList = () => {
         pageCount={count || 1}
         activeClassName="active"
         breakClassName="page-item"
-        pageClassName={"page-item"}
+        pageClassName={'page-item'}
         breakLinkClassName="page-link"
-        nextLinkClassName={"page-link"}
-        pageLinkClassName={"page-link"}
-        nextClassName={"page-item next"}
-        previousLinkClassName={"page-link"}
-        previousClassName={"page-item prev"}
+        nextLinkClassName={'page-link'}
+        pageLinkClassName={'page-link'}
+        nextClassName={'page-item next'}
+        previousLinkClassName={'page-link'}
+        previousClassName={'page-item prev'}
         onPageChange={(page) => handlePagination(page)}
         forcePage={
           currentPage !== 0 ? (currentPage <= count ? currentPage - 1 : 0) : 0
         }
-        containerClassName={"pagination react-paginate justify-content-end p-1"}
+        containerClassName={'pagination react-paginate justify-content-end p-1'}
       />
     )
   }
@@ -239,19 +239,19 @@ const HotspotList = () => {
 
   const handleDeleteConfirmation = (row) => {
     return MySwal.fire({
-      title: "Tem certeza?",
-      text: "Sua ação não poderá ser revertida!",
-      icon: "warning",
+      title: 'Tem certeza?',
+      text: 'Sua ação não poderá ser revertida!',
+      icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: "Sim, remover!",
-      cancelButtonText: "Cancelar",
+      confirmButtonText: 'Sim, remover!',
+      cancelButtonText: 'Cancelar',
       customClass: {
-        confirmButton: "btn btn-primary",
-        cancelButton: "btn btn-outline-danger ms-1",
-        popup: "animate__animated animate__fadeIn",
+        confirmButton: 'btn btn-primary',
+        cancelButton: 'btn btn-outline-danger ms-1',
+        popup: 'animate__animated animate__fadeIn',
       },
       hideClass: {
-        popup: "animate__animated animate__zoomOut",
+        popup: 'animate__animated animate__zoomOut',
       },
       buttonsStyling: false,
     }).then(async (result) => {
@@ -259,8 +259,8 @@ const HotspotList = () => {
         await dispatch(deleteHotspot(row.id))
         handleFilter(store.params.q)
 
-        toast.success("Removido com sucesso!", {
-          position: "bottom-right",
+        toast.success('Removido com sucesso!', {
+          position: 'bottom-right',
         })
       }
     })
@@ -270,36 +270,36 @@ const HotspotList = () => {
 
   const handleClone = (row) => {
     MySwal.fire({
-      title: "Copiar cadastro de Hotspot",
-      text: "Quantas cópias deseja fazer?",
-      input: "number",
-      icon: "warning",
+      title: 'Copiar cadastro de Hotspot',
+      text: 'Quantas cópias deseja fazer?',
+      input: 'number',
+      icon: 'warning',
       inputAttributes: {
         min: 1,
       },
       customClass: {
-        input: "mx-3",
-        confirmButton: "btn btn-primary",
-        cancelButton: "btn btn-danger ms-1",
-        popup: "animate__animated animate__fadeIn",
+        input: 'mx-3',
+        confirmButton: 'btn btn-primary',
+        cancelButton: 'btn btn-danger ms-1',
+        popup: 'animate__animated animate__fadeIn',
       },
       hideClass: {
-        popup: "animate__animated animate__zoomOut",
+        popup: 'animate__animated animate__zoomOut',
       },
       buttonsStyling: false,
       inputAttributes: {
-        autocapitalize: "off",
+        autocapitalize: 'off',
       },
       showCancelButton: true,
-      confirmButtonText: "Copiar",
-      cancelButtonText: "Cancelar",
+      confirmButtonText: 'Copiar',
+      cancelButtonText: 'Cancelar',
       inputValidator: (value) => {
         return new Promise((resolve) => {
           const numberValue = Number(value)
           if (numberValue <= 0 || numberValue > 50) {
-            resolve("Digite um número entre 1 e 50.")
+            resolve('Digite um número entre 1 e 50.')
           } else if (numberValue % 1 !== 0) {
-            resolve("Digite um número inteiro.")
+            resolve('Digite um número inteiro.')
           } else {
             resolve()
           }
@@ -315,22 +315,22 @@ const HotspotList = () => {
       }
       if (result.value) {
         await dispatch(cloneHotspot(cloneParams))
-        setSort("desc")
-        setValue("")
-        setSortColumn("id")
+        setSort('desc')
+        setValue('')
+        setSortColumn('id')
         setCurrentPage(1)
         dispatch(
           getHotspot({
-            sort: "desc",
-            q: "",
-            sortColumn: "id",
+            sort: 'desc',
+            q: '',
+            sortColumn: 'id',
             page: 1,
             perPage: rowsPerPage,
           })
         )
 
         toast.success(adaptedSentence, {
-          position: "bottom-right",
+          position: 'bottom-right',
         })
       }
     })
@@ -339,11 +339,11 @@ const HotspotList = () => {
   // ** Table columns
   const columns = [
     {
-      name: "ID",
+      name: 'ID',
       sortable: true,
-      maxWidth: "110px",
-      minWidth: "110px",
-      sortField: "id",
+      maxWidth: '110px',
+      minWidth: '110px',
+      sortField: 'id',
       cell: (row) => {
         return (
           <div className="d-flex justify-content-left align-items-center">
@@ -357,12 +357,12 @@ const HotspotList = () => {
       },
     },
     {
-      name: "Nome",
+      name: 'Nome',
       sortable: true,
-      minWidth: "450px",
-      sortField: "nome",
+      minWidth: '450px',
+      sortField: 'nome',
       cell: (row) => {
-        const nome = row.nome ?? ""
+        const nome = row.nome ?? ''
 
         return (
           <div className="d-flex justify-content-left align-items-center">
@@ -379,10 +379,10 @@ const HotspotList = () => {
       },
     },
     {
-      name: "Última comunicação",
-      minWidth: "200px",
+      name: 'Última comunicação',
+      minWidth: '200px',
       sortable: true,
-      sortField: "data_recebido",
+      sortField: 'data_recebido',
       cell: (row) => {
         return (
           <div className="d-flex justify-content-left align-items-center">
@@ -410,7 +410,7 @@ const HotspotList = () => {
     },
     {
       name: <div className="text-end w-100">Ações</div>,
-      minWidth: "80px",
+      minWidth: '80px',
       cell: (row) => (
         <div className="text-end w-100">
           <div className="column-action d-inline-flex">

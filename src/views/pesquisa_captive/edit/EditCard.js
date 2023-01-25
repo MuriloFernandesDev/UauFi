@@ -1,37 +1,37 @@
 // ** React
-import { Fragment, useEffect, useState } from "react"
-import { Link, useNavigate } from "react-router-dom"
-import classnames from "classnames"
+import { Fragment, useEffect, useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import classnames from 'classnames'
 
 // ** Reactstrap
-import { Row, Col, Card, Input, Button, Label, Badge } from "reactstrap"
+import { Row, Col, Card, Input, Button, Label, Badge } from 'reactstrap'
 
 // ** Icons
-import { CornerUpLeft, Check, Move, Trash, Plus } from "react-feather"
+import { CornerUpLeft, Check, Move, Trash, Plus } from 'react-feather'
 
 // ** Utils
-import { campoInvalido, mostrarMensagem } from "@utils"
+import { campoInvalido, mostrarMensagem } from '@utils'
 
 // ** Terceiros
-import Select from "react-select"
-import { useTranslation } from "react-i18next"
-import { ReactSortable } from "react-sortablejs"
-import { getFiltros, getHotspot } from "../store"
+import Select from 'react-select'
+import { useTranslation } from 'react-i18next'
+import { ReactSortable } from 'react-sortablejs'
+import { getFiltros, getHotspot } from '../store'
 
 const vListaFrequencia = [
-  { value: 1, label: "Sempre" },
-  { value: 2, label: "Uma vez por dia para cada usuário" },
-  { value: 3, label: "Uma vez para cada usuário" },
+  { value: 1, label: 'Sempre' },
+  { value: 2, label: 'Uma vez por dia para cada usuário' },
+  { value: 3, label: 'Uma vez para cada usuário' },
 ]
 
 const vListaDiaSemana = [
-  { value: 1, label: "Dom" },
-  { value: 2, label: "Seg" },
-  { value: 3, label: "Ter" },
-  { value: 4, label: "Qua" },
-  { value: 5, label: "Qui" },
-  { value: 6, label: "Sex" },
-  { value: 7, label: "Sab" },
+  { value: 1, label: 'Dom' },
+  { value: 2, label: 'Seg' },
+  { value: 3, label: 'Ter' },
+  { value: 4, label: 'Qua' },
+  { value: 5, label: 'Qui' },
+  { value: 6, label: 'Sex' },
+  { value: 7, label: 'Sab' },
 ]
 
 const PlanoEditCard = ({ data, setSalvarDados }) => {
@@ -70,7 +70,7 @@ const PlanoEditCard = ({ data, setSalvarDados }) => {
       : null
   )
   const [vErros, setErros] = useState({})
-  const vCamposObrigatorios = [{ nome: "nome" }, { nome: "extra_hotspot_id" }]
+  const vCamposObrigatorios = [{ nome: 'nome' }, { nome: 'extra_hotspot_id' }]
 
   // ** Organização da informação
   const handleChange = (e) => {
@@ -117,7 +117,7 @@ const PlanoEditCard = ({ data, setSalvarDados }) => {
       //Selecionar o item no componente
       if (data?.extra_hotspot_id) {
         const vHotspotArray = data?.extra_hotspot_id
-          ?.split(",")
+          ?.split(',')
           .map((item) => parseInt(item))
         setHotspot(
           hotspotsVar
@@ -189,9 +189,9 @@ const PlanoEditCard = ({ data, setSalvarDados }) => {
       setSalvarDados(vDados)
     } else {
       mostrarMensagem(
-        "Atenção!",
-        "Preencha todos os campos obrigatórios.",
-        "warning"
+        'Atenção!',
+        'Preencha todos os campos obrigatórios.',
+        'warning'
       )
     }
   }
@@ -216,7 +216,7 @@ const PlanoEditCard = ({ data, setSalvarDados }) => {
                       <div className="w-100 pe-2">
                         {vDados?.id > 0 ? (
                           <span className="text-body">
-                            {item.texto ?? ""}{" "}
+                            {item.texto ?? ''}{' '}
                             {item.texto_livre ? (
                               <Badge color="secondary">Opção texto livre</Badge>
                             ) : null}
@@ -225,13 +225,13 @@ const PlanoEditCard = ({ data, setSalvarDados }) => {
                           <Row>
                             <Col md="8">
                               <Input
-                                value={item.texto ?? ""}
+                                value={item.texto ?? ''}
                                 placeholder="Digite a opção de resposta aqui..."
                                 onChange={(e) => {
                                   handleChangeItem(
                                     e?.target.value,
                                     index,
-                                    "texto"
+                                    'texto'
                                   )
                                 }}
                               />
@@ -246,7 +246,7 @@ const PlanoEditCard = ({ data, setSalvarDados }) => {
                                     handleChangeItem(
                                       e?.target.checked,
                                       index,
-                                      "texto_livre"
+                                      'texto_livre'
                                     )
                                   }}
                                 />
@@ -303,7 +303,7 @@ const PlanoEditCard = ({ data, setSalvarDados }) => {
               <div>
                 <Button.Ripple
                   color="primary"
-                  onClick={() => navigate("/pesquisa_captive")}
+                  onClick={() => navigate('/pesquisa_captive')}
                 >
                   <CornerUpLeft size={17} />
                 </Button.Ripple>
@@ -331,9 +331,9 @@ const PlanoEditCard = ({ data, setSalvarDados }) => {
                     id="nome"
                     name="nome"
                     disabled={vDados?.id > 0}
-                    value={vDados?.nome ?? ""}
+                    value={vDados?.nome ?? ''}
                     onChange={handleChange}
-                    invalid={campoInvalido(vDados, vErros, "nome")}
+                    invalid={campoInvalido(vDados, vErros, 'nome')}
                   />
                 </Col>
 
@@ -344,14 +344,14 @@ const PlanoEditCard = ({ data, setSalvarDados }) => {
                   <Select
                     isClearable
                     id="extra_hotspot_id"
-                    noOptionsMessage={() => t("Vazio")}
+                    noOptionsMessage={() => t('Vazio')}
                     isMulti
-                    placeholder={""}
-                    className={classnames("react-select", {
-                      "is-invalid": campoInvalido(
+                    placeholder={''}
+                    className={classnames('react-select', {
+                      'is-invalid': campoInvalido(
                         vDados,
                         vErros,
-                        "extra_hotspot_id"
+                        'extra_hotspot_id'
                       ),
                     })}
                     classNamePrefix="select"
@@ -360,7 +360,7 @@ const PlanoEditCard = ({ data, setSalvarDados }) => {
                       setHotspot(e)
                       handleChange({
                         target: {
-                          name: "extra_hotspot_id",
+                          name: 'extra_hotspot_id',
                           value: e
                             ?.map((item) => item.value.toString())
                             .toString(),
@@ -378,8 +378,8 @@ const PlanoEditCard = ({ data, setSalvarDados }) => {
                   <Select
                     isClearable
                     id="filtro_id"
-                    noOptionsMessage={() => t("Vazio")}
-                    placeholder={t("Selecione...")}
+                    noOptionsMessage={() => t('Vazio')}
+                    placeholder={t('Selecione...')}
                     value={vFiltro}
                     options={vListaFiltros}
                     className="react-select"
@@ -388,7 +388,7 @@ const PlanoEditCard = ({ data, setSalvarDados }) => {
                       setFiltro(e)
                       handleChange({
                         target: {
-                          name: "filtro_id",
+                          name: 'filtro_id',
                           value: Number(e?.value),
                         },
                       })
@@ -403,9 +403,9 @@ const PlanoEditCard = ({ data, setSalvarDados }) => {
                     isClearable
                     id="dia_semana"
                     isMulti={true}
-                    noOptionsMessage={() => t("Vazio")}
+                    noOptionsMessage={() => t('Vazio')}
                     value={vDiaSemana}
-                    placeholder={"Todos os dias"}
+                    placeholder={'Todos os dias'}
                     className="react-select"
                     classNamePrefix="select"
                     options={vListaDiaSemana}
@@ -419,8 +419,8 @@ const PlanoEditCard = ({ data, setSalvarDados }) => {
                   <Select
                     isClearable
                     id="frequencia"
-                    noOptionsMessage={() => t("Vazio")}
-                    placeholder={t("Selecione...")}
+                    noOptionsMessage={() => t('Vazio')}
+                    placeholder={t('Selecione...')}
                     className="react-select"
                     classNamePrefix="select"
                     value={vFrequencia}
@@ -429,7 +429,7 @@ const PlanoEditCard = ({ data, setSalvarDados }) => {
                       setFrequencia(e)
                       handleChange({
                         target: {
-                          name: "frequencia",
+                          name: 'frequencia',
                           value: e?.value,
                         },
                       })
@@ -444,7 +444,7 @@ const PlanoEditCard = ({ data, setSalvarDados }) => {
                     id="data_inicial"
                     name="data_inicial"
                     type="date"
-                    value={vDados?.data_inicial ?? ""}
+                    value={vDados?.data_inicial ?? ''}
                     onChange={handleChange}
                   />
                 </Col>
@@ -456,7 +456,7 @@ const PlanoEditCard = ({ data, setSalvarDados }) => {
                     id="data_final"
                     name="data_final"
                     type="date"
-                    value={vDados?.data_final ?? ""}
+                    value={vDados?.data_final ?? ''}
                     onChange={handleChange}
                   />
                 </Col>
@@ -468,7 +468,7 @@ const PlanoEditCard = ({ data, setSalvarDados }) => {
                     id="hora_inicial"
                     name="hora_inicial"
                     type="time"
-                    value={vDados?.hora_inicial ?? ""}
+                    value={vDados?.hora_inicial ?? ''}
                     onChange={handleChange}
                   />
                 </Col>
@@ -480,7 +480,7 @@ const PlanoEditCard = ({ data, setSalvarDados }) => {
                     id="hora_final"
                     name="hora_final"
                     type="time"
-                    value={vDados?.hora_final ?? ""}
+                    value={vDados?.hora_final ?? ''}
                     onChange={handleChange}
                   />
                 </Col>
@@ -501,7 +501,7 @@ const PlanoEditCard = ({ data, setSalvarDados }) => {
                       onChange={(e) => {
                         handleChange({
                           target: {
-                            name: "multipla_escolha",
+                            name: 'multipla_escolha',
                             value: e.target.checked,
                           },
                         })
@@ -540,14 +540,14 @@ const PlanoEditCard = ({ data, setSalvarDados }) => {
                       onChange={(e) => {
                         handleChange({
                           target: {
-                            name: "ativo",
+                            name: 'ativo',
                             value: e.target.checked,
                           },
                         })
                       }}
                     />
                     <Label for="ativo" className="form-check-label mt-25">
-                      {vDados?.ativo ? "Pesquisa ativa" : "Pesquisa desativada"}
+                      {vDados?.ativo ? 'Pesquisa ativa' : 'Pesquisa desativada'}
                     </Label>
                   </div>
                 </Col>
