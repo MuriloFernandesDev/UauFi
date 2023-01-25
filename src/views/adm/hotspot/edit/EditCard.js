@@ -311,11 +311,7 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
 
   const renderItens = () => {
     return (
-      <ul
-        className={`todo-app-list list-group ${
-          vDados?.access_point.length && 'py-5'
-        }`}
-      >
+      <ul className={`todo-app-list list-group`}>
         {vDados?.access_point.map((item, index) => {
           const marca_equip =
             vListaMarcas &&
@@ -328,7 +324,7 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
           return (
             <li
               key={`${item.id}-${index}`}
-              className="todo-item list-group-item pt-2 py-5"
+              className="todo-item list-group-item "
             >
               <div className="todo-title-wrapper mb-3">
                 <div className="todo-title-area w-100">
@@ -780,21 +776,22 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
                         </Label>
                       </div>
                     </Col>
-                    <Col md="12" className="mt-2 mb-1">
-                      <Link
-                        to="/"
-                        className="text-primary d-flex justify-content-left align-items-center"
-                        onClick={(e) => {
-                          e.preventDefault()
-                          handleAddItem()
-                        }}
-                      >
-                        <Plus className="font-medium-3 cursor-pointer" />
-                        <span className="ms-25">Adicionar Access Point</span>
-                      </Link>
-                    </Col>
                   </Row>
                   <Col md="12">{renderItens()}</Col>
+
+                  <Col md="12" className="mt-2 mb-1">
+                    <Link
+                      to="/"
+                      className="text-primary d-flex justify-content-left align-items-center"
+                      onClick={(e) => {
+                        e.preventDefault()
+                        handleAddItem()
+                      }}
+                    >
+                      <Plus className="font-medium-3 cursor-pointer" />
+                      <span className="ms-25">Adicionar Access Point</span>
+                    </Link>
+                  </Col>
                 </Card>
               </TabPane>
               <TabPane tabId="2">
