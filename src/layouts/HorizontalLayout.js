@@ -8,14 +8,7 @@ import Layout from '@layouts/HorizontalLayout'
 // ** Menu Items Array
 import navigation from '@src/navigation/horizontal'
 
-const HorizontalLayout = props => {
-  // const [menuData, setMenuData] = useState([])
-
-  // ** For ServerSide navigation
-  // useEffect(() => {
-  //   axios.get(URL).then(response => setMenuData(response.data))
-  // }, [])
-
+const HorizontalLayout = (props) => {
   return (
     <Layout menuData={navigation} {...props}>
       <Outlet />

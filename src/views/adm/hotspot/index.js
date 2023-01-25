@@ -36,14 +36,7 @@ import '@styles/react/libs/tables/react-dataTable-component.scss'
 import { AbilityContext as PermissaoContext } from '@src/utility/context/Can'
 
 // ** Third Party Components
-import {
-  Eye,
-  Copy,
-  Trash,
-  MoreVertical,
-  ChevronDown,
-  Plus,
-} from 'react-feather'
+import { Eye, Copy, Trash, MoreVertical, ChevronDown } from 'react-feather'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import toast from 'react-hot-toast'
