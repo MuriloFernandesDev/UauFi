@@ -1,16 +1,8 @@
 import { Marker, InfoWindow } from '@react-google-maps/api'
 import { useState } from 'react'
 
-const MarkerComponent = ({ data }) => {
-  const {
-    lat: latData,
-    long: longData,
-    title,
-    address,
-    city,
-    state,
-    cep,
-  } = data
+const MarkerComponent = ({ data, ...rest }) => {
+  const { lat: latData, lng: longData, title, address, city, state, cep } = data
 
   //state para definir se a janela de informações do marker aparecerá ou não
   const [showInfoWindow, setShowInfoWindo] = useState(false)
@@ -22,6 +14,7 @@ const MarkerComponent = ({ data }) => {
 
   return (
     <Marker
+      {...rest}
       position={{ lat: latData, lng: longData }}
       onClick={handleShowInfoWindow}
       title="teste"

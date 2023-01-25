@@ -1,10 +1,6 @@
-import {
-  Autocomplete,
-  HeatmapLayer,
-  StandaloneSearchBox,
-} from '@react-google-maps/api'
+import { HeatmapLayer, Marker, MarkerClusterer } from '@react-google-maps/api'
 import { useCallback, useState } from 'react'
-import MyMapWithAutocomplete from './AutoComplet'
+import AutoComplete from './AutoComplete'
 import GoogleMapsComponent from './GoogleMap'
 import MarkerComponent from './Marker'
 import { markerData } from './markerData'
@@ -12,12 +8,11 @@ import { markerData } from './markerData'
 const TesteMapa = () => {
   //state para definir o mapa de calor
   const [heatMap, setHeatMap] = useState()
+  //state enviado ao autoComplete para definir o centro do mapa
+  const [vLatLng, setVLatLng] = useState({ lat: -21.2115, lng: -50.421 })
 
-  //define o centro do mapa
-  const center = {
-    lat: -21.2115,
-    lng: -50.4261,
-  }
+  //define o centro do mapak
+  const center = vLatLng
 
   //define o layout do gráfico
   const containerStyle = {
@@ -33,11 +28,21 @@ const TesteMapa = () => {
         new window.google.maps.LatLng(-21.209053252281798, -50.42964986276941),
         new window.google.maps.LatLng(-21.207732964446254, -50.42982152414074),
         new window.google.maps.LatLng(-21.20645267405869, -50.426731619456696),
-        new window.google.maps.LatLng(-21.206412664805228, -50.43067983099743),
       ]
       setHeatMap(heatmapData)
     }
   }, [])
+
+  //agrupador dos marcadores para nao ficar lento
+  const options = {
+    imagePath:
+      'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m', // so you must have m1.png, m2.png, m3.png, m4.png, m5.png and m6.png in that folder
+  }
+
+  //cria a chave para o marker
+  function createKey(location) {
+    return location.lat + location.lng
+  }
 
   /*
     https://react-google-maps-api-docs.netlify.app/
@@ -49,18 +54,26 @@ const TesteMapa = () => {
       onLoad={onLoad}
       style={containerStyle}
       center={center}
-      zoom={20}
+      zoom={13}
       options={{
         streetViewControl: false,
       }}
     >
-      {markerData.map((data) => {
-        return <MarkerComponent data={data} />
-      })}
+      <MarkerClusterer options={options}>
+        {(clusterer) =>
+          markerData.map((location) => (
+            <MarkerComponent
+              key={createKey(location)}
+              data={location}
+              clusterer={clusterer}
+            />
+          ))
+        }
+      </MarkerClusterer>
 
       {heatMap && <HeatmapLayer data={heatMap} />}
 
-      <MyMapWithAutocomplete />
+      <AutoComplete setVLatLng={setVLatLng} />
     </GoogleMapsComponent>
   )
 }
