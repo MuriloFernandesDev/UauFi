@@ -311,32 +311,26 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
 
   const renderItens = () => {
     return (
-      <ul className="todo-app-list list-group mb-2">
+      <ul
+        className={`todo-app-list list-group ${
+          vDados?.access_point.length && 'py-5'
+        }`}
+      >
         {vDados?.access_point.map((item, index) => {
-          // const marca_equip = getMarcas().then((re) => {
-          //   console.log(re)
+          const marca_equip =
+            vListaMarcas &&
+            vListaMarcas.map((data) => {
+              if (data.value === item.marca_equipamento) {
+                return data
+              }
+            })[item.marca_equipamento - 1]
 
-          //   re.map((data) => {
-          //     if (data.value === item.marca_equipamento) {
-          //       return data.label
-          //     }
-          //   })
-
-          //   // if (vDados?.id !== undefined) {
-          //   //   re?.map((res) => {
-          //   //     if (res.value === vDados.marca_equipamento) {
-          //   //       setMarca({ value: res.value, label: res.label })
-          //   //     }
-          //   //   })
-          //   // }
-          // })
-          // console.log(marca_equip)
           return (
             <li
               key={`${item.id}-${index}`}
-              className="todo-item list-group-item pt-2"
+              className="todo-item list-group-item pt-2 py-5"
             >
-              <div className="todo-title-wrapper">
+              <div className="todo-title-wrapper mb-3">
                 <div className="todo-title-area w-100">
                   <Row>
                     <Col md="8" className="mt-2">
@@ -359,18 +353,10 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
                         id="marca_equipamento"
                         noOptionsMessage={() => t('Vazio')}
                         placeholder={t(
-                          item.marca_equipamento_name ?? 'Selecione...'
+                          (marca_equip && marca_equip.label) ?? 'Selecione...'
                         )}
-                        // className={classnames('react-select', {
-                        //   'is-invalid': campoInvalido(
-                        //     item.marca_equipamento,
-                        //     vErros,
-                        //     'marca_equipamento',
-                        //     'int'
-                        //   ),
-                        // })}
                         classNamePrefix="select"
-                        value={item.marca_equipamento_name ?? ''}
+                        value={(marca_equip && marca_equip.label) ?? ''}
                         onChange={(e) => {
                           handleChangeItem(e?.value, index, 'marca_equipamento')
                           handleChangeItem(
