@@ -1,13 +1,13 @@
 // ** Redux Imports
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 
 // ** Axios Imports
-import api from "@src/services/api"
+import api from '@src/services/api'
 
 export const getUsuarios = createAsyncThunk(
-  "usuario/getUsuarios",
+  'usuario/getUsuarios',
   async (parametros) => {
-    const response = await api.get("/usuario/lista", { params: parametros })
+    const response = await api.get('/usuario/lista', { params: parametros })
     // console.log(response)
     let vRegInicial = (parametros.page - 1) * parametros.perPage
     let vRegFinal = parametros.page * parametros.perPage
@@ -37,7 +37,7 @@ export const getUsuarios = createAsyncThunk(
 )
 
 export const getPagina = createAsyncThunk(
-  "usuario/getPagina",
+  'usuario/getPagina',
   async (parametros) => {
     let vRegInicial = (parametros.page - 1) * parametros.perPage
     let vRegFinal = parametros.page * parametros.perPage
@@ -62,11 +62,14 @@ export const getUsuario = async (id) => {
   return response
 }
 
-export const getAcessos = async ({id, page, perPage}) => {
+export const getAcessos = async ({ id, page, perPage }) => {
   const parametros = {
-    page, perPage
+    page,
+    perPage,
   }
-  const response = await api.get(`/usuario/linha_tempo/${id}`, { params: parametros })
+  const response = await api.get(`/usuario/linha_tempo/${id}`, {
+    params: parametros,
+  })
   return response
 }
 
@@ -101,7 +104,7 @@ export const getTotais = async (id) => {
 }
 
 export const getUsuarioOnline = async () => {
-  const response = (await api.get("/usuario/online")).data
+  const response = (await api.get('/usuario/online')).data
   return response
 }
 
@@ -111,7 +114,7 @@ export const getListaHotspot = async (id) => {
 }
 
 export const deleteUsuario = createAsyncThunk(
-  "usuario/deleteUsuario",
+  'usuario/deleteUsuario',
   async (id) => {
     await api.delete(`/usuario/${id}`)
     return id
@@ -119,7 +122,7 @@ export const deleteUsuario = createAsyncThunk(
 )
 
 export const usuarioSlice = createSlice({
-  name: "usuario",
+  name: 'usuario',
   initialState: {
     data: [],
     total: -1,
