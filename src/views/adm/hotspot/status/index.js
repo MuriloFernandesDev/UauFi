@@ -1,5 +1,5 @@
 // ** React Imports
-import { Fragment, useState, useEffect, useRef } from "react"
+import { Fragment, useState, useEffect, useRef } from 'react'
 
 // ** Reactstrap Imports
 import {
@@ -14,22 +14,22 @@ import {
   DropdownMenu,
   DropdownItem,
   CardTitle,
-} from "reactstrap"
+} from 'reactstrap'
 
 // ** API
-import api from "@src/services/api"
+import api from '@src/services/api'
 
-import { Link } from "react-router-dom"
+import { Link } from 'react-router-dom'
 
-import StatsHorizontal from "@components/widgets/stats/StatsHorizontal"
+import StatsHorizontal from '@components/widgets/stats/StatsHorizontal'
 
-import classnames from "classnames"
+import classnames from 'classnames'
 
 // ** Store & Actions
-import { getHotspotStatus, getHotspotStatusTotais } from "../store"
+import { getHotspotStatus, getHotspotStatusTotais } from '../store'
 
 // ** Utils
-import { formatDateTime, formatInt, mostrarMensagem } from "@utils"
+import { formatDateTime, formatInt, mostrarMensagem } from '@utils'
 
 // ** Icons Imports
 import {
@@ -41,11 +41,11 @@ import {
   User,
   Wifi,
   WifiOff,
-} from "react-feather"
+} from 'react-feather'
 
 // ** Third Party Components
-import Swal from "sweetalert2"
-import withReactContent from "sweetalert2-react-content"
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
 
 const MySwal = withReactContent(Swal)
 
@@ -90,19 +90,19 @@ const StatusHotspot = () => {
   // ** Modal de desativar
   const handleDesativar = (row) => {
     return MySwal.fire({
-      title: "Tem certeza?",
-      text: "O hotspot será DESATIVADO e deixará de aceitar novas conexões!",
-      icon: "warning",
+      title: 'Tem certeza?',
+      text: 'O hotspot será DESATIVADO e deixará de aceitar novas conexões!',
+      icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: "Ok, desativar!",
-      cancelButtonText: "Cancelar",
+      confirmButtonText: 'Ok, desativar!',
+      cancelButtonText: 'Cancelar',
       customClass: {
-        confirmButton: "btn btn-primary",
-        cancelButton: "btn btn-outline-danger ms-1",
-        popup: "animate__animated animate__fadeIn",
+        confirmButton: 'btn btn-primary',
+        cancelButton: 'btn btn-outline-danger ms-1',
+        popup: 'animate__animated animate__fadeIn',
       },
       hideClass: {
-        popup: "animate__animated animate__zoomOut",
+        popup: 'animate__animated animate__zoomOut',
       },
       buttonsStyling: false,
     }).then((result) => {
@@ -116,14 +116,14 @@ const StatusHotspot = () => {
           })
           .catch((error) => {
             if (error.response.status === 400) {
-              mostrarMensagem("Atenção!", "Não autorizado.", "warning")
+              mostrarMensagem('Atenção!', 'Não autorizado.', 'warning')
             } else if (error.response.status === 503) {
-              mostrarMensagem("Ops...", error.response.data, "error")
+              mostrarMensagem('Ops...', error.response.data, 'error')
             } else {
               mostrarMensagem(
-                "Erro inesperado",
-                "Por favor, contate um administrador.",
-                "error"
+                'Erro inesperado',
+                'Por favor, contate um administrador.',
+                'error'
               )
             }
           })
@@ -144,15 +144,15 @@ const StatusHotspot = () => {
             color="primary"
             statTitle={
               vCarregando
-                ? "Verificando..."
-                : `Hotspot${vDados?.qtd_total !== 1 ? "s" : ""}`
+                ? 'Verificando...'
+                : `Hotspot${vDados?.qtd_total !== 1 ? 's' : ''}`
             }
             icon={<Wifi size={20} />}
             renderStats={
               <h3 className="fw-bolder mb-75">
                 {vCarregando ? (
                   <div>
-                    <Spinner type="grow" size="sm" color="primary" />{" "}
+                    <Spinner type="grow" size="sm" color="primary" />{' '}
                   </div>
                 ) : (
                   formatInt(vTotais?.qtd_total ?? 0)
@@ -164,13 +164,13 @@ const StatusHotspot = () => {
         <Col md="">
           <StatsHorizontal
             color="danger"
-            statTitle={vCarregando ? "Verificando..." : "Offline"}
+            statTitle={vCarregando ? 'Verificando...' : 'Offline'}
             icon={<AlertTriangle size={20} />}
             renderStats={
               <h3 className="fw-bolder mb-75">
                 {vCarregando ? (
                   <div>
-                    <Spinner type="grow" size="sm" color="primary" />{" "}
+                    <Spinner type="grow" size="sm" color="primary" />{' '}
                   </div>
                 ) : (
                   formatInt(vTotais?.qtd_off ?? 0)
@@ -182,13 +182,13 @@ const StatusHotspot = () => {
         <Col md="">
           <StatsHorizontal
             color="success"
-            statTitle={vCarregando ? "Verificando..." : "Online"}
+            statTitle={vCarregando ? 'Verificando...' : 'Online'}
             icon={<Check size={20} />}
             renderStats={
               <h3 className="fw-bolder mb-75">
                 {vCarregando ? (
                   <div>
-                    <Spinner type="grow" size="sm" color="primary" />{" "}
+                    <Spinner type="grow" size="sm" color="primary" />{' '}
                   </div>
                 ) : (
                   formatInt(vTotais?.qtd_on ?? 0)
@@ -200,13 +200,13 @@ const StatusHotspot = () => {
         <Col md="">
           <StatsHorizontal
             color="secondary"
-            statTitle={vCarregando ? "Verificando..." : "Desativado"}
+            statTitle={vCarregando ? 'Verificando...' : 'Desativado'}
             icon={<WifiOff size={20} />}
             renderStats={
               <h3 className="fw-bolder mb-75">
                 {vCarregando ? (
                   <div>
-                    <Spinner type="grow" size="sm" color="primary" />{" "}
+                    <Spinner type="grow" size="sm" color="primary" />{' '}
                   </div>
                 ) : (
                   formatInt(vTotais?.qtd_inativo ?? 0)
@@ -218,13 +218,13 @@ const StatusHotspot = () => {
         <Col md="">
           <StatsHorizontal
             color="warning"
-            statTitle={vCarregando ? "Verificando..." : "Não utilizado"}
+            statTitle={vCarregando ? 'Verificando...' : 'Não utilizado'}
             icon={<Clock size={20} />}
             renderStats={
               <h3 className="fw-bolder mb-75">
                 {vCarregando ? (
                   <div>
-                    <Spinner type="grow" size="sm" color="primary" />{" "}
+                    <Spinner type="grow" size="sm" color="primary" />{' '}
                   </div>
                 ) : (
                   formatInt(vTotais?.qtd_nao_utilizado ?? 0)
@@ -242,11 +242,11 @@ const StatusHotspot = () => {
                   <Col key={index} md="2" lg="4" xl="3">
                     <Card>
                       <CardHeader
-                        className={classnames("p-1", {
-                          "bg-danger": row.status === 0,
-                          "bg-success": row.status === 1,
-                          "bg-secondary": row.status === 2,
-                          "bg-warning": row.status === 3,
+                        className={classnames('p-1', {
+                          'bg-danger': row.status === 0,
+                          'bg-success': row.status === 1,
+                          'bg-secondary': row.status === 2,
+                          'bg-warning': row.status === 3,
                         })}
                       >
                         <div className="d-flex justify-content-between align-items-center">
@@ -290,7 +290,7 @@ const StatusHotspot = () => {
                             </UncontrolledDropdown>
                             <Link to={`/adm/hotspot/${row.id}`}>
                               <CardTitle tag="h5" className="text-white">
-                                {row.nome ?? ""}
+                                {row.nome ?? ''}
                               </CardTitle>
                             </Link>
                           </div>
@@ -302,18 +302,21 @@ const StatusHotspot = () => {
                             <strong>ID: </strong> {row.id}
                           </small>
                           <small className=" mb-0">
+                            <strong>MAC: </strong> {row.mac}
+                          </small>
+                          <small className=" mb-0">
                             <strong>IP público: </strong> {row.ip_recebido}
                           </small>
                           <small className=" mb-0">
-                            <strong>Última comunicação: </strong>{" "}
+                            <strong>Última comunicação: </strong>{' '}
                             {formatDateTime(row.data_recebido)}
                           </small>
                           <small className=" mb-0">
-                            <strong>Usuários online: </strong>{" "}
+                            <strong>Usuários online: </strong>{' '}
                             {formatInt(row.qtd_online)}
                           </small>
                           <small className=" mb-0">
-                            <strong>Usuários cadastrados: </strong>{" "}
+                            <strong>Usuários cadastrados: </strong>{' '}
                             {formatInt(row.qtd_cadastro)}
                           </small>
                         </div>
