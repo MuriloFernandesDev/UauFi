@@ -1,4 +1,4 @@
-import { HeatmapLayer, Marker, MarkerClusterer } from '@react-google-maps/api'
+import { HeatmapLayer, MarkerClusterer } from '@react-google-maps/api'
 import { useCallback, useState } from 'react'
 import AutoComplete from './AutoComplete'
 import GoogleMapsComponent from './GoogleMap'
@@ -10,10 +10,8 @@ const TesteMapa = () => {
   const [heatMap, setHeatMap] = useState()
   //state enviado ao autoComplete para definir o centro do mapa
   const [vLatLng, setVLatLng] = useState({ lat: -21.2115, lng: -50.421 })
-
   //define o centro do mapak
   const center = vLatLng
-
   //define o layout do gráfico
   const containerStyle = {
     width: '100%',
@@ -39,11 +37,6 @@ const TesteMapa = () => {
       'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m', // so you must have m1.png, m2.png, m3.png, m4.png, m5.png and m6.png in that folder
   }
 
-  //cria a chave para o marker
-  function createKey(location) {
-    return location.lat + location.lng
-  }
-
   /*
     https://react-google-maps-api-docs.netlify.app/
     Documentação do react-google-maps-api
@@ -57,13 +50,18 @@ const TesteMapa = () => {
       zoom={13}
       options={{
         streetViewControl: false,
+        mapTypeControl: false,
+        mapTypeId: 'roadmap',
+        //opções acimas desativam os controles de mapa que são cobrados a parte pelo google
       }}
     >
+      {/* componente para agrupar os marcadores e não sobrecarregar o app */}
       <MarkerClusterer options={options}>
         {(clusterer) =>
-          markerData.map((location) => (
+          markerData.map((location, index) => (
+            // componente de marcador
             <MarkerComponent
-              key={createKey(location)}
+              key={index}
               data={location}
               clusterer={clusterer}
             />
@@ -71,8 +69,10 @@ const TesteMapa = () => {
         }
       </MarkerClusterer>
 
+      {/* compoente para exibir mapa de calor */}
       {heatMap && <HeatmapLayer data={heatMap} />}
 
+      {/* componente para pesquisa de lugares */}
       <AutoComplete setVLatLng={setVLatLng} />
     </GoogleMapsComponent>
   )

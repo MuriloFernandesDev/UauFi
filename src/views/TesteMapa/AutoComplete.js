@@ -1,7 +1,7 @@
 import { Autocomplete } from '@react-google-maps/api'
 import React, { useState } from 'react'
 import { Search, Tablet } from 'react-feather'
-import { Button, Input } from 'reactstrap'
+import { Input } from 'reactstrap'
 // ** Custom Components
 import Avatar from '@components/avatar'
 
@@ -14,10 +14,12 @@ const AutoComplete = ({ setVLatLng }) => {
   }
 
   function onPlaceChanged() {
-    if (autoComplete.getPlace().geometry) {
+    const place = autoComplete.getPlace()
+
+    if (place.geometry) {
       setVLatLng({
-        lat: autoComplete.getPlace().geometry.viewport.Wa.hi,
-        lng: autoComplete.getPlace().geometry.viewport.Ja.hi,
+        lat: place.geometry.location.lat(),
+        lng: place.geometry.location.lng(),
       })
     } else {
       console.log('Not found.')
@@ -28,29 +30,27 @@ const AutoComplete = ({ setVLatLng }) => {
     <Autocomplete onLoad={onLoader} onPlaceChanged={onPlaceChanged}>
       <div
         style={{
-          width: `100%`,
           position: 'absolute',
           top: 13,
           display: 'flex',
-          justifyContent: 'center',
+          left: 13,
           alignItems: 'center',
           gap: 5,
         }}
       >
+        <Avatar
+          onClick={() => setIsSearch(!isSearch)}
+          className="text-primary"
+          icon={<Search className="text-white" size={20} />}
+        />
         <Input
           type="text"
           placeholder="Pesquisar por lugar..."
           style={{
-            transition: 'visibility 0s, width 0.6s linear',
+            transition: 'visibility 0.5s, width 0.6s linear',
             width: isSearch ? '190px' : '0',
             visibility: isSearch ? 'visible' : 'hidden',
-            marginLeft: isSearch ? '0' : -50,
           }}
-        />
-        <Avatar
-          onClick={() => setIsSearch(!isSearch)}
-          color="text-primary"
-          icon={<Search size={20} />}
         />
       </div>
     </Autocomplete>

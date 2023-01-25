@@ -1,5 +1,14 @@
 export const markerData = [
   {
+    lat: -21.203334616145394,
+    lng: -50.443415381610656,
+    title: 'UauFi',
+    address: 'Rua de cima, 1333 - vila 2',
+    city: 'Araçatuba',
+    state: 'SP',
+    cep: '16012-529',
+  },
+  {
     lat: -21.201971570277752,
     lng: -50.44149449752359,
     title: 'Rondon',
