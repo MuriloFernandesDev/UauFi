@@ -24,7 +24,6 @@ const LinhaDoTempo = (dados) => {
       .then((response) => {
         setCarregando(false)
         const { data } = response
-
         setDados(data.dados)
         setCurrentPage(propsPage.selected + 1)
       })
