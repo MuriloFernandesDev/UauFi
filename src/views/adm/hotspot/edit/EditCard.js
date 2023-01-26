@@ -440,7 +440,7 @@ const HotspotEditCard = ({ data, setSalvarDados }) => {
                     }}
                   >
                     <Trash className="font-medium-3 text-danger cursor-pointer" />
-                    Excluir Access Point #{index + 1}
+                    Remover Access Point #{index + 1}
                   </Link>
                 </div>
               </div>

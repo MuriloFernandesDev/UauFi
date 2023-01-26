@@ -1,11 +1,11 @@
 import { Autocomplete } from '@react-google-maps/api'
 import React, { useState } from 'react'
-import { Search, Tablet } from 'react-feather'
+import { Search } from 'react-feather'
 import { Input } from 'reactstrap'
 // ** Custom Components
 import Avatar from '@components/avatar'
 
-const AutoComplete = ({ setVLatLng }) => {
+const AutoComplete = ({ setVLatLng, setZoom }) => {
   const [autoComplete, setAutoComplete] = useState()
   const [isSearch, setIsSearch] = useState(false)
 
@@ -21,6 +21,7 @@ const AutoComplete = ({ setVLatLng }) => {
         lat: place.geometry.location.lat(),
         lng: place.geometry.location.lng(),
       })
+      setZoom(13)
     } else {
       console.log('Not found.')
     }

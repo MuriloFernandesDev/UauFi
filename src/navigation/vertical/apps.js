@@ -15,6 +15,7 @@ import {
   WifiOff,
   BookOpen,
   Activity,
+  MapPin,
 } from 'react-feather'
 
 export default [
@@ -23,6 +24,14 @@ export default [
     title: 'Dashboard',
     icon: <Home size={20} />,
     navLink: '/dashboard',
+  },
+  {
+    id: 'menuMapa',
+    title: 'Mapas',
+    icon: <MapPin size={20} />,
+    navLink: '/mapa',
+    action: 'read',
+    resource: 'mapa_google',
   },
   {
     id: 'menuAdm',
@@ -111,6 +120,7 @@ export default [
     action: 'read',
     resource: 'filtro_campanha',
   },
+
   {
     id: 'menuPesquisa',
     title: 'Pesquisa',

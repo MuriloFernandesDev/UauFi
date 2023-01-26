@@ -1,6 +1,6 @@
 // ** React Imports
 import { lazy } from 'react'
-import TesteMapa from '../../views/TesteMapa'
+import Mapa from '../../views/mapa'
 
 const Dashboard = lazy(() => import('../../views/dashboard'))
 const Cliente = lazy(() => import('../../views/adm/cliente'))
@@ -74,8 +74,8 @@ const AppRoutes = [
     path: '/adm/cliente/:id',
   },
   {
-    element: <TesteMapa />,
-    path: '/teste-mapa',
+    element: <Mapa />,
+    path: '/mapa',
   },
   {
     element: <Hotspot />,

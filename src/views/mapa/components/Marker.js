@@ -2,7 +2,16 @@ import { Marker, InfoWindow } from '@react-google-maps/api'
 import { useState } from 'react'
 
 const MarkerComponent = ({ data, ...rest }) => {
-  const { lat: latData, lng: longData, title, address, city, state, cep } = data
+  const {
+    lat: latData,
+    lng: longData,
+    bairro,
+    cidade,
+    endereco,
+    endereco_nr,
+    uf,
+    hotspot_nome,
+  } = data
 
   //state para definir se a janela de informações do marker aparecerá ou não
   const [showInfoWindow, setShowInfoWindo] = useState(false)
@@ -18,28 +27,6 @@ const MarkerComponent = ({ data, ...rest }) => {
       position={{ lat: latData, lng: longData }}
       onClick={handleShowInfoWindow}
       title="teste"
-      // Código abaixo para alterar aparencia do Marker
-      // onLoad={(marker) => {
-      //   const customIcon = (opts) =>
-      //     Object.assign(
-      //       {
-      //         path: 'M12.75 0l-2.25 2.25 2.25 2.25-5.25 6h-5.25l4.125 4.125-6.375 8.452v0.923h0.923l8.452-6.375 4.125 4.125v-5.25l6-5.25 2.25 2.25 2.25-2.25-11.25-11.25zM10.5 12.75l-1.5-1.5 5.25-5.25 1.5 1.5-5.25 5.25z',
-      //         fillColor: '#34495e',
-      //         fillOpacity: 1,
-      //         strokeColor: '#000',
-      //         strokeWeight: 1,
-      //         scale: 1,
-      //       },
-      //       opts
-      //     )
-
-      //   marker.setIcon(
-      //     customIcon({
-      //       fillColor: 'green',
-      //       strokeColor: 'white',
-      //     })
-      //   )
-      // }}
     >
       {showInfoWindow && (
         //janela de informações
@@ -48,12 +35,13 @@ const MarkerComponent = ({ data, ...rest }) => {
           position={{ lat: latData, lng: longData }}
         >
           <div className="d-flex flex-column">
-            <h1 className="mb-0 text-black fs-4">{title}</h1>
-            <p className="mb-0 text-black fs-6">{address} </p>
+            <h1 className="mb-0 text-black fs-4">{hotspot_nome}</h1>
             <p className="mb-0 text-black fs-6">
-              {city} - {state}
+              {endereco}, {endereco_nr} - {bairro}
             </p>
-            <p className="mb-0 text-black fs-6">{cep}</p>
+            <p className="mb-0 text-black fs-6">
+              {cidade} - {uf}
+            </p>
 
             <a
               href={`https://maps.google.com/?q=${latData},${longData}`}

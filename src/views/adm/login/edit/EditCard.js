@@ -1,29 +1,29 @@
 // ** React
-import { Fragment, useEffect, useState, useContext } from "react"
-import { Link, useNavigate } from "react-router-dom"
-import classnames from "classnames"
+import { Fragment, useEffect, useState, useContext } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import classnames from 'classnames'
 
 // ** Reactstrap
-import { Row, Col, Card, Input, Button, Label, Table } from "reactstrap"
+import { Row, Col, Card, Input, Button, Label, Table } from 'reactstrap'
 
 // ** Icons
-import { CornerUpLeft, Check, Trash } from "react-feather"
+import { CornerUpLeft, Check, Trash } from 'react-feather'
 
 // ** Default Imagem
-import defaultImagem from "@src/assets/images/avatars/avatar-blank.png"
+import defaultImagem from '@src/assets/images/avatars/avatar-blank.png'
 
 // ** Terceiros
-import Select from "react-select"
-import { useTranslation } from "react-i18next"
+import Select from 'react-select'
+import { useTranslation } from 'react-i18next'
 
 // ** Utils
-import { campoInvalido, mostrarMensagem } from "@utils"
+import { campoInvalido, mostrarMensagem } from '@utils'
 
 // ** API
-import api from "@src/services/api"
+import api from '@src/services/api'
 
 // ** Context
-import { AbilityContext as PermissaoContext } from "@src/utility/context/Can"
+import { AbilityContext as PermissaoContext } from '@src/utility/context/Can'
 
 const ClienteLoginEditCard = ({ data, setSalvarDados }) => {
   const navigate = useNavigate()
@@ -32,7 +32,7 @@ const ClienteLoginEditCard = ({ data, setSalvarDados }) => {
 
   const [vErros, setErros] = useState({})
 
-  const vCamposObrigatorios = [{ nome: "email" }, { nome: "clientes" }]
+  const vCamposObrigatorios = [{ nome: 'email' }, { nome: 'clientes' }]
 
   // ** States
   const [vDados, setData] = useState(data)
@@ -57,11 +57,11 @@ const ClienteLoginEditCard = ({ data, setSalvarDados }) => {
     const vDadosAnt =
       vDados[name] && vDados[name].length >= pos
         ? vDados[name]
-        : (vDados[name] ?? "").padEnd(pos, "0")
+        : (vDados[name] ?? '').padEnd(pos, '0')
 
     const vNovoValor =
       vDadosAnt.substring(0, pos - 1) +
-      (e.target.checked ? "1" : "0") +
+      (e.target.checked ? '1' : '0') +
       vDadosAnt.substring(pos)
 
     setData((prevState) => ({
@@ -71,13 +71,13 @@ const ClienteLoginEditCard = ({ data, setSalvarDados }) => {
   }
 
   const getClientes = () => {
-    return api.get("/cliente/lista_simples").then((res) => {
+    return api.get('/cliente/lista_simples').then((res) => {
       setListaClientes(res.data)
 
       //Selecionar o item no componente
       if (data?.clientes) {
         const vClienteArray = data?.clientes
-          ?.split(",")
+          ?.split(',')
           .map((item) => parseInt(item))
         setCliente(
           res.data?.filter((item) => vClienteArray?.includes(item.value))
@@ -117,16 +117,16 @@ const ClienteLoginEditCard = ({ data, setSalvarDados }) => {
       setSalvarDados(vDados)
     } else {
       mostrarMensagem(
-        "Atenção!",
-        "Preencha todos os campos obrigatórios.",
-        "warning"
+        'Atenção!',
+        'Preencha todos os campos obrigatórios.',
+        'warning'
       )
     }
   }
 
   const getCampo = (campo, pos) => {
     try {
-      return vDados[campo]?.substring(pos, pos + 1) === "1"
+      return vDados[campo]?.substring(pos, pos + 1) === '1'
     } catch {
       return false
     }
@@ -140,14 +140,14 @@ const ClienteLoginEditCard = ({ data, setSalvarDados }) => {
 
   // ** Table columns
   const renderAcesso = (descricao, campo, arrayPos, perm) => {
-    if (permissao.can("read", campo)) {
+    if (permissao.can('read', campo)) {
       return (
         <tr>
           <td className="text-start">{descricao}</td>
           {!arrayPos || arrayPos.includes(1) ? (
             <td>
               <div className="d-flex form-check justify-content-center">
-                {permissao.can(perm ?? "create", campo) ? (
+                {permissao.can(perm ?? 'create', campo) ? (
                   <Input
                     type="checkbox"
                     name={campo}
@@ -162,7 +162,7 @@ const ClienteLoginEditCard = ({ data, setSalvarDados }) => {
           {!arrayPos || arrayPos.includes(2) ? (
             <td>
               <div className="d-flex form-check justify-content-center">
-                {permissao.can(perm ?? "read", campo) ? (
+                {permissao.can(perm ?? 'read', campo) ? (
                   <Input
                     type="checkbox"
                     name={campo}
@@ -177,7 +177,7 @@ const ClienteLoginEditCard = ({ data, setSalvarDados }) => {
           {!arrayPos || arrayPos.includes(3) ? (
             <td>
               <div className="d-flex form-check justify-content-center">
-                {permissao.can(perm ?? "update", campo) ? (
+                {permissao.can(perm ?? 'update', campo) ? (
                   <Input
                     type="checkbox"
                     name={campo}
@@ -192,7 +192,7 @@ const ClienteLoginEditCard = ({ data, setSalvarDados }) => {
           {!arrayPos || arrayPos.includes(4) ? (
             <td>
               <div className="d-flex form-check justify-content-center">
-                {permissao.can(perm ?? "delete", campo) ? (
+                {permissao.can(perm ?? 'delete', campo) ? (
                   <Input
                     type="checkbox"
                     name={campo}
@@ -283,7 +283,7 @@ const ClienteLoginEditCard = ({ data, setSalvarDados }) => {
                                 onClick={(e) => {
                                   e.preventDefault()
                                   handleChange({
-                                    target: { name: "foto", value: null },
+                                    target: { name: 'foto', value: null },
                                   })
                                 }}
                               >
@@ -307,7 +307,7 @@ const ClienteLoginEditCard = ({ data, setSalvarDados }) => {
                       id="nome"
                       name="nome"
                       autoComplete="new-password"
-                      value={vDados?.nome ?? ""}
+                      value={vDados?.nome ?? ''}
                       onChange={handleChange}
                     />
                   </Col>
@@ -320,9 +320,9 @@ const ClienteLoginEditCard = ({ data, setSalvarDados }) => {
                       name="email"
                       type="email"
                       autoComplete="new-password"
-                      value={vDados?.email ?? ""}
+                      value={vDados?.email ?? ''}
                       onChange={handleChange}
-                      invalid={campoInvalido(vDados, vErros, "email")}
+                      invalid={campoInvalido(vDados, vErros, 'email')}
                     />
                   </Col>
                   <Col md="6" className="mb-2">
@@ -334,7 +334,7 @@ const ClienteLoginEditCard = ({ data, setSalvarDados }) => {
                       name="senha"
                       type="password"
                       autoComplete="new-password"
-                      value={vDados?.senha ?? ""}
+                      value={vDados?.senha ?? ''}
                       onChange={handleChange}
                     />
                   </Col>
@@ -348,11 +348,11 @@ const ClienteLoginEditCard = ({ data, setSalvarDados }) => {
                 <Select
                   isClearable
                   id="clientes"
-                  noOptionsMessage={() => t("Vazio")}
+                  noOptionsMessage={() => t('Vazio')}
                   isMulti
-                  placeholder={""}
-                  className={classnames("react-select", {
-                    "is-invalid": campoInvalido(vDados, vErros, "clientes"),
+                  placeholder={''}
+                  className={classnames('react-select', {
+                    'is-invalid': campoInvalido(vDados, vErros, 'clientes'),
                   })}
                   classNamePrefix="select"
                   value={vCliente}
@@ -360,7 +360,7 @@ const ClienteLoginEditCard = ({ data, setSalvarDados }) => {
                     setCliente(e)
                     handleChange({
                       target: {
-                        name: "clientes",
+                        name: 'clientes',
                         value: e
                           ?.map((item) => item.value.toString())
                           .toString(),
@@ -371,7 +371,7 @@ const ClienteLoginEditCard = ({ data, setSalvarDados }) => {
                 />
               </Col>
             </Row>
-            {permissao.can("read", "adm_login") ? (
+            {permissao.can('read', 'adm_login') ? (
               <Row>
                 <Col md="12" className="mb-2">
                   <Table
@@ -388,29 +388,29 @@ const ClienteLoginEditCard = ({ data, setSalvarDados }) => {
                       </tr>
                     </thead>
                     <tbody>
-                      {renderAcesso("Administrativo - Cliente", "adm_clientes")}
-                      {renderAcesso("Administrativo - Hotspot", "adm_hotspot")}
-                      {renderAcesso("Administrativo - Login", "adm_login")}
+                      {renderAcesso('Administrativo - Cliente', 'adm_clientes')}
+                      {renderAcesso('Administrativo - Hotspot', 'adm_hotspot')}
+                      {renderAcesso('Administrativo - Login', 'adm_login')}
                       {renderAcesso(
-                        "Administrativo - Plano de conexão",
-                        "plano_conexao"
+                        'Administrativo - Plano de conexão',
+                        'plano_conexao'
                       )}
                       {renderAcesso(
-                        "Administrativo - Libera/Bloqueia mac",
-                        "permissao_mac"
+                        'Administrativo - Libera/Bloqueia mac',
+                        'permissao_mac'
                       )}
-                      {renderAcesso("Bloqueio de quarto", "bloqueio_quarto")}
-                      {renderAcesso("Cardápio digital", "cardapio_digital")}
-                      {renderAcesso("Voucher", "evento")}
-                      {renderAcesso("Pesquisa", "adm_pesquisa")}
-                      {renderAcesso("Publicidade", "adm_publicidade")}
-                      {renderAcesso("Filtros", "filtro_campanha")}
-                      {renderAcesso("Campanha - Agendada", "campanha_agendada")}
+                      {renderAcesso('Bloqueio de quarto', 'bloqueio_quarto')}
+                      {renderAcesso('Cardápio digital', 'cardapio_digital')}
+                      {renderAcesso('Voucher', 'evento')}
+                      {renderAcesso('Pesquisa', 'adm_pesquisa')}
+                      {renderAcesso('Publicidade', 'adm_publicidade')}
+                      {renderAcesso('Filtros', 'filtro_campanha')}
+                      {renderAcesso('Campanha - Agendada', 'campanha_agendada')}
                       {renderAcesso(
-                        "Campanha - Recorrente",
-                        "campanha_recorrente"
+                        'Campanha - Recorrente',
+                        'campanha_recorrente'
                       )}
-                      {renderAcesso("Encurtador de URL", "encurtador_url")}
+                      {renderAcesso('Encurtador de URL', 'encurtador_url')}
                     </tbody>
 
                     <thead>
@@ -422,58 +422,58 @@ const ClienteLoginEditCard = ({ data, setSalvarDados }) => {
                     </thead>
                     <tbody>
                       {renderAcesso(
-                        "Usuários online",
-                        "status_usuario",
+                        'Usuários online',
+                        'status_usuario',
                         [1],
-                        "read"
+                        'read'
                       )}
                       {renderAcesso(
-                        "Status hotspot",
-                        "status_hotspot",
+                        'Status hotspot',
+                        'status_hotspot',
                         [1],
-                        "read"
+                        'read'
                       )}
                       {renderAcesso(
-                        "Minha carteira - Visualizar",
-                        "minha_carteira",
+                        'Minha carteira - Visualizar',
+                        'minha_carteira',
                         [2],
-                        "read"
+                        'read'
                       )}
                       {renderAcesso(
-                        "Minha carteira - Solicitar aumento",
-                        "minha_carteira",
+                        'Minha carteira - Solicitar aumento',
+                        'minha_carteira',
                         [1],
-                        "create"
+                        'create'
                       )}
                       {renderAcesso(
-                        "Minha carteira - Aprovar crédito",
-                        "minha_carteira",
+                        'Minha carteira - Aprovar crédito',
+                        'minha_carteira',
                         [3],
-                        "update"
+                        'update'
                       )}
                       {renderAcesso(
-                        "Minha carteira - Remover crédito",
-                        "minha_carteira",
+                        'Minha carteira - Remover crédito',
+                        'minha_carteira',
                         [4],
-                        "delete"
+                        'delete'
                       )}
                       {renderAcesso(
-                        "Relatórios - Campanha enviada",
-                        "rel_campanha",
+                        'Relatórios - Campanha enviada',
+                        'rel_campanha',
                         [2],
-                        "read"
+                        'read'
                       )}
                       {renderAcesso(
-                        "Relatórios - Pesquisa respondida",
-                        "rel_pesquisa",
+                        'Relatórios - Pesquisa respondida',
+                        'rel_pesquisa',
                         [2],
-                        "read"
+                        'read'
                       )}
                       {renderAcesso(
-                        "Relatórios - Cadastros/Conexões",
-                        "rel_cad_conexoes",
+                        'Relatórios - Cadastros/Conexões',
+                        'rel_cad_conexoes',
                         [1],
-                        "read"
+                        'read'
                       )}
                     </tbody>
                     <thead>
@@ -485,28 +485,28 @@ const ClienteLoginEditCard = ({ data, setSalvarDados }) => {
                     </thead>
                     <tbody>
                       {renderAcesso(
-                        "Relatórios - Campanha enviada",
-                        "rel_campanha",
+                        'Relatórios - Campanha enviada',
+                        'rel_campanha',
                         [1],
-                        "create"
+                        'create'
                       )}
                       {renderAcesso(
-                        "Relatórios - Pesquisa respondida",
-                        "rel_pesquisa",
+                        'Relatórios - Pesquisa respondida',
+                        'rel_pesquisa',
                         [1],
-                        "create"
+                        'create'
                       )}
                       {renderAcesso(
-                        "Relatórios - Exportar e-mails",
-                        "rel_exportar_email",
+                        'Relatórios - Exportar e-mails',
+                        'rel_exportar_email',
                         [1],
-                        "read"
+                        'read'
                       )}
                       {renderAcesso(
-                        "Relatórios - Dados de usuários",
-                        "rel_exportar_registros",
+                        'Relatórios - Dados de usuários',
+                        'rel_exportar_registros',
                         [1],
-                        "read"
+                        'read'
                       )}
                     </tbody>
                   </Table>
