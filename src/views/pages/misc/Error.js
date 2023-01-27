@@ -1,20 +1,20 @@
 // ** React Imports
-import { Link } from "react-router-dom"
+import { Link } from 'react-router-dom'
 
 // ** Reactstrap Imports
-import { Button } from "reactstrap"
+import { Button } from 'reactstrap'
 
 // ** Custom Hooks
-import { useSkin } from "@hooks/useSkin"
+import { useSkin } from '@hooks/useSkin'
 
 // ** Styles
-import "@styles/base/pages/page-misc.scss"
+import '@styles/base/pages/page-misc.scss'
 
 const Error = () => {
   // ** Hooks
   const { skin } = useSkin()
 
-  const illustration = skin === "dark" ? "error-dark.svg" : "error.svg",
+  const illustration = skin === 'dark' ? 'error-dark.svg' : 'error.svg',
     source = require(`@src/assets/images/pages/${illustration}`).default
   return (
     <div className="misc-wrapper">

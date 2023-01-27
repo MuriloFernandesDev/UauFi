@@ -1,37 +1,37 @@
 // ** React Imports
-import { lazy } from "react"
+import { lazy } from 'react'
 
-const Login = lazy(() => import("../../views/pages/authentication/Login"))
+const Login = lazy(() => import('../../views/pages/authentication/Login'))
 
 const ForgotPassword = lazy(() =>
-  import("../../views/pages/authentication/ForgotPassword")
+  import('../../views/pages/authentication/ForgotPassword')
 )
 
 const AuthenticationRoutes = [
   {
-    path: "/login",
+    path: '/login',
     element: <Login />,
     meta: {
-      layout: "blank",
+      layout: 'blank',
       publicRoute: true,
       restricted: true,
     },
   },
   {
-    path: "/login/:slug",
+    path: '/login/:slug',
     element: <Login />,
     meta: {
-      layout: "blank",
+      layout: 'blank',
       publicRoute: true,
       restricted: true,
     },
   },
   {
-    path: "/esqueci-senha",
+    path: '/esqueci-senha',
     element: <ForgotPassword />,
-    layout: "BlankLayout",
+    layout: 'BlankLayout',
     meta: {
-      layout: "blank",
+      layout: 'blank',
       publicRoute: true,
       restricted: true,
     },
