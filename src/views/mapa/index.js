@@ -91,38 +91,23 @@ const Mapa = () => {
 
   //função para buscar os dados do mapa
   const getDados = (params) => {
-    const local = localStorage.getItem('@Uau-fi/mapa')
-    const localOnlines = localStorage.getItem('@Uau-fi/mapa-onlines')
-    if (!local && !localOnlines) {
-      return api
-        .get(`/conexao/${params}`)
-        .then((res) => {
-          const { data } = res
+    return api
+      .get(`/conexao/${params}`)
+      .then((res) => {
+        const { data } = res
 
-          if (params === 'mapa_google_usuario_online') {
-            localStorage.setItem('@Uau-fi/mapa-onlines', JSON.stringify(data))
-            setMarkerDataOnlines(data)
-            setMapDataOnlines(data)
-          } else {
-            localStorage.setItem('@Uau-fi/mapa', JSON.stringify(data))
-            setMarkerData(data)
-            setMapData(data)
-            setProcessando(false)
-          }
-        })
-        .catch((error) => {
-          console.log(error)
-        })
-    } else {
-      if (params === 'mapa_google_usuario_online') {
-        setMarkerDataOnlines(JSON.parse(localOnlines))
-        setMapDataOnlines(JSON.parse(localOnlines))
-      } else {
-        setMarkerData(JSON.parse(local))
-        setMapData(JSON.parse(local))
-        setProcessando(false)
-      }
-    }
+        if (params === 'mapa_google_usuario_online') {
+          setMarkerDataOnlines(data)
+          setMapDataOnlines(data)
+        } else {
+          setMarkerData(data)
+          setMapData(data)
+          setProcessando(false)
+        }
+      })
+      .catch((error) => {
+        console.log(error)
+      })
   }
 
   //função para buscar localização atual e definir o centro do mapa
