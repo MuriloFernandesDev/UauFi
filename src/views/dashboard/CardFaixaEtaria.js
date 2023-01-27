@@ -1,19 +1,22 @@
 // ** Third Party Components
-import { Bar } from "react-chartjs-2"
+import { Bar } from 'react-chartjs-2'
 
 // ** React Imports
-import { useEffect, useState } from "react"
+import { useEffect, useState } from 'react'
 
 // ** API
-import api from "@src/services/api"
+import api from '@src/services/api'
+
+import { useTranslation } from 'react-i18next'
 
 // ** Reactstrap Imports
-import { Card, CardHeader, Spinner } from "reactstrap"
+import { Card, CardHeader, Spinner } from 'reactstrap'
 
 const CardVisitasMes = () => {
   // ** State
   const [vProcessando, setProcessando] = useState(true)
   const [vSeries, setSeries] = useState(null)
+  const { t } = useTranslation()
 
   const vOptions = {
     responsive: true,
@@ -24,7 +27,7 @@ const CardVisitasMes = () => {
         grid: {
           display: false,
         },
-        ticks: { color: "#b4b7bd" },
+        ticks: { color: '#b4b7bd' },
       },
       y: {
         min: 0,
@@ -33,7 +36,7 @@ const CardVisitasMes = () => {
           display: false,
         },
         ticks: {
-          color: "#b4b7bd",
+          color: '#b4b7bd',
         },
       },
     },
@@ -45,7 +48,7 @@ const CardVisitasMes = () => {
   const getDados = () => {
     setProcessando(true)
     return api
-      .get("/usuario/visita_idade")
+      .get('/usuario/visita_idade')
       .then((res) => {
         setProcessando(false)
         setSeries({
@@ -54,8 +57,8 @@ const CardVisitasMes = () => {
           datasets: [
             {
               maxBarThickness: 15,
-              backgroundColor: "#28dac6",
-              borderColor: "transparent",
+              backgroundColor: '#28dac6',
+              borderColor: 'transparent',
               borderRadius: { topRight: 15, topLeft: 15 },
               data:
                 res.data.length > 0 ? res.data?.map(({ value }) => value) : [],
@@ -77,9 +80,9 @@ const CardVisitasMes = () => {
   return (
     <Card>
       <CardHeader className="align-items-start pb-0">
-        <h5>Visitas por faixa etária</h5>
+        <h5>{t('Visitas por faixa etária')}</h5>
       </CardHeader>
-      <div style={{ height: "100px" }}>
+      <div style={{ height: '100px' }}>
         {!vProcessando ? (
           vOptions && vSeries?.labels?.length > 0 ? (
             <Bar data={vSeries} options={vOptions} height={100} />

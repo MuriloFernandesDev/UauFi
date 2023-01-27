@@ -1,27 +1,27 @@
 // ** React Imports
-import { useContext } from "react"
+import { useContext } from 'react'
 
 // ** Reactstrap Imports
-import { Row, Col } from "reactstrap"
+import { Row, Col } from 'reactstrap'
 
 // ** Context
-import { ThemeColors } from "@src/utility/context/ThemeColors"
+import { ThemeColors } from '@src/utility/context/ThemeColors'
 
 // ** Demo Components
-import CardUltimosUsuarios from "./CardUltimosUsuarios"
-import CardPlataforma from "./CardPlataforma"
-import CardUsuarioMaisVisita from "./CardUsuarioMaisVisita"
-import CardQuantidades from "./CardQuantidades"
-import CardNovosCad from "./CardNovosCad"
-import CardFaixaEtaria from "./CardFaixaEtaria"
-import CardGeneros from "./CardGeneros"
+import CardUltimosUsuarios from './CardUltimosUsuarios'
+import CardPlataforma from './CardPlataforma'
+import CardUsuarioMaisVisita from './CardUsuarioMaisVisita'
+import CardQuantidades from './CardQuantidades'
+import CardNovosCad from './CardNovosCad'
+import CardFaixaEtaria from './CardFaixaEtaria'
+import CardGeneros from './CardGeneros'
 
 // ** Styles
-import "@styles/react/libs/charts/apex-charts.scss"
-import "@styles/base/pages/dashboard-ecommerce.scss"
+import '@styles/react/libs/charts/apex-charts.scss'
+import '@styles/base/pages/dashboard-ecommerce.scss'
 
 // ** Third Party Components
-import "chart.js/auto"
+import 'chart.js/auto'
 
 const EcommerceDashboard = () => {
   // ** Context
@@ -34,7 +34,7 @@ const EcommerceDashboard = () => {
           <CardUsuarioMaisVisita />
         </Col>
         <Col xl="8" md="6">
-          <CardQuantidades cols={{ xl: "3", sm: "6" }} />
+          <CardQuantidades cols={{ xl: '3', sm: '6' }} />
         </Col>
       </Row>
       <Row className="match-height">

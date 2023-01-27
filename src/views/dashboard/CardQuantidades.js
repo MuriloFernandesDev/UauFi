@@ -10,6 +10,8 @@ import { useEffect, useState } from 'react'
 // ** API
 import api from '@src/services/api'
 
+import { useTranslation } from 'react-i18next'
+
 // ** Reactstrap Imports
 import {
   Card,
@@ -34,6 +36,8 @@ const CardQuantidades = () => {
 
   const [vValor4, setValor4] = useState(null)
   const [vProcessando4, setProcessando4] = useState(true)
+
+  const { t } = useTranslation()
 
   const getDados1 = () => {
     setProcessando1(true)
@@ -102,7 +106,7 @@ const CardQuantidades = () => {
   return (
     <Card className="card-statistics">
       <CardHeader>
-        <h5>Quantidades totais</h5>
+        <h5>{t('Quantidades totais')}</h5>
       </CardHeader>
       <CardBody className="statistics-body">
         <Row>
@@ -121,7 +125,7 @@ const CardQuantidades = () => {
                 )}
 
                 <CardText className="font-small-3 mb-0">
-                  Conexões realizadas
+                  {t('Conexões realizadas')}
                 </CardText>
               </div>
             </div>
@@ -142,7 +146,7 @@ const CardQuantidades = () => {
                 )}
 
                 <CardText className="font-small-3 mb-0">
-                  Online no momento
+                  {t('Online no momento')}
                 </CardText>
               </div>
             </div>
@@ -163,7 +167,7 @@ const CardQuantidades = () => {
                 )}
 
                 <CardText className="font-small-3 mb-0">
-                  Cadastrados no seu wi-fi
+                  {t('Cadastrados no seu wi-fi')}
                 </CardText>
               </div>
             </div>
@@ -184,7 +188,7 @@ const CardQuantidades = () => {
                 )}
 
                 <CardText className="font-small-3 mb-0">
-                  Usuários conectaram
+                  {t('Usuários conectaram')}
                 </CardText>
               </div>
             </div>

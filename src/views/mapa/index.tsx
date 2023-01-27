@@ -62,26 +62,22 @@ const Mapa = () => {
       if (window.google && markerData.length > 0) {
         const heatmapData: any = []
         markerData.map((res: any) => {
-          // for (let i = 0; i < res.total_visitas; i++) {
           heatmapData.push({
             location: new window.google.maps.LatLng(res.lat, res.lng),
             weight: 1,
             radius: res.total_visitas,
           })
-          // }
         })
         setHeatMap(heatmapData)
       }
       if (window.google && markerDataOnlines.length > 0) {
         const heatmapData: any = []
         markerDataOnlines.map((res: any) => {
-          // for (let i = 0; i < res.total_visitas; i++) {
           heatmapData.push({
             location: new window.google.maps.LatLng(res.lat, res.lng),
             weight: 1,
             radius: res.total_usuarios_online,
           })
-          // }
         })
         setHeatMapOnlines(heatmapData)
       }

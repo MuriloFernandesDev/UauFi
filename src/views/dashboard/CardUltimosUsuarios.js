@@ -15,6 +15,8 @@ import defaultAvatar from '@src/assets/images/avatars/avatar-blank.png'
 // ** Utils
 import { formatDateTime } from '@utils'
 
+import { useTranslation } from 'react-i18next'
+
 // ** API
 import api from '@src/services/api'
 import { RefreshCw } from 'react-feather'
@@ -25,6 +27,8 @@ const CardUltimosUsuarios = () => {
   const [vProcessando, setProcessando] = useState(true)
 
   const vTimeoutPesquisa = useRef()
+
+  const { t } = useTranslation()
 
   const getDados = (tempo) => {
     if (vTimeoutPesquisa) {
@@ -103,9 +107,9 @@ const CardUltimosUsuarios = () => {
       <Table responsive>
         <thead>
           <tr>
-            <th>Últimos usuários conectados</th>
-            <th>Dispositivo</th>
-            <th>Conexão</th>
+            <th>{t('Últimos usuários conectados')}</th>
+            <th>{t('Dispositivo')}</th>
+            <th>{t('Conexão')}</th>
             <th style={{ width: '10px' }} className="pe-1 pb-0">
               {vProcessando ? (
                 <Spinner
