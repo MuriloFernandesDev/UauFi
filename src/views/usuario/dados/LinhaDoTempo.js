@@ -60,6 +60,7 @@ const LinhaDoTempo = (dados) => {
       .then((response) => {
         setCarregando(false)
         const { data } = response
+        console.log(data)
         setTotal(data.total)
         setDados(data.dados)
       })
