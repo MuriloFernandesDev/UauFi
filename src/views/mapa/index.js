@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useContext } from 'react'
 
 // ** API
 import api from '@src/services/api'
@@ -15,6 +15,8 @@ import GoogleMapsComponent from './components/GoogleMap'
 import { HeatmapLayer, MarkerClusterer } from '@react-google-maps/api'
 import MarkerComponent from './components/Marker'
 import AutoComplete from './components/AutoComplete'
+// ** Context
+import { AbilityContext as PermissaoContext } from '@src/utility/context/Can'
 
 const Mapa = () => {
   //state para definir o mapa de calor
@@ -46,6 +48,9 @@ const Mapa = () => {
   const [heatMap, setHeatMap] = useState([])
   //state para definir o zoom no mapa
   const [zoom, setZoom] = useState(13)
+
+  // ** Context
+  const permissao = useContext(PermissaoContext)
 
   //função para buscar mapa de calor quando o mapData estiver carregado
   const onLoad = useCallback(
@@ -196,14 +201,17 @@ const Mapa = () => {
               >
                 Marcadores
               </Button>
-              <Button
-                color="primary"
-                onClick={() => setMapType('Calor')}
-                active={mapType === 'Calor'}
-                outline
-              >
-                Calor
-              </Button>
+              {permissao.can('read', 'mapa_calor') && (
+                <Button
+                  color="primary"
+                  onClick={() => setMapType('Calor')}
+                  active={mapType === 'Calor'}
+                  outline
+                >
+                  Calor
+                </Button>
+              )}
+
               <Button
                 color="primary"
                 onClick={() => setMapType('Usuários online')}

@@ -1,14 +1,14 @@
 // ** React
-import { Link } from "react-router-dom"
-import { useRef, useState, useEffect, useContext } from "react"
+import { Link } from 'react-router-dom'
+import { useRef, useState, useEffect, useContext } from 'react'
 
 // ** Terceiros
-import ReactPaginate from "react-paginate"
-import { ChevronDown, Eye, Trash, MoreVertical, Copy } from "react-feather"
-import DataTable from "react-data-table-component"
+import ReactPaginate from 'react-paginate'
+import { ChevronDown, Eye, Trash, MoreVertical, Copy } from 'react-feather'
+import DataTable from 'react-data-table-component'
 
 // ** Custom Components
-import Avatar from "@components/avatar"
+import Avatar from '@components/avatar'
 
 // ** Reactstrap
 import {
@@ -23,22 +23,22 @@ import {
   DropdownToggle,
   UncontrolledTooltip,
   UncontrolledDropdown,
-} from "reactstrap"
+} from 'reactstrap'
 
 // ** Store & Actions
-import { getClienteLogin, deleteClienteLogin, cloneClienteLogin } from "./store"
-import { useDispatch, useSelector } from "react-redux"
+import { getClienteLogin, deleteClienteLogin, cloneClienteLogin } from './store'
+import { useDispatch, useSelector } from 'react-redux'
 
 // ** Styles
-import "@styles/react/libs/tables/react-dataTable-component.scss"
+import '@styles/react/libs/tables/react-dataTable-component.scss'
 
 // ** Context
-import { AbilityContext as PermissaoContext } from "@src/utility/context/Can"
+import { AbilityContext as PermissaoContext } from '@src/utility/context/Can'
 
 // ** Third Party Components
-import Swal from "sweetalert2"
-import withReactContent from "sweetalert2-react-content"
-import toast from "react-hot-toast"
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
+import toast from 'react-hot-toast'
 
 const MySwal = withReactContent(Swal)
 
@@ -67,7 +67,7 @@ const CustomHeader = ({ handleFilter, value, handlePerPage, rowsPerPage }) => {
             tag={Link}
             to="/adm/login/add"
             color="primary"
-            disabled={!permissao.can("create", "adm_login")}
+            disabled={!permissao.can('create', 'adm_login')}
           >
             Novo login
           </Button>
@@ -99,10 +99,10 @@ const ClienteLoginList = () => {
   const store = useSelector((state) => state.cliente_login)
 
   // ** States
-  const [value, setValue] = useState(store.params.q ?? "")
-  const [sort, setSort] = useState(store.params.sort ?? "asc")
+  const [value, setValue] = useState(store.params.q ?? '')
+  const [sort, setSort] = useState(store.params.sort ?? 'asc')
   const [sortColumn, setSortColumn] = useState(
-    store.params.sortColumn ?? "nome"
+    store.params.sortColumn ?? 'nome'
   )
   const [currentPage, setCurrentPage] = useState(store.params.page ?? 1)
   const [rowsPerPage, setRowsPerPage] = useState(store.params.perPage ?? 10)
@@ -110,7 +110,7 @@ const ClienteLoginList = () => {
   const [vPesquisando, setPesquisando] = useState(true)
 
   // ** Guardar o Cliente selecionado para atualizar a página caso mude
-  const sClienteId = localStorage.getItem("clienteId")
+  const sClienteId = localStorage.getItem('clienteId')
 
   if (vPesquisando && store.total >= 0) {
     setPesquisando(false)
@@ -197,18 +197,18 @@ const ClienteLoginList = () => {
         pageCount={count || 1}
         activeClassName="active"
         breakClassName="page-item"
-        pageClassName={"page-item"}
+        pageClassName={'page-item'}
         breakLinkClassName="page-link"
-        nextLinkClassName={"page-link"}
-        pageLinkClassName={"page-link"}
-        nextClassName={"page-item next"}
-        previousLinkClassName={"page-link"}
-        previousClassName={"page-item prev"}
+        nextLinkClassName={'page-link'}
+        pageLinkClassName={'page-link'}
+        nextClassName={'page-item next'}
+        previousLinkClassName={'page-link'}
+        previousClassName={'page-item prev'}
         onPageChange={(page) => handlePagination(page)}
         forcePage={
           currentPage !== 0 ? (currentPage <= count ? currentPage - 1 : 0) : 0
         }
-        containerClassName={"pagination react-paginate justify-content-end p-1"}
+        containerClassName={'pagination react-paginate justify-content-end p-1'}
       />
     )
   }
@@ -262,19 +262,19 @@ const ClienteLoginList = () => {
   // ** Modal de exclusão de plano
   const handleDeleteConfirmation = (row) => {
     return MySwal.fire({
-      title: "Tem certeza?",
-      text: "Sua ação não poderá ser revertida!",
-      icon: "warning",
+      title: 'Tem certeza?',
+      text: 'Sua ação não poderá ser revertida!',
+      icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: "Sim, remover!",
-      cancelButtonText: "Cancelar",
+      confirmButtonText: 'Sim, remover!',
+      cancelButtonText: 'Cancelar',
       customClass: {
-        confirmButton: "btn btn-primary",
-        cancelButton: "btn btn-outline-danger ms-1",
-        popup: "animate__animated animate__fadeIn",
+        confirmButton: 'btn btn-primary',
+        cancelButton: 'btn btn-outline-danger ms-1',
+        popup: 'animate__animated animate__fadeIn',
       },
       hideClass: {
-        popup: "animate__animated animate__zoomOut",
+        popup: 'animate__animated animate__zoomOut',
       },
       buttonsStyling: false,
     }).then(async (result) => {
@@ -282,8 +282,8 @@ const ClienteLoginList = () => {
         await dispatch(deleteClienteLogin(row.id))
         handleFilter(store.params.q)
 
-        toast.success("Removido com sucesso!", {
-          position: "bottom-right",
+        toast.success('Removido com sucesso!', {
+          position: 'bottom-right',
         })
       }
     })
@@ -292,36 +292,36 @@ const ClienteLoginList = () => {
   // ** Modal de clonagem
   const handleClone = (row) => {
     MySwal.fire({
-      title: "Copiar cadastro de login",
-      text: "Quantas cópias deseja fazer?",
-      input: "number",
-      icon: "warning",
+      title: 'Copiar cadastro de login',
+      text: 'Quantas cópias deseja fazer?',
+      input: 'number',
+      icon: 'warning',
       inputAttributes: {
         min: 1,
       },
       customClass: {
-        input: "mx-3",
-        confirmButton: "btn btn-primary",
-        cancelButton: "btn btn-danger ms-1",
-        popup: "animate__animated animate__fadeIn",
+        input: 'mx-3',
+        confirmButton: 'btn btn-primary',
+        cancelButton: 'btn btn-danger ms-1',
+        popup: 'animate__animated animate__fadeIn',
       },
       hideClass: {
-        popup: "animate__animated animate__zoomOut",
+        popup: 'animate__animated animate__zoomOut',
       },
       buttonsStyling: false,
       inputAttributes: {
-        autocapitalize: "off",
+        autocapitalize: 'off',
       },
       showCancelButton: true,
-      confirmButtonText: "Copiar",
-      cancelButtonText: "Cancelar",
+      confirmButtonText: 'Copiar',
+      cancelButtonText: 'Cancelar',
       inputValidator: (value) => {
         return new Promise((resolve) => {
           const numberValue = Number(value)
           if (numberValue <= 0 || numberValue > 50) {
-            resolve("Digite um número entre 1 e 50.")
+            resolve('Digite um número entre 1 e 50.')
           } else if (numberValue % 1 !== 0) {
-            resolve("Digite um número inteiro.")
+            resolve('Digite um número inteiro.')
           } else {
             resolve()
           }
@@ -337,15 +337,15 @@ const ClienteLoginList = () => {
       }
       if (result.value) {
         await dispatch(cloneClienteLogin(cloneParams))
-        setSort("desc")
-        setValue("")
-        setSortColumn("id")
+        setSort('desc')
+        setValue('')
+        setSortColumn('id')
         setCurrentPage(1)
         dispatch(
           getClienteLogin({
-            sort: "desc",
-            q: "",
-            sortColumn: "id",
+            sort: 'desc',
+            q: '',
+            sortColumn: 'id',
             page: 1,
             perPage: rowsPerPage,
             clienteId: sClienteId,
@@ -353,7 +353,7 @@ const ClienteLoginList = () => {
         )
 
         toast.success(adaptedSentence, {
-          position: "bottom-right",
+          position: 'bottom-right',
         })
       }
     })
@@ -362,9 +362,9 @@ const ClienteLoginList = () => {
   // ** Table columns
   const columns = [
     {
-      name: "Nome",
-      minWidth: "350px",
-      sortField: "nome",
+      name: 'Nome',
+      minWidth: '350px',
+      sortField: 'nome',
       cell: (row) => {
         return (
           <Link
@@ -383,7 +383,7 @@ const ClienteLoginList = () => {
                     {row.email}
                   </small>
                 ) : (
-                  ""
+                  ''
                 )}
               </div>
             </div>
@@ -392,9 +392,9 @@ const ClienteLoginList = () => {
       },
     },
     {
-      name: "Cliente",
-      minWidth: "350px",
-      sortField: "cliente_nome",
+      name: 'Cliente',
+      minWidth: '350px',
+      sortField: 'cliente_nome',
       cell: (row) => {
         return (
           <div className="d-flex justify-content-left align-items-center">
@@ -411,7 +411,7 @@ const ClienteLoginList = () => {
     },
     {
       name: <div className="text-end w-100">Ações</div>,
-      width: "100px",
+      width: '100px',
       cell: (row) => (
         <div className="text-end w-100">
           <div className="column-action d-inline-flex">

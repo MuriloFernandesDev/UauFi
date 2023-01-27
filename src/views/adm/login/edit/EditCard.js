@@ -475,6 +475,8 @@ const ClienteLoginEditCard = ({ data, setSalvarDados }) => {
                         [1],
                         'read'
                       )}
+                      {renderAcesso('Mapa', 'mapa_google', [1], 'read')}
+                      {renderAcesso('Mapa de calor', 'mapa_calor', [1], 'read')}
                     </tbody>
                     <thead>
                       <tr>
