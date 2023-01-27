@@ -11,6 +11,8 @@ const MarkerComponent = ({ data, ...rest }) => {
     endereco_nr,
     uf,
     hotspot_nome,
+    total_visitas,
+    total_usuarios_online,
   } = data
 
   //state para definir se a janela de informações do marker aparecerá ou não
@@ -19,6 +21,10 @@ const MarkerComponent = ({ data, ...rest }) => {
   //função para alterar o state da janela de informações
   function handleShowInfoWindow() {
     setShowInfoWindo(!showInfoWindow)
+  }
+
+  function formatarValor(valor) {
+    return valor.toLocaleString('pt-BR')
   }
 
   return (
@@ -42,6 +48,18 @@ const MarkerComponent = ({ data, ...rest }) => {
             <p className="mb-0 text-black fs-6">
               {cidade} - {uf}
             </p>
+            {total_usuarios_online && (
+              <p>
+                Esse local possui {formatarValor(total_usuarios_online)}{' '}
+                usuários onlines no momento.
+              </p>
+            )}
+            {total_visitas && (
+              <p>
+                Esse local possui {formatarValor(total_visitas)} de visitas até
+                agora.
+              </p>
+            )}
 
             <a
               href={`https://maps.google.com/?q=${latData},${longData}`}

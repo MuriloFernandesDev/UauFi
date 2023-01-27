@@ -15,7 +15,6 @@ import GoogleMapsComponent from './components/GoogleMap'
 import { HeatmapLayer, MarkerClusterer } from '@react-google-maps/api'
 import MarkerComponent from './components/Marker'
 import AutoComplete from './components/AutoComplete'
-import MapaUsuariosOnlines from './MapsTypes/MapaUsuariosOnlines'
 
 const Mapa = () => {
   //state para definir o mapa de calor
@@ -33,6 +32,12 @@ const Mapa = () => {
   const [mapData, setMapData] = useState([])
   //state para definir os dados dos marcadores
   const [markerData, setMarkerData] = useState([])
+  //state para definir os dados do mapa
+  const [mapDataOnlines, setMapDataOnlines] = useState([])
+  //state para definir os dados dos marcadores
+  const [markerDataOnlines, setMarkerDataOnlines] = useState([])
+  //state para definir os dados do mapa de calor
+  const [heatMapOnlines, setHeatMapOnlines] = useState([])
   //state para definir carregamento dos dados
   const [vProcessando, setProcessando] = useState(true)
   //state para definir o tipo de mapa que irá aparecer
@@ -58,31 +63,56 @@ const Mapa = () => {
         })
         setHeatMap(heatmapData)
       }
+      if (window.google && markerDataOnlines.length > 0) {
+        const heatmapData = []
+        markerDataOnlines.map((res) => {
+          // for (let i = 0; i < res.total_visitas; i++) {
+          heatmapData.push({
+            location: new window.google.maps.LatLng(res.lat, res.lng),
+            weight: 1,
+            radius: res.total_usuarios_online,
+          })
+          // }
+        })
+        setHeatMapOnlines(heatmapData)
+      }
     },
-    [mapData]
+    [mapData, mapDataOnlines]
   )
 
   //função para buscar os dados do mapa
-  const getDados = () => {
-    setProcessando(true)
+  const getDados = (params) => {
     const local = localStorage.getItem('@Uau-fi/mapa')
-    if (!local) {
+    const localOnlines = localStorage.getItem('@Uau-fi/mapa-onlines')
+    if (!local && !localOnlines) {
       return api
-        .get(`/conexao/mapa_google`)
+        .get(`/conexao/${params}`)
         .then((res) => {
           const { data } = res
-          localStorage.setItem('@Uau-fi/mapa', JSON.stringify(data))
-          setMarkerData(data)
-          setMapData(data)
-          setProcessando(false)
+
+          if (params === 'mapa_google_usuario_online') {
+            localStorage.setItem('@Uau-fi/mapa-onlines', JSON.stringify(data))
+            setMarkerDataOnlines(data)
+            setMapDataOnlines(data)
+          } else {
+            localStorage.setItem('@Uau-fi/mapa', JSON.stringify(data))
+            setMarkerData(data)
+            setMapData(data)
+            setProcessando(false)
+          }
         })
         .catch((error) => {
           console.log(error)
         })
     } else {
-      setMarkerData(JSON.parse(local))
-      setMapData(JSON.parse(local))
-      setProcessando(false)
+      if (params === 'mapa_google_usuario_online') {
+        setMarkerDataOnlines(JSON.parse(localOnlines))
+        setMapDataOnlines(JSON.parse(localOnlines))
+      } else {
+        setMarkerData(JSON.parse(local))
+        setMapData(JSON.parse(local))
+        setProcessando(false)
+      }
     }
   }
 
@@ -132,12 +162,19 @@ const Mapa = () => {
 
   useEffect(() => {
     getLocalizaoAtual()
-    getDados()
+    getDados('mapa_google')
+    getDados('mapa_google_usuario_online')
   }, [])
 
   /*
     https://react-google-maps-api-docs.netlify.app/
     Documentação do react-google-maps-api
+  */
+
+  /*
+        LEMBRETE
+        Tentar usar o mesmo componente mas desmontar o state quando unMount for chamado
+        exemplo https://stackoverflow.com/questions/72219002/heatmap-layer-not-displaying-in-google-maps-api-react-google-maps-api
   */
 
   return (
@@ -180,17 +217,7 @@ const Mapa = () => {
         </ButtonGroup>
       </CardHeader>
       <CardBody className="mt-2">
-        {mapType === 'Usuários online' ? (
-          <MapaUsuariosOnlines
-            containerStyle={containerStyle}
-            center={center}
-            zoom={zoom}
-            options={options}
-            gradientArray={gradientArray}
-            setVLatLng={setVLatLng}
-            setZoom={setZoom}
-          />
-        ) : vProcessando ? (
+        {vProcessando ? (
           <div className="d-flex justify-content-center text-center align-items-center h-100">
             <Spinner type="grow" size="md" color="primary" />
           </div>
@@ -224,16 +251,9 @@ const Mapa = () => {
               </MarkerClusterer>
             ) : mapType === 'Usuários online' ? (
               <>
-                <HeatmapLayer
-                  data={heatMap}
-                  options={{
-                    maxIntensity: 1,
-                    gradient: gradientArray,
-                  }}
-                />
                 <MarkerClusterer options={options}>
                   {(clusterer) =>
-                    markerData.map((location, index) => {
+                    markerDataOnlines.map((location, index) => {
                       return (
                         <MarkerComponent
                           key={index}
@@ -244,6 +264,13 @@ const Mapa = () => {
                     })
                   }
                 </MarkerClusterer>
+                <HeatmapLayer
+                  data={heatMapOnlines}
+                  options={{
+                    maxIntensity: 1,
+                    gradient: gradientArray,
+                  }}
+                />
               </>
             ) : (
               <HeatmapLayer
