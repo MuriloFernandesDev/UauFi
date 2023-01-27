@@ -3,14 +3,14 @@
     "baseUrl": ".",
     "paths": {
       "@src*": ["./src*"],
-      "@assets": ["./src/core/assets*"],
-      "@components*": ["./src/core/components*"],
-      "@layouts*": ["./src/core/layouts*"],
+      "@assets": ["./src/@core/assets*"],
+      "@components*": ["./src/@core/components"],
+      "@layouts*": ["./src/@core/layouts*"],
       "@store*": ["./src/redux*"],
       "@configs*": ["./src/configs*"],
       "@utils*": ["./src/utility/Utils*"],
       "@hooks*": ["./src/utility/hooks*"],
-      "@styles*": ["./src/core/scss*"]
+      "@styles*": ["./src/@core/scss*"]
     }
   }
 }

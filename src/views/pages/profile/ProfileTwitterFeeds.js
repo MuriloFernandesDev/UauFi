@@ -1,5 +1,5 @@
 // ** Custom Components
-import Avatar from '@components/avatar'
+import Avatar from '@src/@core/components/avatar'
 
 // ** Third Party Components
 import classnames from 'classnames'
@@ -15,30 +15,35 @@ const ProfileTwitterFeeds = ({ data }) => {
         <div
           className={classnames('profile-twitter-feed', {
             'mt-1': index === 0,
-            'mt-2': index !== 0
+            'mt-2': index !== 0,
           })}
           key={index}
         >
-          <div className='d-flex justify-content-start align-items-center mb-1'>
-            <Avatar className='me-1' img={feed.imgUrl} imgHeight='40' imgWidth='40' />
-            <div className='profile-user-info'>
-              <h6 className='mb-0'>{feed.title}</h6>
-              <a href='/' onClick={e => e.preventDefault()}>
-                <small className='text-muted'>@{feed.id}</small>
+          <div className="d-flex justify-content-start align-items-center mb-1">
+            <Avatar
+              className="me-1"
+              img={feed.imgUrl}
+              imgHeight="40"
+              imgWidth="40"
+            />
+            <div className="profile-user-info">
+              <h6 className="mb-0">{feed.title}</h6>
+              <a href="/" onClick={(e) => e.preventDefault()}>
+                <small className="text-muted">@{feed.id}</small>
                 <CheckCircle size={14} />
               </a>
             </div>
-            <div className='profile-star ms-auto'>
+            <div className="profile-star ms-auto">
               <Star
                 size={18}
                 className={classnames('cursor-pointer', {
-                  'profile-favorite': feed.favorite === true
+                  'profile-favorite': feed.favorite === true,
                 })}
               />
             </div>
           </div>
-          <CardText className='mb-50'>{feed.desc}</CardText>
-          <a href='/' onClick={e => e.preventDefault()}>
+          <CardText className="mb-50">{feed.desc}</CardText>
+          <a href="/" onClick={(e) => e.preventDefault()}>
             <small>{feed.tags}</small>
           </a>
         </div>

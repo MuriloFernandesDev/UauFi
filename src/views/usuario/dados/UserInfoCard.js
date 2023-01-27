@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState, Fragment, useEffect } from "react"
+import { useState, Fragment, useEffect } from 'react'
 
 // ** Reactstrap Imports
 import {
@@ -15,51 +15,51 @@ import {
   Label,
   ModalBody,
   ModalHeader,
-} from "reactstrap"
+} from 'reactstrap'
 
 // ** Third Party Components
-import Swal from "sweetalert2"
-import Select from "react-select"
-import { useTranslation } from "react-i18next"
-import { Check, X, Wifi, MapPin } from "react-feather"
-import { useForm, Controller } from "react-hook-form"
-import withReactContent from "sweetalert2-react-content"
+import Swal from 'sweetalert2'
+import Select from 'react-select'
+import { useTranslation } from 'react-i18next'
+import { Check, X, Wifi, MapPin } from 'react-feather'
+import { useForm, Controller } from 'react-hook-form'
+import withReactContent from 'sweetalert2-react-content'
 
 // ** Store & Actions
-import { getInfoUsuario, getTotais } from "../store"
-import { useDispatch } from "react-redux"
+import { getInfoUsuario, getTotais } from '../store'
+import { useDispatch } from 'react-redux'
 
 // ** Custom Components
-import Avatar from "@components/avatar"
+import Avatar from '@src/@core/components/avatar'
 
 // ** Utils
-import { selectThemeColors, formatDate, formatDateTime } from "@utils"
+import { selectThemeColors, formatDate, formatDateTime } from '@utils'
 
 // ** Styles
-import "@styles/react/libs/react-select/_react-select.scss"
+import '@styles/react/libs/react-select/_react-select.scss'
 
-import toast from "react-hot-toast"
+import toast from 'react-hot-toast'
 
 const statusOptions = [
-  { value: "active", label: "Active" },
-  { value: "inactive", label: "Inactive" },
-  { value: "suspended", label: "Suspended" },
+  { value: 'active', label: 'Active' },
+  { value: 'inactive', label: 'Inactive' },
+  { value: 'suspended', label: 'Suspended' },
 ]
 
 const countryOptions = [
-  { value: "uk", label: "UK" },
-  { value: "usa", label: "USA" },
-  { value: "france", label: "France" },
-  { value: "russia", label: "Russia" },
-  { value: "canada", label: "Canada" },
+  { value: 'uk', label: 'UK' },
+  { value: 'usa', label: 'USA' },
+  { value: 'france', label: 'France' },
+  { value: 'russia', label: 'Russia' },
+  { value: 'canada', label: 'Canada' },
 ]
 
 const languageOptions = [
-  { value: "english", label: "English" },
-  { value: "spanish", label: "Spanish" },
-  { value: "french", label: "French" },
-  { value: "german", label: "German" },
-  { value: "dutch", label: "Dutch" },
+  { value: 'english', label: 'English' },
+  { value: 'spanish', label: 'Spanish' },
+  { value: 'french', label: 'French' },
+  { value: 'german', label: 'German' },
+  { value: 'dutch', label: 'Dutch' },
 ]
 
 const MySwal = withReactContent(Swal)
@@ -70,11 +70,11 @@ const handleError = (error, errorMessage, errorIcon) => {
     text: errorMessage,
     icon: errorIcon,
     customClass: {
-      confirmButton: "btn btn-primary",
-      popup: "animate__animated animate__fadeIn",
+      confirmButton: 'btn btn-primary',
+      popup: 'animate__animated animate__fadeIn',
     },
     hideClass: {
-      popup: "animate__animated animate__zoomOut",
+      popup: 'animate__animated animate__zoomOut',
     },
     buttonsStyling: false,
   })
@@ -121,18 +121,18 @@ const UserInfoCard = ({ dados }) => {
       return (
         <Avatar
           initials
-          color={"light-primary"}
+          color={'light-primary'}
           className="rounded mt-3 mb-2"
-          content={dados?.nome ?? ""}
+          content={dados?.nome ?? ''}
           contentStyles={{
             borderRadius: 0,
-            fontSize: "calc(48px)",
-            width: "100%",
-            height: "100%",
+            fontSize: 'calc(48px)',
+            width: '100%',
+            height: '100%',
           }}
           style={{
-            height: "110px",
-            width: "110px",
+            height: '110px',
+            width: '110px',
           }}
         />
       )
@@ -146,7 +146,7 @@ const UserInfoCard = ({ dados }) => {
       for (const key in data) {
         if (data[key].length === 0) {
           setError(key, {
-            type: "manual",
+            type: 'manual',
           })
         }
       }
@@ -156,27 +156,27 @@ const UserInfoCard = ({ dados }) => {
   const handleReset = () => {
     reset({
       username: dados.nome,
-      lastName: dados.nome.split(" ")[1],
-      firstName: dados.nome.split(" ")[0],
+      lastName: dados.nome.split(' ')[1],
+      firstName: dados.nome.split(' ')[0],
     })
   }
 
   // ** Modal de exclusão
   const handleDeleteConfirmation = (row) => {
     return MySwal.fire({
-      title: "Tem certeza?",
-      text: "Sua ação removerá todos os dados deste usuário e isso não poderá ser revertido!",
-      icon: "warning",
+      title: 'Tem certeza?',
+      text: 'Sua ação removerá todos os dados deste usuário e isso não poderá ser revertido!',
+      icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: "Sim, remover!",
-      cancelButtonText: "Cancelar",
+      confirmButtonText: 'Sim, remover!',
+      cancelButtonText: 'Cancelar',
       customClass: {
-        confirmButton: "btn btn-primary",
-        cancelButton: "btn btn-outline-danger ms-1",
-        popup: "animate__animated animate__fadeIn",
+        confirmButton: 'btn btn-primary',
+        cancelButton: 'btn btn-outline-danger ms-1',
+        popup: 'animate__animated animate__fadeIn',
       },
       hideClass: {
-        popup: "animate__animated animate__zoomOut",
+        popup: 'animate__animated animate__zoomOut',
       },
       buttonsStyling: false,
     }).then((result) => {
@@ -187,21 +187,21 @@ const UserInfoCard = ({ dados }) => {
             if (response.status === 200) {
               handleFilter(store.params.q)
 
-              toast.success("Removido com sucesso!", {
-                position: "bottom-right",
+              toast.success('Removido com sucesso!', {
+                position: 'bottom-right',
               })
             }
           })
           .catch((error) => {
             if (error.response.status === 400) {
-              handleError("Atenção!", "Não autorizado.", "warning")
+              handleError('Atenção!', 'Não autorizado.', 'warning')
             } else if (error.response.status === 503) {
-              handleError("Ops...", error.response.data, "error")
+              handleError('Ops...', error.response.data, 'error')
             } else {
               handleError(
-                "Erro inesperado",
-                "Por favor, contate um administrador.",
-                "error"
+                'Erro inesperado',
+                'Por favor, contate um administrador.',
+                'error'
               )
             }
           })
@@ -228,7 +228,7 @@ const UserInfoCard = ({ dados }) => {
               {renderUserImg()}
               <div className="d-flex flex-column align-items-center text-center">
                 <div className="user-info">
-                  <h4>{dados.nome ?? ""}</h4>
+                  <h4>{dados.nome ?? ''}</h4>
                 </div>
               </div>
             </div>
@@ -242,7 +242,7 @@ const UserInfoCard = ({ dados }) => {
                 <h4 className="mb-0">
                   {new Intl.NumberFormat().format(vTotais?.visitas ?? 0)}
                 </h4>
-                <small>{t("Visitas")}</small>
+                <small>{t('Visitas')}</small>
               </div>
             </div>
             <div className="d-flex align-items-start">
@@ -263,54 +263,54 @@ const UserInfoCard = ({ dados }) => {
               <ul className="list-unstyled">
                 <li className="mb-75">
                   <span className="fw-bolder me-25">Nome:</span>
-                  <span>{dados.nome ?? ""}</span>
+                  <span>{dados.nome ?? ''}</span>
                 </li>
                 <li className="mb-75">
                   <span className="fw-bolder me-25 text-nowrap">E-mail:</span>
-                  <span>{dados.email ?? ""}</span>
+                  <span>{dados.email ?? ''}</span>
                 </li>
                 <li className="mb-75">
                   <span className="fw-bolder me-25">CPF:</span>
-                  <span>{dados.cpf ?? ""}</span>
+                  <span>{dados.cpf ?? ''}</span>
                 </li>
                 <li className="mb-75">
                   <span className="fw-bolder me-25">Nascimento:</span>
-                  <span>{formatDate(dados.nascimento) ?? ""}</span>
+                  <span>{formatDate(dados.nascimento) ?? ''}</span>
                 </li>
                 <li className="mb-75">
                   <span className="fw-bolder me-25">Gênero:</span>
                   <span className="text-capitalize">
-                    {vDados?.genero ?? ""}
+                    {vDados?.genero ?? ''}
                   </span>
                 </li>
                 <li className="mb-75">
                   <span className="fw-bolder me-25">Cidade:</span>
-                  <span>{vDados?.cidade ?? ""}</span>
+                  <span>{vDados?.cidade ?? ''}</span>
                 </li>
                 <li className="mb-75">
                   <span className="fw-bolder me-25">Estado:</span>
-                  <span>{vDados?.estado ?? ""}</span>
+                  <span>{vDados?.estado ?? ''}</span>
                 </li>
                 <li className="mb-75">
                   <span className="fw-bolder me-25">DDI:</span>
-                  <span>{vDados?.pais ?? ""}</span>
+                  <span>{vDados?.pais ?? ''}</span>
                 </li>
                 <li className="mb-75">
                   <span className="fw-bolder me-25">Celular:</span>
-                  <span>{dados.celular ?? ""}</span>
+                  <span>{dados.celular ?? ''}</span>
                 </li>
                 <li className="mb-75">
                   <span className="fw-bolder me-25">Data do cadastro:</span>
-                  <span>{formatDateTime(dados.data_cadastro) ?? ""}</span>
+                  <span>{formatDateTime(dados.data_cadastro) ?? ''}</span>
                 </li>
                 <li className="mb-75">
                   <span className="fw-bolder me-25">Login social:</span>
-                  <span>{dados.social_type ?? ""}</span>
+                  <span>{dados.social_type ?? ''}</span>
                 </li>
                 {dados.ultimo_quarto ? (
                   <li className="mb-75">
                     <span className="fw-bolder me-25">Último quarto:</span>
-                    <span>{dados.ultimo_quarto ?? ""}</span>
+                    <span>{dados.ultimo_quarto ?? ''}</span>
                   </li>
                 ) : null}
               </ul>

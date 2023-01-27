@@ -1,14 +1,14 @@
 // ** Third Party Components
-import { User, Wifi, UserPlus, Smartphone } from "react-feather"
+import { User, Wifi, UserPlus, Smartphone } from 'react-feather'
 
 // ** Custom Components
-import Avatar from "@components/avatar"
+import Avatar from '@components/avatar'
 
 // ** Hooks
-import { useEffect, useState } from "react"
+import { useEffect, useState } from 'react'
 
 // ** API
-import api from "@src/services/api"
+import api from '@src/services/api'
 
 // ** Reactstrap Imports
 import {
@@ -20,7 +20,7 @@ import {
   Row,
   Col,
   Spinner,
-} from "reactstrap"
+} from 'reactstrap'
 
 const CardQuantidades = () => {
   const [vValor1, setValor1] = useState(null)
@@ -38,56 +38,56 @@ const CardQuantidades = () => {
   const getDados1 = () => {
     setProcessando1(true)
     return api
-      .get("/conexao/qtd_total/")
+      .get('/conexao/qtd_total/')
       .then((res) => {
         setProcessando1(false)
         setValor1(res.data.valor)
       })
       .catch((error) => {
         setProcessando1(false)
-        console.error("Erro ao pegar dados:", error)
+        console.error('Erro ao pegar dados:', error)
       })
   }
 
   const getDados2 = () => {
     setProcessando2(true)
     return api
-      .get("/conexao/qtd_dispositivo_online/")
+      .get('/conexao/qtd_dispositivo_online/')
       .then((res) => {
         setProcessando2(false)
         setValor2(res.data.valor)
       })
       .catch((error) => {
         setProcessando2(false)
-        console.error("Erro ao pegar dados:", error)
+        console.error('Erro ao pegar dados:', error)
       })
   }
 
   const getDados3 = () => {
     setProcessando3(true)
     return api
-      .get("/conexao/cadastro_total/")
+      .get('/conexao/cadastro_total/')
       .then((res) => {
         setProcessando3(false)
         setValor3(res.data.valor)
       })
       .catch((error) => {
         setProcessando3(false)
-        console.error("Erro ao pegar dados:", error)
+        console.error('Erro ao pegar dados:', error)
       })
   }
 
   const getDados4 = () => {
     setProcessando4(true)
     return api
-      .get("/conexao/usuario_total")
+      .get('/conexao/usuario_total')
       .then((res) => {
         setProcessando4(false)
         setValor4(res.data.valor)
       })
       .catch((error) => {
         setProcessando4(false)
-        console.error("Erro ao pegar dados:", error)
+        console.error('Erro ao pegar dados:', error)
       })
   }
 

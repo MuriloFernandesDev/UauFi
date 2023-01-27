@@ -1,5 +1,5 @@
 // ** React
-import { Fragment, useEffect, useState } from "react"
+import { Fragment, useEffect, useState } from 'react'
 
 // ** Reactstrap
 import {
@@ -14,27 +14,27 @@ import {
   NavLink,
   Label,
   Spinner,
-} from "reactstrap"
+} from 'reactstrap'
 
 // ** Icons
-import { Check, Move } from "react-feather"
+import { Check, Move } from 'react-feather'
 
-import QRCodeCanvas from "qrcode.react"
+import QRCodeCanvas from 'qrcode.react'
 
 // ** Terceiros
-import { ReactSortable } from "react-sortablejs"
-import classnames from "classnames"
+import { ReactSortable } from 'react-sortablejs'
+import classnames from 'classnames'
 
 // ** Custom Components
-import Avatar from "@components/avatar"
-import Select from "react-select"
-import { useTranslation } from "react-i18next"
+import Avatar from '@components/avatar'
+import Select from 'react-select'
+import { useTranslation } from 'react-i18next'
 
 // ** API
-import api from "@src/services/api"
+import api from '@src/services/api'
 
 // ** Default Imagem
-import defaultImagem from "@src/assets/images/pages/semfoto.png"
+import defaultImagem from '@src/assets/images/pages/semfoto.png'
 
 const CardapioProdutoCard = () => {
   // ** Hooks
@@ -48,11 +48,11 @@ const CardapioProdutoCard = () => {
   const [vPesquisando, setPesquisando] = useState(false)
 
   // ** State
-  const [activeList, setActiveLIst] = useState("0")
-  const [active, setActive] = useState("1")
+  const [activeList, setActiveLIst] = useState('0')
+  const [active, setActive] = useState('1')
 
   // ** Guardar o Cliente selecionado para atualizar a página caso mude
-  const sClienteId = localStorage.getItem("clienteId")
+  const sClienteId = localStorage.getItem('clienteId')
 
   const toggleList = (list) => {
     if (activeList !== list) {
@@ -68,8 +68,8 @@ const CardapioProdutoCard = () => {
   const toggle = (tab) => {
     if (active !== tab) {
       setActive(tab)
-      if (tab === "3") {
-        document.getElementById("iframe_cardapio").src = `${vDados.link}`
+      if (tab === '3') {
+        document.getElementById('iframe_cardapio').src = `${vDados.link}`
       }
     }
   }
@@ -80,7 +80,7 @@ const CardapioProdutoCard = () => {
       JSON.stringify(vListaCategorias?.map((item) => item.id))
     ) {
       setListaCategorias(v)
-      api.post("/cardapio_categoria/ordenar", v).then((response) => {
+      api.post('/cardapio_categoria/ordenar', v).then((response) => {
         setListaCategorias(response.data)
       })
     }
@@ -92,7 +92,7 @@ const CardapioProdutoCard = () => {
       JSON.stringify(vListaProdutos?.map((item) => item.id))
     ) {
       setListaProdutos(v)
-      api.post("/cardapio_produto/ordenar", v).then((response) => {
+      api.post('/cardapio_produto/ordenar', v).then((response) => {
         setListaProdutos(response.data)
       })
     }
@@ -142,7 +142,7 @@ const CardapioProdutoCard = () => {
                   >
                     <NavLink
                       key={`nav-link-${item.id}-${index}`}
-                      className={classnames("todo-item cursor-pointer", {
+                      className={classnames('todo-item cursor-pointer', {
                         active: activeList === `${item.id}`,
                       })}
                       onClick={() => toggleList(`${item.id}`)}
@@ -199,7 +199,7 @@ const CardapioProdutoCard = () => {
                         <div className="d-flex flex-column">
                           <div>
                             <h6 className="user-name text-truncate mb-0">
-                              {produto.titulo ?? ""}
+                              {produto.titulo ?? ''}
                             </h6>
                           </div>
                         </div>
@@ -216,13 +216,13 @@ const CardapioProdutoCard = () => {
   }
 
   const downloadQR = () => {
-    const canvas = document.getElementById("QrCode")
+    const canvas = document.getElementById('QrCode')
     const pngUrl = canvas
-      .toDataURL("image/png")
-      .replace("image/png", "image/octet-stream")
-    const downloadLink = document.createElement("a")
+      .toDataURL('image/png')
+      .replace('image/png', 'image/octet-stream')
+    const downloadLink = document.createElement('a')
     downloadLink.href = pngUrl
-    downloadLink.download = "QrCode.png"
+    downloadLink.download = 'QrCode.png'
     document.body.appendChild(downloadLink)
     downloadLink.click()
     document.body.removeChild(downloadLink)
@@ -246,9 +246,9 @@ const CardapioProdutoCard = () => {
               <Nav tabs>
                 <NavItem>
                   <NavLink
-                    active={active === "1"}
+                    active={active === '1'}
                     onClick={() => {
-                      toggle("1")
+                      toggle('1')
                     }}
                   >
                     QrCode
@@ -256,9 +256,9 @@ const CardapioProdutoCard = () => {
                 </NavItem>
                 <NavItem>
                   <NavLink
-                    active={active === "2"}
+                    active={active === '2'}
                     onClick={() => {
-                      toggle("2")
+                      toggle('2')
                     }}
                   >
                     Ordenar itens
@@ -266,9 +266,9 @@ const CardapioProdutoCard = () => {
                 </NavItem>
                 <NavItem>
                   <NavLink
-                    active={active === "3"}
+                    active={active === '3'}
                     onClick={() => {
-                      toggle("3")
+                      toggle('3')
                     }}
                   >
                     Visualização final
@@ -284,7 +284,7 @@ const CardapioProdutoCard = () => {
                           id="QrCode"
                           value={vDados?.link}
                           size={400}
-                          level={"H"}
+                          level={'H'}
                           includeMargin={false}
                         />
                       </Col>
@@ -339,8 +339,8 @@ const CardapioProdutoCard = () => {
                   <Select
                     isClearable
                     id="cliente_id"
-                    noOptionsMessage={() => t("Vazio")}
-                    placeholder={t("Selecione...")}
+                    noOptionsMessage={() => t('Vazio')}
+                    placeholder={t('Selecione...')}
                     value={vCardapioBase}
                     options={vDados.cardapios}
                     className="react-select"

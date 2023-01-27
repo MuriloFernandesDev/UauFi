@@ -8,7 +8,7 @@ import { ChevronDown, Eye, Trash, MoreVertical, Copy } from 'react-feather'
 import DataTable from 'react-data-table-component'
 
 // ** Custom Components
-import Avatar from '@components/avatar'
+import Avatar from '@src/@core/components/avatar'
 
 // ** Reactstrap
 import {

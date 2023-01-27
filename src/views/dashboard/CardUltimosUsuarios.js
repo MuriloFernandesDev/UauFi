@@ -1,23 +1,23 @@
 // ** React Imports
-import { Link } from "react-router-dom"
+import { Link } from 'react-router-dom'
 
 // ** Custom Components
-import Avatar from "@components/avatar"
+import Avatar from '@components/avatar'
 
 // ** Reactstrap Imports
-import { Table, Card, Spinner } from "reactstrap"
+import { Table, Card, Spinner } from 'reactstrap'
 
-import { useEffect, useState, useRef } from "react"
+import { useEffect, useState, useRef } from 'react'
 
 // ** Default Avatar Image
-import defaultAvatar from "@src/assets/images/avatars/avatar-blank.png"
+import defaultAvatar from '@src/assets/images/avatars/avatar-blank.png'
 
 // ** Utils
-import { formatDateTime } from "@utils"
+import { formatDateTime } from '@utils'
 
 // ** API
-import api from "@src/services/api"
-import { RefreshCw } from "react-feather"
+import api from '@src/services/api'
+import { RefreshCw } from 'react-feather'
 
 const CardUltimosUsuarios = () => {
   // ** States
@@ -33,7 +33,7 @@ const CardUltimosUsuarios = () => {
     vTimeoutPesquisa.current = setTimeout(() => {
       setProcessando(true)
       return api
-        .get("/usuario/ultimas_conexoes")
+        .get('/usuario/ultimas_conexoes')
         .then((res) => {
           setProcessando(false)
           setDados(res.data)
@@ -73,9 +73,9 @@ const CardUltimosUsuarios = () => {
 
                   <span className="font-small-2 text-muted">
                     {col.ultimo_quarto
-                      ? `Quarto: ${col.ultimo_quarto ?? ""}`
-                      : ""}
-                    {col.celular ? ` Cel: ${col.celular}` : ""}
+                      ? `Quarto: ${col.ultimo_quarto ?? ''}`
+                      : ''}
+                    {col.celular ? ` Cel: ${col.celular}` : ''}
                   </span>
                 </div>
               </div>
@@ -83,7 +83,7 @@ const CardUltimosUsuarios = () => {
           </td>
           <td>
             <div className="d-flex flex-column">
-              <span className="mb-25">{col.plataforma ?? ""}</span>
+              <span className="mb-25">{col.plataforma ?? ''}</span>
               <span className="font-small-2 text-muted">{col.mac}</span>
             </div>
           </td>
@@ -106,7 +106,7 @@ const CardUltimosUsuarios = () => {
             <th>Últimos usuários conectados</th>
             <th>Dispositivo</th>
             <th>Conexão</th>
-            <th style={{ width: "10px" }} className="pe-1 pb-0">
+            <th style={{ width: '10px' }} className="pe-1 pb-0">
               {vProcessando ? (
                 <Spinner
                   type="grow"

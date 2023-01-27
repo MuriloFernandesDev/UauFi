@@ -9,9 +9,9 @@ import classnames from 'classnames'
 import { UncontrolledTooltip } from 'reactstrap'
 
 // ** Custom Components Imports
-import Avatar from '@components/avatar'
+import Avatar from '@src/@core/components/avatar'
 
-const AvatarGroup = props => {
+const AvatarGroup = (props) => {
   // ** Props
   const { data, tag, className } = props
 
@@ -25,7 +25,10 @@ const AvatarGroup = props => {
       return (
         <Fragment key={i}>
           {item.title ? (
-            <UncontrolledTooltip placement={item.placement} target={item.title.split(' ').join('-')}>
+            <UncontrolledTooltip
+              placement={item.placement}
+              target={item.title.split(' ').join('-')}
+            >
               {item.title}
             </UncontrolledTooltip>
           ) : null}
@@ -33,7 +36,7 @@ const AvatarGroup = props => {
             <Avatar
               tag={ItemTag}
               className={classnames('pull-up', {
-                [item.className]: item.className
+                [item.className]: item.className,
               })}
               {...(item.title ? { id: item.title.split(' ').join('-') } : {})}
               {...item}
@@ -41,7 +44,11 @@ const AvatarGroup = props => {
               meta={undefined}
             />
           ) : null}
-          {item.meta ? <ItemTag className='d-flex align-items-center ps-1'>{item.meta}</ItemTag> : null}
+          {item.meta ? (
+            <ItemTag className="d-flex align-items-center ps-1">
+              {item.meta}
+            </ItemTag>
+          ) : null}
         </Fragment>
       )
     })
@@ -50,7 +57,7 @@ const AvatarGroup = props => {
   return (
     <Tag
       className={classnames('avatar-group', {
-        [className]: className
+        [className]: className,
       })}
     >
       {renderData()}
@@ -63,5 +70,5 @@ export default AvatarGroup
 // ** PropTypes
 AvatarGroup.propTypes = {
   data: Proptypes.array.isRequired,
-  tag: Proptypes.oneOfType([Proptypes.func, Proptypes.string])
+  tag: Proptypes.oneOfType([Proptypes.func, Proptypes.string]),
 }

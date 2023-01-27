@@ -1,5 +1,5 @@
 // ** React
-import { Fragment, useEffect, useState } from "react"
+import { Fragment, useEffect, useState } from 'react'
 
 // ** Reactstrap
 import {
@@ -12,23 +12,23 @@ import {
   Nav,
   NavItem,
   NavLink,
-} from "reactstrap"
+} from 'reactstrap'
 
 // ** Icons
-import { Check, Move } from "react-feather"
+import { Check, Move } from 'react-feather'
 
 // ** Terceiros
-import { ReactSortable } from "react-sortablejs"
-import classnames from "classnames"
+import { ReactSortable } from 'react-sortablejs'
+import classnames from 'classnames'
 
 // ** Custom Components
-import Avatar from "@components/avatar"
+import Avatar from '@components/avatar'
 
 // ** API
-import api from "@src/services/api"
+import api from '@src/services/api'
 
 // ** Default Imagem
-import defaultImagem from "@src/assets/images/pages/semfoto.png"
+import defaultImagem from '@src/assets/images/pages/semfoto.png'
 
 const CardapioProdutoCard = ({ setSalvarDados }) => {
   // ** States
@@ -36,7 +36,7 @@ const CardapioProdutoCard = ({ setSalvarDados }) => {
   const [vListaProdutos, setListaProdutos] = useState(null)
 
   // ** State
-  const [activeList, setActiveLIst] = useState("0")
+  const [activeList, setActiveLIst] = useState('0')
 
   const toggleList = (list) => {
     if (activeList !== list) {
@@ -55,7 +55,7 @@ const CardapioProdutoCard = ({ setSalvarDados }) => {
       JSON.stringify(vListaCategorias?.map((item) => item.id))
     ) {
       setListaCategorias(v)
-      api.post("/cardapio_categoria/ordenar", v).then((response) => {
+      api.post('/cardapio_categoria/ordenar', v).then((response) => {
         setListaCategorias(response.data)
       })
     }
@@ -67,7 +67,7 @@ const CardapioProdutoCard = ({ setSalvarDados }) => {
       JSON.stringify(vListaProdutos?.map((item) => item.id))
     ) {
       setListaProdutos(v)
-      api.post("/cardapio_produto/ordenar", v).then((response) => {
+      api.post('/cardapio_produto/ordenar', v).then((response) => {
         setListaProdutos(response.data)
       })
     }
@@ -90,7 +90,7 @@ const CardapioProdutoCard = ({ setSalvarDados }) => {
                   <NavItem>
                     <NavLink
                       key={`${item.id}-${index}`}
-                      className={classnames("todo-item cursor-pointer", {
+                      className={classnames('todo-item cursor-pointer', {
                         active: activeList === `${item.id}`,
                       })}
                       onClick={() => toggleList(`${item.id}`)}
@@ -145,7 +145,7 @@ const CardapioProdutoCard = ({ setSalvarDados }) => {
                         <div className="d-flex flex-column">
                           <div>
                             <h6 className="user-name text-truncate mb-0">
-                              {produto.titulo ?? ""}
+                              {produto.titulo ?? ''}
                             </h6>
                           </div>
                         </div>

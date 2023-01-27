@@ -18,7 +18,7 @@ import { handleLogin } from '@store/authentication'
 import { AbilityContext } from '@src/utility/context/Can'
 
 // ** Custom Components
-import Avatar from '@components/avatar'
+import Avatar from '@src/@core/components/avatar'
 import InputPasswordToggle from '@components/input-password-toggle'
 
 // ** Utils

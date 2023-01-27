@@ -1,10 +1,16 @@
-import { Marker, InfoWindow } from '@react-google-maps/api'
+import { Marker, InfoWindow, MarkerProps } from '@react-google-maps/api'
 import { useState } from 'react'
+import { MapaProps } from '@src/types'
+import { useTranslation } from 'react-i18next'
 
-const MarkerComponent = ({ data, ...rest }) => {
+interface MarkerProp extends MarkerProps {
+  data: MapaProps
+}
+
+const MarkerComponent = ({ data, ...rest }: MarkerProp) => {
   const {
-    lat: latData,
-    lng: longData,
+    lat: vLat,
+    lng: vLng,
     bairro,
     cidade,
     endereco,
@@ -18,6 +24,8 @@ const MarkerComponent = ({ data, ...rest }) => {
   //state para definir se a janela de informações do marker aparecerá ou não
   const [showInfoWindow, setShowInfoWindo] = useState(false)
 
+  const { t: translate } = useTranslation()
+
   //função para alterar o state da janela de informações
   function handleShowInfoWindow() {
     setShowInfoWindo(!showInfoWindow)
@@ -26,15 +34,15 @@ const MarkerComponent = ({ data, ...rest }) => {
   return (
     <Marker
       {...rest}
-      position={{ lat: latData, lng: longData }}
       onClick={handleShowInfoWindow}
       title={hotspot_nome}
     >
+   
       {showInfoWindow && (
         //janela de informações
         <InfoWindow
           onCloseClick={handleShowInfoWindow}
-          position={{ lat: latData, lng: longData }}
+          position={{ lat: vLat, lng: vLng }}
         >
           <div className="d-flex flex-column">
             <h1 className="mb-0 text-black fs-4">{hotspot_nome}</h1>
@@ -53,16 +61,16 @@ const MarkerComponent = ({ data, ...rest }) => {
             )}
             {total_visitas > 0 && (
               <p>
-                Esse local possui {total_visitas.toLocaleString('pt-BR')} de
-                visitas até agora.
+                {translate('Esse local possui')} {total_visitas.toLocaleString('pt-BR')}{' '}
+                {translate('de visitas até agora.')}
               </p>
             )}
 
             <a
-              href={`https://maps.google.com/?q=${latData},${longData}`}
+              href={`https://maps.google.com/?q=${vLat},${vLng}`}
               target={'_blank'}
             >
-              Visualize no google maps
+              {translate('Visualize no google maps')}
             </a>
           </div>
         </InfoWindow>

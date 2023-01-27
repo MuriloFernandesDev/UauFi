@@ -1,14 +1,14 @@
 // ** React Imports
-import { Fragment, useState, useEffect, useRef, useContext } from "react"
+import { Fragment, useState, useEffect, useRef, useContext } from 'react'
 
 // ** Store & Actions
-import { getUsuarios, getPagina } from "../store"
-import { useDispatch, useSelector } from "react-redux"
+import { getUsuarios, getPagina } from '../store'
+import { useDispatch, useSelector } from 'react-redux'
 
 // ** Third Party Components
-import ReactPaginate from "react-paginate"
-import DataTable from "react-data-table-component"
-import StatsHorizontal from "@components/widgets/stats/StatsHorizontal"
+import ReactPaginate from 'react-paginate'
+import DataTable from 'react-data-table-component'
+import StatsHorizontal from '@components/widgets/stats/StatsHorizontal'
 import {
   ChevronDown,
   Share,
@@ -18,7 +18,7 @@ import {
   MoreVertical,
   Eye,
   WifiOff,
-} from "react-feather"
+} from 'react-feather'
 
 // ** Reactstrap Imports
 import {
@@ -34,37 +34,37 @@ import {
   DropdownMenu,
   DropdownItem,
   UncontrolledTooltip,
-} from "reactstrap"
+} from 'reactstrap'
 
 // ** Context
-import { AbilityContext as PermissaoContext } from "@src/utility/context/Can"
+import { AbilityContext as PermissaoContext } from '@src/utility/context/Can'
 
 // ** API
-import api from "@src/services/api"
+import api from '@src/services/api'
 
 // ** React Imports
-import { Link } from "react-router-dom"
+import { Link } from 'react-router-dom'
 
 // ** Custom Components
-import Avatar from "@components/avatar"
+import Avatar from '@src/@core/components/avatar'
 
 // ** Utils
-import { formatDateTime } from "@utils"
+import { formatDateTime } from '@utils'
 
 // ** Sidebar
-import Sidebar from "./Sidebar"
+import Sidebar from './Sidebar'
 
 // ** Third Party Components
-import Swal from "sweetalert2"
-import withReactContent from "sweetalert2-react-content"
-import toast from "react-hot-toast"
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
+import toast from 'react-hot-toast'
 
 // ** Terceiros
-import { useTranslation } from "react-i18next"
+import { useTranslation } from 'react-i18next'
 
 const MySwal = withReactContent(Swal)
 
-import "@styles/react/libs/tables/react-dataTable-component.scss"
+import '@styles/react/libs/tables/react-dataTable-component.scss'
 
 // ** Table Header
 const CustomHeader = ({
@@ -87,15 +87,15 @@ const CustomHeader = ({
   const handleExportar = (parametros) => {
     setCarregando(true)
     api
-      .get("/usuario/exportar_cadastros", {
-        responseType: "blob",
+      .get('/usuario/exportar_cadastros', {
+        responseType: 'blob',
         params: parametros,
       })
       .then((response) => {
         const url = window.URL.createObjectURL(new Blob([response.data]))
-        const link = document.createElement("a")
+        const link = document.createElement('a')
         link.href = url
-        link.setAttribute("download", "cadastros.xlsx")
+        link.setAttribute('download', 'cadastros.xlsx')
         document.body.appendChild(link)
         link.click()
         document.body.removeChild(link)
@@ -144,7 +144,7 @@ const CustomHeader = ({
           >
             +Filtros
           </Button>
-          {permissao.can("read", "rel_exportar_registros") &&
+          {permissao.can('read', 'rel_exportar_registros') &&
           store?.length > 0 ? (
             <Button
               className="me-0 mb-1 mb-md-0 ms-0 ms-sm-1 ms-md-2"
@@ -156,7 +156,7 @@ const CustomHeader = ({
                 {!vCarregando ? (
                   <Fragment>
                     <Share className="font-small-4" />
-                    {t("Exportar")}
+                    {t('Exportar')}
                   </Fragment>
                 ) : (
                   <Spinner size="sm" color="secondary" />
@@ -176,11 +176,11 @@ const handleError = (error, errorMessage, errorIcon) => {
     text: errorMessage,
     icon: errorIcon,
     customClass: {
-      confirmButton: "btn btn-primary",
-      popup: "animate__animated animate__fadeIn",
+      confirmButton: 'btn btn-primary',
+      popup: 'animate__animated animate__fadeIn',
     },
     hideClass: {
-      popup: "animate__animated animate__zoomOut",
+      popup: 'animate__animated animate__zoomOut',
     },
     buttonsStyling: false,
   })
@@ -194,9 +194,9 @@ const arrayToString = (a) => {
 }
 
 const statusOptions = [
-  { value: "o", label: "Online" },
-  { value: "n", label: "Cadastro novo" },
-  { value: "niver", label: "Aniversariantes" },
+  { value: 'o', label: 'Online' },
+  { value: 'n', label: 'Cadastro novo' },
+  { value: 'niver', label: 'Aniversariantes' },
 ]
 
 const UsuarioLista = () => {
@@ -205,19 +205,19 @@ const UsuarioLista = () => {
   const store = useSelector((state) => state.usuario)
 
   // ** States
-  const [sort, setSort] = useState(store.params.sort ?? "desc")
-  const [searchTerm, setSearchTerm] = useState(store.params.q ?? "")
+  const [sort, setSort] = useState(store.params.sort ?? 'desc')
+  const [searchTerm, setSearchTerm] = useState(store.params.q ?? '')
   const [currentPage, setCurrentPage] = useState(store.params.page ?? 1)
   const [sortColumn, setSortColumn] = useState(
-    store.params.sortColumn ?? "entrada"
+    store.params.sortColumn ?? 'entrada'
   )
   const [rowsPerPage, setRowsPerPage] = useState(store.params.perPage ?? 25)
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [vDataInicial, setDataInicial] = useState(null)
   const [vDataFinal, setDataFinal] = useState(null)
   //Valor padrão da situação (Online)
-  const vSituacaoArray = (store.params.situacao ?? "")
-    .split(",")
+  const vSituacaoArray = (store.params.situacao ?? '')
+    .split(',')
     .map((item) => item)
 
   const [vSituacao, setSituacao] = useState(
@@ -228,7 +228,7 @@ const UsuarioLista = () => {
   const vTimeoutPesquisa = useRef()
 
   // ** Guardar o Cliente selecionado para atualizar a página caso mude
-  const sClienteId = localStorage.getItem("clienteId")
+  const sClienteId = localStorage.getItem('clienteId')
 
   const handlePesquisar = (dados, force) => {
     if (
@@ -285,19 +285,19 @@ const UsuarioLista = () => {
   // ** Modal de desconexão
   const handleDesconectar = (row) => {
     return MySwal.fire({
-      title: "Tem certeza?",
-      text: "O usuário será desconectado e deverá conectar-se novamente!",
-      icon: "warning",
+      title: 'Tem certeza?',
+      text: 'O usuário será desconectado e deverá conectar-se novamente!',
+      icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: "Ok, desconectar!",
-      cancelButtonText: "Cancelar",
+      confirmButtonText: 'Ok, desconectar!',
+      cancelButtonText: 'Cancelar',
       customClass: {
-        confirmButton: "btn btn-primary",
-        cancelButton: "btn btn-outline-danger ms-1",
-        popup: "animate__animated animate__fadeIn",
+        confirmButton: 'btn btn-primary',
+        cancelButton: 'btn btn-outline-danger ms-1',
+        popup: 'animate__animated animate__fadeIn',
       },
       hideClass: {
-        popup: "animate__animated animate__zoomOut",
+        popup: 'animate__animated animate__zoomOut',
       },
       buttonsStyling: false,
     }).then((result) => {
@@ -308,21 +308,21 @@ const UsuarioLista = () => {
             if (response.status === 200) {
               handlePesquisar(store.params, true)
 
-              toast.success("Desconectado com sucesso!", {
-                position: "bottom-right",
+              toast.success('Desconectado com sucesso!', {
+                position: 'bottom-right',
               })
             }
           })
           .catch((error) => {
             if (error.response.status === 400) {
-              handleError("Atenção!", "Não autorizado.", "warning")
+              handleError('Atenção!', 'Não autorizado.', 'warning')
             } else if (error.response.status === 503) {
-              handleError("Ops...", error.response.data, "error")
+              handleError('Ops...', error.response.data, 'error')
             } else {
               handleError(
-                "Erro inesperado",
-                "Por favor, contate um administrador.",
-                "error"
+                'Erro inesperado',
+                'Por favor, contate um administrador.',
+                'error'
               )
             }
           })
@@ -409,7 +409,7 @@ const UsuarioLista = () => {
           initials
           className="me-1"
           color="light-primary"
-          content={row.nome || row.email || ""}
+          content={row.nome || row.email || ''}
         />
       )
     }
@@ -417,10 +417,10 @@ const UsuarioLista = () => {
 
   const columns = [
     {
-      name: "Usuário",
+      name: 'Usuário',
       sortable: true,
-      minWidth: "300px",
-      sortField: "nome",
+      minWidth: '300px',
+      sortField: 'nome',
       selector: (row) => row.nome,
       cell: (row) => (
         <Link
@@ -432,8 +432,8 @@ const UsuarioLista = () => {
             <div className="d-flex flex-column">
               <span className="fw-bolder text-truncate">{row.nome}</span>
               <small className="mb-0">
-                {row.cpf ? `CPF: ${row.cpf}` : ""}{" "}
-                {row.celular ? `Cel: ${row.celular}` : ""}
+                {row.cpf ? `CPF: ${row.cpf}` : ''}{' '}
+                {row.celular ? `Cel: ${row.celular}` : ''}
               </small>
               <small className="mb-0">
                 {row.online ? <Badge color="success">Online</Badge> : null}
@@ -444,35 +444,35 @@ const UsuarioLista = () => {
       ),
     },
     {
-      name: "Conexão",
+      name: 'Conexão',
       sortable: true,
-      minWidth: "200px",
-      sortField: "entrada",
+      minWidth: '200px',
+      sortField: 'entrada',
       selector: (row) => row.entrada,
       cell: (row) => (
         <div className="d-flex justify-content-left align-items-center">
           <div className="d-flex flex-column">
-            <small className="mb-0">{row.comentario ?? ""}</small>
+            <small className="mb-0">{row.comentario ?? ''}</small>
             <small className="mb-0">{formatDateTime(row.entrada)}</small>
           </div>
         </div>
       ),
     },
     {
-      name: "Dispositivo",
+      name: 'Dispositivo',
       sortable: true,
-      minWidth: "200px",
-      sortField: "mac",
+      minWidth: '200px',
+      sortField: 'mac',
       selector: (row) => row.mac,
       cell: (row) => (
         <div className="d-flex justify-content-left align-items-center">
           <div className="d-flex flex-column">
             <small className="mb-0">
-              {row.dispositivo?.mac ? `MAC: ${row.dispositivo?.mac ?? ""}` : ""}
+              {row.dispositivo?.mac ? `MAC: ${row.dispositivo?.mac ?? ''}` : ''}
             </small>
-            <small className="mb-0">{row.dispositivo?.plataforma ?? ""}</small>
+            <small className="mb-0">{row.dispositivo?.plataforma ?? ''}</small>
             <small className="mb-0 text-nowrap">
-              {row.dispositivo?.modelo ?? ""} {row.dispositivo?.marca ?? ""}
+              {row.dispositivo?.modelo ?? ''} {row.dispositivo?.marca ?? ''}
             </small>
           </div>
         </div>
@@ -480,7 +480,7 @@ const UsuarioLista = () => {
     },
     {
       name: <div className="text-end w-100">Ações</div>,
-      minWidth: "50px",
+      minWidth: '50px',
       cell: (row) => (
         <div className="text-end w-100">
           <div className="column-action d-inline-flex">
@@ -525,20 +525,20 @@ const UsuarioLista = () => {
 
     return (
       <ReactPaginate
-        previousLabel={""}
-        nextLabel={""}
+        previousLabel={''}
+        nextLabel={''}
         pageCount={count || 1}
         activeClassName="active"
         forcePage={currentPage !== 0 ? currentPage - 1 : 0}
         onPageChange={(page) => handlePagination(page)}
-        pageClassName={"page-item"}
-        nextLinkClassName={"page-link"}
-        nextClassName={"page-item next"}
-        previousClassName={"page-item prev"}
-        previousLinkClassName={"page-link"}
-        pageLinkClassName={"page-link"}
+        pageClassName={'page-item'}
+        nextLinkClassName={'page-link'}
+        nextClassName={'page-item next'}
+        previousClassName={'page-item prev'}
+        previousLinkClassName={'page-link'}
+        pageLinkClassName={'page-link'}
         containerClassName={
-          "pagination react-paginate justify-content-end my-2 pe-1"
+          'pagination react-paginate justify-content-end my-2 pe-1'
         }
       />
     )
