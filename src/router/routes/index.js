@@ -1,26 +1,29 @@
 // ** React Imports
-import { Fragment } from "react"
+import { Fragment, lazy } from 'react'
 
 // ** Routes Imports
-import AppRoutes from "./Apps"
-import PagesRoutes from "./Pages"
-import UiElementRoutes from "./UiElements"
-import ExtensionsRoutes from "./Extensions"
-import PageLayoutsRoutes from "./PageLayouts"
-import AuthenticationRoutes from "./Authentication"
+import AppRoutes from './Apps'
+import PagesRoutes from './Pages'
+import UiElementRoutes from './UiElements'
+import ExtensionsRoutes from './Extensions'
+import PageLayoutsRoutes from './PageLayouts'
+import AuthenticationRoutes from './Authentication'
 
 // ** Layouts
-import BlankLayout from "@layouts/BlankLayout"
-import VerticalLayout from "@src/layouts/VerticalLayout"
-import HorizontalLayout from "@src/layouts/HorizontalLayout"
-import LayoutWrapper from "@src/@core/layouts/components/layout-wrapper"
+import BlankLayout from '@layouts/BlankLayout'
+import VerticalLayout from '@src/layouts/VerticalLayout'
+import HorizontalLayout from '@src/layouts/HorizontalLayout'
+import LayoutWrapper from '@src/@core/layouts/components/layout-wrapper'
+
+const Login = lazy(() => import('../../views/pages/authentication/Login'))
 
 // ** Route Components
-import PublicRoute from "@components/routes/PublicRoute"
-import PrivateRoute from "@components/routes/PrivateRoute"
+import PublicRoute from '@components/routes/PublicRoute'
+import PrivateRoute from '@components/routes/PrivateRoute'
 
 // ** Utils
-import { isObjEmpty } from "@utils"
+import { isObjEmpty } from '@utils'
+import { getUserData } from '../../utility/Utils'
 
 const getLayout = {
   blank: <BlankLayout />,
@@ -29,10 +32,10 @@ const getLayout = {
 }
 
 // ** Document title
-const TemplateTitle = "%s - Uau-Fi Connect"
+const TemplateTitle = '%s - Uau-Fi Connect'
 
 // ** Default Route
-const DefaultRoute = "/dashboard"
+const DefaultRoute = '/dashboard'
 
 // ** Merge Routes
 const Routes = [
@@ -71,7 +74,7 @@ const MergeLayoutRoutes = (layout, defaultLayout) => {
 
         // ** Check for public or private route
         if (route.meta) {
-          route.meta.layout === "blank" ? (isBlank = true) : (isBlank = false)
+          route.meta.layout === 'blank' ? (isBlank = true) : (isBlank = false)
           RouteTag = route.meta.publicRoute ? PublicRoute : PrivateRoute
         }
         if (route.element) {
@@ -99,17 +102,22 @@ const MergeLayoutRoutes = (layout, defaultLayout) => {
 }
 
 const getRoutes = (layout) => {
-  const defaultLayout = layout || "vertical"
-  const layouts = ["vertical", "horizontal", "blank"]
+  const defaultLayout = layout || 'vertical'
+  const layouts = ['vertical', 'horizontal', 'blank']
 
   const AllRoutes = []
+  const user = getUserData()
 
   layouts.forEach((layoutItem) => {
     const LayoutRoutes = MergeLayoutRoutes(layoutItem, defaultLayout)
 
     AllRoutes.push({
-      path: "/",
-      element: getLayout[layoutItem] || getLayout[defaultLayout],
+      path: '/',
+      element: !user ? (
+        <Login />
+      ) : (
+        getLayout[layoutItem] || getLayout[defaultLayout]
+      ),
       children: LayoutRoutes,
     })
   })

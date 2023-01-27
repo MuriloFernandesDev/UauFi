@@ -17,6 +17,8 @@ import MarkerComponent from './components/Marker'
 import AutoComplete from './components/AutoComplete'
 // ** Context
 import { AbilityContext as PermissaoContext } from '@src/utility/context/Can'
+// ** Custom Hooks
+import { useSkin } from '@hooks/useSkin'
 
 const Mapa = () => {
   //state para definir o mapa de calor
@@ -51,6 +53,8 @@ const Mapa = () => {
 
   // ** Context
   const permissao = useContext(PermissaoContext)
+  // ** Hooks
+  const { skin } = useSkin()
 
   //função para buscar mapa de calor quando o mapData estiver carregado
   const onLoad = useCallback(
@@ -165,10 +169,14 @@ const Mapa = () => {
       'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m', // so you must have m1.png, m2.png, m3.png, m4.png, m5.png and m6.png in that folder
   }
 
+  //useeffect para buscar os dados do mapa na api
   useEffect(() => {
-    getLocalizaoAtual()
-    getDados('mapa_google')
-    getDados('mapa_google_usuario_online')
+    if (permissao.can('read', 'mapa_google')) {
+      getLocalizaoAtual()
+      getDados('mapa_google')
+      getDados('mapa_google_usuario_online')
+    }
+    console.log(permissao.can('read', 'mapa_calor'))
   }, [])
 
   /*
@@ -176,125 +184,148 @@ const Mapa = () => {
     Documentação do react-google-maps-api
   */
 
-  /*
-        LEMBRETE
-        Tentar usar o mesmo componente mas desmontar o state quando unMount for chamado
-        exemplo https://stackoverflow.com/questions/72219002/heatmap-layer-not-displaying-in-google-maps-api-react-google-maps-api
-  */
-
   return (
     <Card>
-      <CardHeader className="pt-1 pe-1 pb-0">
-        <h5>Uau-Fi Mapas</h5>
-        <ButtonGroup>
-          {vProcessando ? (
-            <div className="d-flex justify-content-center text-center align-items-center h-100">
-              <Spinner type="grow" size="md" color="primary" />
-            </div>
-          ) : (
-            <>
-              <Button
-                color="primary"
-                onClick={() => setMapType('Marcadores')}
-                active={mapType === 'Marcadores'}
-                outline
-              >
-                Marcadores
-              </Button>
-              {permissao.can('read', 'mapa_calor') && (
-                <Button
-                  color="primary"
-                  onClick={() => setMapType('Calor')}
-                  active={mapType === 'Calor'}
-                  outline
-                >
-                  Calor
-                </Button>
-              )}
+      {/* verificar se o usuário tem permissão de acesso ao mapa, se não possuir
+      mostra o conteudo abaixo */}
+      {!permissao.can('read', 'mapa_google') ? (
+        <div className="misc-inner p-2 p-sm-3">
+          <div className="w-100 text-center">
+            <h2 className="mb-1">
+              Esse conteúdo não está disponível para sua conta 🔐
+            </h2>
+            <p className="mb-2">
+              Entre em contato com o nosso suporte para habilitar essa opção!
+            </p>
 
-              <Button
-                color="primary"
-                onClick={() => setMapType('Usuários online')}
-                active={mapType === 'Usuários online'}
-                outline
-              >
-                Usuários online
-              </Button>
-            </>
-          )}
-        </ButtonGroup>
-      </CardHeader>
-      <CardBody className="mt-2">
-        {vProcessando ? (
-          <div className="d-flex justify-content-center text-center align-items-center h-100">
-            <Spinner type="grow" size="md" color="primary" />
+            <img
+              className="img-fluid"
+              src={
+                require(`@src/assets/images/pages/${
+                  skin === 'dark'
+                    ? 'not-authorized-dark.svg'
+                    : 'not-authorized.svg'
+                }`).default
+              }
+              alt="Not authorized page"
+            />
           </div>
-        ) : (
-          <GoogleMapsComponent
-            onLoad={onLoad}
-            style={containerStyle}
-            center={center}
-            zoom={zoom}
-            options={{
-              streetViewControl: false,
-              mapTypeControl: false,
-              mapTypeId: 'roadmap',
-              //opções acimas desativam os controles de mapa que são cobrados a parte pelo google
-            }}
-          >
-            {/* componente para agrupar os marcadores e não sobrecarregar o app */}
-            {mapType === 'Marcadores' ? (
-              <MarkerClusterer options={options}>
-                {(clusterer) =>
-                  markerData.map((location, index) => {
-                    return (
-                      <MarkerComponent
-                        key={index}
-                        data={location}
-                        clusterer={clusterer}
-                      />
-                    )
-                  })
-                }
-              </MarkerClusterer>
-            ) : mapType === 'Usuários online' ? (
-              <>
-                <MarkerClusterer options={options}>
-                  {(clusterer) =>
-                    markerDataOnlines.map((location, index) => {
-                      return (
-                        <MarkerComponent
-                          key={index}
-                          data={location}
-                          clusterer={clusterer}
-                        />
-                      )
-                    })
-                  }
-                </MarkerClusterer>
-                <HeatmapLayer
-                  data={heatMapOnlines}
-                  options={{
-                    maxIntensity: 1,
-                    gradient: gradientArray,
-                  }}
-                />
-              </>
-            ) : (
-              <HeatmapLayer
-                data={heatMap}
-                options={{
-                  maxIntensity: 1,
-                  gradient: gradientArray,
-                }}
-              />
-            )}
+        </div>
+      ) : (
+        <>
+          <CardHeader className="pt-1 pe-1 pb-0">
+            <h5>Mapas</h5>
+            <ButtonGroup>
+              {vProcessando ? (
+                <div className="d-flex justify-content-center text-center align-items-center h-100">
+                  <Spinner type="grow" size="md" color="primary" />
+                </div>
+              ) : (
+                <>
+                  <Button
+                    color="primary"
+                    onClick={() => setMapType('Marcadores')}
+                    active={mapType === 'Marcadores'}
+                    outline
+                  >
+                    Marcadores
+                  </Button>
+                  {permissao.can('read', 'mapa_calor') && (
+                    <Button
+                      color="primary"
+                      onClick={() => setMapType('Calor')}
+                      active={mapType === 'Calor'}
+                      outline
+                    >
+                      Calor
+                    </Button>
+                  )}
 
-            {/* componente para pesquisa de lugares */}
-            <AutoComplete setVLatLng={setVLatLng} setZoom={setZoom} />
-          </GoogleMapsComponent>
-        )}
-      </CardBody>
+                  <Button
+                    color="primary"
+                    onClick={() => setMapType('Usuários online')}
+                    active={mapType === 'Usuários online'}
+                    outline
+                  >
+                    Usuários online
+                  </Button>
+                </>
+              )}
+            </ButtonGroup>
+          </CardHeader>
+          <CardBody className="mt-2">
+            {vProcessando ? (
+              <div className="d-flex justify-content-center text-center align-items-center h-100">
+                <Spinner type="grow" size="md" color="primary" />
+              </div>
+            ) : (
+              <GoogleMapsComponent
+                onLoad={onLoad}
+                style={containerStyle}
+                center={center}
+                zoom={zoom}
+                options={{
+                  streetViewControl: false,
+                  mapTypeControl: false,
+                  mapTypeId: 'roadmap',
+                  //opções acimas desativam os controles de mapa que são cobrados a parte pelo google
+                }}
+              >
+                {/* componente para agrupar os marcadores e não sobrecarregar o app */}
+                {mapType === 'Marcadores' ? (
+                  <MarkerClusterer options={options}>
+                    {(clusterer) =>
+                      markerData.map((location, index) => {
+                        return (
+                          <MarkerComponent
+                            key={index}
+                            data={location}
+                            clusterer={clusterer}
+                          />
+                        )
+                      })
+                    }
+                  </MarkerClusterer>
+                ) : mapType === 'Usuários online' ? (
+                  <>
+                    <MarkerClusterer options={options}>
+                      {(clusterer) =>
+                        markerDataOnlines.map((location, index) => {
+                          return (
+                            <MarkerComponent
+                              key={index}
+                              data={location}
+                              clusterer={clusterer}
+                            />
+                          )
+                        })
+                      }
+                    </MarkerClusterer>
+                    <HeatmapLayer
+                      data={heatMapOnlines}
+                      options={{
+                        maxIntensity: 1,
+                        gradient: gradientArray,
+                      }}
+                    />
+                  </>
+                ) : (
+                  <HeatmapLayer
+                    data={heatMap}
+                    options={{
+                      maxIntensity: 1,
+                      gradient: gradientArray,
+                    }}
+                  />
+                )}
+
+                {/* componente para pesquisa de lugares */}
+                <AutoComplete setVLatLng={setVLatLng} setZoom={setZoom} />
+              </GoogleMapsComponent>
+            )}
+          </CardBody>
+        </>
+      )}
     </Card>
   )
 }

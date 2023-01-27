@@ -1,7 +1,7 @@
 // ** React Imports
 import { lazy } from 'react'
-import Mapa from '../../views/mapa'
 
+const Mapa = lazy(() => import('../../views/mapa'))
 const Dashboard = lazy(() => import('../../views/dashboard'))
 const Cliente = lazy(() => import('../../views/adm/cliente'))
 const ClienteEdit = lazy(() => import('../../views/adm/cliente/edit'))
