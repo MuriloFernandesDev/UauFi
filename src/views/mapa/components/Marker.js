@@ -23,16 +23,12 @@ const MarkerComponent = ({ data, ...rest }) => {
     setShowInfoWindo(!showInfoWindow)
   }
 
-  function formatarValor(valor) {
-    return valor.toLocaleString('pt-BR')
-  }
-
   return (
     <Marker
       {...rest}
       position={{ lat: latData, lng: longData }}
       onClick={handleShowInfoWindow}
-      title="teste"
+      title={hotspot_nome}
     >
       {showInfoWindow && (
         //janela de informações
@@ -48,16 +44,17 @@ const MarkerComponent = ({ data, ...rest }) => {
             <p className="mb-0 text-black fs-6">
               {cidade} - {uf}
             </p>
-            {total_usuarios_online && (
+            {total_usuarios_online > 0 && (
               <p>
-                Esse local possui {formatarValor(total_usuarios_online)}{' '}
-                usuários onlines no momento.
+                Esse local possui{' '}
+                {total_usuarios_online.toLocaleString('pt-BR')} usuários onlines
+                no momento.
               </p>
             )}
-            {total_visitas && (
+            {total_visitas > 0 && (
               <p>
-                Esse local possui {formatarValor(total_visitas)} de visitas até
-                agora.
+                Esse local possui {total_visitas.toLocaleString('pt-BR')} de
+                visitas até agora.
               </p>
             )}
 
