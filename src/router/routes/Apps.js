@@ -57,6 +57,9 @@ const CardapioDigital = lazy(() => import('../../views/cardapio_digital'))
 const Carteira = lazy(() => import('../../views/carteira'))
 const RelatorioCampanha = lazy(() => import('../../views/relatorio/campanha'))
 const RelatorioPesquisa = lazy(() => import('../../views/relatorio/pesquisa'))
+const RelatorioPublicidade = lazy(() =>
+  import('../../views/relatorio/publicidade')
+)
 const RelatorioCadastro = lazy(() => import('../../views/relatorio/cadastro'))
 const RelatorioEmail = lazy(() => import('../../views/relatorio/email'))
 
@@ -220,6 +223,10 @@ const AppRoutes = [
   {
     element: <RelatorioPesquisa />,
     path: '/relatorio/pesquisa',
+  },
+  {
+    element: <RelatorioPublicidade />,
+    path: '/relatorio/publicidade',
   },
   {
     element: <RelatorioCadastro />,

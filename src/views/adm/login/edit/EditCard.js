@@ -470,6 +470,12 @@ const ClienteLoginEditCard = ({ data, setSalvarDados }) => {
                         'read'
                       )}
                       {renderAcesso(
+                        'Relatórios - Publicidade',
+                        'rel_publicidade',
+                        [2],
+                        'read'
+                      )}
+                      {renderAcesso(
                         'Relatórios - Cadastros/Conexões',
                         'rel_cad_conexoes',
                         [1],
@@ -499,11 +505,18 @@ const ClienteLoginEditCard = ({ data, setSalvarDados }) => {
                         'create'
                       )}
                       {renderAcesso(
+                        'Relatórios - Publicidade',
+                        'rel_publicidade',
+                        [1],
+                        'create'
+                      )}
+                      {renderAcesso(
                         'Relatórios - Exportar e-mails',
                         'rel_exportar_email',
                         [1],
                         'read'
                       )}
+
                       {renderAcesso(
                         'Relatórios - Dados de usuários',
                         'rel_exportar_registros',
