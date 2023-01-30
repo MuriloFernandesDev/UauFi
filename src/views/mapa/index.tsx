@@ -17,7 +17,7 @@ import AutoComplete from './components/AutoComplete'
 import { AbilityContext as PermissaoContext } from '@src/utility/context/Can'
 // ** Custom Hooks
 import { useSkin } from '@hooks/useSkin'
-import { useTranslation } from "react-i18next"
+import { useTranslation } from 'react-i18next'
 
 const Mapa = () => {
   //state para definir o mapa de calor
@@ -48,7 +48,7 @@ const Mapa = () => {
   //state para definir os dados do mapa de calor
   const [heatMap, setHeatMap] = useState<any>([])
   //state para definir o zoom no mapa
-  const [zoom, setZoom] = useState<any>(13)
+  const [zoom, setZoom] = useState<any>(4)
 
   // ** Context
   const permissao = useContext(PermissaoContext)
@@ -173,10 +173,12 @@ const Mapa = () => {
         <div className="misc-inner p-2 p-sm-3">
           <div className="w-100 text-center">
             <h2 className="mb-1">
-            {`${t("Esse conteúdo não está disponível para sua conta ")} 🔐`}
+              {`${t('Esse conteúdo não está disponível para sua conta ')} 🔐`}
             </h2>
             <p className="mb-2">
-            {t("Entre em contato com o nosso suporte para habilitar essa opção!")}
+              {t(
+                'Entre em contato com o nosso suporte para habilitar essa opção!'
+              )}
             </p>
             <img
               className="img-fluid"
@@ -194,7 +196,7 @@ const Mapa = () => {
       ) : (
         <>
           <CardHeader className="pt-1 pe-1 pb-0">
-            <h5>{t("Mapas")}</h5>
+            <h5>{t('Mapas')}</h5>
             <ButtonGroup>
               {vProcessando ? (
                 <div className="d-flex justify-content-center text-center align-items-center h-100">
@@ -208,7 +210,7 @@ const Mapa = () => {
                     active={mapType === 'Marcadores'}
                     outline
                   >
-                    {t("Marcadores")}
+                    {t('Marcadores')}
                   </Button>
                   {permissao.can('read', 'mapa_calor') && (
                     <Button
@@ -217,20 +219,20 @@ const Mapa = () => {
                       active={mapType === 'Calor'}
                       outline
                     >
-                      {t("Calor")}
-                      
+                      {t('Calor')}
                     </Button>
                   )}
 
-                  <Button
-                    color="primary"
-                    onClick={() => setMapType('Usuários online')}
-                    active={mapType === 'Usuários online'}
-                    outline
-                  >
-                    {t("Usuários online")}
-                
-                  </Button>
+                  {markerDataOnlines && markerDataOnlines.length > 0 && (
+                    <Button
+                      color="primary"
+                      onClick={() => setMapType('Usuários online')}
+                      active={mapType === 'Usuários online'}
+                      outline
+                    >
+                      {t('Usuários online')}
+                    </Button>
+                  )}
                 </>
               )}
             </ButtonGroup>
@@ -254,30 +256,17 @@ const Mapa = () => {
                 }}
               >
                 <>
-                {/* componente para agrupar os marcadores e não sobrecarregar o app */}
-                {mapType === 'Marcadores' ? (
-                  <MarkerClusterer options={options}>
-                    {(clusterer) =>
-                      markerData.map((location: any, index: any) => {
-                        return (
-                          <MarkerComponent
-                            position={{lat: location.lat, lng: location.lng}}
-                            key={index}
-                            data={location}
-                            clusterer={clusterer}
-                          />
-                        )
-                      })
-                    }
-                  </MarkerClusterer>
-                ) : mapType === 'Usuários online' ? (
-                  <>
+                  {/* componente para agrupar os marcadores e não sobrecarregar o app */}
+                  {mapType === 'Marcadores' ? (
                     <MarkerClusterer options={options}>
                       {(clusterer) =>
-                        markerDataOnlines.map((location: any, index: any) => {
+                        markerData.map((location: any, index: any) => {
                           return (
                             <MarkerComponent
-                              position={{lat: location.lat, lng: location.lng}}
+                              position={{
+                                lat: location.lat,
+                                lng: location.lng,
+                              }}
                               key={index}
                               data={location}
                               clusterer={clusterer}
@@ -286,26 +275,45 @@ const Mapa = () => {
                         })
                       }
                     </MarkerClusterer>
+                  ) : mapType === 'Usuários online' ? (
+                    <>
+                      <MarkerClusterer options={options}>
+                        {(clusterer) =>
+                          markerDataOnlines.map((location: any, index: any) => {
+                            return (
+                              <MarkerComponent
+                                position={{
+                                  lat: location.lat,
+                                  lng: location.lng,
+                                }}
+                                key={index}
+                                data={location}
+                                clusterer={clusterer}
+                              />
+                            )
+                          })
+                        }
+                      </MarkerClusterer>
+                      <HeatmapLayer
+                        data={heatMapOnlines}
+                        options={{
+                          maxIntensity: 1,
+                          gradient: gradientArray,
+                        }}
+                      />
+                    </>
+                  ) : (
                     <HeatmapLayer
-                      data={heatMapOnlines}
+                      data={heatMap}
                       options={{
                         maxIntensity: 1,
                         gradient: gradientArray,
                       }}
                     />
-                  </>
-                ) : (
-                  <HeatmapLayer
-                    data={heatMap}
-                    options={{
-                      maxIntensity: 1,
-                      gradient: gradientArray,
-                    }}
-                  />
-                )}
+                  )}
 
-                {/* componente para pesquisa de lugares */}
-                <AutoComplete setVLatLng={setVLatLng} setZoom={setZoom} />
+                  {/* componente para pesquisa de lugares */}
+                  <AutoComplete setVLatLng={setVLatLng} setZoom={setZoom} />
                 </>
               </GoogleMapsComponent>
             )}
