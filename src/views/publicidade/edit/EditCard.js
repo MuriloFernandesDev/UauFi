@@ -1,42 +1,42 @@
 // ** React
-import { Fragment, useEffect, useState } from "react"
-import { Link, useNavigate } from "react-router-dom"
-import classnames from "classnames"
+import { Fragment, useEffect, useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import classnames from 'classnames'
 
 // ** Reactstrap
-import { Row, Col, Card, Input, Button, Label, CardImg } from "reactstrap"
+import { Row, Col, Card, Input, Button, Label, CardImg } from 'reactstrap'
 
 // ** Icons
-import { CornerUpLeft, Check, Trash } from "react-feather"
+import { CornerUpLeft, Check, Trash } from 'react-feather'
 
 // ** Utils
-import { campoInvalido, mostrarMensagem } from "@utils"
+import { campoInvalido, mostrarMensagem } from '@utils'
 
 // ** Terceiros
-import Select from "react-select"
-import { useTranslation } from "react-i18next"
-import "@styles/react/libs/flatpickr/flatpickr.scss"
-import { getFiltros, getHotspot } from "../store"
+import Select from 'react-select'
+import { useTranslation } from 'react-i18next'
+import '@styles/react/libs/flatpickr/flatpickr.scss'
+import { getFiltros, getHotspot } from '../store'
 
 const vListaTipo = [
-  { value: 1, label: "Imagem" },
-  { value: 2, label: "Vídeo" },
+  { value: 1, label: 'Imagem' },
+  { value: 2, label: 'Vídeo' },
 ]
 
 const vListaFrequencia = [
-  { value: 1, label: "Sempre" },
-  { value: 2, label: "Uma vez por dia para cada usuário" },
-  { value: 3, label: "Uma vez para cada usuário" },
+  { value: 1, label: 'Sempre' },
+  { value: 2, label: 'Uma vez por dia para cada usuário' },
+  { value: 3, label: 'Uma vez para cada usuário' },
 ]
 
 const vListaDiaSemana = [
-  { value: 1, label: "Dom" },
-  { value: 2, label: "Seg" },
-  { value: 3, label: "Ter" },
-  { value: 4, label: "Qua" },
-  { value: 5, label: "Qui" },
-  { value: 6, label: "Sex" },
-  { value: 7, label: "Sab" },
+  { value: 1, label: 'Dom' },
+  { value: 2, label: 'Seg' },
+  { value: 3, label: 'Ter' },
+  { value: 4, label: 'Qua' },
+  { value: 5, label: 'Qui' },
+  { value: 6, label: 'Sex' },
+  { value: 7, label: 'Sab' },
 ]
 
 const PublicidadeEditCard = ({ data, setSalvarDados }) => {
@@ -79,11 +79,11 @@ const PublicidadeEditCard = ({ data, setSalvarDados }) => {
   )
   const [vErros, setErros] = useState({})
   const vCamposObrigatorios = [
-    { nome: "nome" },
-    { nome: "extra_hotspot_id" },
-    { nome: "data_inicial" },
-    { nome: "data_final" },
-    { nome: "duracao", tipo: "int" },
+    { nome: 'nome' },
+    { nome: 'extra_hotspot_id' },
+    { nome: 'data_inicial' },
+    { nome: 'data_final' },
+    { nome: 'duracao', tipo: 'int' },
   ]
 
   // ** Organização da informação
@@ -103,7 +103,7 @@ const PublicidadeEditCard = ({ data, setSalvarDados }) => {
       //Selecionar o item no componente
       if (data?.extra_hotspot_id) {
         const vHotspotArray = data?.extra_hotspot_id
-          ?.split(",")
+          ?.split(',')
           .map((item) => parseInt(item))
         setHotspot(
           hotspotsVar
@@ -174,6 +174,7 @@ const PublicidadeEditCard = ({ data, setSalvarDados }) => {
             {
               id: 0,
               item_path: reader.result,
+              type: vTipo.label,
             },
           ],
         }
@@ -184,17 +185,28 @@ const PublicidadeEditCard = ({ data, setSalvarDados }) => {
 
   const renderItens = () => {
     return vDados?.propaganda_item.map((item, index) => {
+      const typeVideo = item.item_path.split(';', 2)[0].split('/', 2)[1]
+      console.log(typeVideo)
       return (
         <Col key={`${item.id}-${index}`} className="mb-2" md="3">
           <div className="border rounded">
-            <CardImg
-              className="img-fluid"
-              src={
-                item?.item_path?.length > 0 ? item?.item_path : defaultImagem
-              }
-              alt="Mídia"
-              top
-            />
+            {item.type === 'Vídeo' ? (
+              <video controls className="img-fluid">
+                <source
+                  type={`video/${typeVideo}`}
+                  src={item?.item_path?.length > 0 && item?.item_path}
+                />
+              </video>
+            ) : (
+              <CardImg
+                className="img-fluid"
+                src={
+                  item?.item_path?.length > 0 ? item?.item_path : defaultImagem
+                }
+                alt="Mídia"
+                top
+              />
+            )}
             <div className="m-0">
               <div className="d-flex justify-content-between align-items-center">
                 <div>
@@ -214,7 +226,11 @@ const PublicidadeEditCard = ({ data, setSalvarDados }) => {
                         handleChangeItem(e, index)
                       }}
                       hidden
-                      accept=".jpg, .jpeg, .png, .gif, .webp"
+                      accept={
+                        item.type === 'Vídeo'
+                          ? '.mp4, .m4v, .mov'
+                          : '.jpg, .jpeg, .png, .gif, .webp'
+                      }
                     />
                   </Button>
                 </div>
@@ -259,9 +275,9 @@ const PublicidadeEditCard = ({ data, setSalvarDados }) => {
       setSalvarDados(vDados)
     } else {
       mostrarMensagem(
-        "Atenção!",
-        "Preencha todos os campos obrigatórios.",
-        "warning"
+        'Atenção!',
+        'Preencha todos os campos obrigatórios.',
+        'warning'
       )
     }
   }
@@ -283,7 +299,7 @@ const PublicidadeEditCard = ({ data, setSalvarDados }) => {
               <div>
                 <Button.Ripple
                   color="primary"
-                  onClick={() => navigate("/publicidade")}
+                  onClick={() => navigate('/publicidade')}
                 >
                   <CornerUpLeft size={17} />
                 </Button.Ripple>
@@ -310,9 +326,9 @@ const PublicidadeEditCard = ({ data, setSalvarDados }) => {
                   <Input
                     id="nome"
                     name="nome"
-                    value={vDados?.nome ?? ""}
+                    value={vDados?.nome ?? ''}
                     onChange={handleChange}
-                    invalid={campoInvalido(vDados, vErros, "nome")}
+                    invalid={campoInvalido(vDados, vErros, 'nome')}
                   />
                 </Col>
 
@@ -323,14 +339,14 @@ const PublicidadeEditCard = ({ data, setSalvarDados }) => {
                   <Select
                     isClearable
                     id="extra_hotspot_id"
-                    noOptionsMessage={() => t("Vazio")}
+                    noOptionsMessage={() => t('Vazio')}
                     isMulti
-                    placeholder={""}
-                    className={classnames("react-select", {
-                      "is-invalid": campoInvalido(
+                    placeholder={''}
+                    className={classnames('react-select', {
+                      'is-invalid': campoInvalido(
                         vDados,
                         vErros,
-                        "extra_hotspot_id"
+                        'extra_hotspot_id'
                       ),
                     })}
                     classNamePrefix="select"
@@ -339,7 +355,7 @@ const PublicidadeEditCard = ({ data, setSalvarDados }) => {
                       setHotspot(e)
                       handleChange({
                         target: {
-                          name: "extra_hotspot_id",
+                          name: 'extra_hotspot_id',
                           value: e
                             ?.map((item) => item.value.toString())
                             .toString(),
@@ -356,8 +372,8 @@ const PublicidadeEditCard = ({ data, setSalvarDados }) => {
                   <Select
                     isClearable
                     id="filtro_id"
-                    noOptionsMessage={() => t("Vazio")}
-                    placeholder={t("Selecione...")}
+                    noOptionsMessage={() => t('Vazio')}
+                    placeholder={t('Selecione...')}
                     value={vFiltro}
                     options={vListaFiltros}
                     className="react-select"
@@ -366,7 +382,7 @@ const PublicidadeEditCard = ({ data, setSalvarDados }) => {
                       setFiltro(e)
                       handleChange({
                         target: {
-                          name: "filtro_id",
+                          name: 'filtro_id',
                           value: Number(e?.value),
                         },
                       })
@@ -381,9 +397,9 @@ const PublicidadeEditCard = ({ data, setSalvarDados }) => {
                     isClearable
                     id="dia_semana"
                     isMulti={true}
-                    noOptionsMessage={() => t("Vazio")}
+                    noOptionsMessage={() => t('Vazio')}
                     value={vDiaSemana}
-                    placeholder={"Todos os dias"}
+                    placeholder={'Todos os dias'}
                     className="react-select"
                     classNamePrefix="select"
                     options={vListaDiaSemana}
@@ -397,8 +413,8 @@ const PublicidadeEditCard = ({ data, setSalvarDados }) => {
                   <Select
                     isClearable
                     id="frequencia"
-                    noOptionsMessage={() => t("Vazio")}
-                    placeholder={t("Selecione...")}
+                    noOptionsMessage={() => t('Vazio')}
+                    placeholder={t('Selecione...')}
                     className="react-select"
                     classNamePrefix="select"
                     value={vFrequencia}
@@ -407,7 +423,7 @@ const PublicidadeEditCard = ({ data, setSalvarDados }) => {
                       setFrequencia(e)
                       handleChange({
                         target: {
-                          name: "frequencia",
+                          name: 'frequencia',
                           value: e?.value,
                         },
                       })
@@ -422,9 +438,9 @@ const PublicidadeEditCard = ({ data, setSalvarDados }) => {
                     id="data_inicial"
                     name="data_inicial"
                     type="date"
-                    value={vDados?.data_inicial ?? ""}
+                    value={vDados?.data_inicial ?? ''}
                     onChange={handleChange}
-                    invalid={campoInvalido(vDados, vErros, "data_inicial")}
+                    invalid={campoInvalido(vDados, vErros, 'data_inicial')}
                   />
                 </Col>
                 <Col md="3" className="mb-2">
@@ -435,9 +451,9 @@ const PublicidadeEditCard = ({ data, setSalvarDados }) => {
                     id="data_final"
                     name="data_final"
                     type="date"
-                    value={vDados?.data_final ?? ""}
+                    value={vDados?.data_final ?? ''}
                     onChange={handleChange}
-                    invalid={campoInvalido(vDados, vErros, "data_final")}
+                    invalid={campoInvalido(vDados, vErros, 'data_final')}
                   />
                 </Col>
 
@@ -450,9 +466,9 @@ const PublicidadeEditCard = ({ data, setSalvarDados }) => {
                     name="duracao"
                     type="number"
                     placeholder="Segundos"
-                    value={vDados?.duracao ?? ""}
+                    value={vDados?.duracao ?? ''}
                     onChange={handleChange}
-                    invalid={campoInvalido(vDados, vErros, "duracao", "int")}
+                    invalid={campoInvalido(vDados, vErros, 'duracao', 'int')}
                   />
                 </Col>
 
@@ -462,8 +478,8 @@ const PublicidadeEditCard = ({ data, setSalvarDados }) => {
                   </Label>
                   <Select
                     id="tipo"
-                    noOptionsMessage={() => t("Vazio")}
-                    placeholder={t("Selecione...")}
+                    noOptionsMessage={() => t('Vazio')}
+                    placeholder={t('Selecione...')}
                     className="react-select"
                     classNamePrefix="select"
                     value={vTipo}
@@ -472,7 +488,7 @@ const PublicidadeEditCard = ({ data, setSalvarDados }) => {
                       setTipo(e)
                       handleChange({
                         target: {
-                          name: "tipo",
+                          name: 'tipo',
                           value: e?.value,
                         },
                       })
@@ -508,7 +524,11 @@ const PublicidadeEditCard = ({ data, setSalvarDados }) => {
                                   type="file"
                                   onChange={handleAddItem}
                                   hidden
-                                  accept=".jpg, .jpeg, .png, .gif, .webp"
+                                  accept={
+                                    vTipo.label === 'Vídeo'
+                                      ? '.mp4, .m4v, .mov'
+                                      : '.jpg, .jpeg, .png, .gif, .webp'
+                                  }
                                 />
                               </Button>
                             </div>
@@ -528,7 +548,7 @@ const PublicidadeEditCard = ({ data, setSalvarDados }) => {
                       onChange={(e) => {
                         handleChange({
                           target: {
-                            name: "ativo",
+                            name: 'ativo',
                             value: e.target.checked,
                           },
                         })
@@ -536,8 +556,8 @@ const PublicidadeEditCard = ({ data, setSalvarDados }) => {
                     />
                     <Label for="ativo" className="form-check-label mt-25">
                       {vDados?.ativo
-                        ? "Publicidade ativa"
-                        : "Publicidade desativada"}
+                        ? 'Publicidade ativa'
+                        : 'Publicidade desativada'}
                     </Label>
                   </div>
                 </Col>
