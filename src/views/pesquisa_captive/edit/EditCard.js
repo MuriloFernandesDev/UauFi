@@ -218,7 +218,9 @@ const PlanoEditCard = ({ data, setSalvarDados }) => {
                           <span className="text-body">
                             {item.texto ?? ''}{' '}
                             {item.texto_livre ? (
-                              <Badge color="secondary">Opção texto livre</Badge>
+                              <Badge color="secondary">
+                                {t('Opção texto livre')}
+                              </Badge>
                             ) : null}
                           </span>
                         ) : (
@@ -254,7 +256,7 @@ const PlanoEditCard = ({ data, setSalvarDados }) => {
                                   for={`texto_livre${item.id}-${index}`}
                                   className="form-check-label mt-25"
                                 >
-                                  Opção texto livre
+                                  {t('Opção texto livre')}
                                 </Label>
                               </div>
                             </Col>
@@ -311,7 +313,7 @@ const PlanoEditCard = ({ data, setSalvarDados }) => {
               <div>
                 <Button.Ripple color="success" onClick={setDados}>
                   <Check size={17} />
-                  <span className="align-middle ms-25">Salvar</span>
+                  <span className="align-middle ms-25">{t('Salvar')}</span>
                 </Button.Ripple>
               </div>
             </div>
@@ -397,7 +399,7 @@ const PlanoEditCard = ({ data, setSalvarDados }) => {
                 </Col>
                 <Col md="8" className="mb-2">
                   <Label className="form-label" for="dia_semana">
-                    Dia da semana
+                    {t('Dia da semana')}
                   </Label>
                   <Select
                     isClearable
@@ -414,7 +416,7 @@ const PlanoEditCard = ({ data, setSalvarDados }) => {
                 </Col>
                 <Col md="4" className="mb-2">
                   <Label className="form-label" for="frequencia">
-                    Frequência
+                    {t('Frequência')}
                   </Label>
                   <Select
                     isClearable
@@ -450,7 +452,7 @@ const PlanoEditCard = ({ data, setSalvarDados }) => {
                 </Col>
                 <Col md="4" className="mb-2">
                   <Label className="form-label" for="data_final">
-                    Data Final
+                    {t('Data Final')}
                   </Label>
                   <Input
                     id="data_final"
@@ -474,7 +476,7 @@ const PlanoEditCard = ({ data, setSalvarDados }) => {
                 </Col>
                 <Col md="2" className="mb-2">
                   <Label className="form-label" for="hora_final">
-                    Horário Final
+                    {t('Horário Final')}
                   </Label>
                   <Input
                     id="hora_final"
@@ -488,7 +490,7 @@ const PlanoEditCard = ({ data, setSalvarDados }) => {
                 <Col md="12">
                   <div className="divider divider-dark">
                     <div className="divider-text text-dark">
-                      Opções de resposta
+                      {t('Opções de resposta')}
                     </div>
                   </div>
                 </Col>
@@ -511,7 +513,7 @@ const PlanoEditCard = ({ data, setSalvarDados }) => {
                       for="multipla_escolha"
                       className="form-check-label mt-25"
                     >
-                      Permitir que o usuário selecione mais de uma opção
+                      {t('Permitir que o usuário selecione mais de uma opção')}
                     </Label>
                   </div>
                 </Col>
@@ -526,7 +528,9 @@ const PlanoEditCard = ({ data, setSalvarDados }) => {
                       }}
                     >
                       <Plus className="font-medium-3 cursor-pointer" />
-                      <span className="ms-25">Adicionar opção de resposta</span>
+                      <span className="ms-25">
+                        {t('Adicionar opção de resposta')}
+                      </span>
                     </Link>
                   </Col>
                 )}
@@ -547,7 +551,9 @@ const PlanoEditCard = ({ data, setSalvarDados }) => {
                       }}
                     />
                     <Label for="ativo" className="form-check-label mt-25">
-                      {vDados?.ativo ? 'Pesquisa ativa' : 'Pesquisa desativada'}
+                      {vDados?.ativo
+                        ? t('Pesquisa ativa')
+                        : t('Pesquisa desativada')}
                     </Label>
                   </div>
                 </Col>
