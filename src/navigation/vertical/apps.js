@@ -230,6 +230,14 @@ export default [
         resource: 'rel_pesquisa',
       },
       {
+        id: 'menuRelatorioPublicidade',
+        title: 'Publicidade',
+        icon: <Circle size={12} />,
+        navLink: '/relatorio/publicidade',
+        action: 'read',
+        resource: 'rel_publicidade',
+      },
+      {
         id: 'menuRelatorioCadastro',
         title: 'Cadastros/Conexões',
         icon: <Circle size={12} />,
