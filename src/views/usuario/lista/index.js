@@ -108,7 +108,7 @@ const CustomHeader = ({
       <Row>
         <Col xl="6" className="d-flex align-items-center ps-0 mt-1 mb-1">
           <div className="d-flex align-items-center me-2">
-            <label htmlFor="rows-per-page">Mostrar</label>
+            <label htmlFor="rows-per-page">{t('Mostrar')}</label>
             <Input
               type="select"
               id="rows-per-page"
@@ -142,7 +142,7 @@ const CustomHeader = ({
             color="primary"
             onClick={toggleSidebar}
           >
-            +Filtros
+            +{t('Filtros')}
           </Button>
           {permissao.can('read', 'rel_exportar_registros') &&
           store?.length > 0 ? (
@@ -509,7 +509,7 @@ const UsuarioLista = () => {
                   }}
                 >
                   <WifiOff size={14} className="me-50" />
-                  <span className="align-middle">Desconectar</span>
+                  <span className="align-middle">{t('Desconectar')}</span>
                 </DropdownItem>
               </DropdownMenu>
             </UncontrolledDropdown>

@@ -15,6 +15,7 @@ import {
   DropdownMenu,
   DropdownItem,
 } from 'reactstrap'
+import { useTranslation } from 'react-i18next'
 
 // ** Custom Components
 import Avatar from '@src/@core/components/avatar'
@@ -42,6 +43,7 @@ const UsuarioOnline = () => {
   // ** States
   const [vCarregando, setCarregando] = useState(true)
   const [vDados, setDados] = useState(true)
+  const { t } = useTranslation()
 
   const getDados = () => {
     getUsuarioOnline()
@@ -182,7 +184,7 @@ const UsuarioOnline = () => {
                                 >
                                   <WifiOff size={14} className="me-50" />
                                   <span className="align-middle">
-                                    Desconectar
+                                    {t('Desconectar')}
                                   </span>
                                 </DropdownItem>
                                 <DropdownItem
@@ -192,7 +194,7 @@ const UsuarioOnline = () => {
                                 >
                                   <Eye size={14} className="me-50" />
                                   <span className="align-middle">
-                                    Visualizar dados
+                                    {t('Visualizar dados')}
                                   </span>
                                 </DropdownItem>
                               </DropdownMenu>
@@ -223,7 +225,7 @@ const UsuarioOnline = () => {
                           ) : null}
                           {row.nascimento ? (
                             <small className=" mb-0">
-                              <strong>Nascimento: </strong>{' '}
+                              <strong> {t('Nascimento')}: </strong>{' '}
                               {formatDate(row.nascimento)}
                             </small>
                           ) : null}
@@ -239,7 +241,7 @@ const UsuarioOnline = () => {
                             </small>
                           ) : null}
                           <small className=" mb-0">
-                            <strong>Conexão: </strong>{' '}
+                            <strong>{t('Conexão')}: </strong>{' '}
                             {formatDateTime(row.entrada)}
                           </small>
                           <small className="mb-0">
@@ -252,7 +254,7 @@ const UsuarioOnline = () => {
                         </div>
                         {row.aniversariante ? (
                           <Badge color="light-primary" pill>
-                            Aniversariante
+                            {t('Aniversariante')}
                           </Badge>
                         ) : null}
                       </CardBody>

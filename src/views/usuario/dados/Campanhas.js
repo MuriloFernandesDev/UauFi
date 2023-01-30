@@ -1,19 +1,22 @@
 // ** React Imports
-import { useState, useEffect } from "react"
+import { useState, useEffect } from 'react'
 
 // ** Reactstrap Imports
-import { Card, CardBody, CardTitle, Spinner, Table } from "reactstrap"
+import { Card, CardBody, CardTitle, Spinner, Table } from 'reactstrap'
 
 // ** Store & Actions
-import { getCampanhas } from "../store"
+import { getCampanhas } from '../store'
+
+import { useTranslation } from 'react-i18next'
 
 // ** Utils
-import { formatDateTime } from "@utils"
+import { formatDateTime } from '@utils'
 
 const Campanhas = (dados) => {
   // ** States
   const [vCarregando, setCarregando] = useState(true)
   const [vDados, setDados] = useState(true)
+  const { t } = useTranslation()
 
   useEffect(() => {
     setCarregando(true)
@@ -32,15 +35,15 @@ const Campanhas = (dados) => {
     <Card>
       <CardBody>
         <CardTitle className="mb-50" tag="h4">
-          Campanhas, mensagens e SMS
+          {t('Campanhas, mensagens e SMS')}
         </CardTitle>
       </CardBody>
       <Table className="text-nowrap text-center border-bottom" responsive>
         <thead>
           <tr>
-            <th className="text-start">Data/Hora</th>
-            <th className="text-start">Mensagem</th>
-            <th className="text-start">Tipo</th>
+            <th className="text-start"> {t('Data/Hora')}</th>
+            <th className="text-start">{t('Mensagem')}</th>
+            <th className="text-start">{t('Tipo')}</th>
           </tr>
         </thead>
         <tbody>
