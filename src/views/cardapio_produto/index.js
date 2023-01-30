@@ -10,6 +10,8 @@ import DataTable from 'react-data-table-component'
 // ** Custom Components
 import Avatar from '@src/@core/components/avatar'
 
+import { useTranslation } from 'react-i18next'
+
 // ** API
 import api from '@src/services/api'
 
@@ -49,13 +51,14 @@ const MySwal = withReactContent(Swal)
 const CustomHeader = ({ handleFilter, value, handlePerPage, rowsPerPage }) => {
   // ** Context
   const permissao = useContext(PermissaoContext)
+  const { t } = useTranslation()
 
   return (
     <div className="w-100 py-2">
       <Row>
         <Col lg="6" className="d-flex align-items-center px-0 px-lg-1">
           <div className="d-flex align-items-center me-2">
-            <label htmlFor="rows-per-page">Mostrar</label>
+            <label htmlFor="rows-per-page">{t('Mostrar')}</label>
             <Input
               type="select"
               id="rows-per-page"
@@ -74,7 +77,7 @@ const CustomHeader = ({ handleFilter, value, handlePerPage, rowsPerPage }) => {
             color="primary"
             disabled={!permissao.can('update', 'cardapio_digital')}
           >
-            Novo produto
+            {t('Novo produto')}
           </Button>
         </Col>
         <Col
@@ -82,14 +85,14 @@ const CustomHeader = ({ handleFilter, value, handlePerPage, rowsPerPage }) => {
           className="actions-right d-flex align-items-center justify-content-lg-end flex-lg-nowrap flex-wrap mt-lg-0 mt-1 pe-lg-1 p-0"
         >
           <div className="d-flex align-items-center">
-            <label htmlFor="txtPesquisa">Pesquisa</label>
+            <label htmlFor="txtPesquisa">{t('Pesquisa')}</label>
             <Input
               id="txtPesquisa"
               className="ms-50 me-2 w-100"
               type="text"
               value={value}
               onChange={(e) => handleFilter(e.target.value)}
-              placeholder="Filtrar..."
+              placeholder={t('Filtrar...')}
             />
           </div>
         </Col>
@@ -347,7 +350,7 @@ const CardapioProdutoList = () => {
                   {row.titulo ?? ''}
                   {!row.ativo ? (
                     <small className="text-truncate text-muted mb-0 ms-1">
-                      <Badge color="warning">Desativado</Badge>{' '}
+                      <Badge color="warning">{t('Desativado')}</Badge>{' '}
                     </small>
                   ) : null}
                 </h6>
@@ -382,7 +385,7 @@ const CardapioProdutoList = () => {
       },
     },
     {
-      name: <div className="text-end w-100">Ações</div>,
+      name: <div className="text-end w-100">{t('Ações')}</div>,
       width: '100px',
       cell: (row) => (
         <div className="text-end w-100">
@@ -398,7 +401,7 @@ const CardapioProdutoList = () => {
               placement="top"
               target={`pw-tooltip-${row.id}`}
             >
-              Visualizar
+              {t('Visualizar')}
             </UncontrolledTooltip>
             <UncontrolledDropdown>
               <DropdownToggle tag="span">
@@ -415,7 +418,7 @@ const CardapioProdutoList = () => {
                   }}
                 >
                   <Trash size={14} className="me-50" />
-                  <span className="align-middle">Remover</span>
+                  <span className="align-middle"> {t('Remover')}</span>
                 </DropdownItem>
               </DropdownMenu>
             </UncontrolledDropdown>
@@ -467,7 +470,7 @@ const CardapioProdutoList = () => {
     <Card className="mb-0">
       <Row>
         <Col md="12" className="m-2 text-center">
-          <h5 className="m-0">Selecione um cliente no campo acima</h5>
+          <h5 className="m-0">{t('Selecione um cliente no campo acima')}</h5>
         </Col>
       </Row>
     </Card>

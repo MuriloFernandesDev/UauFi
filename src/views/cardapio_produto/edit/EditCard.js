@@ -1,28 +1,28 @@
 // ** React
-import { Fragment, useEffect, useState } from "react"
-import { Link, useNavigate } from "react-router-dom"
-import classnames from "classnames"
+import { Fragment, useEffect, useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import classnames from 'classnames'
 
 // ** Reactstrap
-import { Row, Col, Card, Input, Button, Label } from "reactstrap"
+import { Row, Col, Card, Input, Button, Label } from 'reactstrap'
 
 // ** Icons
-import { CornerUpLeft, Check, Move, Trash, Plus } from "react-feather"
+import { CornerUpLeft, Check, Move, Trash, Plus } from 'react-feather'
 
 // ** Utils
-import { campoInvalido, mostrarMensagem } from "@utils"
+import { campoInvalido, mostrarMensagem } from '@utils'
 
 // ** Terceiros
-import Select from "react-select"
-import { useTranslation } from "react-i18next"
-import { ReactSortable } from "react-sortablejs"
-import { getCategorias } from "../store"
+import Select from 'react-select'
+import { useTranslation } from 'react-i18next'
+import { ReactSortable } from 'react-sortablejs'
+import { getCategorias } from '../store'
 
 // ** Third Party Components
-import Cleave from "cleave.js/react"
+import Cleave from 'cleave.js/react'
 
 // ** Default Imagem
-import defaultImagem from "@src/assets/images/pages/semfoto.png"
+import defaultImagem from '@src/assets/images/pages/semfoto.png'
 
 const CardapioProdutoCard = ({ data, setSalvarDados }) => {
   const navigate = useNavigate()
@@ -36,10 +36,10 @@ const CardapioProdutoCard = ({ data, setSalvarDados }) => {
   const [vCategoria, setCategoria] = useState(null)
   const [vErros, setErros] = useState({})
   const vCamposObrigatorios = [
-    { nome: "titulo" },
-    { nome: "categoria_id", tipo: "int" },
+    { nome: 'titulo' },
+    { nome: 'categoria_id', tipo: 'int' },
   ]
-  const optMoeda = { numeral: true, numeralDecimalMark: ",", delimiter: "." }
+  const optMoeda = { numeral: true, numeralDecimalMark: ',', delimiter: '.' }
 
   // ** Organização da informação
   const handleChange = (e) => {
@@ -144,9 +144,9 @@ const CardapioProdutoCard = ({ data, setSalvarDados }) => {
       setSalvarDados(vDados)
     } else {
       mostrarMensagem(
-        "Atenção!",
-        "Preencha todos os campos obrigatórios.",
-        "warning"
+        'Atenção!',
+        'Preencha todos os campos obrigatórios.',
+        'warning'
       )
     }
   }
@@ -171,13 +171,15 @@ const CardapioProdutoCard = ({ data, setSalvarDados }) => {
                       <div className="w-100 pe-2">
                         <Row>
                           <Col md="6">
-                            <Label className="form-label">Descrição*</Label>
+                            <Label className="form-label">
+                              {t('Descrição')}*
+                            </Label>
                             <Input
                               className="w-100"
-                              value={item.descricao ?? ""}
+                              value={item.descricao ?? ''}
                               onChange={(e) => {
                                 handleChangeItem(
-                                  "descricao",
+                                  'descricao',
                                   e?.target.value,
                                   index
                                 )
@@ -185,13 +187,13 @@ const CardapioProdutoCard = ({ data, setSalvarDados }) => {
                             />
                           </Col>
                           <Col md="6">
-                            <Label className="form-label">Preço*</Label>
+                            <Label className="form-label">{t('Preço')}*</Label>
                             <Cleave
                               className="form-control w-100"
-                              value={item.preco ?? ""}
+                              value={item.preco ?? ''}
                               onChange={(e) => {
                                 handleChangeItem(
-                                  "preco",
+                                  'preco',
                                   e?.target.value,
                                   index
                                 )
@@ -240,7 +242,7 @@ const CardapioProdutoCard = ({ data, setSalvarDados }) => {
               <div>
                 <Button.Ripple
                   color="primary"
-                  onClick={() => navigate("/cardapio_produto")}
+                  onClick={() => navigate('/cardapio_produto')}
                 >
                   <CornerUpLeft size={17} />
                 </Button.Ripple>
@@ -248,7 +250,7 @@ const CardapioProdutoCard = ({ data, setSalvarDados }) => {
               <div>
                 <Button.Ripple color="success" onClick={setDados}>
                   <Check size={17} />
-                  <span className="align-middle ms-25">Salvar</span>
+                  <span className="align-middle ms-25">{t('Salvar')}</span>
                 </Button.Ripple>
               </div>
             </div>
@@ -264,48 +266,48 @@ const CardapioProdutoCard = ({ data, setSalvarDados }) => {
                   <Row>
                     <Col md="12" className="mb-2">
                       <Label className="form-label" for="titulo">
-                        Título*
+                        {t('Título')}*
                       </Label>
                       <Input
                         id="titulo"
                         name="titulo"
-                        value={vDados?.titulo ?? ""}
+                        value={vDados?.titulo ?? ''}
                         onChange={handleChange}
-                        invalid={campoInvalido(vDados, vErros, "titulo")}
+                        invalid={campoInvalido(vDados, vErros, 'titulo')}
                       />
                     </Col>
 
                     <Col md="12" className="mb-2">
                       <Label className="form-label" for="descricao">
-                        Descrição
+                        {t('Descrição')}
                       </Label>
                       <Input
-                        value={vDados?.descricao ?? ""}
+                        value={vDados?.descricao ?? ''}
                         type="textarea"
                         id="descricao"
                         name="descricao"
-                        style={{ minHeight: "113px" }}
+                        style={{ minHeight: '113px' }}
                         onChange={handleChange}
                       />
                     </Col>
 
                     <Col md="12" className="mb-2">
                       <Label className="form-label" for="categoria_id">
-                        Categoria*
+                        {t('Categoria')}*
                       </Label>
                       <Select
                         isClearable
                         id="categoria_id"
-                        noOptionsMessage={() => t("Vazio")}
-                        placeholder={t("Selecione...")}
+                        noOptionsMessage={() => t('Vazio')}
+                        placeholder={t('Selecione...')}
                         value={vCategoria}
                         options={vListaCategorias}
-                        className={classnames("react-select", {
-                          "is-invalid": campoInvalido(
+                        className={classnames('react-select', {
+                          'is-invalid': campoInvalido(
                             vDados,
                             vErros,
-                            "categoria_id",
-                            "int"
+                            'categoria_id',
+                            'int'
                           ),
                         })}
                         classNamePrefix="select"
@@ -313,7 +315,7 @@ const CardapioProdutoCard = ({ data, setSalvarDados }) => {
                           setCategoria(e)
                           handleChange({
                             target: {
-                              name: "categoria_id",
+                              name: 'categoria_id',
                               value: Number(e?.value),
                             },
                           })
@@ -332,7 +334,7 @@ const CardapioProdutoCard = ({ data, setSalvarDados }) => {
                             ? vDados?.imagem
                             : defaultImagem
                         }
-                        style={{ maxWidth: "100%", maxHeight: "200px" }}
+                        style={{ maxWidth: '100%', maxHeight: '200px' }}
                         alt="imagem"
                         width="200"
                         height="200"
@@ -341,9 +343,9 @@ const CardapioProdutoCard = ({ data, setSalvarDados }) => {
                     <div>
                       <div className="mb-1">
                         <small className="text-muted">
-                          Resolução recomendada: 800x800px.
+                          {t('Resolução recomendada')}: 800x800px.
                           <br />
-                          Tamanho máximo: 250kB.
+                          {t('Tamanho máximo')}: 250kB.
                         </small>
                       </div>
                       <div className="d-inline-block">
@@ -355,7 +357,7 @@ const CardapioProdutoCard = ({ data, setSalvarDados }) => {
                             color="secondary"
                             outline
                           >
-                            Selecionar imagem
+                            {t('Selecionar imagem')}
                             <Input
                               type="file"
                               name="imagem"
@@ -370,7 +372,7 @@ const CardapioProdutoCard = ({ data, setSalvarDados }) => {
                             onClick={(e) => {
                               e.preventDefault()
                               handleChange({
-                                target: { name: "imagem", value: null },
+                                target: { name: 'imagem', value: null },
                               })
                             }}
                           >
@@ -384,7 +386,7 @@ const CardapioProdutoCard = ({ data, setSalvarDados }) => {
                 <Col md="12">
                   <div className="divider divider-dark">
                     <div className="divider-text text-dark">
-                      Opções de preços
+                      {t('Opções de preços')}
                     </div>
                   </div>
                 </Col>
@@ -398,7 +400,7 @@ const CardapioProdutoCard = ({ data, setSalvarDados }) => {
                     }}
                   >
                     <Plus className="font-medium-3 cursor-pointer" />
-                    <span className="ms-25">Adicionar preço</span>
+                    <span className="ms-25">{t('Adicionar preço')}</span>
                   </Link>
                 </Col>
                 <Col md="12">{renderItens()}</Col>
@@ -411,14 +413,14 @@ const CardapioProdutoCard = ({ data, setSalvarDados }) => {
                       onChange={(e) => {
                         handleChange({
                           target: {
-                            name: "ativo",
+                            name: 'ativo',
                             value: e.target.checked,
                           },
                         })
                       }}
                     />
                     <Label for="ativo" className="form-check-label mt-25">
-                      Produto {vDados?.ativo ? "ativo" : "desativado"}
+                      {t('Produto')} {vDados?.ativo ? 'ativo' : 'desativado'}
                     </Label>
                   </div>
                 </Col>

@@ -123,7 +123,7 @@ const CardapioProdutoCard = () => {
     return (
       <div className="nav-vertical">
         <h5 className="text-center mb-1">
-          <strong>Categorias</strong>
+          <strong>{t('Categorias')}</strong>
         </h5>
         <Nav tabs className="nav-left todo-app-list list-group w-100 mb-0">
           {vListaCategorias?.length ? (
@@ -261,7 +261,7 @@ const CardapioProdutoCard = () => {
                       toggle('2')
                     }}
                   >
-                    Ordenar itens
+                    {t('Ordenar itens')}
                   </NavLink>
                 </NavItem>
                 <NavItem>
@@ -271,7 +271,7 @@ const CardapioProdutoCard = () => {
                       toggle('3')
                     }}
                   >
-                    Visualização final
+                    {t('Visualização final')}
                   </NavLink>
                 </NavItem>
               </Nav>
@@ -333,8 +333,9 @@ const CardapioProdutoCard = () => {
               <Row>
                 <Col md="12" className="mb-2">
                   <Label className="form-label" for="cliente_id">
-                    O Cliente não possui cardápio digital, mas você pode criar
-                    um, duplicando o cardápio existente no cliente abaixo
+                    {t(
+                      'O Cliente não possui cardápio digital, mas você pode criar um, duplicando o cardápio existente no cliente abaixo'
+                    )}
                   </Label>
                   <Select
                     isClearable
@@ -356,7 +357,7 @@ const CardapioProdutoCard = () => {
                     onClick={() => handleDuplicar()}
                     disabled={!vCardapioBase}
                   >
-                    Duplicar
+                    {t('Duplicar')}
                   </Button>
                 </Col>
               </Row>
@@ -369,7 +370,7 @@ const CardapioProdutoCard = () => {
     <Card className="mb-0">
       <Row>
         <Col md="12" className="m-2 text-center">
-          <h5 className="m-0">Selecione um cliente no campo acima</h5>
+          <h5 className="m-0">{t('Selecione um cliente no campo acima')}</h5>
         </Col>
       </Row>
     </Card>

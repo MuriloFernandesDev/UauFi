@@ -17,6 +17,8 @@ import {
 // ** Icons
 import { Check, Move } from 'react-feather'
 
+import { useTranslation } from 'react-i18next'
+
 // ** Terceiros
 import { ReactSortable } from 'react-sortablejs'
 import classnames from 'classnames'
@@ -34,6 +36,7 @@ const CardapioProdutoCard = ({ setSalvarDados }) => {
   // ** States
   const [vListaCategorias, setListaCategorias] = useState(null)
   const [vListaProdutos, setListaProdutos] = useState(null)
+  const { t } = useTranslation()
 
   // ** State
   const [activeList, setActiveLIst] = useState('0')
@@ -181,7 +184,7 @@ const CardapioProdutoCard = ({ setSalvarDados }) => {
                   onClick={setSalvarDados(vListaCategorias)}
                 >
                   <Check size={17} />
-                  <span className="align-middle ms-25">Salvar</span>
+                  <span className="align-middle ms-25">{t('Salvar')}</span>
                 </Button.Ripple>
               </div>
             </div>
