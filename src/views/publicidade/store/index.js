@@ -1,13 +1,13 @@
 // ** Redux Imports
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 
 // ** Axios Imports
-import api from "@src/services/api"
+import api from '@src/services/api'
 
 export const getPublicidade = createAsyncThunk(
-  "publicidade/getPublicidade",
+  'publicidade/getPublicidade',
   async (parametros) => {
-    const response = await api.get("/publicidade/lista/", {
+    const response = await api.get('/publicidade/lista/', {
       params: parametros,
     })
     // console.log(response)
@@ -46,7 +46,7 @@ export const getFiltros = async () => {
 }
 
 export const publicidadeSlice = createSlice({
-  name: "publicidade",
+  name: 'publicidade',
   initialState: {
     data: [],
     total: -1,

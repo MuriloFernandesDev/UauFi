@@ -1,8 +1,6 @@
 import { useState, useEffect, useCallback, useContext } from 'react'
-
 // ** API
 import api from '@src/services/api'
-
 import {
   Card,
   CardHeader,
@@ -33,23 +31,23 @@ const Mapa = () => {
     borderRadius: '10px',
   }
   //state para definir os dados do mapa
-  const [mapData, setMapData] = useState([])
+  const [mapData, setMapData] = useState<any>([])
   //state para definir os dados dos marcadores
-  const [markerData, setMarkerData] = useState([])
+  const [markerData, setMarkerData] = useState<any>([])
   //state para definir os dados do mapa
-  const [mapDataOnlines, setMapDataOnlines] = useState([])
+  const [mapDataOnlines, setMapDataOnlines] = useState<any>([])
   //state para definir os dados dos marcadores
-  const [markerDataOnlines, setMarkerDataOnlines] = useState([])
+  const [markerDataOnlines, setMarkerDataOnlines] = useState<any>([])
   //state para definir os dados do mapa de calor
-  const [heatMapOnlines, setHeatMapOnlines] = useState([])
+  const [heatMapOnlines, setHeatMapOnlines] = useState<any>([])
   //state para definir carregamento dos dados
-  const [vProcessando, setProcessando] = useState(true)
+  const [vProcessando, setProcessando] = useState<any>(true)
   //state para definir o tipo de mapa que irá aparecer
-  const [mapType, setMapType] = useState('Marcadores')
+  const [mapType, setMapType] = useState<any>('Marcadores')
   //state para definir os dados do mapa de calor
-  const [heatMap, setHeatMap] = useState([])
+  const [heatMap, setHeatMap] = useState<any>([])
   //state para definir o zoom no mapa
-  const [zoom, setZoom] = useState(13)
+  const [zoom, setZoom] = useState<any>(13)
 
   // ** Context
   const permissao = useContext(PermissaoContext)
@@ -60,8 +58,8 @@ const Mapa = () => {
   const onLoad = useCallback(
     function callback() {
       if (window.google && markerData.length > 0) {
-        const heatmapData = []
-        markerData.map((res) => {
+        const heatmapData: any = []
+        markerData.map((res: any) => {
           // for (let i = 0; i < res.total_visitas; i++) {
           heatmapData.push({
             location: new window.google.maps.LatLng(res.lat, res.lng),
@@ -73,8 +71,8 @@ const Mapa = () => {
         setHeatMap(heatmapData)
       }
       if (window.google && markerDataOnlines.length > 0) {
-        const heatmapData = []
-        markerDataOnlines.map((res) => {
+        const heatmapData: any = []
+        markerDataOnlines.map((res: any) => {
           // for (let i = 0; i < res.total_visitas; i++) {
           heatmapData.push({
             location: new window.google.maps.LatLng(res.lat, res.lng),
@@ -90,7 +88,7 @@ const Mapa = () => {
   )
 
   //função para buscar os dados do mapa
-  const getDados = (params) => {
+  const getDados = (params: string) => {
     return api
       .get(`/conexao/${params}`)
       .then((res) => {
@@ -260,7 +258,7 @@ const Mapa = () => {
                 {mapType === 'Marcadores' ? (
                   <MarkerClusterer options={options}>
                     {(clusterer) =>
-                      markerData.map((location, index) => {
+                      markerData.map((location: any, index: any) => {
                         return (
                           <MarkerComponent
                             key={index}
@@ -275,7 +273,7 @@ const Mapa = () => {
                   <>
                     <MarkerClusterer options={options}>
                       {(clusterer) =>
-                        markerDataOnlines.map((location, index) => {
+                        markerDataOnlines.map((location: any, index: any) => {
                           return (
                             <MarkerComponent
                               key={index}
