@@ -52,8 +52,6 @@ const PublicidadeEditCard = ({ data, setSalvarDados }) => {
   const [vTipo, setTipo] = useState(
     data?.tipo ? vListaTipo.filter((item) => item.value === data.tipo)[0] : null
   )
-
-  console.log(vTipo)
   const [vDiaSemana, setDiaSemana] = useState(
     vListaDiaSemana
       .filter((item) =>
@@ -176,6 +174,7 @@ const PublicidadeEditCard = ({ data, setSalvarDados }) => {
             {
               id: 0,
               item_path: reader.result,
+              type: vTipo.label,
             },
           ],
         }
@@ -186,17 +185,28 @@ const PublicidadeEditCard = ({ data, setSalvarDados }) => {
 
   const renderItens = () => {
     return vDados?.propaganda_item.map((item, index) => {
+      const typeVideo = item.item_path.split(';', 2)[0].split('/', 2)[1]
+      console.log(typeVideo)
       return (
         <Col key={`${item.id}-${index}`} className="mb-2" md="3">
           <div className="border rounded">
-            <CardImg
-              className="img-fluid"
-              src={
-                item?.item_path?.length > 0 ? item?.item_path : defaultImagem
-              }
-              alt="Mídia"
-              top
-            />
+            {item.type === 'Vídeo' ? (
+              <video controls className="img-fluid">
+                <source
+                  type={`video/${typeVideo}`}
+                  src={item?.item_path?.length > 0 && item?.item_path}
+                />
+              </video>
+            ) : (
+              <CardImg
+                className="img-fluid"
+                src={
+                  item?.item_path?.length > 0 ? item?.item_path : defaultImagem
+                }
+                alt="Mídia"
+                top
+              />
+            )}
             <div className="m-0">
               <div className="d-flex justify-content-between align-items-center">
                 <div>
@@ -216,7 +226,11 @@ const PublicidadeEditCard = ({ data, setSalvarDados }) => {
                         handleChangeItem(e, index)
                       }}
                       hidden
-                      accept=".jpg, .jpeg, .png, .gif, .webp, .mp4, .wav, .m4v, .mov"
+                      accept={
+                        item.type === 'Vídeo'
+                          ? '.mp4, .m4v, .mov'
+                          : '.jpg, .jpeg, .png, .gif, .webp'
+                      }
                     />
                   </Button>
                 </div>
@@ -510,7 +524,11 @@ const PublicidadeEditCard = ({ data, setSalvarDados }) => {
                                   type="file"
                                   onChange={handleAddItem}
                                   hidden
-                                  accept=".jpg, .jpeg, .png, .gif, .webp, .mp4, .wav, .m4v, .mov"
+                                  accept={
+                                    vTipo.label === 'Vídeo'
+                                      ? '.mp4, .m4v, .mov'
+                                      : '.jpg, .jpeg, .png, .gif, .webp'
+                                  }
                                 />
                               </Button>
                             </div>
