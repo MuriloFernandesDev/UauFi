@@ -1,23 +1,23 @@
 // ** React
-import { useEffect, useState } from "react"
-import { useParams, useNavigate } from "react-router-dom"
+import { useEffect, useState } from 'react'
+import { useParams, useNavigate } from 'react-router-dom'
 
 // ** API
-import api from "@src/services/api"
+import api from '@src/services/api'
 
 // ** Reactstrap
-import { Row, Col, Spinner } from "reactstrap"
+import { Row, Col, Spinner } from 'reactstrap'
 
 // ** Editar
-import EditCard from "./EditCard"
-import { getPublicidade } from "../store"
-import { useDispatch, useSelector } from "react-redux"
+import EditCard from './EditCard'
+import { getPublicidade } from '../store'
+import { useDispatch, useSelector } from 'react-redux'
 
 // ** Terceiros
-import toast from "react-hot-toast"
-import Swal from "sweetalert2"
-import withReactContent from "sweetalert2-react-content"
-import UILoader from "@components/ui-loader"
+import toast from 'react-hot-toast'
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
+import UILoader from '@components/ui-loader'
 
 // ** Modal de apresentação de erros
 
@@ -29,11 +29,11 @@ const handleError = (error, errorMessage, errorIcon) => {
     text: errorMessage,
     icon: errorIcon,
     customClass: {
-      confirmButton: "btn btn-primary",
-      popup: "animate__animated animate__fadeIn",
+      confirmButton: 'btn btn-primary',
+      popup: 'animate__animated animate__fadeIn',
     },
     hideClass: {
-      popup: "animate__animated animate__zoomOut",
+      popup: 'animate__animated animate__zoomOut',
     },
     buttonsStyling: false,
   })
@@ -56,7 +56,7 @@ const PublicidadeEdit = () => {
   const handleOK = () => {
     setSalvando(false)
     dispatch(getPublicidade(vParFiltro))
-    navigate("/publicidade")
+    navigate('/publicidade')
   }
 
   // ** Função para salvar dados & respostas a erros
@@ -64,11 +64,11 @@ const PublicidadeEdit = () => {
     setSalvando(true)
     if (pDados.id > 0) {
       api
-        .put("/publicidade", pDados)
+        .put('/publicidade', pDados)
         .then((response) => {
           if (response.status === 200) {
-            toast.success("Publicidade editada com sucesso!", {
-              position: "bottom-right",
+            toast.success('Publicidade editada com sucesso!', {
+              position: 'bottom-right',
             })
             handleOK()
           }
@@ -77,27 +77,27 @@ const PublicidadeEdit = () => {
           setSalvando(false)
           if (error.response.status === 400) {
             handleError(
-              "Atenção!",
-              "Preencha todos os campos corretamente.",
-              "warning"
+              'Atenção!',
+              'Preencha todos os campos corretamente.',
+              'warning'
             )
           } else if (error.response.status === 503) {
-            handleError("Ops...", error.response.data, "error")
+            handleError('Ops...', error.response.data, 'error')
           } else {
             handleError(
-              "Erro inesperado",
-              "Por favor, contate um administrador.",
-              "error"
+              'Erro inesperado',
+              'Por favor, contate um administrador.',
+              'error'
             )
           }
         })
     } else {
       api
-        .post("/publicidade", pDados)
+        .post('/publicidade', pDados)
         .then((response) => {
           if (response.status === 200) {
-            toast.success("Publicidade criada com sucesso!", {
-              position: "bottom-right",
+            toast.success('Publicidade criada com sucesso!', {
+              position: 'bottom-right',
             })
             handleOK()
           }
@@ -106,17 +106,17 @@ const PublicidadeEdit = () => {
           setSalvando(false)
           if (error.response.status === 400) {
             handleError(
-              "Atenção!",
-              "Preencha todos os campos corretamente.",
-              "warning"
+              'Atenção!',
+              'Preencha todos os campos corretamente.',
+              'warning'
             )
           } else if (error.response.status === 503) {
-            handleError("Ops...", error.response.data, "error")
+            handleError('Ops...', error.response.data, 'error')
           } else {
             handleError(
-              "Erro inesperado",
-              "Por favor, contate um administrador.",
-              "error"
+              'Erro inesperado',
+              'Por favor, contate um administrador.',
+              'error'
             )
           }
         })
