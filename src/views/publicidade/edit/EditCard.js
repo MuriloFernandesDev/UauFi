@@ -12,9 +12,10 @@ import { CornerUpLeft, Check, Trash } from 'react-feather'
 // ** Utils
 import { campoInvalido, mostrarMensagem } from '@utils'
 
+import { useTranslation } from 'react-i18next'
+
 // ** Terceiros
 import Select from 'react-select'
-import { useTranslation } from 'react-i18next'
 import '@styles/react/libs/flatpickr/flatpickr.scss'
 import { getFiltros, getHotspot } from '../store'
 
@@ -217,7 +218,7 @@ const PublicidadeEditCard = ({ data, setSalvarDados }) => {
                     color="secondary"
                     outline
                   >
-                    Trocar mídia
+                    {t('Trocar mídia')}
                     <Input
                       type="file"
                       name="item_path"
@@ -307,7 +308,7 @@ const PublicidadeEditCard = ({ data, setSalvarDados }) => {
               <div>
                 <Button.Ripple color="success" onClick={setDados}>
                   <Check size={17} />
-                  <span className="align-middle ms-25">Salvar</span>
+                  <span className="align-middle ms-25">{t('Salvar')}</span>
                 </Button.Ripple>
               </div>
             </div>
@@ -321,7 +322,7 @@ const PublicidadeEditCard = ({ data, setSalvarDados }) => {
               <Row>
                 <Col md="12" className="mb-2">
                   <Label className="form-label" for="nome">
-                    Nome da publicidade*
+                    {t('Nome da publicidade')}*
                   </Label>
                   <Input
                     id="nome"
@@ -334,7 +335,7 @@ const PublicidadeEditCard = ({ data, setSalvarDados }) => {
 
                 <Col md="8" className="mb-2">
                   <Label className="form-label" for="extra_hotspot_id">
-                    Selecione o(s) Hotspot(s)*
+                    {t('Selecione o(s) Hotspot(s)')}*
                   </Label>
                   <Select
                     isClearable
@@ -367,7 +368,7 @@ const PublicidadeEditCard = ({ data, setSalvarDados }) => {
                 </Col>
                 <Col md="4" className="mb-2">
                   <Label className="form-label" for="filtro_id">
-                    Filtro
+                    {t('Filtro')}
                   </Label>
                   <Select
                     isClearable
@@ -391,7 +392,7 @@ const PublicidadeEditCard = ({ data, setSalvarDados }) => {
                 </Col>
                 <Col md="8" className="mb-2">
                   <Label className="form-label" for="dia_semana">
-                    Dia da semana
+                    {t('Dia da semana')}
                   </Label>
                   <Select
                     isClearable
@@ -408,7 +409,7 @@ const PublicidadeEditCard = ({ data, setSalvarDados }) => {
                 </Col>
                 <Col md="4" className="mb-2">
                   <Label className="form-label" for="frequencia">
-                    Frequência
+                    {t('Frequência')}
                   </Label>
                   <Select
                     isClearable
@@ -459,7 +460,7 @@ const PublicidadeEditCard = ({ data, setSalvarDados }) => {
 
                 <Col md="3" className="mb-2">
                   <Label className="form-label" for="duracao">
-                    Tempo de exibição (segundos)*
+                    {t('Tempo de exibição (segundos)')}*
                   </Label>
                   <Input
                     id="duracao"
@@ -474,7 +475,7 @@ const PublicidadeEditCard = ({ data, setSalvarDados }) => {
 
                 <Col md="3" className="mb-2">
                   <Label className="form-label" for="tipo">
-                    Tipo de mídia
+                    {t('Tipo de mídia')}
                   </Label>
                   <Select
                     id="tipo"
@@ -505,7 +506,7 @@ const PublicidadeEditCard = ({ data, setSalvarDados }) => {
                         <div>
                           <div className="mb-1">
                             <small className="text-muted">
-                              Resolução recomendada: 800x500px.
+                              {t('Resolução recomendada')}: 800x500px.
                               <br />
                               Tamanho máximo: 5mb.
                             </small>
@@ -519,7 +520,7 @@ const PublicidadeEditCard = ({ data, setSalvarDados }) => {
                                 color="secondary"
                                 outline
                               >
-                                Adicionar mídia
+                                {t('Adicionar mídia')}
                                 <Input
                                   type="file"
                                   onChange={handleAddItem}
@@ -556,8 +557,8 @@ const PublicidadeEditCard = ({ data, setSalvarDados }) => {
                     />
                     <Label for="ativo" className="form-check-label mt-25">
                       {vDados?.ativo
-                        ? 'Publicidade ativa'
-                        : 'Publicidade desativada'}
+                        ? t('Publicidade ativa')
+                        : t('Publicidade desativada')}
                     </Label>
                   </div>
                 </Col>

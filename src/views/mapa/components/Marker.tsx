@@ -32,12 +32,7 @@ const MarkerComponent = ({ data, ...rest }: MarkerProp) => {
   }
 
   return (
-    <Marker
-      {...rest}
-      onClick={handleShowInfoWindow}
-      title={hotspot_nome}
-    >
-   
+    <Marker {...rest} onClick={handleShowInfoWindow} title={hotspot_nome}>
       {showInfoWindow && (
         //janela de informações
         <InfoWindow
@@ -61,7 +56,8 @@ const MarkerComponent = ({ data, ...rest }: MarkerProp) => {
             )}
             {total_visitas > 0 && (
               <p>
-                {translate('Esse local possui')} {total_visitas.toLocaleString('pt-BR')}{' '}
+                {translate('Esse local possui')}{' '}
+                {total_visitas.toLocaleString('pt-BR')}{' '}
                 {translate('de visitas até agora.')}
               </p>
             )}
