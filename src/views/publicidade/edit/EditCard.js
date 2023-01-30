@@ -185,13 +185,15 @@ const PublicidadeEditCard = ({ data, setSalvarDados }) => {
 
   const renderItens = () => {
     return vDados?.propaganda_item.map((item, index) => {
+      const typeVideo = item.item_path.split(';', 2)[0].split('/', 2)[1]
+      console.log(typeVideo)
       return (
         <Col key={`${item.id}-${index}`} className="mb-2" md="3">
           <div className="border rounded">
             {item.type === 'Vídeo' ? (
               <video controls className="img-fluid">
                 <source
-                  type="video/mp4"
+                  type={`video/${typeVideo}`}
                   src={item?.item_path?.length > 0 && item?.item_path}
                 />
               </video>
@@ -226,7 +228,7 @@ const PublicidadeEditCard = ({ data, setSalvarDados }) => {
                       hidden
                       accept={
                         item.type === 'Vídeo'
-                          ? '.mp4, .wav, .m4v, .mov'
+                          ? '.mp4, .m4v, .mov'
                           : '.jpg, .jpeg, .png, .gif, .webp'
                       }
                     />
@@ -524,7 +526,7 @@ const PublicidadeEditCard = ({ data, setSalvarDados }) => {
                                   hidden
                                   accept={
                                     vTipo.label === 'Vídeo'
-                                      ? '.mp4, .wav, .m4v, .mov'
+                                      ? '.mp4, .m4v, .mov'
                                       : '.jpg, .jpeg, .png, .gif, .webp'
                                   }
                                 />
