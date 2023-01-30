@@ -1,5 +1,5 @@
 // ** React Imports
-import { useEffect, useState } from "react"
+import { useEffect, useState } from 'react'
 
 // ** Reactstrap Imports
 import {
@@ -11,28 +11,28 @@ import {
   Modal,
   ModalHeader,
   ModalBody,
-} from "reactstrap"
+} from 'reactstrap'
 
 // ** Icons Imports
-import { PieChart, ChevronDown, Download } from "react-feather"
+import { PieChart, ChevronDown, Download } from 'react-feather'
 
-import DataTable from "react-data-table-component"
-import { Link } from "react-router-dom"
+import DataTable from 'react-data-table-component'
+import { Link } from 'react-router-dom'
 
 // ** Charts
-import PesquisaDados from "./PesquisaDados"
+import PesquisaDados from './PesquisaDados'
 
 // ** Styles
-import "@styles/react/libs/charts/apex-charts.scss"
+import '@styles/react/libs/charts/apex-charts.scss'
 
-import { formatDateTime, formatInt } from "@utils"
+import { formatDateTime, formatInt } from '@utils'
 
 // ** API
-import api from "@src/services/api"
+import api from '@src/services/api'
 
 const RelatorioPesquisa = () => {
-  const vDefault = [{ nome: "", valor: 0, qtd: 0, percentual: 0 }]
-  const vParametrosGet = { sortColumn: "data_cadastro", sort: "desc" }
+  const vDefault = [{ nome: '', valor: 0, qtd: 0, percentual: 0 }]
+  const vParametrosGet = { sortColumn: 'data_cadastro', sort: 'desc' }
   // ** States
   const [vDados, setDados] = useState(vDefault)
   const [vCarregando, setCarregando] = useState(true)
@@ -50,7 +50,7 @@ const RelatorioPesquisa = () => {
   const getLista = () => {
     setCarregando(true)
     return api
-      .get("/pesquisa_captive/lista", { params: vParametrosGet })
+      .get('/pesquisa_captive/lista', { params: vParametrosGet })
       .then((res) => {
         setDados(res.data)
         setCarregando(false)
@@ -64,13 +64,13 @@ const RelatorioPesquisa = () => {
     setExportando(id)
     api
       .get(`/pesquisa_captive/exportar/${id}`, {
-        responseType: "blob",
+        responseType: 'blob',
       })
       .then((response) => {
         const url = window.URL.createObjectURL(new Blob([response.data]))
-        const link = document.createElement("a")
+        const link = document.createElement('a')
         link.href = url
-        link.setAttribute("download", "respostas.xlsx")
+        link.setAttribute('download', 'respostas.xlsx')
         document.body.appendChild(link)
         link.click()
         document.body.removeChild(link)
@@ -84,8 +84,8 @@ const RelatorioPesquisa = () => {
   // ** Table columns
   const columns = [
     {
-      name: "Pergunta",
-      minWidth: "400px",
+      name: 'Pergunta',
+      minWidth: '400px',
       sortable: true,
       selector: (row) => row.nome,
       cell: (row) => {
@@ -103,8 +103,8 @@ const RelatorioPesquisa = () => {
       },
     },
     {
-      name: "Data cadastro",
-      minWidth: "200px",
+      name: 'Data cadastro',
+      minWidth: '200px',
       sortable: true,
       selector: (row) => row.data_cadastro,
       cell: (row) => {
@@ -124,8 +124,8 @@ const RelatorioPesquisa = () => {
       },
     },
     {
-      name: <div className="text-center w-100 ps-2">Respostas</div>,
-      minWidth: "80px",
+      name: <div className="text-center w-100 ps-2">{t('Respostas')} </div>,
+      minWidth: '80px',
       sortable: true,
       selector: (row) => row.qtd_respostas,
       cell: (row) => {
@@ -146,7 +146,7 @@ const RelatorioPesquisa = () => {
     },
     {
       name: <div className="text-end w-100">Ações</div>,
-      minWidth: "80px",
+      minWidth: '80px',
       cell: (row) => (
         <div className="text-end w-100">
           <div className="column-action d-inline-flex">
@@ -178,7 +178,7 @@ const RelatorioPesquisa = () => {
               placement="top"
               target={`pw-grafico-${row.id}`}
             >
-              Visualizar o gráfico
+              {t('Visualizar o gráfico')}
             </UncontrolledTooltip>
             {vExportando === row.id ? (
               <Spinner size="sm" color="light" />
@@ -199,7 +199,7 @@ const RelatorioPesquisa = () => {
               placement="top"
               target={`pw-tooltip-export-${row.id}`}
             >
-              Exportar usuários e respostas
+              {t('Exportar usuários e respostas')}
             </UncontrolledTooltip>
           </div>
         </div>

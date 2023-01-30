@@ -16,6 +16,8 @@ import {
 // ** Icons Imports
 import { PieChart, ChevronDown, Download } from 'react-feather'
 
+import { useTranslation } from 'react-i18next'
+
 import DataTable from 'react-data-table-component'
 import { Link } from 'react-router-dom'
 
@@ -38,6 +40,8 @@ const RelatorioPublicidade = () => {
   const [vCarregando, setCarregando] = useState(true)
   const [vExportando, setExportando] = useState(null)
   const [vModalQrCode, setModalQrCode] = useState(false)
+
+  const { t } = useTranslation()
 
   const toggleModal = (id) => {
     if (vModalQrCode !== id) {
@@ -124,7 +128,7 @@ const RelatorioPublicidade = () => {
       },
     },
     {
-      name: <div className="text-center w-100 ps-2">Visualizações</div>,
+      name: <div className="text-center w-100 ps-2">{t('Visualizações')}</div>,
       minWidth: '80px',
       sortable: true,
       selector: (row) => row.qtd_views,
@@ -145,7 +149,7 @@ const RelatorioPublicidade = () => {
       },
     },
     {
-      name: <div className="text-end w-100">Ações</div>,
+      name: <div className="text-end w-100">{t('Ações')}</div>,
       minWidth: '80px',
       cell: (row) => (
         <div className="text-end w-100">
@@ -178,7 +182,7 @@ const RelatorioPublicidade = () => {
               placement="top"
               target={`pw-grafico-${row.id}`}
             >
-              Visualizar o gráfico
+              {t('Visualizar o gráfico')}
             </UncontrolledTooltip>
             {vExportando === row.id ? (
               <Spinner size="sm" color="light" />
@@ -199,7 +203,7 @@ const RelatorioPublicidade = () => {
               placement="top"
               target={`pw-tooltip-export-${row.id}`}
             >
-              Exportar usuários que visualizaram
+              {t('Exportar usuários que visualizaram')}
             </UncontrolledTooltip>
           </div>
         </div>
