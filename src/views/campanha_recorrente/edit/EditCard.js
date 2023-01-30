@@ -1,6 +1,7 @@
 // ** React
-import { useEffect, useState, Fragment } from "react"
-import { useNavigate } from "react-router-dom"
+import { useEffect, useState, Fragment } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 
 // ** Reactstrap
 import {
@@ -13,19 +14,18 @@ import {
   ButtonGroup,
   Alert,
   CardBody,
-} from "reactstrap"
+} from 'reactstrap'
 
 // ** Icons
-import { CornerUpLeft, Check } from "react-feather"
-import classnames from "classnames"
+import { CornerUpLeft, Check } from 'react-feather'
+import classnames from 'classnames'
 
 // ** Utils
-import { campoInvalido, mostrarMensagem, formatMoeda, formatInt } from "@utils"
+import { campoInvalido, mostrarMensagem, formatMoeda, formatInt } from '@utils'
 
 // ** Terceiros
-import Select from "react-select"
-import { useTranslation } from "react-i18next"
-import { getClientes, getTipos } from "../store"
+import Select from 'react-select'
+import { getClientes, getTipos } from '../store'
 
 const CampanhaRecorrenteEditCard = ({ data, setSalvarDados }) => {
   const navigate = useNavigate()
@@ -43,16 +43,16 @@ const CampanhaRecorrenteEditCard = ({ data, setSalvarDados }) => {
   const [vListaTipo, setListaTipo] = useState(null)
   const vListaFrequencia = [
     {
-      label: "Todos os dias, enviar para os aniversariantes do dia",
-      value: "day",
+      label: 'Todos os dias, enviar para os aniversariantes do dia',
+      value: 'day',
     },
     {
-      label: "No domingo, enviar para todos aniversariantes da semana",
-      value: "week",
+      label: 'No domingo, enviar para todos aniversariantes da semana',
+      value: 'week',
     },
     {
-      label: "No dia 1º de cada mês, enviar para todos aniversariantes do mês",
-      value: "month",
+      label: 'No dia 1º de cada mês, enviar para todos aniversariantes do mês',
+      value: 'month',
     },
   ]
   const [vFrequencia, setFrequencia] = useState(
@@ -63,11 +63,11 @@ const CampanhaRecorrenteEditCard = ({ data, setSalvarDados }) => {
   const [vErros, setErros] = useState({})
   const [vErrosCR, setErrosCR] = useState({})
   const vCamposObrigatorios = [
-    { nome: "cliente_id", tipo: "int" },
-    { nome: "campanha_recorrente_tipo_id", tipo: "int" },
+    { nome: 'cliente_id', tipo: 'int' },
+    { nome: 'campanha_recorrente_tipo_id', tipo: 'int' },
   ]
 
-  const vCamposObrigatoriosCR = [{ nome: "titulo" }, { nome: "mensagem" }]
+  const vCamposObrigatoriosCR = [{ nome: 'titulo' }, { nome: 'mensagem' }]
 
   // ** Organização da informação
   const handleChange = (e) => {
@@ -156,9 +156,9 @@ const CampanhaRecorrenteEditCard = ({ data, setSalvarDados }) => {
       setSalvarDados(vDados)
     } else {
       mostrarMensagem(
-        "Atenção!",
-        "Preencha todos os campos obrigatórios.",
-        "warning"
+        'Atenção!',
+        'Preencha todos os campos obrigatórios.',
+        'warning'
       )
     }
   }
@@ -178,7 +178,7 @@ const CampanhaRecorrenteEditCard = ({ data, setSalvarDados }) => {
               <div>
                 <Button.Ripple
                   color="primary"
-                  onClick={() => navigate("/campanha_recorrente")}
+                  onClick={() => navigate('/campanha_recorrente')}
                 >
                   <CornerUpLeft size={17} />
                 </Button.Ripple>
@@ -186,7 +186,7 @@ const CampanhaRecorrenteEditCard = ({ data, setSalvarDados }) => {
               <div>
                 <Button.Ripple color="success" onClick={setDados}>
                   <Check size={17} />
-                  <span className="align-middle ms-25">Salvar</span>
+                  <span className="align-middle ms-25">{t('Salvar')}</span>
                 </Button.Ripple>
               </div>
             </div>
@@ -197,19 +197,19 @@ const CampanhaRecorrenteEditCard = ({ data, setSalvarDados }) => {
             <Row>
               <Col md="4" className="mb-2">
                 <Label className="form-label" for="titulo">
-                  Título da campanha*
+                  {t('Título da campanha')} *
                 </Label>
                 <Input
                   id="titulo"
                   name="titulo"
-                  value={vDadosCR?.titulo ?? ""}
+                  value={vDadosCR?.titulo ?? ''}
                   onChange={handleChangeCR}
-                  invalid={campoInvalido(vDadosCR, vErrosCR, "titulo")}
+                  invalid={campoInvalido(vDadosCR, vErrosCR, 'titulo')}
                 />
               </Col>
               <Col md="3" className="mb-2">
                 <Label className="form-label" for="mensagem">
-                  Tipo de mensagem
+                  {t('Tipo de mensagem')}
                 </Label>
                 <div>
                   <ButtonGroup>
@@ -218,12 +218,12 @@ const CampanhaRecorrenteEditCard = ({ data, setSalvarDados }) => {
                       onClick={() =>
                         handleChangeCR({
                           target: {
-                            name: "tipo",
-                            value: "sms",
+                            name: 'tipo',
+                            value: 'sms',
                           },
                         })
                       }
-                      active={(vDadosCR?.tipo ?? "sms") === "sms"}
+                      active={(vDadosCR?.tipo ?? 'sms') === 'sms'}
                       outline
                     >
                       SMS
@@ -233,12 +233,12 @@ const CampanhaRecorrenteEditCard = ({ data, setSalvarDados }) => {
                       onClick={() =>
                         handleChangeCR({
                           target: {
-                            name: "tipo",
-                            value: "push",
+                            name: 'tipo',
+                            value: 'push',
                           },
                         })
                       }
-                      active={(vDadosCR?.tipo ?? "sms") === "push"}
+                      active={(vDadosCR?.tipo ?? 'sms') === 'push'}
                       outline
                     >
                       Push (App)
@@ -253,17 +253,17 @@ const CampanhaRecorrenteEditCard = ({ data, setSalvarDados }) => {
                 <Select
                   isClearable
                   id="cliente_id"
-                  noOptionsMessage={() => t("Vazio")}
-                  placeholder={t("Selecione...")}
+                  noOptionsMessage={() => t('Vazio')}
+                  placeholder={t('Selecione...')}
                   value={vCliente}
                   options={vListaClientes}
                   isDisabled={vDados.id === 0 && data.cliente_id > 0}
-                  className={classnames("react-select", {
-                    "is-invalid": campoInvalido(
+                  className={classnames('react-select', {
+                    'is-invalid': campoInvalido(
                       vDados,
                       vErros,
-                      "cliente_id",
-                      "int"
+                      'cliente_id',
+                      'int'
                     ),
                   })}
                   classNamePrefix="select"
@@ -271,7 +271,7 @@ const CampanhaRecorrenteEditCard = ({ data, setSalvarDados }) => {
                     setCliente(e)
                     handleChange({
                       target: {
-                        name: "cliente_id",
+                        name: 'cliente_id',
                         value: Number(e?.value),
                       },
                     })
@@ -280,21 +280,21 @@ const CampanhaRecorrenteEditCard = ({ data, setSalvarDados }) => {
               </Col>
               <Col md="5" className="mb-2">
                 <Label className="form-label" for="campanha_recorrente_tipo_id">
-                  Tipo de campanha recorrente*
+                  {t('Tipo de campanha recorrente')}*
                 </Label>
                 <Select
                   isClearable
                   id="campanha_recorrente_tipo_id"
-                  noOptionsMessage={() => t("Vazio")}
-                  placeholder={t("Selecione...")}
+                  noOptionsMessage={() => t('Vazio')}
+                  placeholder={t('Selecione...')}
                   value={vTipo}
                   options={vListaTipo}
-                  className={classnames("react-select", {
-                    "is-invalid": campoInvalido(
+                  className={classnames('react-select', {
+                    'is-invalid': campoInvalido(
                       vDados,
                       vErros,
-                      "campanha_recorrente_tipo_id",
-                      "int"
+                      'campanha_recorrente_tipo_id',
+                      'int'
                     ),
                   })}
                   classNamePrefix="select"
@@ -302,7 +302,7 @@ const CampanhaRecorrenteEditCard = ({ data, setSalvarDados }) => {
                     setTipo(e)
                     handleChange({
                       target: {
-                        name: "campanha_recorrente_tipo_id",
+                        name: 'campanha_recorrente_tipo_id',
                         value: e?.value,
                       },
                     })
@@ -310,23 +310,23 @@ const CampanhaRecorrenteEditCard = ({ data, setSalvarDados }) => {
                 />
               </Col>
               {vTipo &&
-              vTipo?.codigo !== "checkout" &&
-              vTipo?.codigo !== "welcome" &&
-              vTipo?.codigo !== "welcomeback" ? (
+              vTipo?.codigo !== 'checkout' &&
+              vTipo?.codigo !== 'welcome' &&
+              vTipo?.codigo !== 'welcomeback' ? (
                 <Col md="2" className="mb-2">
                   <Label className="form-label" for="hora">
-                    Horário do envio
+                    {t('Horário do envio')}
                   </Label>
                   <Input
                     id="hora"
                     name="hora"
                     type="time"
-                    value={vDadosCR?.hora ?? ""}
+                    value={vDadosCR?.hora ?? ''}
                     onChange={handleChangeCR}
                   />
                 </Col>
               ) : null}
-              {vTipo?.codigo === "birthday" ? (
+              {vTipo?.codigo === 'birthday' ? (
                 <Col md="5" className="mb-2">
                   <Label className="form-label" for="frequencia">
                     Frequência de envio
@@ -334,8 +334,8 @@ const CampanhaRecorrenteEditCard = ({ data, setSalvarDados }) => {
                   <Select
                     isClearable
                     id="frequencia"
-                    noOptionsMessage={() => t("Vazio")}
-                    placeholder={t("Selecione...")}
+                    noOptionsMessage={() => t('Vazio')}
+                    placeholder={t('Selecione...')}
                     value={vFrequencia}
                     options={vListaFrequencia}
                     className="react-select"
@@ -344,7 +344,7 @@ const CampanhaRecorrenteEditCard = ({ data, setSalvarDados }) => {
                       setFrequencia(e)
                       handleChangeCR({
                         target: {
-                          name: "frequencia",
+                          name: 'frequencia',
                           value: e?.value,
                         },
                       })
@@ -355,7 +355,7 @@ const CampanhaRecorrenteEditCard = ({ data, setSalvarDados }) => {
               {vTipo ? (
                 <Col md="12">
                   <Alert
-                    color={vTipo?.cor ?? "primary"}
+                    color={vTipo?.cor ?? 'primary'}
                     isOpen={vTipo && true}
                     className="p-1"
                   >
@@ -369,23 +369,23 @@ const CampanhaRecorrenteEditCard = ({ data, setSalvarDados }) => {
               ) : null}
               <Col md="12" className="mb-1">
                 <Label className="form-label" for="mensagem">
-                  Mensagem*
+                  {t('Mensagem')}*
                 </Label>
                 <Input
-                  value={vDadosCR?.mensagem ?? ""}
+                  value={vDadosCR?.mensagem ?? ''}
                   type="textarea"
                   id="mensagem"
                   name="mensagem"
-                  invalid={campoInvalido(vDadosCR, vErrosCR, "mensagem")}
-                  style={{ minHeight: "80px" }}
+                  invalid={campoInvalido(vDadosCR, vErrosCR, 'mensagem')}
+                  style={{ minHeight: '80px' }}
                   onChange={handleChangeCR}
                   className={classnames({
-                    "text-danger": (vDadosCR?.mensagem?.length || 0) > 140,
+                    'text-danger': (vDadosCR?.mensagem?.length || 0) > 140,
                   })}
                 />
                 <span
-                  className={classnames("textarea-counter-value float-end", {
-                    "bg-danger": (vDadosCR?.mensagem?.length || 0) > 140,
+                  className={classnames('textarea-counter-value float-end', {
+                    'bg-danger': (vDadosCR?.mensagem?.length || 0) > 140,
                   })}
                 >
                   {`${vDadosCR?.mensagem?.length || 0}/140`}
@@ -401,14 +401,14 @@ const CampanhaRecorrenteEditCard = ({ data, setSalvarDados }) => {
                     onChange={(e) => {
                       handleChange({
                         target: {
-                          name: "ativo",
+                          name: 'ativo',
                           value: e.target.checked,
                         },
                       })
                     }}
                   />
                   <Label for="ativo" className="form-check-label mt-25">
-                    Campanha {vDados?.ativo ? "ativada" : "desativada"}
+                    {t('Campanha')} {vDados?.ativo ? 'ativada' : 'desativada'}
                   </Label>
                 </div>
               </Col>
@@ -420,12 +420,14 @@ const CampanhaRecorrenteEditCard = ({ data, setSalvarDados }) => {
         <Row>
           <Col md="6" className="offset-md-3">
             <Card>
-              <h4 className="text-center p-2">Informações sobre o envio</h4>
+              <h4 className="text-center p-2">
+                {t('Informações sobre o envio')}
+              </h4>
               <CardBody>
                 <div className="transaction-item mb-2">
                   <div className="d-flex justify-content-between align-items-center">
                     <div>
-                      <h6 className="transaction-title">Valor total</h6>
+                      <h6 className="transaction-title">{t('Valor total')}</h6>
                     </div>
                     <div className="fw-bolder text-secondary text-end">
                       {formatMoeda(vDados.total_gasto ?? 0)}
@@ -435,7 +437,9 @@ const CampanhaRecorrenteEditCard = ({ data, setSalvarDados }) => {
                 <div className="transaction-item">
                   <div className="d-flex justify-content-between align-items-center">
                     <div>
-                      <h6 className="transaction-title">Usuários atingidos</h6>
+                      <h6 className="transaction-title">
+                        {t('Usuários atingidos')}
+                      </h6>
                     </div>
                     <div className="fw-bolder text-success text-end">
                       {formatInt(vDados.qtd ?? 0)}

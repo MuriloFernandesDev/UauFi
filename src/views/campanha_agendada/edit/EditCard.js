@@ -1,6 +1,6 @@
 // ** React
-import { useEffect, useState, Fragment } from "react"
-import { useNavigate } from "react-router-dom"
+import { useEffect, useState, Fragment } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 // ** Reactstrap
 import {
@@ -14,23 +14,23 @@ import {
   CardTitle,
   Spinner,
   ButtonGroup,
-} from "reactstrap"
+} from 'reactstrap'
 
 // ** API
-import api from "@src/services/api"
+import api from '@src/services/api'
 
 // ** Icons
-import { CornerUpLeft, Check } from "react-feather"
-import toast from "react-hot-toast"
-import classnames from "classnames"
+import { CornerUpLeft, Check } from 'react-feather'
+import toast from 'react-hot-toast'
+import classnames from 'classnames'
 
-import Cleave from "cleave.js/react"
-import "cleave.js/dist/addons/cleave-phone.br"
+import Cleave from 'cleave.js/react'
+import 'cleave.js/dist/addons/cleave-phone.br'
 
 // ** Terceiros
-import Select from "react-select"
-import { useTranslation } from "react-i18next"
-import { getClientes, getFiltros, testarCampanha } from "../store"
+import Select from 'react-select'
+import { useTranslation } from 'react-i18next'
+import { getClientes, getFiltros, testarCampanha } from '../store'
 
 // ** Custom Components
 import {
@@ -39,7 +39,7 @@ import {
   formatDateTime,
   campoInvalido,
   mostrarMensagem,
-} from "@utils"
+} from '@utils'
 
 const CampanhaAgendadaEditCard = ({ data, setSalvarDados }) => {
   const navigate = useNavigate()
@@ -59,9 +59,9 @@ const CampanhaAgendadaEditCard = ({ data, setSalvarDados }) => {
   const [vVerificandoAlcance, setVerificandoAlcance] = useState(null)
   const [vErros, setErros] = useState({})
   const vCamposObrigatorios = [
-    { nome: "nome" },
-    { nome: "cliente_id", tipo: "int" },
-    { nome: "mensagem" },
+    { nome: 'nome' },
+    { nome: 'cliente_id', tipo: 'int' },
+    { nome: 'mensagem' },
   ]
 
   // ** Organização da informação
@@ -99,24 +99,24 @@ const CampanhaAgendadaEditCard = ({ data, setSalvarDados }) => {
       .then((response) => {
         setTestando(false)
         if (response.status === 200) {
-          toast.success("Teste enviado com sucesso!", {
-            position: "bottom-right",
+          toast.success('Teste enviado com sucesso!', {
+            position: 'bottom-right',
           })
         }
       })
       .catch((error) => {
         setTestando(false)
         if (error.response.status === 400) {
-          toast.error("Preencha todos os campos corretamente.", {
-            position: "bottom-right",
+          toast.error('Preencha todos os campos corretamente.', {
+            position: 'bottom-right',
           })
         } else if (error.response.status === 503) {
           toast.error(error.response.data, {
-            position: "bottom-right",
+            position: 'bottom-right',
           })
         } else {
-          toast.error("Mensagem não enviada, contate um administrador.", {
-            position: "bottom-right",
+          toast.error('Mensagem não enviada, contate um administrador.', {
+            position: 'bottom-right',
           })
         }
       })
@@ -155,9 +155,9 @@ const CampanhaAgendadaEditCard = ({ data, setSalvarDados }) => {
       return true
     } else {
       mostrarMensagem(
-        "Atenção!",
-        "Preencha todos os campos obrigatórios.",
-        "warning"
+        'Atenção!',
+        'Preencha todos os campos obrigatórios.',
+        'warning'
       )
     }
   }
@@ -166,7 +166,7 @@ const CampanhaAgendadaEditCard = ({ data, setSalvarDados }) => {
     if (setDados(true)) {
       setVerificandoAlcance(true)
       return api
-        .post("/campanha_agendada/alcance", vDados)
+        .post('/campanha_agendada/alcance', vDados)
         .then((res) => {
           setAlcance(res.data)
           setVerificandoAlcance(false)
@@ -178,7 +178,7 @@ const CampanhaAgendadaEditCard = ({ data, setSalvarDados }) => {
     }
   }
 
-  const optTel = { phone: true, phoneRegionCode: "BR" }
+  const optTel = { phone: true, phoneRegionCode: 'BR' }
 
   // ** Get filter on mount based on id
 
@@ -197,7 +197,7 @@ const CampanhaAgendadaEditCard = ({ data, setSalvarDados }) => {
               <div>
                 <Button.Ripple
                   color="primary"
-                  onClick={() => navigate("/campanha_agendada")}
+                  onClick={() => navigate('/campanha_agendada')}
                 >
                   <CornerUpLeft size={17} />
                 </Button.Ripple>
@@ -205,7 +205,7 @@ const CampanhaAgendadaEditCard = ({ data, setSalvarDados }) => {
               <div>
                 <Button.Ripple color="success" onClick={() => setDados(false)}>
                   <Check size={17} />
-                  <span className="align-middle ms-25">Salvar</span>
+                  <span className="align-middle ms-25">{t('Salvar')}</span>
                 </Button.Ripple>
               </div>
             </div>
@@ -216,20 +216,20 @@ const CampanhaAgendadaEditCard = ({ data, setSalvarDados }) => {
             <Row>
               <Col md="6" className="mb-2">
                 <Label className="form-label" for="nome">
-                  Nome da campanha*
+                  {t('Nome da campanha')}*
                 </Label>
                 <Input
                   id="nome"
                   name="nome"
                   disabled={vDados.enviado}
-                  value={vDados?.nome ?? ""}
+                  value={vDados?.nome ?? ''}
                   onChange={handleChange}
-                  invalid={campoInvalido(vDados, vErros, "nome")}
+                  invalid={campoInvalido(vDados, vErros, 'nome')}
                 />
               </Col>
               <Col md="6" className="mb-2">
                 <Label className="form-label" for="mensagem">
-                  Tipo de mensagem
+                  {t('Tipo de mensagem')}
                 </Label>
                 <div>
                   <ButtonGroup>
@@ -238,7 +238,7 @@ const CampanhaAgendadaEditCard = ({ data, setSalvarDados }) => {
                       onClick={() =>
                         handleChange({
                           target: {
-                            name: "tipo",
+                            name: 'tipo',
                             value: 0,
                           },
                         })
@@ -253,7 +253,7 @@ const CampanhaAgendadaEditCard = ({ data, setSalvarDados }) => {
                       onClick={() =>
                         handleChange({
                           target: {
-                            name: "tipo",
+                            name: 'tipo',
                             value: 1,
                           },
                         })
@@ -268,24 +268,24 @@ const CampanhaAgendadaEditCard = ({ data, setSalvarDados }) => {
               </Col>
               <Col md="6" className="mb-2">
                 <Label className="form-label" for="cliente_id">
-                  Selecione um Cliente*
+                  {t('Selecione um Cliente')}*
                 </Label>
                 <Select
                   isClearable
                   id="cliente_id"
-                  noOptionsMessage={() => t("Vazio")}
-                  placeholder={t("Selecione...")}
+                  noOptionsMessage={() => t('Vazio')}
+                  placeholder={t('Selecione...')}
                   value={vCliente}
                   options={vListaCliente}
                   isDisabled={
                     (vDados.id === 0 && data.cliente_id > 0) || vDados.enviado
                   }
-                  className={classnames("react-select", {
-                    "is-invalid": campoInvalido(
+                  className={classnames('react-select', {
+                    'is-invalid': campoInvalido(
                       vDados,
                       vErros,
-                      "cliente_id",
-                      "int"
+                      'cliente_id',
+                      'int'
                     ),
                   })}
                   classNamePrefix="select"
@@ -293,7 +293,7 @@ const CampanhaAgendadaEditCard = ({ data, setSalvarDados }) => {
                     setCliente(e)
                     handleChange({
                       target: {
-                        name: "cliente_id",
+                        name: 'cliente_id',
                         value: Number(e?.value),
                       },
                     })
@@ -302,13 +302,13 @@ const CampanhaAgendadaEditCard = ({ data, setSalvarDados }) => {
               </Col>
               <Col md="6" className="mb-2">
                 <Label className="form-label" for="filtro_id">
-                  Filtro
+                  {t('Filtro')}
                 </Label>
                 <Select
                   isClearable
                   id="filtro_id"
-                  noOptionsMessage={() => t("Vazio")}
-                  placeholder={t("Selecione...")}
+                  noOptionsMessage={() => t('Vazio')}
+                  placeholder={t('Selecione...')}
                   value={vFiltro}
                   options={vListaFiltros}
                   className="react-select"
@@ -318,7 +318,7 @@ const CampanhaAgendadaEditCard = ({ data, setSalvarDados }) => {
                     setFiltro(e)
                     handleChange({
                       target: {
-                        name: "filtro_id",
+                        name: 'filtro_id',
                         value: Number(e?.value),
                       },
                     })
@@ -328,24 +328,24 @@ const CampanhaAgendadaEditCard = ({ data, setSalvarDados }) => {
 
               <Col md="12" className="mb-2">
                 <Label className="form-label" for="mensagem">
-                  Mensagem*
+                  {t('Mensagem')}*
                 </Label>
                 <Input
-                  value={vDados?.mensagem ?? ""}
+                  value={vDados?.mensagem ?? ''}
                   type="textarea"
                   id="mensagem"
                   name="mensagem"
-                  invalid={campoInvalido(vDados, vErros, "mensagem")}
-                  style={{ minHeight: "80px" }}
+                  invalid={campoInvalido(vDados, vErros, 'mensagem')}
+                  style={{ minHeight: '80px' }}
                   disabled={vDados.enviado}
                   onChange={handleChange}
                   className={classnames({
-                    "text-danger": (vDados?.mensagem?.length || 0) > 140,
+                    'text-danger': (vDados?.mensagem?.length || 0) > 140,
                   })}
                 />
                 <span
-                  className={classnames("textarea-counter-value float-end", {
-                    "bg-danger": (vDados?.mensagem?.length || 0) > 140,
+                  className={classnames('textarea-counter-value float-end', {
+                    'bg-danger': (vDados?.mensagem?.length || 0) > 140,
                   })}
                 >
                   {`${vDados?.mensagem?.length || 0}/140`}
@@ -361,14 +361,14 @@ const CampanhaAgendadaEditCard = ({ data, setSalvarDados }) => {
                     onChange={(e) => {
                       handleChange({
                         target: {
-                          name: "ativo",
+                          name: 'ativo',
                           value: e.target.checked,
                         },
                       })
                     }}
                   />
                   <Label for="ativo" className="form-check-label mt-25">
-                    Campanha {vDados?.ativo ? "ativada" : "desativada"}
+                    Campanha {vDados?.ativo ? 'ativada' : 'desativada'}
                   </Label>
                 </div>
               </Col>
@@ -376,14 +376,14 @@ const CampanhaAgendadaEditCard = ({ data, setSalvarDados }) => {
               {vDados?.ativo ? (
                 <Col md="8" className="mb-2">
                   <Label className="form-label" for="data_hora_agendamento">
-                    Escolha a data e hora que a campanha será enviada*
+                    {t('Escolha a data e hora que a campanha será enviada')}*
                   </Label>
                   <Input
                     id="data_hora_agendamento"
                     name="data_hora_agendamento"
                     type="datetime-local"
                     disabled={vDados.enviado}
-                    value={vDados?.data_hora_agendamento ?? ""}
+                    value={vDados?.data_hora_agendamento ?? ''}
                     onChange={handleChange}
                   />
                 </Col>
@@ -396,12 +396,16 @@ const CampanhaAgendadaEditCard = ({ data, setSalvarDados }) => {
         <Row>
           <Col md="6" className="offset-md-3">
             <Card>
-              <h4 className="text-center p-2">Informações sobre o envio</h4>
+              <h4 className="text-center p-2">
+                {t('Informações sobre o envio')}
+              </h4>
               <CardBody>
                 <div className="transaction-item mb-2">
                   <div className="d-flex justify-content-between align-items-center">
                     <div>
-                      <h6 className="transaction-title">Data do envio</h6>
+                      <h6 className="transaction-title">
+                        {t('Data do envio')}
+                      </h6>
                     </div>
                     <div className="fw-bolder text-primary text-end">
                       {formatDateTime(vDados.data_hora_envio)}
@@ -411,7 +415,7 @@ const CampanhaAgendadaEditCard = ({ data, setSalvarDados }) => {
                 <div className="transaction-item mb-2">
                   <div className="d-flex justify-content-between align-items-center">
                     <div>
-                      <h6 className="transaction-title">Valor total</h6>
+                      <h6 className="transaction-title">{t('Valor total')}</h6>
                     </div>
                     <div className="fw-bolder text-secondary text-end">
                       {formatMoeda(vDados.preco ?? 0)}
@@ -421,7 +425,9 @@ const CampanhaAgendadaEditCard = ({ data, setSalvarDados }) => {
                 <div className="transaction-item">
                   <div className="d-flex justify-content-between align-items-center">
                     <div>
-                      <h6 className="transaction-title">Usuários atingidos</h6>
+                      <h6 className="transaction-title">
+                        {t('Usuários atingidos')}
+                      </h6>
                     </div>
                     <div className="fw-bolder text-success text-end">
                       {formatInt(vDados.quantidade ?? 0)}
@@ -437,12 +443,14 @@ const CampanhaAgendadaEditCard = ({ data, setSalvarDados }) => {
           <Col md="6">
             <Card className="text-center">
               <CardBody>
-                <CardTitle tag="h4">Testar campanha</CardTitle>
+                <CardTitle tag="h4">{t('Testar campanha')}</CardTitle>
                 <Row>
-                  <h6>*Será enviado para o número descrito como um teste</h6>
+                  <h6>
+                    *{t('Será enviado para o número descrito como um teste')}
+                  </h6>
                   <Col lg="6" className="mb-2 offset-lg-3">
                     <Label className="form-label" for="vNumeroTeste">
-                      Número do celular com o ddd
+                      {t('Número do celular com o ddd')}
                     </Label>
                     <Cleave
                       className="form-control"
@@ -451,7 +459,7 @@ const CampanhaAgendadaEditCard = ({ data, setSalvarDados }) => {
                       id="whatsapp"
                       name="whatsapp"
                       disabled={vDados.enviado}
-                      value={vNumeroTeste ?? ""}
+                      value={vNumeroTeste ?? ''}
                       onChange={(e) => setNumeroTeste(e.target.value)}
                     />
                   </Col>
@@ -460,7 +468,7 @@ const CampanhaAgendadaEditCard = ({ data, setSalvarDados }) => {
                       <Spinner color="primary" />
                     ) : (
                       <Button onClick={handleTestarSMS} color="primary" outline>
-                        Enviar teste
+                        {t('Enviar teste')}
                       </Button>
                     )}
                   </Col>
@@ -470,7 +478,9 @@ const CampanhaAgendadaEditCard = ({ data, setSalvarDados }) => {
           </Col>
           <Col md="6">
             <Card>
-              <h4 className="text-center p-2">Informações sobre o envio</h4>
+              <h4 className="text-center p-2">
+                {t('Informações sobre o envio')}
+              </h4>
               <CardBody>
                 {!vVerificandoAlcance ? (
                   vAlcance ? (
@@ -478,7 +488,9 @@ const CampanhaAgendadaEditCard = ({ data, setSalvarDados }) => {
                       <div className="transaction-item mb-2">
                         <div className="d-flex justify-content-between align-items-center">
                           <div>
-                            <h6 className="transaction-title">Valor total</h6>
+                            <h6 className="transaction-title">
+                              {t('Valor total')}
+                            </h6>
                           </div>
                           <div className="fw-bolder text-secondary text-end">
                             {formatMoeda(vAlcance.valor ?? 0)}
@@ -489,7 +501,7 @@ const CampanhaAgendadaEditCard = ({ data, setSalvarDados }) => {
                         <div className="d-flex justify-content-between align-items-center">
                           <div>
                             <h6 className="transaction-title">
-                              Usuários atingidos
+                              {t('Usuários atingidos')}
                             </h6>
                           </div>
                           <div className="fw-bolder text-success text-end">
@@ -506,7 +518,7 @@ const CampanhaAgendadaEditCard = ({ data, setSalvarDados }) => {
                 )}
                 <div className="text-center">
                   <Button onClick={handleAlcance} color="primary" outline>
-                    Verificar
+                    {t('Verificar')}
                   </Button>
                 </div>
               </CardBody>
