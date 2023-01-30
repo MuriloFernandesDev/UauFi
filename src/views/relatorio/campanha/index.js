@@ -1,38 +1,41 @@
 // ** React Imports
-import { Fragment, useEffect, useState } from "react"
+import { Fragment, useEffect, useState } from 'react'
 
 // ** Reactstrap Imports
-import { Nav, NavItem, NavLink, TabContent, TabPane, Spinner } from "reactstrap"
+import { Nav, NavItem, NavLink, TabContent, TabPane, Spinner } from 'reactstrap'
 
 // ** Icons Imports
-import { Clock, RefreshCw } from "react-feather"
+import { Clock, RefreshCw } from 'react-feather'
 
 // ** Charts
-import CampanhaDados from "./CampanhaDados"
+import CampanhaDados from './CampanhaDados'
+
+import { useTranslation } from 'react-i18next'
 
 // ** Styles
-import "@styles/react/libs/charts/apex-charts.scss"
+import '@styles/react/libs/charts/apex-charts.scss'
 
 // ** API
-import api from "@src/services/api"
+import api from '@src/services/api'
 
 // ** Third Party Components
-import "chart.js/auto"
+import 'chart.js/auto'
 
 const RelatorioCampanha = () => {
-  const vDefault = [{ nome: "", valor: 0, qtd: 0, percentual: 0 }]
-  const vParametrosGet = { sortColumn: "qtd", sort: "desc" }
+  const vDefault = [{ nome: '', valor: 0, qtd: 0, percentual: 0 }]
+  const vParametrosGet = { sortColumn: 'qtd', sort: 'desc' }
   // ** States
   const [vCampanhaAgendada, setCampanhaAgendada] = useState(vDefault)
   const [vCarregando1, setCarregando1] = useState(true)
   const [vCarregando2, setCarregando2] = useState(true)
   const [vCampanhaRecorrente, setCampanhaRecorrente] = useState(vDefault)
-  const [active, toggleTab] = useState("1")
+  const [active, toggleTab] = useState('1')
+  const { t } = useTranslation()
 
   const getCampanhaAgendada = () => {
     setCarregando1(true)
     return api
-      .get("/campanha_agendada/lista", { params: vParametrosGet })
+      .get('/campanha_agendada/lista', { params: vParametrosGet })
       .then((res) => {
         setCampanhaAgendada(res.data)
         setCarregando1(false)
@@ -45,7 +48,7 @@ const RelatorioCampanha = () => {
   const getCampanhaRecorrente = () => {
     setCarregando2(true)
     return api
-      .get("/campanha_recorrente/lista", { params: vParametrosGet })
+      .get('/campanha_recorrente/lista', { params: vParametrosGet })
       .then((res) => {
         setCampanhaRecorrente(res.data)
         setCarregando2(false)
@@ -66,15 +69,15 @@ const RelatorioCampanha = () => {
     <Fragment>
       <Nav pills className="mb-2">
         <NavItem>
-          <NavLink active={active === "1"} onClick={() => toggleTab("1")}>
+          <NavLink active={active === '1'} onClick={() => toggleTab('1')}>
             <Clock className="font-medium-3 me-50" />
-            <span className="fw-bold">Agendadas</span>
+            <span className="fw-bold">{t('Agendadas')}</span>
           </NavLink>
         </NavItem>
         <NavItem>
-          <NavLink active={active === "2"} onClick={() => toggleTab("2")}>
+          <NavLink active={active === '2'} onClick={() => toggleTab('2')}>
             <RefreshCw className="font-medium-3 me-50" />
-            <span className="fw-bold">Recorrentes</span>
+            <span className="fw-bold">{t('Recorrentes')}</span>
           </NavLink>
         </NavItem>
       </Nav>
@@ -85,7 +88,7 @@ const RelatorioCampanha = () => {
               <Spinner color="primary" />
             </div>
           ) : (
-            <CampanhaDados valores={vCampanhaAgendada} tipo={"agendada"} />
+            <CampanhaDados valores={vCampanhaAgendada} tipo={'agendada'} />
           )}
         </TabPane>
         <TabPane tabId="2">
@@ -94,7 +97,7 @@ const RelatorioCampanha = () => {
               <Spinner color="primary" />
             </div>
           ) : (
-            <CampanhaDados valores={vCampanhaRecorrente} tipo={"recorrente"} />
+            <CampanhaDados valores={vCampanhaRecorrente} tipo={'recorrente'} />
           )}
         </TabPane>
       </TabContent>

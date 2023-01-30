@@ -1,16 +1,16 @@
 // ** Custom Components
-import Avatar from '@components/avatar'
+import Avatar from '@src/@core/components/avatar'
 
 // ** Avatar Image
 import avatarImg from '@src/assets/images/portrait/small/avatar-s-20.jpg'
 
 const AvatarSizes = () => {
   return (
-    <div className='demo-inline-spacing'>
-      <Avatar img={avatarImg} size='sm' />
+    <div className="demo-inline-spacing">
+      <Avatar img={avatarImg} size="sm" />
       <Avatar img={avatarImg} />
-      <Avatar img={avatarImg} size='lg' />
-      <Avatar img={avatarImg} size='xl' />
+      <Avatar img={avatarImg} size="lg" />
+      <Avatar img={avatarImg} size="xl" />
     </div>
   )
 }

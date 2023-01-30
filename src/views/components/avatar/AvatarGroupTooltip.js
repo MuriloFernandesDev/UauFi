@@ -1,27 +1,27 @@
 // ** Custom Components
-import AvatarGroup from '@components/avatar-group'
+import AvatarGroup from '@src/@core/components/avatar'
 
 const data = [
   {
     title: 'Vinnie Mostowy',
-    img: require('@src/assets/images/portrait/small/avatar-s-5.jpg').default
+    img: require('@src/assets/images/portrait/small/avatar-s-5.jpg').default,
   },
   {
     title: 'Elicia Rieske',
-    img: require('@src/assets/images/portrait/small/avatar-s-7.jpg').default
+    img: require('@src/assets/images/portrait/small/avatar-s-7.jpg').default,
   },
   {
     title: 'Julee Rossignol',
-    img: require('@src/assets/images/portrait/small/avatar-s-10.jpg').default
+    img: require('@src/assets/images/portrait/small/avatar-s-10.jpg').default,
   },
   {
     title: 'Darcey Nooner',
-    img: require('@src/assets/images/portrait/small/avatar-s-11.jpg').default
+    img: require('@src/assets/images/portrait/small/avatar-s-11.jpg').default,
   },
   {
     title: 'Jenny Looper',
-    img: require('@src/assets/images/portrait/small/avatar-s-20.jpg').default
-  }
+    img: require('@src/assets/images/portrait/small/avatar-s-20.jpg').default,
+  },
 ]
 
 const AvatarGroupComponent = () => {

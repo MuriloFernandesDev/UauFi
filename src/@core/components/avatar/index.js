@@ -31,10 +31,10 @@ const Avatar = forwardRef((props, ref) => {
   } = props
 
   // ** Function to extract initials from content
-  const getInitials = str => {
+  const getInitials = (str) => {
     const results = []
     const wordArray = str.split(' ')
-    wordArray.forEach(e => {
+    wordArray.forEach((e) => {
       results.push(e[0])
     })
     return results.join('')
@@ -45,7 +45,7 @@ const Avatar = forwardRef((props, ref) => {
       className={classnames('avatar', {
         [className]: className,
         [`bg-${color}`]: color,
-        [`avatar-${size}`]: size
+        [`avatar-${size}`]: size,
       })}
       ref={ref}
       {...rest}
@@ -53,7 +53,7 @@ const Avatar = forwardRef((props, ref) => {
       {img === false || img === undefined ? (
         <span
           className={classnames('avatar-content', {
-            'position-relative': badgeUp
+            'position-relative': badgeUp,
           })}
           style={contentStyles}
         >
@@ -61,7 +61,11 @@ const Avatar = forwardRef((props, ref) => {
 
           {icon ? icon : null}
           {badgeUp ? (
-            <Badge color={badgeColor ? badgeColor : 'primary'} className='badge-sm badge-up' pill>
+            <Badge
+              color={badgeColor ? badgeColor : 'primary'}
+              className="badge-sm badge-up"
+              pill
+            >
               {badgeText ? badgeText : '0'}
             </Badge>
           ) : null}
@@ -69,13 +73,14 @@ const Avatar = forwardRef((props, ref) => {
       ) : (
         <img
           className={classnames({
-            [imgClassName]: imgClassName
+            [imgClassName]: imgClassName,
           })}
           src={img}
-          alt=''
+          alt=""
           onError={({ currentTarget }) => {
-            currentTarget.onerror = null 
-            currentTarget.src = require('@src/assets/images/avatars/avatar-blank.png').default
+            currentTarget.onerror = null
+            currentTarget.src =
+              require('@src/assets/images/avatars/avatar-blank.png').default
           }}
           height={imgHeight && !size ? imgHeight : 32}
           width={imgWidth && !size ? imgWidth : 32}
@@ -85,7 +90,7 @@ const Avatar = forwardRef((props, ref) => {
         <span
           className={classnames({
             [`avatar-status-${status}`]: status,
-            [`avatar-status-${size}`]: size
+            [`avatar-status-${size}`]: size,
           })}
         ></span>
       ) : null}
@@ -124,7 +129,7 @@ Avatar.propTypes = {
     'light-danger',
     'light-info',
     'light-warning',
-    'light-dark'
+    'light-dark',
   ]),
   color: Proptypes.oneOf([
     'primary',
@@ -140,7 +145,7 @@ Avatar.propTypes = {
     'light-danger',
     'light-info',
     'light-warning',
-    'light-dark'
+    'light-dark',
   ]),
   initials(props) {
     if (props['initials'] && props['content'] === undefined) {
@@ -149,13 +154,16 @@ Avatar.propTypes = {
     if (props['initials'] && typeof props['content'] !== 'string') {
       return new Error('content prop must be a string.')
     }
-    if (typeof props['initials'] !== 'boolean' && props['initials'] !== undefined) {
+    if (
+      typeof props['initials'] !== 'boolean' &&
+      props['initials'] !== undefined
+    ) {
       return new Error('initials must be a boolean!')
     }
-  }
+  },
 }
 
 // ** Default Props
 Avatar.defaultProps = {
-  tag: 'div'
+  tag: 'div',
 }

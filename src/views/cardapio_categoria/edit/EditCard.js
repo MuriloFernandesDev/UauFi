@@ -1,21 +1,21 @@
 // ** React
-import { Fragment, useEffect, useState } from "react"
-import { useNavigate } from "react-router-dom"
-import classnames from "classnames"
+import { Fragment, useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import classnames from 'classnames'
 
 // ** Reactstrap
-import { Row, Col, Card, Input, Button, Label } from "reactstrap"
+import { Row, Col, Card, Input, Button, Label } from 'reactstrap'
 
 // ** Icons
-import { CornerUpLeft, Check } from "react-feather"
+import { CornerUpLeft, Check } from 'react-feather'
 
 // ** Utils
-import { campoInvalido, mostrarMensagem } from "@utils"
+import { campoInvalido, mostrarMensagem } from '@utils'
 
 // ** Terceiros
-import Select from "react-select"
-import { useTranslation } from "react-i18next"
-import { getClientes } from "../store"
+import Select from 'react-select'
+import { useTranslation } from 'react-i18next'
+import { getClientes } from '../store'
 
 const CardapioCategoriaEditCard = ({ data, setSalvarDados }) => {
   const navigate = useNavigate()
@@ -30,8 +30,8 @@ const CardapioCategoriaEditCard = ({ data, setSalvarDados }) => {
   const [vErros, setErros] = useState({})
 
   const vCamposObrigatorios = [
-    { nome: "titulo" },
-    { nome: "cliente_id", tipo: "int" },
+    { nome: 'titulo' },
+    { nome: 'cliente_id', tipo: 'int' },
   ]
 
   // ** Organização da informação
@@ -73,9 +73,9 @@ const CardapioCategoriaEditCard = ({ data, setSalvarDados }) => {
       setSalvarDados(vDados)
     } else {
       mostrarMensagem(
-        "Atenção!",
-        "Preencha todos os campos obrigatórios.",
-        "warning"
+        'Atenção!',
+        'Preencha todos os campos obrigatórios.',
+        'warning'
       )
     }
   }
@@ -96,7 +96,7 @@ const CardapioCategoriaEditCard = ({ data, setSalvarDados }) => {
               <div>
                 <Button.Ripple
                   color="primary"
-                  onClick={() => navigate("/cardapio_categoria")}
+                  onClick={() => navigate('/cardapio_categoria')}
                 >
                   <CornerUpLeft size={17} />
                 </Button.Ripple>
@@ -104,7 +104,7 @@ const CardapioCategoriaEditCard = ({ data, setSalvarDados }) => {
               <div>
                 <Button.Ripple color="success" onClick={setDados}>
                   <Check size={17} />
-                  <span className="align-middle ms-25">Salvar</span>
+                  <span className="align-middle ms-25">{t('Salvar')}</span>
                 </Button.Ripple>
               </div>
             </div>
@@ -118,37 +118,37 @@ const CardapioCategoriaEditCard = ({ data, setSalvarDados }) => {
               <Row>
                 <Col md="6" className="mb-2">
                   <Label className="form-label" for="quarto">
-                    Título*
+                    {t('Título')}*
                   </Label>
                   <Input
                     id="titulo"
                     name="titulo"
-                    value={vDados?.titulo ?? ""}
+                    value={vDados?.titulo ?? ''}
                     onChange={handleChange}
-                    invalid={campoInvalido(vDados, vErros, "titulo")}
+                    invalid={campoInvalido(vDados, vErros, 'titulo')}
                   />
                 </Col>
 
                 <Col md="6" className="mb-2">
                   <Label className="form-label" for="cliente_id">
-                    Selecione um Cliente*
+                    {t('Selecione um Cliente')}*
                   </Label>
                   <Select
                     isClearable
                     id="cliente_id"
-                    noOptionsMessage={() => t("Vazio")}
-                    placeholder={t("Selecione...")}
+                    noOptionsMessage={() => t('Vazio')}
+                    placeholder={t('Selecione...')}
                     value={vCliente}
                     options={vListaCliente}
                     isDisabled={
                       (vDados.id === 0 && data.cliente_id > 0) || vDados.enviado
                     }
-                    className={classnames("react-select", {
-                      "is-invalid": campoInvalido(
+                    className={classnames('react-select', {
+                      'is-invalid': campoInvalido(
                         vDados,
                         vErros,
-                        "cliente_id",
-                        "int"
+                        'cliente_id',
+                        'int'
                       ),
                     })}
                     classNamePrefix="select"
@@ -156,7 +156,7 @@ const CardapioCategoriaEditCard = ({ data, setSalvarDados }) => {
                       setCliente(e)
                       handleChange({
                         target: {
-                          name: "cliente_id",
+                          name: 'cliente_id',
                           value: Number(e?.value),
                         },
                       })
@@ -165,14 +165,14 @@ const CardapioCategoriaEditCard = ({ data, setSalvarDados }) => {
                 </Col>
                 <Col md="12" className="mb-2">
                   <Label className="form-label" for="descricao">
-                    Descrição
+                    {t('Descrição')}
                   </Label>
                   <Input
-                    value={vDados?.descricao ?? ""}
+                    value={vDados?.descricao ?? ''}
                     type="textarea"
                     id="descricao"
                     name="descricao"
-                    style={{ minHeight: "100px" }}
+                    style={{ minHeight: '100px' }}
                     onChange={handleChange}
                   />
                 </Col>
@@ -185,14 +185,14 @@ const CardapioCategoriaEditCard = ({ data, setSalvarDados }) => {
                       onChange={(e) => {
                         handleChange({
                           target: {
-                            name: "ativo",
+                            name: 'ativo',
                             value: e.target.checked,
                           },
                         })
                       }}
                     />
                     <Label for="ativo" className="form-check-label mt-25">
-                      Categoria {vDados?.ativo ? "ativada" : "desativada"}
+                      Categoria {vDados?.ativo ? 'ativada' : 'desativada'}
                     </Label>
                   </div>
                 </Col>

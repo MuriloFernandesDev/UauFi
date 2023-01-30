@@ -1,25 +1,24 @@
 // ** React Imports
-import { useState, Fragment } from "react"
+import { useState, Fragment } from 'react'
 
 // ** Custom Components
-import Avatar from "@components/avatar"
+import Avatar from '@components/avatar'
 
 // ** Utils
-import { selectThemeColors } from "@utils"
+import { selectThemeColors } from '@utils'
 
 // ** API
-import api from "@src/services/api"
+import api from '@src/services/api'
 
 // ** Reactstrap Imports
-import { Label, Modal, ModalBody, ModalHeader, Row, Col } from "reactstrap"
+import { Label, Modal, ModalBody, ModalHeader, Row, Col } from 'reactstrap'
 
 // ** Third Party Components
-import { components } from "react-select"
-import AsyncSelect from "react-select/async"
-import { useTranslation } from "react-i18next"
+import AsyncSelect from 'react-select/async'
+import { useTranslation } from 'react-i18next'
 
 // ** Default Avatar Image
-import defaultAvatar from "@src/assets/images/avatars/avatar-blank.png"
+import defaultAvatar from '@src/assets/images/avatars/avatar-blank.png'
 
 const OptionComponent = ({ data, ...props }) => {
   return (
@@ -48,7 +47,7 @@ const Impersonar = ({
   setImpersonando,
 }) => {
   // ** Variáveis de estado
-  const [query, setQuery] = useState("")
+  const [query, setQuery] = useState('')
 
   // ** Hooks
   const { t } = useTranslation()
@@ -60,9 +59,9 @@ const Impersonar = ({
   const handleDBChange = (value) => {
     setImpersonando(true)
     api
-      .post("/cliente_login/auth/", {
+      .post('/cliente_login/auth/', {
         email: pEmail,
-        senha: "",
+        senha: '',
         email_impersonar: value.email,
       })
       .then((response) => {
@@ -75,7 +74,7 @@ const Impersonar = ({
 
   const loadOptionsDB = () => {
     return api
-      .get("/cliente_login/lista", { params: { q: query, limit: 20 } })
+      .get('/cliente_login/lista', { params: { q: query, limit: 20 } })
       .then((res) => {
         return res.data.map((ret) => ({
           label: ret.label,
@@ -115,9 +114,9 @@ const Impersonar = ({
               <AsyncSelect
                 defaultOptions
                 isClearable={true}
-                noOptionsMessage={() => t("Vazio")}
-                loadingMessage={() => t("Pesquisando...")}
-                placeholder={t("Selecione...")}
+                noOptionsMessage={() => t('Vazio')}
+                loadingMessage={() => t('Pesquisando...')}
+                placeholder={t('Selecione...')}
                 id="login_id"
                 name="db-react-select"
                 className="react-select"

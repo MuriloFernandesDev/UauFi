@@ -1,18 +1,18 @@
 // ** Custom Components
-import Avatar from "@components/avatar"
+import Avatar from '@components/avatar'
 
 // ** React Imports
-import { Link } from "react-router-dom"
+import { Link } from 'react-router-dom'
 
 // ** Hooks
-import { useEffect, useState, useRef } from "react"
+import { useEffect, useState, useRef } from 'react'
 
 // ** API
-import api from "@src/services/api"
+import api from '@src/services/api'
 
 // ** Third Party Components
-import PerfectScrollbar from "react-perfect-scrollbar"
-import { Gift } from "react-feather"
+import PerfectScrollbar from 'react-perfect-scrollbar'
+import { Gift } from 'react-feather'
 
 // ** Reactstrap Imports
 import {
@@ -23,8 +23,8 @@ import {
   DropdownItem,
   DropdownToggle,
   UncontrolledDropdown,
-} from "reactstrap"
-import { formatDate } from "@utils"
+} from 'reactstrap'
+import { formatDate } from '@utils'
 
 const NotificationDropdown = () => {
   const [vDados, setDados] = useState(null)
@@ -38,7 +38,7 @@ const NotificationDropdown = () => {
     vTimeoutPesquisa.current = setTimeout(() => {
       setProcessando(true)
       return api
-        .get("/usuario/aniversariantes")
+        .get('/usuario/aniversariantes')
         .then((res) => {
           setProcessando(false)
           setDados(res.data)
@@ -48,7 +48,7 @@ const NotificationDropdown = () => {
           setProcessando(false)
           setDados(null)
           getDados(60000)
-          console.error("Erro ao pegar dados:", error)
+          console.error('Erro ao pegar dados:', error)
         })
     }, t)
   }
@@ -85,7 +85,7 @@ const NotificationDropdown = () => {
                       initials
                       className="me-1"
                       color="light-primary"
-                      content={item.nome || ""}
+                      content={item.nome || ''}
                     />
                   )}
                 </div>

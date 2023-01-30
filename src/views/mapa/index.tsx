@@ -17,6 +17,7 @@ import AutoComplete from './components/AutoComplete'
 import { AbilityContext as PermissaoContext } from '@src/utility/context/Can'
 // ** Custom Hooks
 import { useSkin } from '@hooks/useSkin'
+import { useTranslation } from "react-i18next"
 
 const Mapa = () => {
   //state para definir o mapa de calor
@@ -53,6 +54,7 @@ const Mapa = () => {
   const permissao = useContext(PermissaoContext)
   // ** Hooks
   const { skin } = useSkin()
+  const { t } = useTranslation()
 
   //função para buscar mapa de calor quando o mapData estiver carregado
   const onLoad = useCallback(
@@ -60,26 +62,22 @@ const Mapa = () => {
       if (window.google && markerData.length > 0) {
         const heatmapData: any = []
         markerData.map((res: any) => {
-          // for (let i = 0; i < res.total_visitas; i++) {
           heatmapData.push({
             location: new window.google.maps.LatLng(res.lat, res.lng),
             weight: 1,
             radius: res.total_visitas,
           })
-          // }
         })
         setHeatMap(heatmapData)
       }
       if (window.google && markerDataOnlines.length > 0) {
         const heatmapData: any = []
         markerDataOnlines.map((res: any) => {
-          // for (let i = 0; i < res.total_visitas; i++) {
           heatmapData.push({
             location: new window.google.maps.LatLng(res.lat, res.lng),
             weight: 1,
             radius: res.total_usuarios_online,
           })
-          // }
         })
         setHeatMapOnlines(heatmapData)
       }
@@ -175,12 +173,11 @@ const Mapa = () => {
         <div className="misc-inner p-2 p-sm-3">
           <div className="w-100 text-center">
             <h2 className="mb-1">
-              Esse conteúdo não está disponível para sua conta 🔐
+            {`${t("Esse conteúdo não está disponível para sua conta ")} 🔐`}
             </h2>
             <p className="mb-2">
-              Entre em contato com o nosso suporte para habilitar essa opção!
+            {t("Entre em contato com o nosso suporte para habilitar essa opção!")}
             </p>
-
             <img
               className="img-fluid"
               src={
@@ -197,7 +194,7 @@ const Mapa = () => {
       ) : (
         <>
           <CardHeader className="pt-1 pe-1 pb-0">
-            <h5>Mapas</h5>
+            <h5>{t("Mapas")}</h5>
             <ButtonGroup>
               {vProcessando ? (
                 <div className="d-flex justify-content-center text-center align-items-center h-100">
@@ -211,7 +208,7 @@ const Mapa = () => {
                     active={mapType === 'Marcadores'}
                     outline
                   >
-                    Marcadores
+                    {t("Marcadores")}
                   </Button>
                   {permissao.can('read', 'mapa_calor') && (
                     <Button
@@ -220,7 +217,8 @@ const Mapa = () => {
                       active={mapType === 'Calor'}
                       outline
                     >
-                      Calor
+                      {t("Calor")}
+                      
                     </Button>
                   )}
 
@@ -230,7 +228,8 @@ const Mapa = () => {
                     active={mapType === 'Usuários online'}
                     outline
                   >
-                    Usuários online
+                    {t("Usuários online")}
+                
                   </Button>
                 </>
               )}
@@ -244,7 +243,7 @@ const Mapa = () => {
             ) : (
               <GoogleMapsComponent
                 onLoad={onLoad}
-                style={containerStyle}
+                mapContainerStyle={containerStyle}
                 center={center}
                 zoom={zoom}
                 options={{
@@ -254,6 +253,7 @@ const Mapa = () => {
                   //opções acimas desativam os controles de mapa que são cobrados a parte pelo google
                 }}
               >
+                <>
                 {/* componente para agrupar os marcadores e não sobrecarregar o app */}
                 {mapType === 'Marcadores' ? (
                   <MarkerClusterer options={options}>
@@ -261,6 +261,7 @@ const Mapa = () => {
                       markerData.map((location: any, index: any) => {
                         return (
                           <MarkerComponent
+                            position={{lat: location.lat, lng: location.lng}}
                             key={index}
                             data={location}
                             clusterer={clusterer}
@@ -276,6 +277,7 @@ const Mapa = () => {
                         markerDataOnlines.map((location: any, index: any) => {
                           return (
                             <MarkerComponent
+                              position={{lat: location.lat, lng: location.lng}}
                               key={index}
                               data={location}
                               clusterer={clusterer}
@@ -304,6 +306,7 @@ const Mapa = () => {
 
                 {/* componente para pesquisa de lugares */}
                 <AutoComplete setVLatLng={setVLatLng} setZoom={setZoom} />
+                </>
               </GoogleMapsComponent>
             )}
           </CardBody>

@@ -1,14 +1,16 @@
 // ** Third Party Components
-import { User, Wifi, UserPlus, Smartphone } from "react-feather"
+import { User, Wifi, UserPlus, Smartphone } from 'react-feather'
 
 // ** Custom Components
-import Avatar from "@components/avatar"
+import Avatar from '@components/avatar'
 
 // ** Hooks
-import { useEffect, useState } from "react"
+import { useEffect, useState } from 'react'
 
 // ** API
-import api from "@src/services/api"
+import api from '@src/services/api'
+
+import { useTranslation } from 'react-i18next'
 
 // ** Reactstrap Imports
 import {
@@ -20,7 +22,7 @@ import {
   Row,
   Col,
   Spinner,
-} from "reactstrap"
+} from 'reactstrap'
 
 const CardQuantidades = () => {
   const [vValor1, setValor1] = useState(null)
@@ -35,59 +37,61 @@ const CardQuantidades = () => {
   const [vValor4, setValor4] = useState(null)
   const [vProcessando4, setProcessando4] = useState(true)
 
+  const { t } = useTranslation()
+
   const getDados1 = () => {
     setProcessando1(true)
     return api
-      .get("/conexao/qtd_total/")
+      .get('/conexao/qtd_total/')
       .then((res) => {
         setProcessando1(false)
         setValor1(res.data.valor)
       })
       .catch((error) => {
         setProcessando1(false)
-        console.error("Erro ao pegar dados:", error)
+        console.error('Erro ao pegar dados:', error)
       })
   }
 
   const getDados2 = () => {
     setProcessando2(true)
     return api
-      .get("/conexao/qtd_dispositivo_online/")
+      .get('/conexao/qtd_dispositivo_online/')
       .then((res) => {
         setProcessando2(false)
         setValor2(res.data.valor)
       })
       .catch((error) => {
         setProcessando2(false)
-        console.error("Erro ao pegar dados:", error)
+        console.error('Erro ao pegar dados:', error)
       })
   }
 
   const getDados3 = () => {
     setProcessando3(true)
     return api
-      .get("/conexao/cadastro_total/")
+      .get('/conexao/cadastro_total/')
       .then((res) => {
         setProcessando3(false)
         setValor3(res.data.valor)
       })
       .catch((error) => {
         setProcessando3(false)
-        console.error("Erro ao pegar dados:", error)
+        console.error('Erro ao pegar dados:', error)
       })
   }
 
   const getDados4 = () => {
     setProcessando4(true)
     return api
-      .get("/conexao/usuario_total")
+      .get('/conexao/usuario_total')
       .then((res) => {
         setProcessando4(false)
         setValor4(res.data.valor)
       })
       .catch((error) => {
         setProcessando4(false)
-        console.error("Erro ao pegar dados:", error)
+        console.error('Erro ao pegar dados:', error)
       })
   }
 
@@ -102,7 +106,7 @@ const CardQuantidades = () => {
   return (
     <Card className="card-statistics">
       <CardHeader>
-        <h5>Quantidades totais</h5>
+        <h5>{t('Quantidades totais')}</h5>
       </CardHeader>
       <CardBody className="statistics-body">
         <Row>
@@ -121,7 +125,7 @@ const CardQuantidades = () => {
                 )}
 
                 <CardText className="font-small-3 mb-0">
-                  Conexões realizadas
+                  {t('Conexões realizadas')}
                 </CardText>
               </div>
             </div>
@@ -142,7 +146,7 @@ const CardQuantidades = () => {
                 )}
 
                 <CardText className="font-small-3 mb-0">
-                  Online no momento
+                  {t('Online no momento')}
                 </CardText>
               </div>
             </div>
@@ -163,7 +167,7 @@ const CardQuantidades = () => {
                 )}
 
                 <CardText className="font-small-3 mb-0">
-                  Cadastrados no seu wi-fi
+                  {t('Cadastrados no seu wi-fi')}
                 </CardText>
               </div>
             </div>
@@ -184,7 +188,7 @@ const CardQuantidades = () => {
                 )}
 
                 <CardText className="font-small-3 mb-0">
-                  Usuários conectaram
+                  {t('Usuários conectaram')}
                 </CardText>
               </div>
             </div>

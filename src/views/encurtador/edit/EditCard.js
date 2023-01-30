@@ -1,37 +1,38 @@
 // ** React
-import { Fragment, useEffect, useState } from "react"
-import { useNavigate } from "react-router-dom"
+import { Fragment, useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 // ** Reactstrap
-import { Row, Col, Card, Input, Button, Label } from "reactstrap"
+import { Row, Col, Card, Input, Button, Label } from 'reactstrap'
 
 // ** Icons
-import { CornerUpLeft, Check } from "react-feather"
-import { campoInvalido, mostrarMensagem } from "@utils"
-import { useForm } from "react-hook-form"
-import classnames from "classnames"
+import { CornerUpLeft, Check } from 'react-feather'
+import { campoInvalido, mostrarMensagem } from '@utils'
+import { useForm } from 'react-hook-form'
+import classnames from 'classnames'
 
 // ** Terceiros
-import Select from "react-select"
-import { useTranslation } from "react-i18next"
+import Select from 'react-select'
+import { useTranslation } from 'react-i18next'
 
 // ** API
-import api from "@src/services/api"
+import api from '@src/services/api'
 
 const EncurtadorEditCard = ({ data, setSalvarDados }) => {
   const navigate = useNavigate()
 
   // ** Hooks
   const { t } = useTranslation()
+
   const {
     setError,
     formState: { errors },
   } = useForm()
 
   const vCamposObrigatorios = [
-    { nome: "descricao" },
-    { nome: "url_redirect" },
-    { nome: "cliente_id", tipo: "int" },
+    { nome: 'descricao' },
+    { nome: 'url_redirect' },
+    { nome: 'cliente_id', tipo: 'int' },
   ]
 
   // ** States
@@ -50,7 +51,7 @@ const EncurtadorEditCard = ({ data, setSalvarDados }) => {
   }
 
   const getClientes = () => {
-    return api.get("/cliente/lista_simples").then((res) => {
+    return api.get('/cliente/lista_simples').then((res) => {
       setListaClientes(res.data)
 
       //Selecionar o item no componente
@@ -68,7 +69,7 @@ const EncurtadorEditCard = ({ data, setSalvarDados }) => {
       if (campoInvalido(vDados, null, campo.nome, campo.tipo)) {
         vCamposOK = false
         setError(campo.nome, {
-          type: "manual",
+          type: 'manual',
         })
       }
     })
@@ -77,9 +78,9 @@ const EncurtadorEditCard = ({ data, setSalvarDados }) => {
       setSalvarDados(vDados)
     } else {
       mostrarMensagem(
-        "Atenção!",
-        "Preencha todos os campos obrigatórios.",
-        "warning"
+        'Atenção!',
+        'Preencha todos os campos obrigatórios.',
+        'warning'
       )
     }
   }
@@ -99,7 +100,7 @@ const EncurtadorEditCard = ({ data, setSalvarDados }) => {
               <div>
                 <Button.Ripple
                   color="primary"
-                  onClick={() => navigate("/encurtador")}
+                  onClick={() => navigate('/encurtador')}
                 >
                   <CornerUpLeft size={17} />
                 </Button.Ripple>
@@ -126,9 +127,9 @@ const EncurtadorEditCard = ({ data, setSalvarDados }) => {
                   <Input
                     id="descricao"
                     name="descricao"
-                    value={vDados?.descricao ?? ""}
+                    value={vDados?.descricao ?? ''}
                     onChange={handleChange}
-                    invalid={campoInvalido(vDados, errors, "descricao")}
+                    invalid={campoInvalido(vDados, errors, 'descricao')}
                   />
                 </Col>
 
@@ -138,16 +139,16 @@ const EncurtadorEditCard = ({ data, setSalvarDados }) => {
                   </Label>
                   <Select
                     isClearable
-                    noOptionsMessage={() => t("Vazio")}
+                    noOptionsMessage={() => t('Vazio')}
                     id="cliente_id"
                     isDisabled={vDados.id === 0 && data.cliente_id > 0}
-                    placeholder={t("Selecione...")}
-                    className={classnames("react-select", {
-                      "is-invalid": campoInvalido(
+                    placeholder={t('Selecione...')}
+                    className={classnames('react-select', {
+                      'is-invalid': campoInvalido(
                         vDados,
                         errors,
-                        "cliente_id",
-                        "int"
+                        'cliente_id',
+                        'int'
                       ),
                     })}
                     classNamePrefix="select"
@@ -155,7 +156,7 @@ const EncurtadorEditCard = ({ data, setSalvarDados }) => {
                     onChange={(e) => {
                       setCliente(e)
                       handleChange({
-                        target: { name: "cliente_id", value: e?.value },
+                        target: { name: 'cliente_id', value: e?.value },
                       })
                     }}
                     options={vListaClientes}
@@ -169,9 +170,9 @@ const EncurtadorEditCard = ({ data, setSalvarDados }) => {
                     id="url_redirect"
                     name="url_redirect"
                     type="url"
-                    value={vDados?.url_redirect ?? ""}
+                    value={vDados?.url_redirect ?? ''}
                     onChange={handleChange}
-                    invalid={campoInvalido(vDados, errors, "url_redirect")}
+                    invalid={campoInvalido(vDados, errors, 'url_redirect')}
                   />
                 </Col>
               </Row>

@@ -1,22 +1,22 @@
 // ** React Import
-import { useState, useEffect } from "react"
+import { useState, useEffect } from 'react'
 
 // ** Custom Components
-import Sidebar from "@components/sidebar"
+import Sidebar from '@components/sidebar'
 
 // ** Third Party Components
-import Select from "react-select"
-import { useTranslation } from "react-i18next"
-import { useForm } from "react-hook-form"
+import Select from 'react-select'
+import { useTranslation } from 'react-i18next'
+import { useForm } from 'react-hook-form'
 
-import { useDispatch, useSelector } from "react-redux"
+import { useDispatch, useSelector } from 'react-redux'
 
 // ** Reactstrap Imports
-import { Button, Label, Form, Input } from "reactstrap"
+import { Button, Label, Form, Input } from 'reactstrap'
 
 const vListaSituacao = [
-  { value: "o", label: "Online" },
-  { value: "n", label: "Cadastro novo" },
+  { value: 'o', label: 'Online' },
+  { value: 'n', label: 'Cadastro novo' },
 ]
 
 const SidebarMaisFiltros = ({ open, toggleSidebar }) => {
@@ -49,8 +49,8 @@ const SidebarMaisFiltros = ({ open, toggleSidebar }) => {
     setDataInicial(store.params.datai)
     setDataFinal(store.params.dataf)
     //Valor padrão da situação (Online)
-    const vSituacaoArray = (store.params.situacao ?? "")
-      .split(",")
+    const vSituacaoArray = (store.params.situacao ?? '')
+      .split(',')
       .map((item) => item)
 
     setSituacao(
@@ -70,7 +70,7 @@ const SidebarMaisFiltros = ({ open, toggleSidebar }) => {
       <Form onSubmit={handleSubmit(onSubmit)}>
         <div className="mb-1">
           <Label className="form-label" for="data-inicio">
-            Conexão inicial
+            {t('Conexão inicial')}
           </Label>
 
           <Input
@@ -85,7 +85,7 @@ const SidebarMaisFiltros = ({ open, toggleSidebar }) => {
         </div>
         <div className="mb-1">
           <Label className="form-label" for="data-fim">
-            Conexão final
+            {t('Conexão final')}
           </Label>
 
           <Input
@@ -99,12 +99,12 @@ const SidebarMaisFiltros = ({ open, toggleSidebar }) => {
           />
         </div>
         <div className="mb-1">
-          <Label for="status-select">Situação</Label>
+          <Label for="status-select">{t('Situação')}</Label>
           <Select
             isClearable={true}
             isMulti={true}
-            placeholder={t("Selecione...")}
-            noOptionsMessage={() => t("Vazio")}
+            placeholder={t('Selecione...')}
+            noOptionsMessage={() => t('Vazio')}
             className="react-select"
             classNamePrefix="select"
             options={vListaSituacao}
@@ -115,10 +115,10 @@ const SidebarMaisFiltros = ({ open, toggleSidebar }) => {
           />
         </div>
         <Button type="submit" className="me-1" color="primary">
-          Aplicar
+          {t('Aplicar')}
         </Button>
         <Button type="reset" color="secondary" outline onClick={toggleSidebar}>
-          Cancelar
+          {t('Cancelar')}
         </Button>
       </Form>
     </Sidebar>

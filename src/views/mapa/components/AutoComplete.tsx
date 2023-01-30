@@ -1,15 +1,20 @@
 import { Autocomplete } from '@react-google-maps/api'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { Search } from 'react-feather'
 import { Input } from 'reactstrap'
 // ** Custom Components
-import Avatar from '@components/avatar'
+import AvatarComponent from './avatar'
 
-const AutoComplete = ({ setVLatLng, setZoom }) => {
-  const [autoComplete, setAutoComplete] = useState()
-  const [isSearch, setIsSearch] = useState(false)
+interface AutoCompleteProps {
+  setVLatLng: any,
+  setZoom: (prop: number) => void
+}
 
-  function onLoader(autocomplete) {
+const AutoComplete = ({ setVLatLng, setZoom }: AutoCompleteProps) => {
+  const [autoComplete, setAutoComplete] = useState<any>()
+  const [isSearch, setIsSearch] = useState<boolean>(false)
+
+  function onLoader(autocomplete: any) {
     setAutoComplete(autocomplete)
   }
 
@@ -39,9 +44,9 @@ const AutoComplete = ({ setVLatLng, setZoom }) => {
           gap: 5,
         }}
       >
-        <Avatar
-          onClick={() => setIsSearch(!isSearch)}
-          className="text-primary"
+        <AvatarComponent
+         onClick={() => setIsSearch(!isSearch)} 
+         className="text-primary"
           icon={<Search className="text-white" size={20} />}
         />
         <Input

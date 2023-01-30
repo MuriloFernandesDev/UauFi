@@ -1,25 +1,28 @@
 // ** React Imports
-import { Fragment, useState, useEffect } from "react"
+import { Fragment, useState, useEffect } from 'react'
 
 // ** Reactstrap Imports
-import { Card, CardBody, CardTitle, Button, Spinner } from "reactstrap"
+import { Card, CardBody, CardTitle, Button, Spinner } from 'reactstrap'
 
-import { Link } from "react-router-dom"
+import { Link } from 'react-router-dom'
 
 // ** Store & Actions
-import { getDispositivos } from "../store"
+import { getDispositivos } from '../store'
 
 // ** Utils
-import { formatDateTime } from "@utils"
+import { formatDateTime } from '@utils'
+
+import { useTranslation } from 'react-i18next'
 
 // ** Icons Imports
-import { Trash } from "react-feather"
-import { auto } from "@popperjs/core"
+import { Trash } from 'react-feather'
+import { auto } from '@popperjs/core'
 
 const Dispositivos = (dados) => {
   // ** States
   const [vCarregando, setCarregando] = useState(true)
   const [vDados, setDados] = useState(true)
+  const { t } = useTranslation()
 
   const handleDelete = (id) => {
     console.log(id)
@@ -41,8 +44,10 @@ const Dispositivos = (dados) => {
   return (
     <Fragment>
       <Card>
-        <CardBody style={{ maxHeight: "600px", overflow: auto }}>
-          <CardTitle className="mb-75">Dispositivos utilizados</CardTitle>
+        <CardBody style={{ maxHeight: '600px', overflow: auto }}>
+          <CardTitle className="mb-75">
+            {t('Dispositivos utilizados')}
+          </CardTitle>
           {!vCarregando ? (
             vDados?.length > 0 ? (
               vDados.map((item, index) => {

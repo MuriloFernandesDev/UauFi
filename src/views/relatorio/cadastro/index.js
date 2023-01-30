@@ -1,36 +1,36 @@
 // ** React
-import { Fragment, useState, useContext } from "react"
+import { Fragment, useState, useContext } from 'react'
 
 // ** Reactstrap
-import { Row, Col, Card, Input, Button, Label, Spinner } from "reactstrap"
-import StatsHorizontal from "@components/widgets/stats/StatsHorizontal"
+import { Row, Col, Card, Input, Button, Label, Spinner } from 'reactstrap'
+import StatsHorizontal from '@components/widgets/stats/StatsHorizontal'
 
 // ** Context
-import { ThemeColors } from "@src/utility/context/ThemeColors"
+import { ThemeColors } from '@src/utility/context/ThemeColors'
 
 // ** Utils
-import { campoInvalido, mostrarMensagem } from "@utils"
+import { campoInvalido, mostrarMensagem } from '@utils'
 
 // ** Icons
-import { Calendar, Check, Clock, UserPlus, Wifi } from "react-feather"
+import { Calendar, Check, Clock, UserPlus, Wifi } from 'react-feather'
 
 // ** Terceiros
-import { useTranslation } from "react-i18next"
+import { useTranslation } from 'react-i18next'
 
-import CardQtdUsuario from "./CardQtdUsuario"
-import CardFaixaEtaria from "./CardFaixaEtaria"
-import CardGenero from "./CardGenero"
+import CardQtdUsuario from './CardQtdUsuario'
+import CardFaixaEtaria from './CardFaixaEtaria'
+import CardGenero from './CardGenero'
 
 // ** API
-import api from "@src/services/api"
+import api from '@src/services/api'
 
 // ** Styles
-import "@styles/react/libs/charts/apex-charts.scss"
-import "@styles/base/pages/dashboard-ecommerce.scss"
-import "@styles/react/libs/charts/recharts.scss"
+import '@styles/react/libs/charts/apex-charts.scss'
+import '@styles/base/pages/dashboard-ecommerce.scss'
+import '@styles/react/libs/charts/recharts.scss'
 
 // ** Third Party Components
-import "chart.js/auto"
+import 'chart.js/auto'
 
 const ExportarEmail = () => {
   // ** Hooks
@@ -42,7 +42,7 @@ const ExportarEmail = () => {
   // ** States
   const [vDados, setDados] = useState({ data_inicial: null, data_final: null })
   const [vErros, setErros] = useState({})
-  const vCamposObrigatorios = [{ nome: "data_inicial" }, { nome: "data_final" }]
+  const vCamposObrigatorios = [{ nome: 'data_inicial' }, { nome: 'data_final' }]
   const [vDatasOK, setDatasOK] = useState(false)
 
   const [vValor1, setValor1] = useState(null)
@@ -94,7 +94,7 @@ const ExportarEmail = () => {
       })
       .catch((error) => {
         setProcessando1(false)
-        console.error("Erro ao pegar dados:", error)
+        console.error('Erro ao pegar dados:', error)
       })
   }
 
@@ -110,7 +110,7 @@ const ExportarEmail = () => {
       })
       .catch((error) => {
         setProcessando2(false)
-        console.error("Erro ao pegar dados:", error)
+        console.error('Erro ao pegar dados:', error)
       })
   }
 
@@ -126,7 +126,7 @@ const ExportarEmail = () => {
       })
       .catch((error) => {
         setProcessando3(false)
-        console.error("Erro ao pegar dados:", error)
+        console.error('Erro ao pegar dados:', error)
       })
   }
 
@@ -140,7 +140,7 @@ const ExportarEmail = () => {
       })
       .catch((error) => {
         setProcessando4(false)
-        console.error("Erro ao pegar dados:", error)
+        console.error('Erro ao pegar dados:', error)
       })
   }
 
@@ -156,7 +156,7 @@ const ExportarEmail = () => {
       })
       .catch((error) => {
         setProcessando5(false)
-        console.error("Erro ao pegar dados:", error)
+        console.error('Erro ao pegar dados:', error)
       })
   }
 
@@ -172,7 +172,7 @@ const ExportarEmail = () => {
       })
       .catch((error) => {
         setProcessando6(false)
-        console.error("Erro ao pegar dados:", error)
+        console.error('Erro ao pegar dados:', error)
       })
   }
 
@@ -188,7 +188,7 @@ const ExportarEmail = () => {
       })
       .catch((error) => {
         setProcessando10(false)
-        console.error("Erro ao pegar dados:", error)
+        console.error('Erro ao pegar dados:', error)
       })
   }
 
@@ -204,7 +204,7 @@ const ExportarEmail = () => {
       })
       .catch((error) => {
         setProcessando7(false)
-        console.error("Erro ao pegar dados:", error)
+        console.error('Erro ao pegar dados:', error)
       })
   }
 
@@ -220,7 +220,7 @@ const ExportarEmail = () => {
       })
       .catch((error) => {
         setProcessando8(false)
-        console.error("Erro ao pegar dados:", error)
+        console.error('Erro ao pegar dados:', error)
       })
   }
 
@@ -234,7 +234,7 @@ const ExportarEmail = () => {
       })
       .catch((error) => {
         setProcessando9(false)
-        console.error("Erro ao pegar dados:", error)
+        console.error('Erro ao pegar dados:', error)
       })
   }
 
@@ -256,15 +256,15 @@ const ExportarEmail = () => {
       getDados2()
       getDados3()
       getDados4()
-      getDados5("day")
-      getDados6("day")
-      getDados7("day")
+      getDados5('day')
+      getDados6('day')
+      getDados7('day')
       getDados8()
       getDados9()
-      getDados10("day")
+      getDados10('day')
       setDatasOK(true)
     } else {
-      mostrarMensagem("Atenção!", "Selecione as duas datas.", "warning")
+      mostrarMensagem('Atenção!', 'Selecione as duas datas.', 'warning')
     }
   }
 
@@ -274,34 +274,35 @@ const ExportarEmail = () => {
         <Col md="8" className="offset-md-2 mb-2">
           <Card className="mb-1 p-2">
             <h5 className="text-center ps-2 pe-2">
-              Análise quantitativa dos usuários que visitaram seu
-              estabelecimento nas datas informadas
+              {t(
+                'Análise quantitativa dos usuários que visitaram seu estabelecimento nas datas informadas'
+              )}
             </h5>
             <Row className="mt-2">
               <Col md="4">
                 <Label className="form-label" for="data_inicial">
-                  Data inicial da visita*
+                  {t('Data inicial da visita')}*
                 </Label>
                 <Input
                   id="data_inicial"
                   name="data_inicial"
                   type="date"
-                  value={vDados.data_inicial ?? ""}
+                  value={vDados.data_inicial ?? ''}
                   onChange={handleChange}
-                  invalid={campoInvalido(vDados, vErros, "data_inicial")}
+                  invalid={campoInvalido(vDados, vErros, 'data_inicial')}
                 />
               </Col>
               <Col md="4">
                 <Label className="form-label" for="data_final">
-                  Data final da visita*
+                  {t('Data final da visita')}*
                 </Label>
                 <Input
                   id="data_final"
                   name="data_final"
                   type="date"
-                  value={vDados.data_final ?? ""}
+                  value={vDados.data_final ?? ''}
                   onChange={handleChange}
-                  invalid={campoInvalido(vDados, vErros, "data_final")}
+                  invalid={campoInvalido(vDados, vErros, 'data_final')}
                 />
               </Col>
               <Col md="4" className="text-end">
@@ -311,7 +312,7 @@ const ExportarEmail = () => {
                   className="mt-2"
                 >
                   <Check size={17} />
-                  <span className="align-middle ms-25">{t("Visualizar")}</span>
+                  <span className="align-middle ms-25">{t('Visualizar')}</span>
                 </Button.Ripple>
               </Col>
             </Row>
@@ -365,7 +366,7 @@ const ExportarEmail = () => {
                   icon={<Calendar size={21} />}
                   color="warning"
                   stats={vValor3}
-                  statTitle="Tempo médio desde a última visita"
+                  statTitle={t('Tempo médio desde a última visita')}
                 />
               )}
             </Col>
@@ -381,7 +382,7 @@ const ExportarEmail = () => {
                   icon={<UserPlus size={21} />}
                   color="primary"
                   stats={vValor4}
-                  statTitle="Visitas no período"
+                  statTitle={t('Visitas no período')}
                 />
               )}
             </Col>
@@ -390,7 +391,7 @@ const ExportarEmail = () => {
             <Col md="6">
               <CardQtdUsuario
                 primary={colors.primary.main}
-                titulo={"Quantidade de usuários"}
+                titulo={'Quantidade de usuários'}
                 dados={vValor5}
                 proc={vProcessando5}
                 getdados={getDados5}
@@ -399,7 +400,7 @@ const ExportarEmail = () => {
             <Col md="6">
               <CardQtdUsuario
                 primary={colors.primary.main}
-                titulo={"Total de conexões"}
+                titulo={'Total de conexões'}
                 dados={vValor6}
                 proc={vProcessando6}
                 getdados={getDados6}
@@ -410,7 +411,7 @@ const ExportarEmail = () => {
             <Col md="6">
               <CardQtdUsuario
                 primary={colors.primary.main}
-                titulo={"Total de MACs não autenticados"}
+                titulo={'Total de MACs não autenticados'}
                 dados={vValor10}
                 proc={vProcessando10}
                 getdados={getDados10}
@@ -419,7 +420,7 @@ const ExportarEmail = () => {
             <Col md="6">
               <CardQtdUsuario
                 primary={colors.primary.main}
-                titulo={"Tempo médio de permanência por dia (em minutos)"}
+                titulo={t('Tempo médio de permanência por dia (em minutos)')}
                 dados={vValor8}
                 proc={vProcessando8}
                 getdados={getDados8}
@@ -431,7 +432,7 @@ const ExportarEmail = () => {
             <Col md="6">
               <CardGenero
                 primary={colors.primary.main}
-                titulo={"Gêneros por período"}
+                titulo={t('Gêneros por período')}
                 dados={vValor7}
                 proc={vProcessando7}
                 getdados={getDados7}
@@ -440,7 +441,7 @@ const ExportarEmail = () => {
             <Col md="6">
               <CardFaixaEtaria
                 primary={colors.primary.main}
-                titulo={"Usuários por faixa etária"}
+                titulo={t('Usuários por faixa etária')}
                 dados={vValor9}
                 proc={vProcessando9}
                 getdados={getDados9}

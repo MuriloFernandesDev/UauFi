@@ -1,20 +1,20 @@
 // ** React
-import { Fragment, useEffect, useState } from "react"
-import { useNavigate } from "react-router-dom"
-import { useForm } from "react-hook-form"
-import classnames from "classnames"
+import { Fragment, useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { useForm } from 'react-hook-form'
+import classnames from 'classnames'
 
 // ** Reactstrap
-import { Row, Col, Card, Input, Button, Label, Form } from "reactstrap"
+import { Row, Col, Card, Input, Button, Label, Form } from 'reactstrap'
 
 // ** Icons
-import { CornerUpLeft, Check } from "react-feather"
-import { campoInvalido, mostrarMensagem } from "@utils"
+import { CornerUpLeft, Check } from 'react-feather'
+import { campoInvalido, mostrarMensagem } from '@utils'
 
 // ** Terceiros
-import Select from "react-select"
-import { useTranslation } from "react-i18next"
-import { getHotspot, getPlano } from "../store"
+import Select from 'react-select'
+import { useTranslation } from 'react-i18next'
+import { getHotspot, getPlano } from '../store'
 
 const EventoEditCard = ({ data, setSalvarDados }) => {
   const navigate = useNavigate()
@@ -27,10 +27,10 @@ const EventoEditCard = ({ data, setSalvarDados }) => {
   } = useForm()
 
   const vCamposObrigatorios = [
-    { nome: "nome" },
-    { nome: "data_inicio" },
-    { nome: "data_fim" },
-    { nome: "hotspot_id", tipo: "int" },
+    { nome: 'nome' },
+    { nome: 'data_inicio' },
+    { nome: 'data_fim' },
+    { nome: 'hotspot_id', tipo: 'int' },
   ]
 
   // ** States
@@ -83,7 +83,7 @@ const EventoEditCard = ({ data, setSalvarDados }) => {
       if (campoInvalido(vDados, null, campo.nome, campo.tipo)) {
         vCamposOK = false
         setError(campo.nome, {
-          type: "manual",
+          type: 'manual',
         })
       }
     })
@@ -92,9 +92,9 @@ const EventoEditCard = ({ data, setSalvarDados }) => {
       setSalvarDados(vDados)
     } else {
       mostrarMensagem(
-        "Atenção!",
-        "Preencha todos os campos obrigatórios.",
-        "warning"
+        'Atenção!',
+        'Preencha todos os campos obrigatórios.',
+        'warning'
       )
     }
   }
@@ -114,7 +114,7 @@ const EventoEditCard = ({ data, setSalvarDados }) => {
               <div>
                 <Button.Ripple
                   color="primary"
-                  onClick={() => navigate("/evento")}
+                  onClick={() => navigate('/evento')}
                 >
                   <CornerUpLeft size={17} />
                 </Button.Ripple>
@@ -122,7 +122,7 @@ const EventoEditCard = ({ data, setSalvarDados }) => {
               <div>
                 <Button.Ripple color="success" onClick={setDados}>
                   <Check size={17} />
-                  <span className="align-middle ms-25">Salvar</span>
+                  <span className="align-middle ms-25">{t('Salvar')}</span>
                 </Button.Ripple>
               </div>
             </div>
@@ -143,9 +143,9 @@ const EventoEditCard = ({ data, setSalvarDados }) => {
                       <Input
                         id="nome"
                         name="nome"
-                        value={vDados?.nome ?? ""}
+                        value={vDados?.nome ?? ''}
                         onChange={handleChange}
-                        invalid={campoInvalido(vDados, errors, "nome")}
+                        invalid={campoInvalido(vDados, errors, 'nome')}
                       />
                     </Col>
                     <Col lg="6" md="6" className="mb-2">
@@ -156,10 +156,10 @@ const EventoEditCard = ({ data, setSalvarDados }) => {
                         id="voucher"
                         name="voucher"
                         maxLength={20}
-                        value={vDados?.voucher ?? ""}
+                        value={vDados?.voucher ?? ''}
                         onChange={handleChange}
                       />
-                    </Col>{" "}
+                    </Col>{' '}
                   </Row>
                 </Col>
 
@@ -167,30 +167,30 @@ const EventoEditCard = ({ data, setSalvarDados }) => {
                   <Row>
                     <Col lg="6" md="6" className="mb-2">
                       <Label className="form-label" for="data_inicio">
-                        Data de início*
+                        {t('Data de início')}*
                       </Label>
                       <Input
                         id="data_inicio"
                         name="data_inicio"
                         type="datetime-local"
-                        value={vDados?.data_inicio ?? ""}
+                        value={vDados?.data_inicio ?? ''}
                         onChange={handleChange}
-                        invalid={campoInvalido(vDados, errors, "data_inicio")}
+                        invalid={campoInvalido(vDados, errors, 'data_inicio')}
                       />
                     </Col>
 
                     <Col lg="6" md="6" className="mb-2">
                       <Label className="form-label" for="data_fim">
-                        Data final*
+                        {t('Data final')}*
                       </Label>
 
                       <Input
                         id="data_fim"
                         name="data_fim"
                         type="datetime-local"
-                        value={vDados?.data_fim ?? ""}
+                        value={vDados?.data_fim ?? ''}
                         onChange={handleChange}
-                        invalid={campoInvalido(vDados, errors, "data_fim")}
+                        invalid={campoInvalido(vDados, errors, 'data_fim')}
                       />
                     </Col>
                   </Row>
@@ -200,12 +200,12 @@ const EventoEditCard = ({ data, setSalvarDados }) => {
                   <Row>
                     <Col lg="6" md="6" className="mb-2">
                       <Label className="form-label" for="plano-conexao-id">
-                        Plano de conexão
+                        {t('Plano de conexão')}
                       </Label>
                       <Select
                         id="plano-conexao-id"
-                        noOptionsMessage={() => t("Vazio")}
-                        placeholder={t("Selecione...")}
+                        noOptionsMessage={() => t('Vazio')}
+                        placeholder={t('Selecione...')}
                         value={vPlano}
                         options={vListaPlanos}
                         className="react-select"
@@ -214,7 +214,7 @@ const EventoEditCard = ({ data, setSalvarDados }) => {
                           setPlano(e)
                           handleChange({
                             target: {
-                              name: "plano_conexao_id",
+                              name: 'plano_conexao_id',
                               value: Number(e?.value),
                             },
                           })
@@ -224,23 +224,23 @@ const EventoEditCard = ({ data, setSalvarDados }) => {
 
                     <Col lg="6" md="6" className="mb-2">
                       <Label className="form-label" for="hotspot_id">
-                        Selecione um Hotspot*
+                        {t('Selecione um Hotspot')}*
                       </Label>
 
                       <Select
                         isClearable
                         name="hotspot_id"
-                        noOptionsMessage={() => t("Vazio")}
-                        placeholder={t("Selecione...")}
+                        noOptionsMessage={() => t('Vazio')}
+                        placeholder={t('Selecione...')}
                         value={vHotspot}
                         options={vListaHotspots}
                         classNamePrefix="select"
-                        className={classnames("react-select", {
-                          "is-invalid": campoInvalido(
+                        className={classnames('react-select', {
+                          'is-invalid': campoInvalido(
                             vDados,
                             errors,
-                            "hotspot_id",
-                            "int"
+                            'hotspot_id',
+                            'int'
                           ),
                         })}
                         isDisabled={vDados.id === 0 && data.hotspot_id > 0}
@@ -248,7 +248,7 @@ const EventoEditCard = ({ data, setSalvarDados }) => {
                           setHotspot(e)
                           handleChange({
                             target: {
-                              name: "hotspot_id",
+                              name: 'hotspot_id',
                               value: Number(e?.value),
                             },
                           })
@@ -269,7 +269,7 @@ const EventoEditCard = ({ data, setSalvarDados }) => {
                           onChange={(e) => {
                             handleChange({
                               target: {
-                                name: "ativo",
+                                name: 'ativo',
                                 value: e.target.checked,
                               },
                             })
@@ -277,8 +277,8 @@ const EventoEditCard = ({ data, setSalvarDados }) => {
                         />
                         <Label for="ativo" className="form-check-label mt-25">
                           {vDados?.ativo
-                            ? "Voucher ativo"
-                            : "Voucher desativado"}
+                            ? 'Voucher ativo'
+                            : 'Voucher desativado'}
                         </Label>
                       </div>
                     </Col>

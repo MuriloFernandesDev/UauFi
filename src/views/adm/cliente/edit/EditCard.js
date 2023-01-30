@@ -1,7 +1,7 @@
 // ** React
-import { Fragment, useEffect, useState } from "react"
-import { Link, useNavigate } from "react-router-dom"
-import { useForm } from "react-hook-form"
+import { Fragment, useEffect, useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { useForm } from 'react-hook-form'
 
 // ** Reactstrap
 import {
@@ -17,38 +17,38 @@ import {
   Nav,
   NavItem,
   NavLink,
-} from "reactstrap"
+} from 'reactstrap'
 
 // ** Default Imagem
-import defaultImagem from "@src/assets/images/pages/semfoto.png"
+import defaultImagem from '@src/assets/images/pages/semfoto.png'
 
 // ** Icons
-import { CornerUpLeft, Check, Trash } from "react-feather"
+import { CornerUpLeft, Check, Trash } from 'react-feather'
 
-import { useTranslation } from "react-i18next"
+import { useTranslation } from 'react-i18next'
 
 // ** Terceiros
-import Cleave from "cleave.js/react"
-import "cleave.js/dist/addons/cleave-phone.br"
-import Select from "react-select"
-import classnames from "classnames"
+import Cleave from 'cleave.js/react'
+import 'cleave.js/dist/addons/cleave-phone.br'
+import Select from 'react-select'
+import classnames from 'classnames'
 
 // ** API
-import api from "@src/services/api"
+import api from '@src/services/api'
 
 // ** API
-import viacep from "@src/services/viacep"
+import viacep from '@src/services/viacep'
 
 // ** Utils
-import { removerAcentos, campoInvalido, mostrarMensagem } from "@utils"
+import { removerAcentos, campoInvalido, mostrarMensagem } from '@utils'
 
-import toast from "react-hot-toast"
+import toast from 'react-hot-toast'
 
 const vListaArtigoGenero = [
-  { value: "à", label: "à" },
-  { value: "o", label: "o" },
-  { value: "a", label: "a" },
-  { value: "ao", label: "ao" },
+  { value: 'à', label: 'à' },
+  { value: 'o', label: 'o' },
+  { value: 'a', label: 'a' },
+  { value: 'ao', label: 'ao' },
 ]
 
 const ClienteEditCard = ({ data, setSalvarDados }) => {
@@ -62,14 +62,14 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
   } = useForm()
 
   const vCamposObrigatorios = [
-    { nome: "nome" },
-    { nome: "tel_1" },
-    { nome: "endereco" },
-    { nome: "endereco_nr" },
-    { nome: "breve_descricao" },
-    { nome: "informacoes_gerais" },
-    { nome: "cliente_agregador" },
-    { nome: "categoria_id", tipo: "int" },
+    { nome: 'nome' },
+    { nome: 'tel_1' },
+    { nome: 'endereco' },
+    { nome: 'endereco_nr' },
+    { nome: 'breve_descricao' },
+    { nome: 'informacoes_gerais' },
+    { nome: 'cliente_agregador' },
+    { nome: 'categoria_id', tipo: 'int' },
   ]
 
   // ** States
@@ -88,7 +88,7 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
   const [vListaCategorias, setListaCategorias] = useState(null)
   const [vListaAgregadores, setListaAgregadores] = useState(null)
 
-  const [active, setActive] = useState("1")
+  const [active, setActive] = useState('1')
 
   const handleChange = (e) => {
     const { name, value } = e.target
@@ -128,7 +128,7 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
   }
 
   const getEstados = () => {
-    return api.get("/estado").then((res) => {
+    return api.get('/estado').then((res) => {
       setListaEstados(
         res.data.map((ret) => ({
           label: ret.nome,
@@ -155,7 +155,7 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
   }
 
   const getCategorias = () => {
-    return api.get("/categoria").then((res) => {
+    return api.get('/categoria').then((res) => {
       setListaCategorias(
         res.data.map((ret) => ({
           label: ret.nome,
@@ -178,7 +178,7 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
   }
 
   const getAgregadores = () => {
-    return api.get("/cliente/agregador").then((res) => {
+    return api.get('/cliente/agregador').then((res) => {
       setListaAgregadores(
         res.data.map((ret) => ({
           label: ret.nome,
@@ -189,7 +189,7 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
       //Selecionar o item no componente
       if (data?.cliente_agregador) {
         const vAgregadorArray = data?.cliente_agregador
-          ?.split(",")
+          ?.split(',')
           .map((item) => parseInt(item))
         setAgregador(
           res.data
@@ -220,17 +220,17 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
 
   const handleGetCEP = (e) => {
     const cepString = e.target.value
-    const cep = cepString.replace(/\D/g, "")
+    const cep = cepString.replace(/\D/g, '')
 
     viacep
       .get(`${cep}/json`)
       .then((response) => {
         const addressData = response.data
         handleChange({
-          target: { name: "endereco", value: addressData.logradouro },
+          target: { name: 'endereco', value: addressData.logradouro },
         })
         handleChange({
-          target: { name: "bairro", value: addressData.bairro },
+          target: { name: 'bairro', value: addressData.bairro },
         })
 
         const estadoSel = vListaEstados.filter(
@@ -239,7 +239,7 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
 
         setEstado(estadoSel)
         handleChange({
-          target: { name: "estado_id", value: estadoSel.value },
+          target: { name: 'estado_id', value: estadoSel.value },
         })
 
         api.get(`/cidade/por_estado/${estadoSel.value}`).then((res) => {
@@ -261,40 +261,40 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
           setCidade(cidadeSel || null)
 
           handleChange({
-            target: { name: "cidade_id", value: cidadeSel?.id || null },
+            target: { name: 'cidade_id', value: cidadeSel?.id || null },
           })
         })
       })
 
       .catch(() => {
-        toast.warning("CEP não encontrado!", {
-          position: "bottom-right",
+        toast.warning('CEP não encontrado!', {
+          position: 'bottom-right',
         })
       })
   }
 
   const handleArrayTelefoneBlocks = () => {
-    if (i18n.language === "br") {
+    if (i18n.language === 'br') {
       return [2, 5, 4]
-    } else if (i18n.language === "pt") {
+    } else if (i18n.language === 'pt') {
       return [3, 3, 3]
-    } else if (i18n.language === "en") {
+    } else if (i18n.language === 'en') {
       return [3, 3, 4]
-    } else if (i18n.language === "es") {
+    } else if (i18n.language === 'es') {
       return [3, 2, 2, 2]
     }
   }
   const handleArrayTelefoneDelimiters = () => {
-    if (i18n.language === "es") {
-      return [" ", " ", " "]
+    if (i18n.language === 'es') {
+      return [' ', ' ', ' ']
     } else {
-      return [" ", " "]
+      return [' ', ' ']
     }
   }
 
-  let optTel = { phone: true, phoneRegionCode: "BR" }
+  let optTel = { phone: true, phoneRegionCode: 'BR' }
 
-  if (i18n.language !== "br") {
+  if (i18n.language !== 'br') {
     optTel = {
       delimiters: handleArrayTelefoneDelimiters(),
       blocks: handleArrayTelefoneBlocks(),
@@ -302,7 +302,7 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
     }
   }
 
-  const optCep = { delimiters: [".", "-"], blocks: [2, 3, 3], uppercase: true }
+  const optCep = { delimiters: ['.', '-'], blocks: [2, 3, 3], uppercase: true }
 
   const setDados = () => {
     let vCamposOK = true
@@ -310,7 +310,7 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
       if (campoInvalido(vDados, null, campo.nome, campo.tipo)) {
         vCamposOK = false
         setError(campo.nome, {
-          type: "manual",
+          type: 'manual',
         })
       }
     })
@@ -319,9 +319,9 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
       setSalvarDados(vDados)
     } else {
       mostrarMensagem(
-        "Atenção!",
-        "Preencha todos os campos obrigatórios.",
-        "warning"
+        'Atenção!',
+        'Preencha todos os campos obrigatórios.',
+        'warning'
       )
     }
   }
@@ -365,22 +365,22 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
             <Nav tabs>
               <NavItem>
                 <NavLink
-                  active={active === "1"}
+                  active={active === '1'}
                   onClick={() => {
-                    toggle("1")
+                    toggle('1')
                   }}
                 >
-                  Dados básicos
+                  {t('Dados básicos')}
                 </NavLink>
               </NavItem>
               <NavItem>
                 <NavLink
-                  active={active === "2"}
+                  active={active === '2'}
                   onClick={() => {
-                    toggle("2")
+                    toggle('2')
                   }}
                 >
-                  Gerencial
+                  {t('Gerencial')}
                 </NavLink>
               </NavItem>
             </Nav>
@@ -392,7 +392,9 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                       <Row>
                         <Col className="mb-2" sm="12">
                           <div className="border rounded p-2">
-                            <h5 className="mb-1">Logotipo do Dashboard - modo claro</h5>
+                            <h5 className="mb-1">
+                              {t('Logotipo do Dashboard - modo claro')}
+                            </h5>
                             <div className="d-flex flex-column flex-md-row">
                               <img
                                 className="me-2 mb-1 mb-md-0 img-fluid img-proporcional"
@@ -408,9 +410,9 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                               <div>
                                 <div className="mb-1">
                                   <small className="text-muted">
-                                    Resolução recomendada: 800x800px.
+                                    {t('Resolução recomendada')}: 800x800px.
                                     <br />
-                                    Tamanho máximo: 250kB.
+                                    {t('Tamanho máximo')}: 250kB.
                                   </small>
                                 </div>
                                 <div className="d-inline-block">
@@ -422,7 +424,7 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                                       color="secondary"
                                       outline
                                     >
-                                      Selecionar imagem
+                                      {t('Selecionar imagem')}
                                       <Input
                                         type="file"
                                         name="logo"
@@ -437,7 +439,7 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                                       onClick={(e) => {
                                         e.preventDefault()
                                         handleChange({
-                                          target: { name: "logo", value: null },
+                                          target: { name: 'logo', value: null },
                                         })
                                       }}
                                     >
@@ -455,7 +457,9 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                       <Row>
                         <Col className="mb-2" sm="12">
                           <div className="border rounded p-2">
-                            <h5 className="mb-1">Logotipo do Dashboard - modo escuro</h5>
+                            <h5 className="mb-1">
+                              {t('Logotipo do Dashboard - modo escuro')}
+                            </h5>
                             <div className="d-flex flex-column flex-md-row">
                               <img
                                 className="me-2 mb-1 mb-md-0 img-fluid img-proporcional"
@@ -471,9 +475,9 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                               <div>
                                 <div className="mb-1">
                                   <small className="text-muted">
-                                    Resolução recomendada: 800x800px.
+                                    {t('Resolução recomendada')}: 800x800px.
                                     <br />
-                                    Tamanho máximo: 250kB.
+                                    {t('Tamanho máximo')}: 250kB.
                                   </small>
                                 </div>
                                 <div className="d-inline-block">
@@ -485,7 +489,7 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                                       color="secondary"
                                       outline
                                     >
-                                      Selecionar imagem
+                                      {t('Selecionar imagem')}
                                       <Input
                                         type="file"
                                         name="logo_dark"
@@ -500,7 +504,10 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                                       onClick={(e) => {
                                         e.preventDefault()
                                         handleChange({
-                                          target: { name: "logo_dark", value: null },
+                                          target: {
+                                            name: 'logo_dark',
+                                            value: null,
+                                          },
                                         })
                                       }}
                                     >
@@ -514,19 +521,19 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                         </Col>
                       </Row>
                     </Col>
-                    
+
                     <Col lg="12">
                       <Row>
                         <Col md="12" className="mb-2">
                           <Label className="form-label" for="nome">
-                            Nome completo*
+                            {t('Nome completo')}*
                           </Label>
                           <Input
                             id="nome"
                             name="nome"
-                            value={vDados?.nome ?? ""}
+                            value={vDados?.nome ?? ''}
                             onChange={handleChange}
-                            invalid={campoInvalido(vDados, errors, "nome")}
+                            invalid={campoInvalido(vDados, errors, 'nome')}
                           />
                         </Col>
                         <Col md="6" className="mb-2">
@@ -537,19 +544,19 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                             id="email"
                             name="email"
                             type="email"
-                            value={vDados?.email ?? ""}
+                            value={vDados?.email ?? ''}
                             onChange={handleChange}
                           />
                         </Col>
                         <Col md="6" className="mb-2">
                           <Label className="form-label" for="site">
-                            Site institucional
+                            {t('Site institucional')}
                           </Label>
                           <Input
                             id="site"
                             name="site"
                             type="url"
-                            value={vDados?.site ?? ""}
+                            value={vDados?.site ?? ''}
                             onChange={handleChange}
                           />
                         </Col>
@@ -558,20 +565,20 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
 
                     <Col md="5" className="mb-2">
                       <Label className="form-label" for="artigo_genero">
-                        Tratamento
+                        {t('Tratamento')}
                       </Label>
                       <Select
                         isClearable
                         id="artigo_genero"
-                        placeholder={t("Selecione...")}
-                        noOptionsMessage={() => t("Vazio")}
+                        placeholder={t('Selecione...')}
+                        noOptionsMessage={() => t('Vazio')}
                         className="react-select"
                         classNamePrefix="select"
                         value={vArtigoGenero}
                         onChange={(e) => {
                           setArtigoGenero(e)
                           handleChange({
-                            target: { name: "artigo_genero", value: e.value },
+                            target: { name: 'artigo_genero', value: e.value },
                           })
                         }}
                         options={vListaArtigoGenero}
@@ -584,33 +591,33 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                       <Input
                         id="slug"
                         name="slug"
-                        value={vDados?.slug ?? ""}
+                        value={vDados?.slug ?? ''}
                         onChange={handleChange}
                       />
                     </Col>
                     <Col md="7" className="mb-2">
                       <Label className="form-label" for="categoria_id">
-                        Categoria*
+                        {t('Categoria')}*
                       </Label>
                       <Select
                         isClearable
                         id="categoria_id"
-                        placeholder={t("Selecione...")}
-                        className={classnames("react-select", {
-                          "is-invalid": campoInvalido(
+                        placeholder={t('Selecione...')}
+                        className={classnames('react-select', {
+                          'is-invalid': campoInvalido(
                             vDados,
                             errors,
-                            "categoria_id",
-                            "int"
+                            'categoria_id',
+                            'int'
                           ),
                         })}
-                        noOptionsMessage={() => t("Vazio")}
+                        noOptionsMessage={() => t('Vazio')}
                         classNamePrefix="select"
                         value={vCategoria}
                         onChange={(e) => {
                           setCategoria(e)
                           handleChange({
-                            target: { name: "categoria_id", value: e.value },
+                            target: { name: 'categoria_id', value: e.value },
                           })
                         }}
                         options={vListaCategorias}
@@ -618,7 +625,7 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                     </Col>
                     <Col md="2" className="mb-2">
                       <Label for="agregador" className="form-label mb-50">
-                        É matriz?
+                        {t('É')} {t('matriz')}?
                       </Label>
                       <div className="form-switch form-check-primary">
                         <Input
@@ -628,7 +635,7 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                           onChange={(e) => {
                             handleChange({
                               target: {
-                                name: "agregador",
+                                name: 'agregador',
                                 value: e.target.checked,
                               },
                             })
@@ -638,19 +645,19 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                     </Col>
                     <Col md="6" className="mb-2">
                       <Label className="form-label" for="cliente_agregador">
-                        Cliente matriz*
+                        {t('Cliente')} {t('matriz')}*
                       </Label>
                       <Select
                         isClearable
                         id="cliente_agregador"
-                        noOptionsMessage={() => t("Vazio")}
+                        noOptionsMessage={() => t('Vazio')}
                         isMulti
-                        placeholder={""}
-                        className={classnames("react-select", {
-                          "is-invalid": campoInvalido(
+                        placeholder={''}
+                        className={classnames('react-select', {
+                          'is-invalid': campoInvalido(
                             vDados,
                             errors,
-                            "cliente_agregador"
+                            'cliente_agregador'
                           ),
                         })}
                         classNamePrefix="select"
@@ -659,7 +666,7 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                           setAgregador(e)
                           handleChange({
                             target: {
-                              name: "cliente_agregador",
+                              name: 'cliente_agregador',
                               value: e
                                 ?.map((item) => item.value.toString())
                                 .toString(),
@@ -675,47 +682,47 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                       </Label>
                       <Cleave
                         className="form-control"
-                        placeholder={t("mask_celular")}
+                        placeholder={t('mask_celular')}
                         options={optTel}
                         id="whatsapp"
                         name="whatsapp"
-                        value={vDados?.whatsapp ?? ""}
+                        value={vDados?.whatsapp ?? ''}
                         onChange={handleChange}
                       />
                     </Col>
                     <Col md="4" className="mb-2">
                       <Label className="form-label" for="tel_1">
-                        Telefone 1*
+                        {t('Telefone')} 1*
                       </Label>
                       <Cleave
                         className="form-control"
-                        placeholder={t("mask_telefone")}
+                        placeholder={t('mask_telefone')}
                         options={optTel}
                         id="tel_1"
                         name="tel_1"
-                        value={vDados?.tel_1 ?? ""}
+                        value={vDados?.tel_1 ?? ''}
                         onChange={handleChange}
-                        invalid={campoInvalido(vDados, errors, "tel_1")}
+                        invalid={campoInvalido(vDados, errors, 'tel_1')}
                       />
                     </Col>
                     <Col md="4" className="mb-2">
                       <Label className="form-label" for="tel_2">
-                        Telefone 2
+                        {t('Telefone')} 2
                       </Label>
                       <Cleave
                         className="form-control"
-                        placeholder={t("mask_telefone")}
+                        placeholder={t('mask_telefone')}
                         options={optTel}
                         id="tel_2"
                         name="tel_2"
-                        value={vDados?.tel_2 ?? ""}
+                        value={vDados?.tel_2 ?? ''}
                         onChange={handleChange}
                       />
                     </Col>
 
                     <Col md="4" className="mb-2">
                       <Label className="form-label" for="vCep">
-                        {t("CEP")}
+                        {t('CEP')}
                       </Label>
                       <Cleave
                         className="form-control"
@@ -724,66 +731,66 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                         onBlurCapture={(e) => handleGetCEP(e)}
                         id="vCep"
                         name="cep"
-                        value={vDados?.cep ?? ""}
+                        value={vDados?.cep ?? ''}
                         onChange={handleChange}
                       />
                     </Col>
                     <Col md="8" className="mb-2">
                       <Label className="form-label" for="endereco">
-                        {t("Endereço")}*
+                        {t('Endereço')}*
                       </Label>
                       <Input
                         id="endereco"
                         name="endereco"
-                        value={vDados?.endereco ?? ""}
+                        value={vDados?.endereco ?? ''}
                         onChange={handleChange}
-                        invalid={campoInvalido(vDados, errors, "endereco")}
+                        invalid={campoInvalido(vDados, errors, 'endereco')}
                       />
                     </Col>
                     <Col md="4" className="mb-2">
                       <Label className="form-label" for="endereco_nr">
-                        {t("Número")}*
+                        {t('Número')}*
                       </Label>
                       <Input
                         id="endereco_nr"
                         name="endereco_nr"
-                        value={vDados?.endereco_nr ?? ""}
+                        value={vDados?.endereco_nr ?? ''}
                         onChange={handleChange}
-                        invalid={campoInvalido(vDados, errors, "endereco_nr")}
+                        invalid={campoInvalido(vDados, errors, 'endereco_nr')}
                       />
                     </Col>
 
                     <Col md="4" className="mb-2">
                       <Label className="form-label" for="vBairro">
-                        {t("Bairro")}
+                        {t('Bairro')}
                       </Label>
                       <Input
                         id="vBairro"
                         name="bairro"
-                        value={vDados?.bairro ?? ""}
+                        value={vDados?.bairro ?? ''}
                         onChange={handleChange}
                       />
                     </Col>
                     <Col md="4" className="mb-2">
                       <Label className="form-label" for="vEstado">
-                        {t("U.F.")}
+                        {t('U.F.')}
                       </Label>
                       <Select
                         isClearable
                         id="vEstado"
-                        noOptionsMessage={() => t("Vazio")}
-                        placeholder={t("Selecione...")}
+                        noOptionsMessage={() => t('Vazio')}
+                        placeholder={t('Selecione...')}
                         className="react-select"
                         classNamePrefix="select"
                         value={vEstado}
                         onChange={(e) => {
                           setEstado(e)
                           handleChange({
-                            target: { name: "estado_id", value: e.value },
+                            target: { name: 'estado_id', value: e.value },
                           })
                           getCidades(e)
                           handleChange({
-                            target: { name: "cidade_id", value: null },
+                            target: { name: 'cidade_id', value: null },
                           })
                         }}
                         options={vListaEstados}
@@ -791,13 +798,13 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                     </Col>
                     <Col md="4" className="mb-2">
                       <Label className="form-label" for="vCidade">
-                        Cidade
+                        {t('Cidade')}
                       </Label>
                       <Select
                         id="vCidade"
-                        noOptionsMessage={() => t("Vazio")}
-                        LoadingMessage={() => "pesquisando..."}
-                        placeholder={t("Selecione...")}
+                        noOptionsMessage={() => t('Vazio')}
+                        LoadingMessage={() => 'pesquisando...'}
+                        placeholder={t('Selecione...')}
                         mess
                         isClearable
                         className="react-select"
@@ -807,7 +814,7 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                         onChange={(e) => {
                           setCidade(e)
                           handleChange({
-                            target: { name: "cidade_id", value: e.value },
+                            target: { name: 'cidade_id', value: e.value },
                           })
                         }}
                         options={vListaCidades}
@@ -816,30 +823,30 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
 
                     <Col md="12" className="mb-2">
                       <Label className="form-label" for="vBreveDescricao">
-                        Breve descrição*
+                        {t('Breve descrição')}*
                       </Label>
                       <Input
-                        value={vDados?.breve_descricao ?? ""}
+                        value={vDados?.breve_descricao ?? ''}
                         type="textarea"
                         id="vBreveDescricao"
                         name="breve_descricao"
-                        style={{ minHeight: "80px" }}
+                        style={{ minHeight: '80px' }}
                         onChange={handleChange}
                         invalid={campoInvalido(
                           vDados,
                           errors,
-                          "breve_descricao"
+                          'breve_descricao'
                         )}
                         className={classnames({
-                          "text-danger":
+                          'text-danger':
                             (vDados?.breve_descricao?.length || 0) > 510,
                         })}
                       />
                       <span
                         className={classnames(
-                          "textarea-counter-value float-end",
+                          'textarea-counter-value float-end',
                           {
-                            "bg-danger":
+                            'bg-danger':
                               (vDados?.breve_descricao?.length || 0) > 510,
                           }
                         )}
@@ -850,19 +857,19 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
 
                     <Col md="12" className="mb-2">
                       <Label className="form-label" for="vInfoGerais">
-                        Informações gerais*
+                        {t('Informações gerais')}*
                       </Label>
                       <Input
-                        value={vDados?.informacoes_gerais ?? ""}
+                        value={vDados?.informacoes_gerais ?? ''}
                         type="textarea"
                         id="vInfoGerais"
                         name="informacoes_gerais"
-                        style={{ minHeight: "100px" }}
+                        style={{ minHeight: '100px' }}
                         onChange={handleChange}
                         invalid={campoInvalido(
                           vDados,
                           errors,
-                          "informacoes_gerais"
+                          'informacoes_gerais'
                         )}
                       />
                     </Col>
@@ -875,14 +882,15 @@ const ClienteEditCard = ({ data, setSalvarDados }) => {
                           onChange={(e) => {
                             handleChange({
                               target: {
-                                name: "ativo",
+                                name: 'ativo',
                                 value: e.target.checked,
                               },
                             })
                           }}
                         />
                         <Label for="ativo" className="form-check-label mt-25">
-                          Cliente {vDados?.ativo ? "ativado" : "desativado"}
+                          {t('Cliente')}{' '}
+                          {vDados?.ativo ? t('ativado') : t('desativado')}
                         </Label>
                       </div>
                     </Col>

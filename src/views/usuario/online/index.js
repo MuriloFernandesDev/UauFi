@@ -1,5 +1,5 @@
 // ** React Imports
-import { Fragment, useState, useEffect } from "react"
+import { Fragment, useState, useEffect } from 'react'
 
 // ** Reactstrap Imports
 import {
@@ -14,27 +14,28 @@ import {
   DropdownToggle,
   DropdownMenu,
   DropdownItem,
-} from "reactstrap"
+} from 'reactstrap'
+import { useTranslation } from 'react-i18next'
 
 // ** Custom Components
-import Avatar from "@components/avatar"
+import Avatar from '@src/@core/components/avatar'
 
-import { Link } from "react-router-dom"
+import { Link } from 'react-router-dom'
 
-import StatsHorizontal from "@components/widgets/stats/StatsHorizontal"
+import StatsHorizontal from '@components/widgets/stats/StatsHorizontal'
 
 // ** Store & Actions
-import { getUsuarioOnline } from "../store"
+import { getUsuarioOnline } from '../store'
 
 // ** Utils
-import { formatDateTime, formatDate, formatInt, mostrarMensagem } from "@utils"
+import { formatDateTime, formatDate, formatInt, mostrarMensagem } from '@utils'
 
 // ** Icons Imports
-import { Eye, MoreVertical, Smartphone, WifiOff } from "react-feather"
+import { Eye, MoreVertical, Smartphone, WifiOff } from 'react-feather'
 
 // ** Third Party Components
-import Swal from "sweetalert2"
-import withReactContent from "sweetalert2-react-content"
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
 
 const MySwal = withReactContent(Swal)
 
@@ -42,6 +43,7 @@ const UsuarioOnline = () => {
   // ** States
   const [vCarregando, setCarregando] = useState(true)
   const [vDados, setDados] = useState(true)
+  const { t } = useTranslation()
 
   const getDados = () => {
     getUsuarioOnline()
@@ -57,19 +59,19 @@ const UsuarioOnline = () => {
   // ** Modal de desconexão
   const handleDesconectar = (row) => {
     return MySwal.fire({
-      title: "Tem certeza?",
-      text: "O usuário será desconectado e deverá conectar-se novamente!",
-      icon: "warning",
+      title: 'Tem certeza?',
+      text: 'O usuário será desconectado e deverá conectar-se novamente!',
+      icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: "Ok, desconectar!",
-      cancelButtonText: "Cancelar",
+      confirmButtonText: 'Ok, desconectar!',
+      cancelButtonText: 'Cancelar',
       customClass: {
-        confirmButton: "btn btn-primary",
-        cancelButton: "btn btn-outline-danger ms-1",
-        popup: "animate__animated animate__fadeIn",
+        confirmButton: 'btn btn-primary',
+        cancelButton: 'btn btn-outline-danger ms-1',
+        popup: 'animate__animated animate__fadeIn',
       },
       hideClass: {
-        popup: "animate__animated animate__zoomOut",
+        popup: 'animate__animated animate__zoomOut',
       },
       buttonsStyling: false,
     }).then((result) => {
@@ -83,14 +85,14 @@ const UsuarioOnline = () => {
           })
           .catch((error) => {
             if (error.response.status === 400) {
-              mostrarMensagem("Atenção!", "Não autorizado.", "warning")
+              mostrarMensagem('Atenção!', 'Não autorizado.', 'warning')
             } else if (error.response.status === 503) {
-              mostrarMensagem("Ops...", error.response.data, "error")
+              mostrarMensagem('Ops...', error.response.data, 'error')
             } else {
               mostrarMensagem(
-                "Erro inesperado",
-                "Por favor, contate um administrador.",
-                "error"
+                'Erro inesperado',
+                'Por favor, contate um administrador.',
+                'error'
               )
             }
           })
@@ -122,7 +124,7 @@ const UsuarioOnline = () => {
           color="light-success"
           width="42"
           height="42"
-          content={row.nome || row.email || ""}
+          content={row.nome || row.email || ''}
         />
       )
     }
@@ -134,13 +136,13 @@ const UsuarioOnline = () => {
         <Col md="4" className="offset-md-4">
           <StatsHorizontal
             color="success"
-            statTitle={vCarregando ? "Verificando..." : "Usuários online"}
+            statTitle={vCarregando ? 'Verificando...' : 'Usuários online'}
             icon={<Smartphone size={20} />}
             renderStats={
               <h3 className="fw-bolder mb-75">
                 {vCarregando ? (
                   <div>
-                    <Spinner type="grow" size="sm" color="success" />{" "}
+                    <Spinner type="grow" size="sm" color="success" />{' '}
                   </div>
                 ) : (
                   formatInt(vDados?.length)
@@ -182,7 +184,7 @@ const UsuarioOnline = () => {
                                 >
                                   <WifiOff size={14} className="me-50" />
                                   <span className="align-middle">
-                                    Desconectar
+                                    {t('Desconectar')}
                                   </span>
                                 </DropdownItem>
                                 <DropdownItem
@@ -192,7 +194,7 @@ const UsuarioOnline = () => {
                                 >
                                   <Eye size={14} className="me-50" />
                                   <span className="align-middle">
-                                    Visualizar dados
+                                    {t('Visualizar dados')}
                                   </span>
                                 </DropdownItem>
                               </DropdownMenu>
@@ -203,7 +205,7 @@ const UsuarioOnline = () => {
                                 {row.nome ||
                                   row.email ||
                                   row.dispositivo?.mac ||
-                                  ""}
+                                  ''}
                               </h6>
                             </Link>
                           </div>
@@ -223,7 +225,7 @@ const UsuarioOnline = () => {
                           ) : null}
                           {row.nascimento ? (
                             <small className=" mb-0">
-                              <strong>Nascimento: </strong>{" "}
+                              <strong> {t('Nascimento')}: </strong>{' '}
                               {formatDate(row.nascimento)}
                             </small>
                           ) : null}
@@ -239,20 +241,20 @@ const UsuarioOnline = () => {
                             </small>
                           ) : null}
                           <small className=" mb-0">
-                            <strong>Conexão: </strong>{" "}
+                            <strong>{t('Conexão')}: </strong>{' '}
                             {formatDateTime(row.entrada)}
                           </small>
                           <small className="mb-0">
-                            <strong>Dispositivo: </strong>{" "}
-                            {row.dispositivo?.plataforma ?? ""}{" "}
-                            {row.dispositivo?.modelo ?? ""}{" "}
-                            {row.dispositivo?.marca ?? ""}
+                            <strong>Dispositivo: </strong>{' '}
+                            {row.dispositivo?.plataforma ?? ''}{' '}
+                            {row.dispositivo?.modelo ?? ''}{' '}
+                            {row.dispositivo?.marca ?? ''}
                           </small>
-                          <small className="mb-0">{row.hotspot ?? ""}</small>
+                          <small className="mb-0">{row.hotspot ?? ''}</small>
                         </div>
                         {row.aniversariante ? (
                           <Badge color="light-primary" pill>
-                            Aniversariante
+                            {t('Aniversariante')}
                           </Badge>
                         ) : null}
                       </CardBody>

@@ -1,11 +1,13 @@
 // ** React Imports
-import { useEffect, useState } from "react"
+import { useEffect, useState } from 'react'
 
 // ** API
-import api from "@src/services/api"
+import api from '@src/services/api'
 
 // ** Third Party Components
-import Chart from "react-apexcharts"
+import Chart from 'react-apexcharts'
+
+import { useTranslation } from 'react-i18next'
 
 // ** Reactstrap Imports
 import {
@@ -17,14 +19,15 @@ import {
   Spinner,
   ButtonGroup,
   Button,
-} from "reactstrap"
+} from 'reactstrap'
 
 const CardNovosCad = (props) => {
   // ** State
-  const [vPeriodo, setPeriodo] = useState("mes")
+  const [vPeriodo, setPeriodo] = useState('mes')
   const [vProcessando, setProcessando] = useState(true)
   const [vOptions, setOptions] = useState(null)
   const [vSeries, setSeries] = useState(null)
+  const { t } = useTranslation()
 
   const getDados = (p) => {
     setProcessando(true)
@@ -37,18 +40,18 @@ const CardNovosCad = (props) => {
           chart: {
             toolbar: { show: false },
             zoom: { enabled: false },
-            type: "line",
+            type: 'line',
             offsetX: -10,
           },
           stroke: {
-            curve: "smooth",
+            curve: 'smooth',
             dashArray: [0, 12],
             width: [4, 3],
           },
           legend: {
             show: false,
           },
-          colors: ["#d0ccff", "#ebe9f1"],
+          colors: ['#d0ccff', '#ebe9f1'],
           dataLabels: {
             enabled: true,
             formatter(val) {
@@ -56,13 +59,13 @@ const CardNovosCad = (props) => {
             },
           },
           fill: {
-            type: "gradient",
+            type: 'gradient',
             gradient: {
-              shade: "dark",
+              shade: 'dark',
               inverseColors: false,
-              gradientToColors: [props.primary, "#ebe9f1"],
+              gradientToColors: [props.primary, '#ebe9f1'],
               shadeIntensity: 1,
-              type: "horizontal",
+              type: 'horizontal',
               opacityFrom: 1,
               opacityTo: 1,
               stops: [0, 100, 100, 100],
@@ -77,8 +80,8 @@ const CardNovosCad = (props) => {
           xaxis: {
             labels: {
               style: {
-                colors: "#b9b9c3",
-                fontSize: "1rem",
+                colors: '#b9b9c3',
+                fontSize: '1rem',
               },
             },
             axisTicks: {
@@ -88,14 +91,14 @@ const CardNovosCad = (props) => {
             axisBorder: {
               show: false,
             },
-            tickPlacement: "on",
+            tickPlacement: 'on',
           },
           yaxis: {
             tickAmount: 5,
             labels: {
               style: {
-                colors: "#b9b9c3",
-                fontSize: "1rem",
+                colors: '#b9b9c3',
+                fontSize: '1rem',
               },
               show: false,
               formatter(val) {
@@ -104,7 +107,7 @@ const CardNovosCad = (props) => {
             },
           },
           grid: {
-            borderColor: "#e7eef7",
+            borderColor: '#e7eef7',
             padding: {
               top: -20,
               bottom: -10,
@@ -133,37 +136,37 @@ const CardNovosCad = (props) => {
   useEffect(() => {
     // ** Requisitar lista
 
-    getDados("mes")
+    getDados('mes')
   }, [])
 
   return (
     <Card>
       <CardHeader className="pt-1 pe-1 pb-0">
-        <h5>Novos cadastros</h5>
+        <h5>{t('Novos cadastros')}</h5>
         <ButtonGroup>
           <Button
             color="primary"
-            onClick={() => getDados("dia")}
-            active={vPeriodo === "dia"}
+            onClick={() => getDados('dia')}
+            active={vPeriodo === 'dia'}
             outline
           >
-            Diário
+            {t('Diário')}
           </Button>
           <Button
             color="primary"
-            onClick={() => getDados("mes")}
-            active={vPeriodo === "mes"}
+            onClick={() => getDados('mes')}
+            active={vPeriodo === 'mes'}
             outline
           >
-            Mensal
+            {t('Mensal')}
           </Button>
           <Button
             color="primary"
-            onClick={() => getDados("ano")}
-            active={vPeriodo === "ano"}
+            onClick={() => getDados('ano')}
+            active={vPeriodo === 'ano'}
             outline
           >
-            Anual
+            {t('Anual')}
           </Button>
         </ButtonGroup>
       </CardHeader>
@@ -171,12 +174,12 @@ const CardNovosCad = (props) => {
       <CardBody>
         <div className="d-flex justify-content-start mb-0">
           <CardText className="mb-50">
-            Últimos{" "}
-            {vPeriodo === "mes"
-              ? "12 meses"
-              : vPeriodo === "dia"
-              ? "30 dias"
-              : "10 anos"}
+            {t('Últimos')}{' '}
+            {vPeriodo === 'mes'
+              ? '12 meses'
+              : vPeriodo === 'dia'
+              ? '30 dias'
+              : '10 anos'}
           </CardText>
         </div>
         {!vProcessando ? (

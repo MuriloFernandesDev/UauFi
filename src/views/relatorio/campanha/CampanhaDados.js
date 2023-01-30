@@ -1,24 +1,24 @@
 // ** Third Party Components
-import { Bar } from "react-chartjs-2"
+import { Bar } from 'react-chartjs-2'
 
 // ** Reactstrap Imports
-import { Card, CardBody } from "reactstrap"
-import { Link } from "react-router-dom"
-import { useTranslation } from "react-i18next"
+import { Card, CardBody } from 'reactstrap'
+import { Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 
 // ** Utils
-import { formatInt, formatMoeda, formatDateTime } from "@utils"
-import { Fragment } from "react"
-import DataTable from "react-data-table-component"
-import { ChevronDown } from "react-feather"
+import { formatInt, formatMoeda, formatDateTime } from '@utils'
+import { Fragment } from 'react'
+import DataTable from 'react-data-table-component'
+import { ChevronDown } from 'react-feather'
 
 // ** Styles
-import "@styles/react/libs/tables/react-dataTable-component.scss"
+import '@styles/react/libs/tables/react-dataTable-component.scss'
 
 const CampanhaDonut = (dados) => {
-  const labelColor = "#6e6b7b",
-    gridLineColor = "rgba(200, 200, 200, 0.2)",
-    success = "#28dac6"
+  const labelColor = '#6e6b7b',
+    gridLineColor = 'rgba(200, 200, 200, 0.2)',
+    success = '#28dac6'
 
   // ** Hooks
   const { t } = useTranslation()
@@ -59,7 +59,7 @@ const CampanhaDonut = (dados) => {
       {
         maxBarThickness: 15,
         backgroundColor: success,
-        borderColor: "transparent",
+        borderColor: 'transparent',
         borderRadius: { topRight: 15, topLeft: 15 },
         data: dados.valores?.map(({ qtd }) => qtd),
       },
@@ -69,8 +69,8 @@ const CampanhaDonut = (dados) => {
   // ** Table columns
   const columns = [
     {
-      name: "Nome",
-      minWidth: "200px",
+      name: 'Nome',
+      minWidth: '200px',
       sortable: true,
       selector: (row) => row.nome,
       cell: (row) => {
@@ -83,10 +83,10 @@ const CampanhaDonut = (dados) => {
             >
               <h6 className="user-name text-truncate mb-0">{row.nome}</h6>
               <small className="text-truncate text-muted mb-0">
-                {row.cliente ?? ""}
+                {row.cliente ?? ''}
               </small>
               <small className="text-truncate text-muted mb-0">
-                {row.tipo ?? ""}
+                {row.tipo ?? ''}
               </small>
             </Link>
           </div>
@@ -94,8 +94,8 @@ const CampanhaDonut = (dados) => {
       },
     },
     {
-      name: "Mensagem",
-      minWidth: "450px",
+      name: 'Mensagem',
+      minWidth: '450px',
       sortable: true,
       selector: (row) => row.mensagem,
       cell: (row) => {
@@ -115,8 +115,8 @@ const CampanhaDonut = (dados) => {
       },
     },
     {
-      name: <div className="text-center w-100 ps-2">Envios</div>,
-      minWidth: "100px",
+      name: <div className="text-center w-100 ps-2">{t('Envios')}</div>,
+      minWidth: '100px',
       sortable: true,
       selector: (row) => row.qtd,
       cell: (row) => {
@@ -140,7 +140,7 @@ const CampanhaDonut = (dados) => {
     },
     {
       name: <div className="text-end w-100">Valor</div>,
-      minWidth: "100px",
+      minWidth: '100px',
       sortable: true,
       selector: (row) => row.valor,
       cell: (row) => {
@@ -166,11 +166,11 @@ const CampanhaDonut = (dados) => {
       <Card>
         <CardBody>
           {dados?.valores?.length > 0 ? (
-            <div style={{ height: "400px" }}>
+            <div style={{ height: '400px' }}>
               <Bar data={data} options={options} height={400} />
             </div>
           ) : (
-            <h6 className="text-center">{t("Vazio")}</h6>
+            <h6 className="text-center">{t('Vazio')}</h6>
           )}
         </CardBody>
       </Card>

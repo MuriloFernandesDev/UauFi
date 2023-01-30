@@ -1,8 +1,8 @@
 // ** Third Party Components
-import { Bar } from "react-chartjs-2"
+import { Bar } from 'react-chartjs-2'
 
 // ** Reactstrap Imports
-import { Card, CardHeader, Spinner } from "reactstrap"
+import { Card, CardHeader, Spinner } from 'reactstrap'
 
 const CardFaixaEtaria = (props) => {
   // ** State
@@ -12,8 +12,8 @@ const CardFaixaEtaria = (props) => {
     datasets: [
       {
         maxBarThickness: 15,
-        backgroundColor: "#28dac6",
-        borderColor: "transparent",
+        backgroundColor: '#28dac6',
+        borderColor: 'transparent',
         borderRadius: { topRight: 15, topLeft: 15 },
         data:
           props.dados?.length > 0 ? props.dados?.map(({ value }) => value) : [],
@@ -30,7 +30,7 @@ const CardFaixaEtaria = (props) => {
         grid: {
           display: false,
         },
-        ticks: { color: "#b4b7bd" },
+        ticks: { color: '#b4b7bd' },
       },
       y: {
         min: 0,
@@ -39,7 +39,7 @@ const CardFaixaEtaria = (props) => {
           display: false,
         },
         ticks: {
-          color: "#b4b7bd",
+          color: '#b4b7bd',
         },
       },
     },
@@ -53,7 +53,7 @@ const CardFaixaEtaria = (props) => {
       <CardHeader className="align-items-start pb-0">
         <h5>{props.titulo}</h5>
       </CardHeader>
-      <div style={{ height: "300px" }}>
+      <div style={{ height: '300px' }}>
         {!props.proc ? (
           vOptions && vSeries?.labels?.length > 0 ? (
             <Bar data={vSeries} options={vOptions} height={300} />

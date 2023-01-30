@@ -1,34 +1,34 @@
 // ** React Imports
-import { Link } from "react-router-dom"
-import { useEffect, useState, useContext } from "react"
+import { Link } from 'react-router-dom'
+import { useEffect, useState, useContext } from 'react'
 
 // ** Custom Components
-import Avatar from "@components/avatar"
+import Avatar from '@components/avatar'
 
 //Internacionalização
-import { useTranslation } from "react-i18next"
+import { useTranslation } from 'react-i18next'
 
 // ** Utils
-import { isUserLoggedIn, getUserData } from "@utils"
+import { isUserLoggedIn, getUserData } from '@utils'
 
 // ** Context
-import { AbilityContext } from "@src/utility/context/Can"
+import { AbilityContext } from '@src/utility/context/Can'
 
 // ** API
-import api from "@src/services/api"
+import api from '@src/services/api'
 
 // ** Store & Actions
-import { useDispatch } from "react-redux"
+import { useDispatch } from 'react-redux'
 import {
   handleLogout,
   handleLogin,
   handlePararEmpersonar,
-} from "@store/authentication"
+} from '@store/authentication'
 
-import Impersonar from "./Impersonar"
+import Impersonar from './Impersonar'
 
 // ** Third Party Components
-import { User, Power, Sun, Moon, Users } from "react-feather"
+import { User, Power, Sun, Moon, Users } from 'react-feather'
 
 // ** Reactstrap Imports
 import {
@@ -37,10 +37,10 @@ import {
   DropdownToggle,
   DropdownItem,
   Spinner,
-} from "reactstrap"
+} from 'reactstrap'
 
 // ** Default Avatar Image
-import defaultAvatar from "@src/assets/images/avatars/avatar-blank.png"
+import defaultAvatar from '@src/assets/images/avatars/avatar-blank.png'
 
 const UserDropdown = (props) => {
   // ** Store Vars
@@ -65,7 +65,7 @@ const UserDropdown = (props) => {
   //** ComponentDidMount
   useEffect(() => {
     if (isUserLoggedIn() !== null) {
-      setUserData(JSON.parse(localStorage.getItem("userData")))
+      setUserData(JSON.parse(localStorage.getItem('userData')))
     }
   }, [])
 
@@ -73,7 +73,7 @@ const UserDropdown = (props) => {
   const userAvatar = (userData && userData.avatar) || defaultAvatar
 
   const handleThemeToggler = () => {
-    setSkin(skin === "dark" ? "light" : "dark")
+    setSkin(skin === 'dark' ? 'light' : 'dark')
   }
 
   const handleImpersonar = (dados) => {
@@ -87,9 +87,9 @@ const UserDropdown = (props) => {
     setImpersonando(true)
     dispatch(handlePararEmpersonar())
     api
-      .post("/cliente_login/auth/", {
-        email: "",
-        senha: "",
+      .post('/cliente_login/auth/', {
+        email: '',
+        senha: '',
       })
       .then((response) => {
         handleImpersonar(response.data)
@@ -101,7 +101,7 @@ const UserDropdown = (props) => {
 
   // ** Function to toggle Theme (Light/Dark)
   const ThemeToggler = () => {
-    if (skin === "dark") {
+    if (skin === 'dark') {
       return <Sun size={14} className="me-75" />
     } else {
       return <Moon size={14} className="me-75" />
@@ -118,14 +118,14 @@ const UserDropdown = (props) => {
       >
         <div className="user-nav d-sm-flex d-none">
           <span className="user-name text-nowrap fw-bold">
-            {(userData && (userData["fullName"] || userData["username"])) || ""}
+            {(userData && (userData['fullName'] || userData['username'])) || ''}
           </span>
           <span className="user-status">
             {userData
               ? userData?.fullName
                 ? userData?.username
                 : userData.role
-              : ""}
+              : ''}
           </span>
         </div>
         {!vImpersonando ? (
@@ -143,13 +143,13 @@ const UserDropdown = (props) => {
       <DropdownMenu end>
         <DropdownItem tag={Link} to="/adm/login/edit">
           <User size={14} className="me-75" />
-          <span className="align-middle">{t("Meu perfil")}</span>
+          <span className="align-middle">{t('Meu perfil')}</span>
         </DropdownItem>
 
-        {user.perfil === "adm" && !user.impersonado ? (
+        {user.perfil === 'adm' && !user.impersonado ? (
           <DropdownItem className="w-100" onClick={() => setShow(!show)}>
             <Users size={14} className="me-75" />
-            <span className="align-middle">{t("Impersonar")}</span>
+            <span className="align-middle">{t('Impersonar')}</span>
             <Impersonar
               show={show}
               setShow={setShow}
@@ -165,7 +165,7 @@ const UserDropdown = (props) => {
             onClick={() => handlePararImpersonar()}
           >
             <Users size={14} className="me-75" />
-            <span className="align-middle">{t("Parar de impersonar")}</span>
+            <span className="align-middle">{t('Parar de impersonar')}</span>
           </DropdownItem>
         ) : null}
         <DropdownItem
@@ -175,7 +175,7 @@ const UserDropdown = (props) => {
           <ThemeToggler />
           <span className="align-middle">
             {`${
-              skin === "dark" ? t("Usar tema claro") : t("Usar tema escuro")
+              skin === 'dark' ? t('Usar tema claro') : t('Usar tema escuro')
             }`}
           </span>
         </DropdownItem>
@@ -185,7 +185,7 @@ const UserDropdown = (props) => {
           onClick={() => dispatch(handleLogout())}
         >
           <Power size={14} className="me-75" />
-          <span className="align-middle">{t("Sair")}</span>
+          <span className="align-middle">{t('Sair')}</span>
         </DropdownItem>
       </DropdownMenu>
     </UncontrolledDropdown>

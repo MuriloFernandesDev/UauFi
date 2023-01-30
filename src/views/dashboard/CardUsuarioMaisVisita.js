@@ -7,6 +7,8 @@ import medal from '@src/assets/images/illustration/badge.svg'
 // ** Hooks
 import { useEffect, useState } from 'react'
 
+import { useTranslation } from 'react-i18next'
+
 // ** API
 import api from '@src/services/api'
 
@@ -23,6 +25,8 @@ import { Link } from 'react-router-dom'
 const CardUsuarioMaisVisita = () => {
   // ** States
   const [vDados, setDados] = useState({ nome: '', qtd: '0', ultima_visita: '' })
+
+  const { t } = useTranslation()
 
   const [vProcessando, setProcessando] = useState(true)
 
@@ -48,7 +52,7 @@ const CardUsuarioMaisVisita = () => {
   return (
     <Card className="card-congratulations-medal">
       <CardBody>
-        <h5 className="mb-1">Usuário que mais te visitou:</h5>
+        <h5 className="mb-1">{t('Usuário que mais te visitou')}:</h5>
 
         {!vProcessando ? (
           vDados?.qtd > 0 ? (
@@ -64,15 +68,17 @@ const CardUsuarioMaisVisita = () => {
                 <small>
                   <div>{vDados?.hotspot_nome}</div>
                   <div>
-                    Última visita {formatDateTime(vDados?.ultima_visita)}
+                    {t('Última visita')} {formatDateTime(vDados?.ultima_visita)}
                   </div>
                 </small>
-                <h3 className="mb-0 mt-50">{vDados?.qtd} visitas</h3>
+                <h3 className="mb-0 mt-50">
+                  {vDados?.qtd} {t('visitas')}
+                </h3>
               </div>
             </Link>
           ) : (
             <div className="mb-2">
-              <h6>Ninguém se conectou aqui ainda 😔</h6>
+              <h6>{t('Ninguém se conectou aqui ainda')} 😔</h6>
             </div>
           )
         ) : (

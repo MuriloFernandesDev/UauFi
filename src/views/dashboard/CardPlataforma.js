@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState } from 'react'
 
 // ** API
-import api from "@src/services/api"
+import api from '@src/services/api'
 
 // ** Third Party Components
-import Chart from "react-apexcharts"
+import Chart from 'react-apexcharts'
 
 // ** Reactstrap Imports
 import {
@@ -15,19 +15,22 @@ import {
   Col,
   Spinner,
   CardText,
-} from "reactstrap"
+} from 'reactstrap'
+
+import { useTranslation } from 'react-i18next'
 
 const Plataforma = () => {
   // ** States
   const [vDados, setDados] = useState(null)
   const [vProcessando, setProcessando] = useState(true)
   const [vOptions, setOptions] = useState(null)
+  const { t } = useTranslation()
 
   const getDados = () => {
     setProcessando(true)
     //return
     return api
-      .get("/conexao/perc_plataforma")
+      .get('/conexao/perc_plataforma')
       .then((res) => {
         setProcessando(false)
         setDados(res.data)
@@ -49,20 +52,20 @@ const Plataforma = () => {
                 labels: {
                   show: true,
                   name: {
-                    fontSize: "2rem",
-                    fontFamily: "Montserrat",
+                    fontSize: '2rem',
+                    fontFamily: 'Montserrat',
                   },
                   value: {
-                    fontSize: "1rem",
-                    fontFamily: "Montserrat",
+                    fontSize: '1rem',
+                    fontFamily: 'Montserrat',
                     formatter(val) {
                       return `${parseInt(val)}%`
                     },
                   },
                   total: {
                     show: true,
-                    fontSize: "1.5rem",
-                    label: res.data?.maior_label ?? "",
+                    fontSize: '1.5rem',
+                    label: res.data?.maior_label ?? '',
                     formatter() {
                       return `${res.data?.maior_value}%`
                     },
@@ -89,13 +92,13 @@ const Plataforma = () => {
       <CardBody>
         <Row>
           <Col xs="6">
-            <h5 className="mb-3 text-nowrap">Plataformas</h5>
+            <h5 className="mb-3 text-nowrap">{t('Plataformas')}</h5>
             {!vProcessando ? (
               <div>
-                <div className="font-small-2">Total</div>
-                <h5 className="mb-2">{vDados?.total ?? "0"}</h5>{" "}
+                <div className="font-small-2">{t('Total')}</div>
+                <h5 className="mb-2">{vDados?.total ?? '0'}</h5>{' '}
                 <CardText className="text-muted font-small-2">
-                  <span>Dispositivos</span>
+                  <span>{t('Dispositivos')}</span>
                 </CardText>
               </div>
             ) : (

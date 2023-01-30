@@ -40,18 +40,20 @@ import { Eye, Copy, Trash, MoreVertical, ChevronDown } from 'react-feather'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import toast from 'react-hot-toast'
+import { useTranslation } from 'react-i18next'
 
 const MySwal = withReactContent(Swal)
 
 const CustomHeader = ({ handleFilter, value, handlePerPage, rowsPerPage }) => {
   // ** Context
   const permissao = useContext(PermissaoContext)
+  const { t } = useTranslation()
   return (
     <div className="w-100 py-2">
       <Row>
         <Col lg="6" className="d-flex align-items-center px-0 px-lg-1">
           <div className="d-flex align-items-center me-2">
-            <label htmlFor="rows-per-page">Mostrar</label>
+            <label htmlFor="rows-per-page">{t('Mostrar')}</label>
             <Input
               type="select"
               id="rows-per-page"
@@ -70,7 +72,7 @@ const CustomHeader = ({ handleFilter, value, handlePerPage, rowsPerPage }) => {
             color="primary"
             disabled={!permissao.can('create', 'adm_hotspot')}
           >
-            Novo hotspot
+            {t('Novo hotspot')}
           </Button>
         </Col>
         <Col
@@ -78,14 +80,14 @@ const CustomHeader = ({ handleFilter, value, handlePerPage, rowsPerPage }) => {
           className="actions-right d-flex align-items-center justify-content-lg-end flex-lg-nowrap flex-wrap mt-lg-0 mt-1 pe-lg-1 p-0"
         >
           <div className="d-flex align-items-center">
-            <label htmlFor="txtPesquisa">Pesquisa</label>
+            <label htmlFor="txtPesquisa"> {t('Pesquisa')}</label>
             <Input
               id="txtPesquisa"
               className="ms-50 me-2 w-100"
               type="text"
               value={value}
               onChange={(e) => handleFilter(e.target.value)}
-              placeholder="Filtrar..."
+              placeholder={t('Filtrar...')}
             />
           </div>
         </Col>
@@ -107,6 +109,7 @@ const HotspotList = () => {
   const [rowsPerPage, setRowsPerPage] = useState(store.params.perPage ?? 10)
   const vTimeoutPesquisa = useRef()
   const [vPesquisando, setPesquisando] = useState(true)
+  const { t } = useTranslation()
 
   // ** Guardar o Cliente selecionado para atualizar a página caso mude
   const sClienteId = localStorage.getItem('clienteId')
@@ -397,9 +400,9 @@ const HotspotList = () => {
                   ) : row.status === 1 ? (
                     <Badge color="success">Online</Badge>
                   ) : row.status === 2 ? (
-                    <Badge color="secondary">Desativado</Badge>
+                    <Badge color="secondary">{t('Desativado')}</Badge>
                   ) : (
-                    <Badge color="warning">Não utilizado</Badge>
+                    <Badge color="warning">{t('Não utilizado')}</Badge>
                   )}
                 </small>
               </Link>

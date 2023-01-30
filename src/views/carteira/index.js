@@ -1,16 +1,18 @@
 // ** React Imports
-import { Fragment, useState, useEffect, useRef, useContext } from "react"
+import { Fragment, useState, useEffect, useRef, useContext } from 'react'
 
 // ** Third Party Components
-import DataTable from "react-data-table-component"
-import StatsHorizontal from "@components/widgets/stats/StatsHorizontal"
+import DataTable from 'react-data-table-component'
+import StatsHorizontal from '@components/widgets/stats/StatsHorizontal'
 import {
   ChevronDown,
   DollarSign,
   Trash,
   MoreVertical,
   Check,
-} from "react-feather"
+} from 'react-feather'
+
+import { useTranslation } from 'react-i18next'
 
 // ** Reactstrap Imports
 import {
@@ -24,25 +26,25 @@ import {
   DropdownMenu,
   DropdownToggle,
   UncontrolledDropdown,
-} from "reactstrap"
+} from 'reactstrap'
 
 // ** Context
-import { AbilityContext as PermissaoContext } from "@src/utility/context/Can"
+import { AbilityContext as PermissaoContext } from '@src/utility/context/Can'
 
 // ** API
-import api from "@src/services/api"
+import api from '@src/services/api'
 
 // ** Utils
-import { formatDateTime, formatMoeda, mostrarMensagem } from "@utils"
+import { formatDateTime, formatMoeda, mostrarMensagem } from '@utils'
 
 // ** Sidebar
-import Sidebar from "./Sidebar"
+import Sidebar from './Sidebar'
 
-import "@styles/react/libs/tables/react-dataTable-component.scss"
+import '@styles/react/libs/tables/react-dataTable-component.scss'
 
 // ** Third Party Components
-import Swal from "sweetalert2"
-import withReactContent from "sweetalert2-react-content"
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
 
 const MySwal = withReactContent(Swal)
 
@@ -50,26 +52,27 @@ const MySwal = withReactContent(Swal)
 const CustomHeader = ({ toggleSidebar }) => {
   // ** Context
   const permissao = useContext(PermissaoContext)
+  const { t } = useTranslation()
 
   return (
     <div className="invoice-list-table-header w-100 me-1 ms-50 mt-1 mb-75">
       <Row>
         <Col xl="6" className="d-flex align-items-center ps-0 mt-1 mb-1">
           <div className="d-flex align-items-center me-2">
-            <h5>Créditos adicionados</h5>
+            <h5>{t('Créditos adicionados')}</h5>
           </div>
         </Col>
         <Col
           xl="6"
           className="d-flex align-items-sm-center justify-content-xl-end justify-content-start flex-xl-nowrap flex-wrap flex-sm-row flex-column mt-xl-0 mt-1 pe-0 ps-0"
         >
-          {permissao.can("create", "minha_carteira") ? (
+          {permissao.can('create', 'minha_carteira') ? (
             <Button
               className="me-0 mb-1 mb-md-0"
               color="primary"
               onClick={toggleSidebar}
             >
-              Solicitar crédito
+              {t('Solicitar crédito')}
             </Button>
           ) : null}
         </Col>
@@ -89,9 +92,10 @@ const Carteira = () => {
   const [vPesquisando, setPesquisando] = useState(false)
 
   const vTimeoutPesquisa = useRef()
+  const { t } = useTranslation()
 
   // ** Guardar o Cliente selecionado para atualizar a página caso mude
-  const sClienteId = localStorage.getItem("clienteId")
+  const sClienteId = localStorage.getItem('clienteId')
 
   const handlePesquisar = (dados, force) => {
     if (force || sClienteId !== dados.clienteId) {
@@ -102,7 +106,11 @@ const Carteira = () => {
         setPesquisando(true)
         dados.clienteId = sClienteId
         api
-          .get(`/cliente_credito/${dados.clienteId?.length >= 1 ? 'carteira' : 'credito_nao_aprovado'}`)
+          .get(
+            `/cliente_credito/${
+              dados.clienteId?.length >= 1 ? 'carteira' : 'credito_nao_aprovado'
+            }`
+          )
           .then((res) => {
             setDados(res.data)
             setPesquisando(false)
@@ -123,7 +131,7 @@ const Carteira = () => {
         valor,
       }
       api
-        .post("/cliente_credito/pedir", vDados)
+        .post('/cliente_credito/pedir', vDados)
         .then((response) => {
           if (response.status === 200) {
             handlePesquisar(
@@ -137,17 +145,17 @@ const Carteira = () => {
         .catch((error) => {
           if (error.response.status === 400) {
             mostrarMensagem(
-              "Atenção!",
-              "Preencha todos os campos corretamente.",
-              "warning"
+              'Atenção!',
+              'Preencha todos os campos corretamente.',
+              'warning'
             )
           } else if (error.response.status === 503) {
-            mostrarMensagem("Ops...", error.response.data, "error")
+            mostrarMensagem('Ops...', error.response.data, 'error')
           } else {
             mostrarMensagem(
-              "Erro inesperado",
-              "Por favor, contate um administrador.",
-              "error"
+              'Erro inesperado',
+              'Por favor, contate um administrador.',
+              'error'
             )
           }
         })
@@ -171,17 +179,17 @@ const Carteira = () => {
       .catch((error) => {
         if (error.response.status === 400) {
           mostrarMensagem(
-            "Atenção!",
-            "Preencha todos os campos corretamente.",
-            "warning"
+            'Atenção!',
+            'Preencha todos os campos corretamente.',
+            'warning'
           )
         } else if (error.response.status === 503) {
-          mostrarMensagem("Ops...", error.response.data, "error")
+          mostrarMensagem('Ops...', error.response.data, 'error')
         } else {
           mostrarMensagem(
-            "Erro inesperado",
-            "Por favor, contate um administrador.",
-            "error"
+            'Erro inesperado',
+            'Por favor, contate um administrador.',
+            'error'
           )
         }
       })
@@ -203,17 +211,17 @@ const Carteira = () => {
       .catch((error) => {
         if (error.response.status === 400) {
           mostrarMensagem(
-            "Atenção!",
-            "Preencha todos os campos corretamente.",
-            "warning"
+            'Atenção!',
+            'Preencha todos os campos corretamente.',
+            'warning'
           )
         } else if (error.response.status === 503) {
-          mostrarMensagem("Ops...", error.response.data, "error")
+          mostrarMensagem('Ops...', error.response.data, 'error')
         } else {
           mostrarMensagem(
-            "Erro inesperado",
-            "Por favor, contate um administrador.",
-            "error"
+            'Erro inesperado',
+            'Por favor, contate um administrador.',
+            'error'
           )
         }
       })
@@ -222,19 +230,19 @@ const Carteira = () => {
   // ** Modal de exclusão
   const handleDeleteConfirmation = (id) => {
     return MySwal.fire({
-      title: "Tem certeza?",
-      text: "Sua ação não poderá ser revertida!",
-      icon: "warning",
+      title: 'Tem certeza?',
+      text: 'Sua ação não poderá ser revertida!',
+      icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: "Sim, remover!",
-      cancelButtonText: "Cancelar",
+      confirmButtonText: 'Sim, remover!',
+      cancelButtonText: 'Cancelar',
       customClass: {
-        confirmButton: "btn btn-primary",
-        cancelButton: "btn btn-outline-danger ms-1",
-        popup: "animate__animated animate__fadeIn",
+        confirmButton: 'btn btn-primary',
+        cancelButton: 'btn btn-outline-danger ms-1',
+        popup: 'animate__animated animate__fadeIn',
       },
       hideClass: {
-        popup: "animate__animated animate__zoomOut",
+        popup: 'animate__animated animate__zoomOut',
       },
       buttonsStyling: false,
     }).then(async (result) => {
@@ -259,10 +267,10 @@ const Carteira = () => {
 
   const columns = [
     {
-      name: "Data / Hora",
+      name: 'Data / Hora',
       sortable: true,
-      minWidth: "150px",
-      sortField: "data_cadastro",
+      minWidth: '150px',
+      sortField: 'data_cadastro',
       selector: (row) => row.data_cadastro,
       cell: (row) => (
         <div className="d-flex justify-content-left align-items-center w-100">
@@ -277,10 +285,10 @@ const Carteira = () => {
       ),
     },
     {
-      name: "Descrição",
+      name: 'Descrição',
       sortable: true,
-      minWidth: "150px",
-      sortField: "descricao",
+      minWidth: '150px',
+      sortField: 'descricao',
       selector: (row) => row.descricao,
       cell: (row) => (
         <div className="d-flex justify-content-left align-items-center">
@@ -288,7 +296,7 @@ const Carteira = () => {
             <small className="mb-0">{row.descricao}</small>
             {row.data_aprovacao === null ? (
               <small className="text-truncate text-muted mb-0">
-                <Badge color="warning">Aguardando aprovação</Badge>
+                <Badge color="warning">{t('Aguardando aprovação')}</Badge>
               </small>
             ) : null}
           </div>
@@ -297,8 +305,8 @@ const Carteira = () => {
     },
     {
       name: <div className="text-end w-100">Valor</div>,
-      minWidth: "100px",
-      sortField: "valor",
+      minWidth: '100px',
+      sortField: 'valor',
       selector: (row) => row.valor,
       cell: (row) => (
         <div className="text-end w-100">
@@ -309,12 +317,12 @@ const Carteira = () => {
   ]
 
   if (
-    permissao.can("update", "minha_carteira") ||
-    permissao.can("delete", "minha_carteira")
+    permissao.can('update', 'minha_carteira') ||
+    permissao.can('delete', 'minha_carteira')
   ) {
     columns.push({
-      name: <div className="text-end w-100">Ações</div>,
-      width: "100px",
+      name: <div className="text-end w-100">{t('Ações')}</div>,
+      width: '100px',
       cell: (row) => (
         <div className="text-end w-100">
           <div className="column-action d-inline-flex">
@@ -323,7 +331,7 @@ const Carteira = () => {
                 <MoreVertical size={17} className="cursor-pointer" />
               </DropdownToggle>
               <DropdownMenu end>
-                {permissao.can("update", "minha_carteira") &&
+                {permissao.can('update', 'minha_carteira') &&
                 row.data_aprovacao === null ? (
                   <DropdownItem
                     tag="a"
@@ -335,10 +343,10 @@ const Carteira = () => {
                     }}
                   >
                     <Check size={14} className="me-50" />
-                    <span className="align-middle">Aprovar</span>
+                    <span className="align-middle">{t('Aprovar')}</span>
                   </DropdownItem>
                 ) : null}
-                {permissao.can("delete", "minha_carteira") ? (
+                {permissao.can('delete', 'minha_carteira') ? (
                   <DropdownItem
                     tag="a"
                     href="/"
@@ -349,7 +357,7 @@ const Carteira = () => {
                     }}
                   >
                     <Trash size={14} className="me-50" />
-                    <span className="align-middle">Remover</span>
+                    <span className="align-middle">{t('Remover')}</span>
                   </DropdownItem>
                 ) : null}
               </DropdownMenu>
