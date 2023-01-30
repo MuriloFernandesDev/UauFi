@@ -1,21 +1,21 @@
 // ** React
-import { Fragment, useEffect, useState } from "react"
-import { useNavigate } from "react-router-dom"
-import classnames from "classnames"
+import { Fragment, useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import classnames from 'classnames'
 
 // ** Reactstrap
-import { Row, Col, Card, Input, Button, Label } from "reactstrap"
+import { Row, Col, Card, Input, Button, Label } from 'reactstrap'
 
 // ** Icons
-import { CornerUpLeft, Check } from "react-feather"
+import { CornerUpLeft, Check } from 'react-feather'
 
 // ** Utils
-import { campoInvalido, mostrarMensagem } from "@utils"
+import { campoInvalido, mostrarMensagem } from '@utils'
 
 // ** Terceiros
-import Select from "react-select"
-import { useTranslation } from "react-i18next"
-import { getHotspot } from "../store"
+import Select from 'react-select'
+import { useTranslation } from 'react-i18next'
+import { getHotspot } from '../store'
 
 const BloqueioQuartoEditCard = ({ data, setSalvarDados }) => {
   const navigate = useNavigate()
@@ -30,8 +30,8 @@ const BloqueioQuartoEditCard = ({ data, setSalvarDados }) => {
   const [vErros, setErros] = useState({})
 
   const vCamposObrigatorios = [
-    { nome: "quarto" },
-    { nome: "hotspot_id", tipo: "int" },
+    { nome: 'quarto' },
+    { nome: 'hotspot_id', tipo: 'int' },
   ]
 
   let hotspotsVar
@@ -76,9 +76,9 @@ const BloqueioQuartoEditCard = ({ data, setSalvarDados }) => {
       setSalvarDados(vDados)
     } else {
       mostrarMensagem(
-        "Atenção!",
-        "Preencha todos os campos obrigatórios.",
-        "warning"
+        'Atenção!',
+        'Preencha todos os campos obrigatórios.',
+        'warning'
       )
     }
   }
@@ -99,7 +99,7 @@ const BloqueioQuartoEditCard = ({ data, setSalvarDados }) => {
               <div>
                 <Button.Ripple
                   color="primary"
-                  onClick={() => navigate("/bloqueio_quarto")}
+                  onClick={() => navigate('/bloqueio_quarto')}
                 >
                   <CornerUpLeft size={17} />
                 </Button.Ripple>
@@ -107,7 +107,7 @@ const BloqueioQuartoEditCard = ({ data, setSalvarDados }) => {
               <div>
                 <Button.Ripple color="success" onClick={setDados}>
                   <Check size={17} />
-                  <span className="align-middle ms-25">Salvar</span>
+                  <span className="align-middle ms-25">{t('Salvar')}</span>
                 </Button.Ripple>
               </div>
             </div>
@@ -121,35 +121,35 @@ const BloqueioQuartoEditCard = ({ data, setSalvarDados }) => {
               <Row>
                 <Col md="6" className="mb-2">
                   <Label className="form-label" for="quarto">
-                    Número do quarto*
+                    {t('Número do quarto')}*
                   </Label>
                   <Input
                     id="quarto"
                     name="quarto"
-                    value={vDados?.quarto ?? ""}
+                    value={vDados?.quarto ?? ''}
                     onChange={handleChange}
-                    invalid={campoInvalido(vDados, vErros, "quarto")}
+                    invalid={campoInvalido(vDados, vErros, 'quarto')}
                   />
                 </Col>
 
                 <Col md="6" className="mb-2">
                   <Label className="form-label" for="hotspot_id">
-                    Selecione um Hotspot*
+                    {t('Selecione um Hotspot')}*
                   </Label>
                   <Select
                     isClearable
                     id="hotspot_id"
-                    noOptionsMessage={() => t("Vazio")}
-                    placeholder={t("Selecione...")}
+                    noOptionsMessage={() => t('Vazio')}
+                    placeholder={t('Selecione...')}
                     value={vHotspot}
                     options={vListaHotspots}
                     isDisabled={vDados.id === 0 && data.hotspot_id > 0}
-                    className={classnames("react-select", {
-                      "is-invalid": campoInvalido(
+                    className={classnames('react-select', {
+                      'is-invalid': campoInvalido(
                         vDados,
                         vErros,
-                        "hotspot_id",
-                        "int"
+                        'hotspot_id',
+                        'int'
                       ),
                     })}
                     classNamePrefix="select"
@@ -157,7 +157,7 @@ const BloqueioQuartoEditCard = ({ data, setSalvarDados }) => {
                       setHotspot(e)
                       handleChange({
                         target: {
-                          name: "hotspot_id",
+                          name: 'hotspot_id',
                           value: Number(e?.value),
                         },
                       })
