@@ -1,25 +1,20 @@
 // ** React Import
-import { useState, useEffect } from "react"
+import { useState } from 'react'
 
 // ** Custom Components
-import Sidebar from "@components/sidebar"
+import Sidebar from '@components/sidebar'
 
 // ** Third Party Components
-import { useTranslation } from "react-i18next"
-import { useForm } from "react-hook-form"
-
-import { useDispatch } from "react-redux"
+import { useTranslation } from 'react-i18next'
+import { useForm } from 'react-hook-form'
 
 // ** Reactstrap Imports
-import { Button, Label, Form, Input } from "reactstrap"
+import { Button, Label, Form, Input } from 'reactstrap'
 
 // ** Third Party Components
-import Cleave from "cleave.js/react"
+import Cleave from 'cleave.js/react'
 
 const SidebarCreditos = ({ open, toggleSidebar }) => {
-  // ** Store Vars
-  const dispatch = useDispatch()
-
   // ** Hooks
   const { t } = useTranslation()
 
@@ -29,17 +24,12 @@ const SidebarCreditos = ({ open, toggleSidebar }) => {
   // ** Vars
   const { handleSubmit } = useForm()
 
-  const optMoeda = { numeral: true, numeralDecimalMark: ",", delimiter: "." }
+  const optMoeda = { numeral: true, numeralDecimalMark: ',', delimiter: '.' }
 
   // ** Function to handle form submit
   const onSubmit = () => {
     toggleSidebar(vValor)
   }
-
-  // ** Get data on mount
-  useEffect(() => {
-    //
-  }, [dispatch])
 
   return (
     <Sidebar
@@ -53,11 +43,11 @@ const SidebarCreditos = ({ open, toggleSidebar }) => {
       <Form onSubmit={handleSubmit(onSubmit)}>
         <div className="mb-1">
           <Label className="form-label" for="data-inicio">
-            {t("Valor")}
+            {t('Valor')}
           </Label>
           <Cleave
             className="form-control w-100"
-            value={vValor ?? ""}
+            value={vValor ?? ''}
             onChange={(e) => {
               setValor(e.target.value)
             }}
@@ -66,10 +56,10 @@ const SidebarCreditos = ({ open, toggleSidebar }) => {
         </div>
 
         <Button type="submit" className="me-1" color="primary">
-          Solicitar
+          {t('Solicitar')}
         </Button>
         <Button type="reset" color="secondary" outline onClick={toggleSidebar}>
-          Cancelar
+          {t('Cancelar')}
         </Button>
       </Form>
     </Sidebar>
