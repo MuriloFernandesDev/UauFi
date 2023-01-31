@@ -1,9 +1,6 @@
 // ** Third Party Components
 import { User, Wifi, UserPlus, Smartphone } from 'react-feather'
 
-// ** Custom Components
-import Avatar from '@components/avatar'
-
 // ** Hooks
 import { useEffect, useState } from 'react'
 
@@ -16,13 +13,14 @@ import { useTranslation } from 'react-i18next'
 import {
   Card,
   CardHeader,
-  CardTitle,
   CardBody,
   CardText,
   Row,
   Col,
   Spinner,
 } from 'reactstrap'
+
+import Avatar from '@src/@core/components/avatar/avatar'
 
 const CardQuantidades = () => {
   const [vValor1, setValor1] = useState(null)

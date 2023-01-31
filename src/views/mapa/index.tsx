@@ -50,6 +50,8 @@ const Mapa = () => {
   //state para definir o zoom no mapa
   const [zoom, setZoom] = useState<any>(4)
 
+  console.log(markerData)
+
   // ** Context
   const permissao = useContext(PermissaoContext)
   // ** Hooks
@@ -96,12 +98,19 @@ const Mapa = () => {
           setMarkerDataOnlines(data)
           setMapDataOnlines(data)
         } else {
+          //define a media de lat e lng e centraliza o mapa nela
+          for (const u in data) {
+            const vLat = data[u].lat
+            const vLng = data[u].lng
+            setVLatLng({ lat: vLat, lng: vLng })
+          }
           setMarkerData(data)
           setMapData(data)
           setProcessando(false)
         }
       })
       .catch((error) => {
+        setProcessando(false)
         console.log(error)
       })
   }
@@ -157,7 +166,6 @@ const Mapa = () => {
       getDados('mapa_google')
       getDados('mapa_google_usuario_online')
     }
-    console.log(permissao.can('read', 'mapa_calor'))
   }, [])
 
   /*
@@ -249,6 +257,8 @@ const Mapa = () => {
                 center={center}
                 zoom={zoom}
                 options={{
+                  gestureHandling: 'greedy',
+                  zoomControl: false,
                   streetViewControl: false,
                   mapTypeControl: false,
                   mapTypeId: 'roadmap',

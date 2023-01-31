@@ -20,6 +20,8 @@ import {
   WifiOff,
 } from 'react-feather'
 
+import { useTranslation } from 'react-i18next'
+
 // ** Reactstrap Imports
 import {
   Row,
@@ -58,9 +60,6 @@ import Sidebar from './Sidebar'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import toast from 'react-hot-toast'
-
-// ** Terceiros
-import { useTranslation } from 'react-i18next'
 
 const MySwal = withReactContent(Swal)
 
@@ -200,6 +199,8 @@ const statusOptions = [
 ]
 
 const UsuarioLista = () => {
+  const { t } = useTranslation()
+
   // ** Store Vars
   const dispatch = useDispatch()
   const store = useSelector((state) => state.usuario)

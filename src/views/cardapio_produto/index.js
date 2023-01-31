@@ -133,6 +133,8 @@ const CardapioProdutoList = () => {
   const vTimeoutPesquisa = useRef()
   const [vPesquisando, setPesquisando] = useState(true)
 
+  const { t } = useTranslation()
+
   // ** Guardar o Cliente selecionado para atualizar a página caso mude
   const sClienteId = localStorage.getItem('clienteId')
 

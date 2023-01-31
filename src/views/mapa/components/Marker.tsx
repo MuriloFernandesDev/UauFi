@@ -47,14 +47,14 @@ const MarkerComponent = ({ data, ...rest }: MarkerProp) => {
             <p className="mb-0 text-black fs-6">
               {cidade} - {uf}
             </p>
-            {total_usuarios_online > 0 && (
+            {total_usuarios_online && total_usuarios_online > 0 && (
               <p>
                 Esse local possui{' '}
                 {total_usuarios_online.toLocaleString('pt-BR')} usuários onlines
                 no momento.
               </p>
             )}
-            {total_visitas > 0 && (
+            {total_visitas && total_visitas > 0 && (
               <p>
                 {translate('Esse local possui')}{' '}
                 {total_visitas.toLocaleString('pt-BR')}{' '}

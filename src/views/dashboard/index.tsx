@@ -34,7 +34,7 @@ const EcommerceDashboard = () => {
           <CardUsuarioMaisVisita />
         </Col>
         <Col xl="8" md="6">
-          <CardQuantidades cols={{ xl: '3', sm: '6' }} />
+          <CardQuantidades />
         </Col>
       </Row>
       <Row className="match-height">

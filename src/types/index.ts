@@ -1,4 +1,4 @@
-export type MapaProps = {
+export interface MapaProps {
     lat: number,
     lng: number,
     bairro: string,
@@ -7,6 +7,7 @@ export type MapaProps = {
     endereco_nr: string,
     uf: string,
     hotspot_nome: string,
-    total_visitas: number,
-    total_usuarios_online: number,
+    hotspot_id: number,
+    total_visitas?: number,
+    total_usuarios_online?: number,
 }

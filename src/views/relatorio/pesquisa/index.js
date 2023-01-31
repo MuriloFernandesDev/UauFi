@@ -13,6 +13,8 @@ import {
   ModalBody,
 } from 'reactstrap'
 
+import { useTranslation } from 'react-i18next'
+
 // ** Icons Imports
 import { PieChart, ChevronDown, Download } from 'react-feather'
 
@@ -31,6 +33,7 @@ import { formatDateTime, formatInt } from '@utils'
 import api from '@src/services/api'
 
 const RelatorioPesquisa = () => {
+  const { t } = useTranslation()
   const vDefault = [{ nome: '', valor: 0, qtd: 0, percentual: 0 }]
   const vParametrosGet = { sortColumn: 'data_cadastro', sort: 'desc' }
   // ** States
