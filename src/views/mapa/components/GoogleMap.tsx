@@ -6,9 +6,10 @@ interface MapsProps extends GoogleMapProps {
 }
 
 const GoogleMapsComponent = ({ children, ...rest }: MapsProps) => {
+  const apiKey = process.env.REACT_APP_GOOGLE_MAPS ?? ''
   return (
     <LoadScript
-      googleMapsApiKey="AIzaSyBHbJPrYK7gGDUm1CY9vV88eXDY3P7LV3Q"
+      googleMapsApiKey={apiKey}
       libraries={['places', 'visualization']}
     >
       <GoogleMap {...rest}>{children}</GoogleMap>
